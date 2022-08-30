@@ -2,57 +2,109 @@
 {% load static %}
 {% load item_tags %}
 <div class="parcours_choice_list">
-{% for parcours in parcourses %}
-
-            <div  class="box box-widget widget-user-2 div_sorter"  {% if not parcours_sort.grouper %} data-parcours_id ="{{parcours.id}}" {% endif %} 
-                  style="cursor: move;{% if parcours.vignette %}background-image: url('{{ parcours.vignette.url }}'); background-size: cover; {% endif %}background-color:{{parcours.color }};">
-                <div class="handler widget-user-header">
-                    <!-- Add signet to folder -->
-                    {% if parcours.is_folder and not parcours.vignette  %}
-                        <img src="{% static 'img/signet.png' %}" class="pull-right" />
-                    {% elif parcours.is_folder and parcours.vignette  %}
-                        <img src="{% static 'img/rabat_dossier.png' %}" class="rabat_dossier" />
-                    {% elif not parcours.is_folder and parcours.vignette  %}
-                        <img src="{% static 'img/rabat_parcours.png' %}" class="rabat_dossier" />
-                    {% else  %}
-                        <img src="{% static 'img/rabat_parcours.png' %}" class="rabat_dossier" />
-                    {% endif  %}
 
 
-                    {% if parcours.vignette %}                
-                        <div class="box_title_underlay_vignette" style="background-color:{{ parcours.color }};">
-                        </div> 
-                    {% endif  %}
-                    <div class="box_title_vignette"> 
-                        <span class='thin' style="color:{{ parcours.color|contrast_color }};font-size:20px">{{ parcours.title|truncatechars:"28" }}</span>
-                    </div>
-                </div>
+        {% for folder in folders %}
+
+                    <div  class="box box-widget widget-user-2 div_sorter"   
+                          style="cursor: move;{% if folder.vignette %}background-image: url('{{ folder.vignette.url }}'); background-size: cover; {% endif %}background-color:{{folder.color }};">
+                        <div class="handler widget-user-header">
+                            <!-- Add signet to folder -->
+
+                            {% if  folder.vignette  %}
+                                <img src="{% static 'img/rabat_parcours.png' %}" class="rabat_dossier" />
+                            {% else  %}
+                                <img src="{% static 'img/signet.png' %}" class="rabat_dossier" />
+                            {% endif  %}
+
+
+                            {% if folder.vignette %}                
+                                <div class="box_title_underlay_vignette" style="background-color:{{ folder.color }};">
+                                </div> 
+                            {% endif  %}
+                            <div class="box_title_vignette"> 
+                                <span class='thin' style="color:{{ folder.color|contrast_color }};font-size:20px">{{ folder.title|truncatechars:"28" }}</span>
+                            </div>
+                        </div>
 
 
 
-                <div class="box-footer">
-                    <div class="row" align="center">
-                        <span style="color:#222">
-                            {% if parcours.is_folder %}
-                                <i class="fa fa-folder"></i> Dossier de {{ parcours.leaf_parcours.count }} parcours 
-                            {% else %}
-                                <i class="fa fa-th"></i> Parcours
-                            {% endif %}
-                        </span>
+                        <div class="box-footer">
+                            <div class="row" align="center">
+                                <span style="color:#222">
+                                    <i class="fa fa-folder"></i> Dossier
+                                </span>
+                            </div> 
+                            <div class="row" align="center">
+                                <label class="btn btn-xs btn-primary"><input type="checkbox" name="folder_ids" value="{{ folder.id}}"/> Sélectionner</label> 
+                            </div>  
+                        </div>
+
                     </div> 
-                    <div class="row" align="center">
-                        <label class="btn btn-xs btn-primary"><input type="checkbox" name="parcours_id" value="{{ parcours.id}}"/> Sélectionner</label> 
-                    </div>  
-                </div>
-
-            </div> 
 
 
-{% empty %}
+ 
 
-<div class="alert alert-danger">
-Aucun parcours ne correspond à votre attente. Assurez-vous d'avoir bien renseigné le niveau et l'enseignement. Puis recocher l'option.
-</div>
+        {% endfor %} 
 
-{% endfor %} 
+
+
+
+
+        <hr/>
+        <hr/>
+
+
+
+
+
+        {% for parcours in parcourses %}
+
+                    <div  class="box box-widget widget-user-2"  
+                          style="cursor: move;{% if parcours.vignette %}background-image: url('{{ parcours.vignette.url }}'); background-size: cover; {% endif %}background-color:{{parcours.color }};">
+                        <div class="handler widget-user-header">
+                            <!-- Add signet to folder -->
+                            {% if parcours.is_folder and not parcours.vignette  %}
+                                <img src="{% static 'img/signet.png' %}" class="pull-right" />
+                            {% elif parcours.is_folder and parcours.vignette  %}
+                                <img src="{% static 'img/rabat_dossier.png' %}" class="rabat_dossier" />
+                            {% elif not parcours.is_folder and parcours.vignette  %}
+                                <img src="{% static 'img/rabat_parcours.png' %}" class="rabat_dossier" />
+                            {% else  %}
+                                <img src="{% static 'img/rabat_parcours.png' %}" class="rabat_dossier" />
+                            {% endif  %}
+
+
+                            {% if parcours.vignette %}                
+                                <div class="box_title_underlay_vignette" style="background-color:{{ parcours.color }};">
+                                </div> 
+                            {% endif  %}
+                            <div class="box_title_vignette"> 
+                                <span class='thin' style="color:{{ parcours.color|contrast_color }};font-size:20px">{{ parcours.title|truncatechars:"28" }}</span>
+                            </div>
+                        </div>
+
+
+
+                        <div class="box-footer">
+                            <div class="row" align="center">
+                                <span style="color:#222">
+                                    {% if parcours.is_sequence %}<i class="bi bi-ladder"></i>  Séquences {% else %}<i class="fa fa-th"></i> Parcours {% endif %}
+                                </span>
+                            </div> 
+                            <div class="row" align="center">
+                                <label class="btn btn-xs btn-primary"><input type="checkbox" name="parcours_ids" value="{{ parcours.id}}"/> Sélectionner</label> 
+                            </div>  
+                        </div>
+
+                    </div> 
+
+
+ 
+
+        {% endfor %} 
+
+ 
+
+
 </div>  

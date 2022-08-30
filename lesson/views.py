@@ -1,3 +1,4 @@
+
 from django import http
 from sacado.settings import BBB_SERVEUR, BBB_SECRET, DEFAULT_FROM_EMAIL
 import json
@@ -223,7 +224,6 @@ def add_students_to_my_lesson_group(request):
         students = request.POST.getlist('students')
 
         for s in students :
-            print(s)
             user.teacher.students.add(s)
         return redirect('calendar_show' , 0)
 

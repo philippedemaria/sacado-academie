@@ -314,16 +314,15 @@ define(['jquery','bootstrap_popover', 'bootstrap','chart'], function ($) {
         });
   
 
-
-
         $("#id_recuperation").change(function () {
                 if ($("#id_recuperation").is(":checked")) {
 
                     let level_id   = $("#id_level").val();
                     let subject_id = $("#id_subject").val();
                     let csrf_token = $("input[name='csrfmiddlewaretoken']").val();
+                    let is_update  = $("#is_update").val();
 
-
+                    if (is_update=="yes") {  url = "../../ajax_choose_parcours" } else { url = "ajax_choose_parcours"}
                         $.ajax(
                             {
                                 type: "POST",
@@ -333,7 +332,7 @@ define(['jquery','bootstrap_popover', 'bootstrap','chart'], function ($) {
                                     'level_id'   :  level_id, 
                                     csrfmiddlewaretoken : csrf_token
                                 },
-                                url: "ajax_choose_parcours",
+                                url: url,
                                 success: function (data) {
                                     $('#choosen_parcours_by_this_level_and_subject').html("").html(data.html);
                                 }

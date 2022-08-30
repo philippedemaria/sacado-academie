@@ -644,6 +644,15 @@ class Student(ModelWithCode):
 
 
 
+    def runnning_adhesion(self):
+        today    = time_zone_user(self.user)
+        adhesion = self.adhesions.filter(stop__gte=today).last()
+        return adhesion
+
+
+
+
+
 
 class Adhesion(models.Model):
     """docstring for Facture"""
@@ -663,7 +672,6 @@ class Adhesion(models.Model):
     def formule(self):
         Formule = apps.get_model('setup', 'Formule')
         return Formule.objects.get(pk = int(self.menu))
-
 
 
 class Facture(models.Model):

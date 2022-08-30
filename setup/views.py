@@ -1050,6 +1050,21 @@ def attribute_all_documents_to_student_by_level(level,student) :
 
 
 
+def attribute_group_to_student_by_level(level,student,formule_id) :
+
+    teacher_ids = ["0" ,89513,89507,89508,89510, 89511, 46245  , 46242 , 46246  , 46247, 46222, 46243, 46244,"", 130243]
+    teacher_id = teacher_ids[level.id]
+    group = Group.objects.filter(level = level, school_id = 50, teacher_id=teacher_id, formule_id=formule_id).first()
+    group.students.add(student)
+    groups = [group]
+    test = attribute_all_documents_of_groups_to_a_new_student(groups, student)
+    success = True
+    return success
+
+
+
+
+
 
 def add_adhesion(request) :
 
@@ -1071,8 +1086,8 @@ def add_adhesion(request) :
             form_user.save()
             level_id = request.POST.get("level")
             formule_id = request.POST.get("formule_id")
-            student = Student.objects.create(user=form_user, level_id = level_id)
-            level   = Level.objects.get(pk = level_id)
+            level   = Level.objects.get(pk = level_id)            
+            student = Student.objects.create(user=form_user, level = level)
             u_parents = all_from_parent_user(request.user)
 
             u_p_mails = []
@@ -1085,7 +1100,7 @@ def add_adhesion(request) :
             adhesion = Adhesion.objects.create(start = today, stop = end, student = student , level_id = level_id  , amount = 0  , formule_id = formule_id ) 
             facture = Facture.objects.create(chrono = chrono, file = "" , user = request.user , date = today     ) 
             facture.adhesions.add(adhesion)
-            success = attribute_all_documents_to_student_by_level(level,student)
+            success = attribute_group_to_student_by_level(level,student,formule_id)
 
             msg = "Bonjour,\n\nVous venez de souscrire à une adhésion à la SACADO Académie. \n"
             msg += "Votre référence d'adhésion est "+chrono+".\n\n"
@@ -1225,9 +1240,9 @@ def save_adhesion(request) :
  
         adhesion = Adhesion.objects.create( student = student , level = level , start = today , amount = total_price , stop = date_end_dateformat , formule_id  = formule.id , year  = today.year )
         adhesions_in.append(adhesion)
-        success = attribute_all_documents_to_student_by_level(level,student)
+        success = attribute_group_to_student_by_level(level,student,formule.id)
+    
     i = 0
-
     for p in parents_of_adhesion :
 
         # if nb_child == 0 : # enfant émancipé ou majeur

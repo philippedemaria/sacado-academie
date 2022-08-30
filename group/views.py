@@ -558,13 +558,42 @@ def create_group(request):
         if teacher.user.school :
             nf.school = teacher.user.school
         nf.save()
+
+
+        folders_ids  = request.POST.getlist("folder_ids")
+        for f_id in folders_ids :
+            folder = Folder.objects.get(pk=f_id)
+            parcourses = folder.parcours.all()
+            folder.pk = None
+            folder.teacher = request.user.teacher
+            folder.save()
+            folder.groups.add(nf)
+            for parcours in parcourses :
+                parcours.pk = None
+                parcours.code = str(uuid.uuid4())[:8]
+                parcours.teacher = request.user.teacher
+                parcours.save()
+                parcours.groups.add(nf)
+        
+        parcours_ids = request.POST.getlist("parcours_ids")
+        for parcours_id in parcours_ids :
+            parcours = Parcours.objects.get(pk=parcours_id)
+            parcours.pk = None
+            parcours.code = str(uuid.uuid4())[:8]
+            parcours.teacher = request.user.teacher
+            parcours.save()
+            parcours.groups.add(nf)
+
         stdts = request.POST.get("students")
         if stdts : 
             if len(stdts) > 0 :
                 include_students(request , stdts,nf)
-        create_student_profile_inside(request, nf)          
+        create_student_profile_inside(request, nf) 
 
-        return redirect("show_group", nf.id)
+
+
+
+        return redirect("show_group", group.id)
     else:
         print(form.errors)
 
@@ -579,8 +608,8 @@ def update_group(request, id):
 
 
     teacher = Teacher.objects.get(user= request.user)
-    group = Group.objects.get(id=id)
-    stdnts = group.students.exclude(user__username = request.user.username).exclude(user__username__contains=  "_e-test").order_by("user__last_name")
+    group   = Group.objects.get(id=id)
+    stdnts  = group.students.exclude(user__username = request.user.username).exclude(user__username__contains=  "_e-test").order_by("user__last_name")
 
 
     stu = group.students.values_list("user_id",flat=True)
@@ -598,11 +627,41 @@ def update_group(request, id):
         if teacher.user.school :
             nf.school = teacher.user.school
         nf.save()
+
+        folders_ids  = request.POST.getlist("folder_ids")
+        for f_id in folders_ids :
+            folder = Folder.objects.get(pk=f_id)
+            parcourses = folder.parcours.all()
+            folder.pk = None
+            folder.teacher = request.user.teacher
+            folder.save()
+            folder.groups.add(nf)
+            for parcours in parcourses :
+                parcours.pk = None
+                parcours.code = str(uuid.uuid4())[:8]
+                parcours.teacher = request.user.teacher
+                parcours.save()
+                parcours.groups.add(nf)
+        
+        parcours_ids = request.POST.getlist("parcours_ids")
+        for parcours_id in parcours_ids :
+            parcours = Parcours.objects.get(pk=parcours_id)
+            parcours.pk = None
+            parcours.code = str(uuid.uuid4())[:8]
+            parcours.teacher = request.user.teacher
+            parcours.save()
+            parcours.groups.add(nf)
+
+
         stdts = request.POST.get("students")
         if stdts : 
             if len(stdts) > 0 :
-                include_students(request , stdts,group)
- 
+                include_students(request , stdts, group)
+        try :
+            student = group.students.filter(user__username__contains="_e-test").first()
+            attribute_all_documents_of_groups_to_a_new_student([group], student) 
+        except :
+            pass
  
         return redirect("show_group", group.id)
     else:
@@ -611,6 +670,7 @@ def update_group(request, id):
     context = {'form': form,   'group': group, 'teacher': teacher, 'students': stdnts, 'all_students' : all_students ,  }
 
     return render(request, 'group/form_group.html', context )
+
 
 
 
