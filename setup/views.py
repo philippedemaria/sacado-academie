@@ -995,9 +995,9 @@ def accept_renewal_adhesion(request) :
 		
 			if closure :    #il y a deja un abonnement en cours : le debut
 							#du nouvel abonnement commence le lendemain de la fin
-				debut=closure+timedelta(days=1)
+				debut = closure+timedelta(days=1)
 			else : 
-				debut=datetime.now()
+				debut = time_zone_user(request.user)
 				
 			new_closure = debut + timedelta(days = duration)
 			User.objects.filter(pk = student_id).update(closure=new_closure)
@@ -1076,8 +1076,8 @@ def add_adhesion(request) :
 
     if request.method == "POST" :
         if form.is_valid():
-            #end = today + timedelta(days=7)
-            end = datetime(2022,8,31) 
+            end = today + timedelta(days=7)
+            #end = datetime(2022,8,31) 
             form_user = form.save(commit=False)
             form_user.closure = end
             form_user.school_id = 50
