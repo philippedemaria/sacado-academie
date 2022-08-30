@@ -1054,7 +1054,6 @@ def attribute_group_to_student_by_level(level,student,formule_id) :
 
     teacher_ids = ["0" ,89513,89507,89508,89510, 89511, 46245  , 46242 , 46246  , 46247, 46222, 46243, 46244,"", 130243] # "0" ET "" sont des offsets
     teacher_id = teacher_ids[level.id]
-    print( level,   50,  teacher_id,  formule_id)
     group = Group.objects.filter(level = level, school_id = 50, teacher_id=teacher_id, formule_id=formule_id).first()
     group.students.add(student)
     groups = [group]
