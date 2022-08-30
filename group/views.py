@@ -534,8 +534,6 @@ def create_student_profile_inside(request, nf) :
             code = str(uuid.uuid4())[:8]                 
             student = Student.objects.create(user=user, level=nf.level, code=code)
             nf.students.add(student)
-            get_all_documents_from_group(nf,student)
-
         else :
             student = Student.objects.get(user=user)
         st = True   
@@ -561,36 +559,24 @@ def create_group(request):
 
 
         folders_ids  = request.POST.getlist("folder_ids")
+        folders , parcourses = [] , []
         for f_id in folders_ids :
             folder = Folder.objects.get(pk=f_id)
-            parcourses = folder.parcours.all()
-            folder.pk = None
-            folder.teacher = request.user.teacher
-            folder.save()
-            folder.groups.add(nf)
-            for parcours in parcourses :
-                parcours.pk = None
-                parcours.code = str(uuid.uuid4())[:8]
-                parcours.teacher = request.user.teacher
-                parcours.save()
-                parcours.groups.add(nf)
+            folders.append(folder)
+
         
         parcours_ids = request.POST.getlist("parcours_ids")
         for parcours_id in parcours_ids :
             parcours = Parcours.objects.get(pk=parcours_id)
-            parcours.pk = None
-            parcours.code = str(uuid.uuid4())[:8]
-            parcours.teacher = request.user.teacher
-            parcours.save()
-            parcours.groups.add(nf)
+            parcourses.append(parcours)
 
         stdts = request.POST.get("students")
         if stdts : 
             if len(stdts) > 0 :
                 include_students(request , stdts,nf)
-        create_student_profile_inside(request, nf) 
-
-
+        student = create_student_profile_inside(request, nf) 
+        duplicate_all_folders_of_group_to_a_new_student(nf , folders, teacher,  student)
+        duplicate_all_parcours_of_group_to_a_new_student(nf , parcourses, teacher,  student)
 
 
         return redirect("show_group", nf.id)
@@ -628,29 +614,18 @@ def update_group(request, id):
             nf.school = teacher.user.school
         nf.save()
 
+
         folders_ids  = request.POST.getlist("folder_ids")
+        folders , parcourses = [] , []
         for f_id in folders_ids :
             folder = Folder.objects.get(pk=f_id)
-            parcourses = folder.parcours.all()
-            folder.pk = None
-            folder.teacher = request.user.teacher
-            folder.save()
-            folder.groups.add(nf)
-            for parcours in parcourses :
-                parcours.pk = None
-                parcours.code = str(uuid.uuid4())[:8]
-                parcours.teacher = request.user.teacher
-                parcours.save()
-                parcours.groups.add(nf)
+            folders.append(folder)
+
         
         parcours_ids = request.POST.getlist("parcours_ids")
         for parcours_id in parcours_ids :
             parcours = Parcours.objects.get(pk=parcours_id)
-            parcours.pk = None
-            parcours.code = str(uuid.uuid4())[:8]
-            parcours.teacher = request.user.teacher
-            parcours.save()
-            parcours.groups.add(nf)
+            parcourses.append(parcours)
 
 
         stdts = request.POST.get("students")
@@ -659,7 +634,8 @@ def update_group(request, id):
                 include_students(request , stdts, group)
         try :
             student = group.students.filter(user__username__contains="_e-test").first()
-            attribute_all_documents_of_groups_to_a_new_student([group], student) 
+            duplicate_all_folders_of_group_to_a_new_student(group , folders, teacher,  student)
+            duplicate_all_parcours_of_group_to_a_new_student(group , parcourses, teacher,  student)
         except :
             pass
  
@@ -670,6 +646,7 @@ def update_group(request, id):
     context = {'form': form,   'group': group, 'teacher': teacher, 'students': stdnts, 'all_students' : all_students ,  }
 
     return render(request, 'group/form_group.html', context )
+
 
 
 

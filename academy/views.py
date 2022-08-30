@@ -212,34 +212,12 @@ def create_academy(request,idl):
 
                 if is_sequence :
                     for r  in relationships : 
-                        try :
-                            relations = Relationship.objects.create(parcours = parcours , exercise_id = r.exercise.id , document_id = r.exercise.id  , type_id = 0 , ranking =  2 , is_publish= r.is_publish  , start= None , date_limit= None, duration= r.duration, situation= r.situation ) 
-                            relations.students.add(student)
-                        except :
-                            pass
+                        skills = r.skills.all() 
+                        r.pk = None
+                        r.save()                        
+                        r.skills.set(skills)
+                        r.students.add(student)
 
-                    for c  in customexercises : 
-                        relationc = Relationship.objects.create(parcours = parcours , exercise_id = None , document_id = c.id  , type_id = 1 , ranking =  3 , is_publish= c.is_publish  , start= None , date_limit= None, duration= c.duration, situation= 0 ) 
-                        relationc.students.add(student)
-
-                    for course in courses : 
-                        relation = Relationship.objects.create(parcours = parcours , exercise_id = None , document_id = course.id  , type_id = 2 , ranking =  1 , is_publish= course.is_publish  , start= None , date_limit= None, duration= course.duration, situation= 0 ) 
-                        relation.students.add(student)
-                    
-
-                    for quizz in quizzes : 
-                        relationq = Relationship.objects.create(parcours = parcours , exercise_id = None , document_id = quizz.id  , type_id = 3 , ranking =  4 , is_publish= quizz.is_publish , start= None , date_limit= None, duration= 10, situation= 0 ) 
-                        relationq.students.add(student)
-
-
-                    for flashpack in flashpacks : 
-                        relationf = Relationship.objects.create(parcours = parcours , exercise_id = None , document_id = flashpack.id  , type_id = 4 , ranking =  5 , is_publish= flashpack.is_publish  , start= None , date_limit= None, duration= 10, situation= 0 ) 
-                        relationf.students.add(student)
-
-                    for bibliotex in bibliotexs : 
-                        relationb = Relationship.objects.create(parcours = parcours , exercise_id = None , document_id = bibliotex.id  , type_id = 5 , ranking =  6 , is_publish= bibliotex.is_publish  , start= None , date_limit= None, duration= 10, situation= 0 ) 
-                        relationb.students.add(student)
-                
                 else :
 
                     for c  in customexercises : 

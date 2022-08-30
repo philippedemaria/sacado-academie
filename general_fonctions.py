@@ -236,6 +236,7 @@ def time_zone_user(user):
 
 
  
+ 
 def attribute_all_documents_to_student(parcourses,student):
     """  assigner les documents et renvoie Vrai ou Faux suivant l'attribution """
     try :
@@ -253,6 +254,18 @@ def attribute_all_documents_to_student(parcourses,student):
             courses = p.course.all()
             for course in courses:
                 course.students.add(student)
+
+            bibliotexs = p.bibliotexs.all()
+            for b in bibliotexs:
+                b.students.add(student)
+
+            flashpacks = p.flashpacks.all()
+            for f in flashpacks:
+                f.students.add(student)
+
+            quizz = p.quizz.all()
+            for q in quizz:
+                q.students.add(student)
 
         test = True
     except :
@@ -297,75 +310,6 @@ def attribute_all_documents_to_students(parcourses, students ):
     return test
 
  
-# def attribute_all_documents_of_parcours_to_group(group,parcours):
-#     """  assigner les documents   """
-    
-#     students = group.students.all()
-#     parcours.students.set(students)
-#     relationships = parcours.parcours_relationship.all()
-#     for r in relationships:
-#         r.students.set(students)
-
-#     customexercises = parcours.parcours_customexercises.all()
-#     for c in customexercises:
-#         c.students.set(students)
-
-#     courses = parcours.course.all()
-#     for course in courses:
-#         course.students.set(students)
-
-
-# def attribute_all_documents_of_folder_to_group(group,folder):
-#     """  assigner les documents   """
-    
-#     students = group.students.all()
-#     folder.students.set(students)
-#     for parcours in folder.parcours.all() :
-#         attribute_all_documents_of_parcours_to_group(group,parcours)
-
-
-# def attribute_all_documents(group,student):
-#     """  assigner les documents   """
-#     # Assigne les dossiers et leurs contenus 
-#     group.students.add(student)
-#     for folder in group.group_folders.all():
-#         folder.students.add(student)
-
-#         for parcours in folder.parcours.all():
-#             parcours.students.add(student)
-
-#             relationships = parcours.parcours_relationship.all()
-#             for r in relationships:
-#                 r.students.add(student)
-
-#             customexercises = parcours.parcours_customexercises.all()
-#             for c in customexercises:
-#                 c.students.add(student)
-
-#             courses = parcours.course.all()
-#             for course in courses:
-#                 course.students.add(student)
-
-#     # Assigne les parcours et leurs contenus 
-#     for parcours in group.group_parcours.filter(folders=None):
-#         parcours.students.add(student)
-
-#         relationships = parcours.parcours_relationship.all()
-#         for r in relationships:
-#             r.students.add(student)
-
-#         customexercises = parcours.parcours_customexercises.all()
-#         for c in customexercises:
-#             c.students.add(student)
-
-#         courses = parcours.course.all()
-#         for course in courses:
-#             course.students.add(student)
-#     test = True
- 
-#     return test
-
-
 
 
 
@@ -432,12 +376,6 @@ def attribute_all_documents_of_groups_to_a_new_student(groups, student):
             for quiz in quizz:
                 quiz.students.add(student)
 
-
-
-    test = True
-
-
-    return test
 
 
 
@@ -519,6 +457,223 @@ def attribute_all_documents_of_groups_to_all_new_students(groups):
 
 
 
+def duplicate_all_folders_of_group_to_a_new_student(group , folders, teacher,  student):
+    for folder in folders :
+        parcourses = folder.parcours.all() # récupération des parcours
+        #clone du dossier
+        folder.pk = None
+        folder.teacher = teacher
+        folder.save()
+        folder.groups.add(group)
+        folder.students.add(student)
+        for parcours in parcourses :
+            relationships   = parcours.parcours_relationship.all() # récupération des relations
+            courses         = parcours.course.all() # récupération des relations
+            customexercises = parcours.parcours_customexercises.all() # récupération des customexercises
+            quizzes         = parcours.quizz.all() # récupération des quizzes
+            flashpacks      = parcours.flashpacks.all() # récupération des flashpacks
+            bibliotexs      = parcours.bibliotexs.all() # récupération des bibliotexs
+
+            #clone du parcours
+            parcours.pk = None
+            parcours.teacher = teacher
+            parcours.is_publish = 1
+            parcours.is_archive = 0
+            parcours.is_share = 0
+            parcours.is_favorite = 1
+            parcours.is_sequence = is_sequence
+            parcours.code = str(uuid.uuid4())[:8]
+            parcours.save()
+            parcours.students.add(student)
+            folder.parcours.add(parcours)
+            # fin du clone
+
+            if is_sequence :
+                for r  in relationships : 
+                    skills = r.skills.all() 
+                    r.pk = None
+                    r.save()                        
+                    r.skills.set(skills)
+                    r.students.add(student)
+
+            else :
+
+                for c  in customexercises : 
+                    skills     = c.skills.all() 
+                    knowledges = c.knowledges.all() 
+                    c.pk       = None
+                    c.teacher  = teacher
+                    c.save()
+                    c.students.add(student)
+                    c.skills.set(skills)
+                    c.knowledges.set(knowledges)
+                    c.parcourses.add(parcours)
+
+                n_r = []
+                for course in courses : 
+                    relationships_c  = course.relationships.all() 
+                    course.pk      = None
+                    course.parcours = parcours
+                    course.teacher = teacher
+                    course.save()
+                    
+                    for r in relationships_c :
+                        try :
+                            skills = r.skills.all() 
+                            r.pk       = None
+                            r.parcours = parcours
+                            r.save()
+                            r.students.add(student)
+                            r.skills.set(skills)
+                            course.relationships.add(r)
+                        except :
+                            pass
+                        n_r.append(r.id)
+
+                for r in relationships.exclude(pk__in=n_r) :
+                    try :
+                        skills = r.skills.all() 
+                        r.pk       = None
+                        r.parcours = parcours
+                        r.save()
+                        r.students.add(student)
+                        r.skills.set(skills)
+                    except :
+                        pass
+
+
+                for quizz in quizzes :  
+                    questions = quizz.questions.all()    
+                    themes    = quizz.themes.all()  
+                    levels    = quizz.levels.all()  
+
+                    quizz.pk      = None
+                    quizz.teacher = teacher
+                    quizz.save()
+
+                    for question in questions :
+                        choices = question.choices.all()
+                        question.pk = None
+                        question.save()
+                        question.students.add(student)
+                        for choice in choices :
+                            choice.pk= None
+                            choice.question = question
+                            choice.save()
+
+                    quizz.groups.add(group)
+                    quizz.parcours.add(parcours)
+                    quizz.folders.add(folder)
+                    quizz.levels.set(levels)
+                    quizz.themes.set(themes)
+                    quizz.students.add(student)
+
+
+
+
+def duplicate_all_parcours_of_group_to_a_new_student(group , parcourses, teacher,  student):
+ 
+    for parcours in parcourses :
+        relationships   = parcours.parcours_relationship.all() # récupération des relations
+        courses         = parcours.course.all() # récupération des relations
+        customexercises = parcours.parcours_customexercises.all() # récupération des customexercises
+        quizzes         = parcours.quizz.all() # récupération des quizzes
+        flashpacks      = parcours.flashpacks.all() # récupération des flashpacks
+        bibliotexs      = parcours.bibliotexs.all() # récupération des bibliotexs
+        is_sequence     = parcours.is_sequence
+        #clone du parcours
+        parcours.pk = None
+        parcours.teacher = teacher
+        parcours.is_publish = 1
+        parcours.is_archive = 0
+        parcours.is_share = 0
+        parcours.is_favorite = 1
+        parcours.is_sequence = is_sequence
+        parcours.code = str(uuid.uuid4())[:8]
+        parcours.save()
+        parcours.students.add(student)
+        folder.parcours.add(parcours)
+        # fin du clone
+
+        if is_sequence :
+            for r  in relationships : 
+                skills = r.skills.all() 
+                r.pk = None
+                r.save()                        
+                r.skills.set(skills)
+                r.students.add(student)
+
+        else :
+
+            for c  in customexercises : 
+                skills     = c.skills.all() 
+                knowledges = c.knowledges.all() 
+                c.pk       = None
+                c.teacher  = teacher
+                c.save()
+                c.students.add(student)
+                c.skills.set(skills)
+                c.knowledges.set(knowledges)
+                c.parcourses.add(parcours)
+
+            n_r = []
+            for course in courses : 
+                relationships_c  = course.relationships.all() 
+                course.pk      = None
+                course.parcours = parcours
+                course.teacher = teacher
+                course.save()
+                
+                for r in relationships_c :
+                    try :
+                        skills = r.skills.all() 
+                        r.pk       = None
+                        r.parcours = parcours
+                        r.save()
+                        r.students.add(student)
+                        r.skills.set(skills)
+                        course.relationships.add(r)
+                    except :
+                        pass
+                    n_r.append(r.id)
+
+            for r in relationships.exclude(pk__in=n_r) :
+                try :
+                    skills = r.skills.all() 
+                    r.pk       = None
+                    r.parcours = parcours
+                    r.save()
+                    r.students.add(student)
+                    r.skills.set(skills)
+                except :
+                    pass
+
+
+            for quizz in quizzes :  
+                questions = quizz.questions.all()    
+                themes    = quizz.themes.all()  
+                levels    = quizz.levels.all()  
+
+                quizz.pk      = None
+                quizz.teacher = teacher
+                quizz.save()
+
+                for question in questions :
+                    choices = question.choices.all()
+                    question.pk = None
+                    question.save()
+                    question.students.add(student)
+                    for choice in choices :
+                        choice.pk= None
+                        choice.question = question
+                        choice.save()
+
+                quizz.groups.add(group)
+                quizz.parcours.add(parcours)
+                quizz.folders.add(folder)
+                quizz.levels.set(levels)
+                quizz.themes.set(themes)
+                quizz.students.add(student)
 
 
 
