@@ -1427,6 +1427,8 @@ class Relationship(models.Model):
     is_mark = models.BooleanField(default=0, verbose_name="Notation ?")
     mark = models.CharField(max_length=3, default="", verbose_name="Sur ?")
     is_correction_visible = models.BooleanField(default=0, editable=False  )
+    
+    coefficient = models.DecimalField(default=1,  max_digits=4, decimal_places=2, verbose_name="Coefficient")
 
     # document : type du doc et id du doc ( exercice = 0 , custom = 1 , cours = 2 , quizz= 3 , biblio = 4 , flash = 5)
     document_id = models.IntegerField(  default=0,  blank=True, null=True, editable=False)    
