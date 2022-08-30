@@ -592,7 +592,6 @@ def duplicate_all_parcours_of_group_to_a_new_student(group , parcourses, teacher
         parcours.code = str(uuid.uuid4())[:8]
         parcours.save()
         parcours.students.add(student)
-        folder.parcours.add(parcours)
         # fin du clone
 
         if is_sequence :
