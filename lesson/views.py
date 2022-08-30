@@ -18,7 +18,7 @@ from django.http import JsonResponse
 #from django.core import serializers
 from django.core.mail import send_mail
 from general_fonctions import time_zone_user
-
+from datetime import datetime, timedelta
 
 import urllib.parse
 import requests # debuggage, à enlever en developpement
@@ -26,8 +26,6 @@ from hashlib import sha1  # pour l'API de bbb
 from lesson.models import *
 
 
-def get_hours():
-    return ["{:02d}:{:02d}".format(i//60,i%60) for i in range(8*60,20*60,15)]
 
 def events_json(request):
 
@@ -37,9 +35,10 @@ def events_json(request):
 
     for event in events:
         # On récupère les dates dans le bon fuseau horaire
-        event_start = event.start.astimezone(timezone.get_default_timezone())
-        event_end = event.end.astimezone(timezone.get_default_timezone())
- 
+        event_date  = event.date
+        event_start = datetime.combine(event_date, event.start )
+        event_end   = event_start + timedelta(minutes=event.duration)
+
         event_list.append({
                     'id': event.id,
                     'start': event_start.strftime('%Y-%m-%d %H:%M:%S'),
@@ -58,9 +57,7 @@ def events_json(request):
 def calendar_show(request,id=0):
     user  = request.user
     form = EventForm(user, request.POST or None)
-    hours = get_hours()
-
-    context = { 'user_shown' : user , 'form' : form , 'hours' : hours ,   }  
+    context = { 'user_shown' : user , 'form' : form ,   }  
 
     return render(request, "lesson/calendar_show.html" , context )
  
@@ -73,20 +70,6 @@ def create_event(request):
     if form.is_valid():
         event = form.save(commit=False)
         event.user = request.user
-        date_of_event = event.start 
-        start_hour = request.POST.get("start_hour")
-        tabs = start_hour.split(":")
-        event.start = date_of_event + timedelta(hours=int(tabs[0]),minutes=int(tabs[1]))
-
-        end_hour = request.POST.get("end_hour")
-        tabe = end_hour.split(":")
- 
-        event.end = date_of_event + timedelta(hours=int(tabe[0]),minutes=int(tabe[1]))
-        
-
-        event.urlCreate=bbb_urlCreate(event)
-        event.urlJoinProf=bbb_urlJoin(event,"MODERATOR", user.first_name+" "+user.last_name)
-        event.urlIsMeetingRunning=bbb_urlIsMeetingRunning(event)
         event.save()  # pour avoir un id, necessaire pour les relations M2M
         users=form.cleaned_data.get("users")
         send_list = []
@@ -103,14 +86,14 @@ def create_event(request):
         #-------------- envoi du mail au prof
         CorpsMessage="""Bonjour, 
 Vous venez de créer une nouvelle leçon intitulée : {}.
-Elle se déroulera le {} de {} à {}.
+Elle se déroulera le {} à {} pour {} minutes.
 Voici le lien qui vous permettra d'accéder à la visio :
 {}
 
 Normalement, la visio sera créée automatiquement 3 minutes avant le rendez-vous. 
 En cas de problème, ou pour la créer à la main, voici le lien :
 {}  
-""".format(str(event.title) ,str(date_of_event.strftime("%A %d/%m")),str(start_hour),str(end_hour),event.urlJoinProf,event.urlCreate)
+""".format(str(event.title) ,str(event.date.strftime("%A %d/%m")),str(event.start),str(event.duration),event.urlJoinProf,event.urlCreate)
         if len(users)==0 :
             CorpsMessage+="Cette leçon n'a pas d'élève, ce qui est curieux..."
         elif len(users)==1 :
@@ -161,15 +144,6 @@ def update_event(request,id):
 
     if form.is_valid():
         new_form = form.save(commit=False)
-        start_hour = request.POST.get("start_hour")
-        tabs = start_hour.split(":")
-        new_form.start = new_form.start + timedelta(hours=int(tabs[0]),minutes=int(tabs[1]))
-
-        #new_form.type_of_event = request.POST.get("type_of_event")
-
-        end_hour = request.POST.get("end_hour")
-        tabe = end_hour.split(":")
-        new_form.end = new_form.end + timedelta(hours=int(tabe[0]),minutes=int(tabe[1]))
         new_form.user = user 
         new_form.urlCreate=bbb_urlCreate(new_form)
         new_form.urlJoinProf=bbb_urlJoin(new_form,"MODERATOR")
@@ -201,7 +175,7 @@ def show_event(request):
  
     data = {}
      
-    html = render_to_string('lesson/show.html',{ 'event' : event  , 'same_day': same_day ,  'form' : form  , 'hours' : get_hours()  , 'Prof' : request.user.user_type==user.TEACHER  })
+    html = render_to_string('lesson/show.html',{ 'event' : event  , 'same_day': same_day ,  'form' : form  , 'Prof' : request.user.user_type==user.TEACHER  })
     data['html'] = html       
 
     return JsonResponse(data)

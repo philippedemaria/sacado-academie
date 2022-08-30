@@ -45,12 +45,11 @@ define(['jquery', 'bootstrap','moment', 'fullcalendar'], function ($) {
       				events: '../events_json',	                  
 					select: function(startDate, endDate) {
 	 						$("#new_event").modal('show');
- 							$("#id_start").val(startDate.format());
- 							$("#id_end").val(endDate.format());
+ 							$("#id_date").val(startDate.format());
 					    },
 	                eventDrop: function(event, delta, revertFunc) {
 
-						if (!confirm(event.title + " est déplacé au " + event.start.format()+". Etes-vous sûr de ce changement ?")) {
+						if (!confirm(event.title + " est déplacé au " + event.date.format()+". Etes-vous sûr de ce changement ?")) {
 						      revertFunc();
 						    }
 						else
@@ -62,7 +61,7 @@ define(['jquery', 'bootstrap','moment', 'fullcalendar'], function ($) {
 					                    dataType: "json",
 					                    data: {
 					                       'event_id': event.id,
-					                       'start_event': event.start.format(),
+					                       'start_event': event.date.format(),
 					                        csrfmiddlewaretoken: csrf_token
 					                    },
 					                    url: "shift_event" ,

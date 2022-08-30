@@ -32,10 +32,10 @@
                     <div class="col-sm-9 col-md-9">                        
                       <div class="event-group">
                             <h3>
-                                Le {{ event.start|date:"l j b Y"  }} 
+                                Le {{ event.date|date:"l j b Y"  }} 
                             </h3>
                             <h5>
-                                De {{ event.start|date:"H:i:s"  }} à {{ event.end|date:"H:i:s"   }}
+                                De {{ event.start|date:"H:i:s"  }} pendant {{ event.duration  }} mintes
                             </h5>
                       </div> 
                     </div> 
