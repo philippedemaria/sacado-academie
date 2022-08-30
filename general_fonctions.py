@@ -368,69 +368,18 @@ def attribute_all_documents_to_students(parcourses, students ):
 
 
 
+
 def attribute_all_documents_of_groups_to_a_new_student(groups, student):
     """  assigner les documents   """
     # Assigne les dossiers et leurs contenus à aprtir d'un groupe
 
     for group in groups :
+        for folder in group.group_folders.all():
+            folder.students.add(student)
 
-        if student.adhesions.last().formule_id == 1 :
-
-            for folder in group.group_folders.all():
-                folder.students.add(student)
-
-                # on supprime si l'élève a été en formule > 1 
-                for parcours in folder.parcours.filter(is_sequence = 1):
-                    parcours.students.remove(student)
-
-                relationships = parcours.parcours_relationship.all()
-                for r in relationships:
-                    r.students.remove(student)
-
-                customexercises = parcours.parcours_customexercises.all()
-                for c in customexercises:
-                    c.students.remove(student)
-
-                courses = parcours.course.all()
-                for course in courses:
-                    course.students.remove(student)  
-           
-                # on attribue si l'élève est en formule  1 
-                for parcours in folder.parcours.filter(is_sequence = 0):
-                    parcours.students.add(student)
-
-                    relationships = parcours.parcours_relationship.all()
-                    for r in relationships:
-                        r.students.add(student)
-
-                    customexercises = parcours.parcours_customexercises.all()
-                    for c in customexercises:
-                        c.students.add(student)
-
-                    courses = parcours.course.all()
-                    for course in courses:
-                        course.students.add(student)
-
-          
-            # Assigne les parcours et leurs contenus 
-            for parcours in group.group_parcours.filter(folders=None,is_sequence = 1):
-                parcours.students.remove(student)
-                relationships = parcours.parcours_relationship.all()
-                for r in relationships:
-                    r.students.remove(student)
-
-                customexercises = parcours.parcours_customexercises.all()
-                for c in customexercises:
-                    c.students.remove(student)
-
-                courses = parcours.course.all()
-                for course in courses:
-                    course.students.remove(student)
- 
-
-            # Assigne les parcours et leurs contenus 
-            for parcours in group.group_parcours.filter(folders=None,is_sequence = 0):
+            for parcours in folder.parcours.all():
                 parcours.students.add(student)
+
                 relationships = parcours.parcours_relationship.all()
                 for r in relationships:
                     r.students.add(student)
@@ -444,78 +393,50 @@ def attribute_all_documents_of_groups_to_a_new_student(groups, student):
                     course.students.add(student)
 
 
-        else :
+                flashpacks = parcours.flashpacks.all()
+                for flashpack in flashpacks:
+                    flashpack.students.add(student)
 
-            for folder in group.group_folders.all():
-                folder.students.add(student)
+                bibliotexs = parcours.bibliotexs.all()
+                for bibliotex in bibliotexs:
+                    bibliotex.students.add(student)
+                    
+                quizz = parcours.quizz.all()
+                for quiz in quizz:
+                    quiz.students.add(student)
+        # Assigne les parcours et leurs contenus 
+        for parcours in group.group_parcours.filter(folders=None):
+            parcours.students.add(student)
+            relationships = parcours.parcours_relationship.all()
+            for r in relationships:
+                r.students.add(student)
 
-                # on supprime si l'élève a été en formule = 1
-                for parcours in folder.parcours.filter(is_sequence = 0):
-                    parcours.students.remove(student)
+            customexercises = parcours.parcours_customexercises.all()
+            for c in customexercises:
+                c.students.add(student)
 
-                    relationships = parcours.parcours_relationship.all()
-                    for r in relationships:
-                        r.students.remove(student)
-
-                    customexercises = parcours.parcours_customexercises.all()
-                    for c in customexercises:
-                        c.students.remove(student)
-
-                    courses = parcours.course.all()
-                    for course in courses:
-                        course.students.remove(student)  
-
-                # on attribue si l'élève est en formule > 1
-                for parcours in folder.parcours.filter(is_sequence = 1):
-                    parcours.students.add(student)
-
-                    relationships = parcours.parcours_relationship.all()
-                    for r in relationships:
-                        r.students.add(student)
-
-                    customexercises = parcours.parcours_customexercises.all()
-                    for c in customexercises:
-                        c.students.add(student)
-
-                    courses = parcours.course.all()
-                    for course in courses:
-                        course.students.add(student)
-
-       
-            # Assigne les parcours et leurs contenus 
-            for parcours in group.group_parcours.filter(folders=None,is_sequence = 0):
-                parcours.students.remove(student)
-                relationships = parcours.parcours_relationship.all()
-                for r in relationships:
-                    r.students.remove(student)
-
-                customexercises = parcours.parcours_customexercises.all()
-                for c in customexercises:
-                    c.students.remove(student)
-
-                courses = parcours.course.all()
-                for course in courses:
-                    course.students.remove(student)
+            courses = parcours.course.all()
+            for course in courses:
+                course.students.add(student)
 
 
-            # Assigne les parcours et leurs contenus 
-            for parcours in group.group_parcours.filter(folders=None,is_sequence =1):
-                parcours.students.add(student)
-                relationships = parcours.parcours_relationship.all()
-                for r in relationships:
-                    r.students.add(student)
+            flashpacks = parcours.flashpacks.all()
+            for flashpack in flashpacks:
+                flashpack.students.add(student)
 
-                customexercises = parcours.parcours_customexercises.all()
-                for c in customexercises:
-                    c.students.add(student)
+            bibliotexs = parcours.bibliotexs.all()
+            for bibliotex in bibliotexs:
+                bibliotex.students.add(student)
+                
+            quizz = parcours.quizz.all()
+            for quiz in quizz:
+                quiz.students.add(student)
 
-                courses = parcours.course.all()
-                for course in courses:
-                    course.students.add(student)
 
 
     test = True
-    
+
+
     return test
 
 
@@ -595,6 +516,18 @@ def attribute_all_documents_of_groups_to_all_new_students(groups):
     test = True
  
     return test
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
