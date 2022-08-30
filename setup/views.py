@@ -1213,8 +1213,8 @@ def save_adhesion(request) :
     formule_adhesion = " période d'essai "+ formule.name 
     formule_name     = formule.name 
     today = time_zone_user(request.user)
-    #date_end_dateformat = today + timedelta(days=7)
-    date_end_dateformat = datetime(2022,8,31)  
+    date_end_dateformat = today + timedelta(days=7)
+    #date_end_dateformat = datetime(2022,8,31)  
     date_end = str(date_end_dateformat)
     menu_id = 1
     ##################################################################################################################
