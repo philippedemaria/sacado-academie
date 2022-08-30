@@ -57,7 +57,8 @@ def events_json(request):
 def calendar_show(request,id=0):
     user  = request.user
     form = EventForm(user, request.POST or None)
-    context = { 'user_shown' : user , 'form' : form ,   }  
+    students = user.teacher.students.all()
+    context = { 'user_shown' : user , 'form' : form ,  'students' : students , }  
 
     return render(request, "lesson/calendar_show.html" , context )
  
@@ -202,7 +203,7 @@ def add_students_to_my_lesson_group(request):
         return redirect('calendar_show' , 0)
 
     today   = time_zone_user(user)
-    students = Student.objects.filter(user__school_id = 50,user__user_type=0, user__closure__lte= today  ).order_by("level__ranking", "user__last_name")
+    students = Student.objects.filter(user__school_id = 50,user__user_type=0, user__closure__gte= today  ).order_by("level__ranking", "user__last_name")
     
     context = { 'user' : user , 'students' : students , 'teacher' : user.teacher   }   
     return render(request, "lesson/add_students_to_my_lesson_group.html" , context )

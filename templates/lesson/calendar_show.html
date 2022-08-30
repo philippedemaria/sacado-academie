@@ -82,16 +82,15 @@
             Mes élèves <a href="{% url 'add_students_to_my_lesson_group' %}" class="pull-right"><i class="bi bi-plus-circle"></i> Ajouter</a><hr/>
  
 
-
                 {% regroup students by level as level_list %}
 
                 {% for l in level_list %}
                     <h4 style="background-color: #f1eef7"> {{ l.grouper }}</h4> 
-                        <ul style="padding: 10px!important;">
-                        {% for s in l.list %} 
-                        <li>{{ s }} <a href="{% url 'delete_student_to_my_lesson_group' s.user.id %}" class="pull-right"><i class="bi bi-trash"></i></a></li> 
-                        {% endfor  %}
-                        </ul>
+                    <ul style="padding: 10px!important;">
+                    {% for s in l.list %} 
+                    <li>{{ s }} <a href="{% url 'delete_student_to_my_lesson_group' s.user.id %}" class="pull-right"><i class="bi bi-trash"></i></a></li> 
+                    {% endfor  %}
+                    </ul>
                     
                 {% endfor %}
 
