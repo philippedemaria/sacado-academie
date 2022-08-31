@@ -307,13 +307,11 @@ def school_adhesion(request):
 
     if request.method == "POST" :
         if  all((u_form.is_valid(), form.is_valid())):   
-
             if token :
                 if int(token) == 7 :
                     school_commit = form.save(commit=False)
                     school_exists, created = School.objects.get_or_create(name = school_commit.name, town = school_commit.town , country = school_commit.country , 
                         code_acad = school_commit.code_acad , defaults={ 'nbstudents' : school_commit.nbstudents , 'logo' : school_commit.logo , 'address' : school_commit.address ,'complement' : school_commit.complement , 'gar' : school_commit.gar }  )
-
 
                     if not created :
                         # si l'établisseent est déjà créé, on la modifie et on récupère son utilisateur.
