@@ -23,11 +23,7 @@
 
     {% include 'qcm/breadcrumb.html' %}
 
-    {% if user.is_testeur or user.is_superuser %} 
-        <a href="#" data-toggle='modal' data-target='#reporting'>
-            <sup><i class="fa fa-comment fa-xs"></i></sup>
-        </a>
-    {% endif %} 
+ 
 
     {% if nb_point_display %}
         <small>{{ nb_point }} - {{ nb_time|int_minutes }}</small> 
