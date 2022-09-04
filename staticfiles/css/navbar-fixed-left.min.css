@@ -552,7 +552,7 @@ position: absolute;
         margin:20px;
     }
 
-    .notification-container {
+.notification-container {
         position: absolute;
         top: 0;
         left: 0;
@@ -565,59 +565,122 @@ position: absolute;
     }
 
 
-    .modal-lg {
+.modal-lg {
         width: 110%;
         margin-left: auto;
         margin-right: auto;
     }
+}
 
+
+
+.horloge p, .calculator p, .situation p {
+ font-size: 10px;
+
+}
+
+.refresh_5x{
+  font-size : 5em;
+}
+
+
+
+.barcode{
+    font-size: 10px
+}
+
+
+.full_screen_size{
+font-size:12px;
+text-align: center
+}
+
+
+
+.img_size_square_75{
+width:75px ;
+height:75px;
+}
+
+
+
+
+
+
+
+
+.double_bottom_padding{
+  margin-bottom: 0px
+}
+
+.form-group {
+    margin-bottom: 15px;
+    margin-top: 20px;
+}
+ 
+
+
+.content_main_exercise {
+  margin-left: 0px;
+  margin-bottom: 15px;
+  /* margin-right: 15px; */
+}
+
+h1, .h1 {
+font-size: 26px;
+}
+
+.refresh_5x{
+          font-size : 5em;
+        }
+
+@media (max-width:660px){
 
     .horloge, .calculator , .situation  {
-     float:left;     
-     margin-right: 30px;
-     text-align: center;
+         float:left;     
+         margin-right: 10px;
+         text-align: center;
+        }
+
+
+    .refresh_5x{
+          font-size : 3.8em;
+        }
+
+    .available_attempt {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 2px solid #F0F0F0;
+            font-size: 30px;
+            padding: 2px 7px;
+            margin: auto;
+        }
+
+      
+    .left_attempt{
+          display: none;
+        }
+
+    .coefficient_small{
+            margin: 5px ;
+        }
+    .coefficient_small_label{
+            margin: 10px 10px 15px 10px;
+        }
+        
+    .barcode{
+          font-size: 10px
+        }
+
+    .full_screen_size{
+      font-size:12px;
+      text-align: center;
+      height:80px;
     }
-
-
-    .horloge p, .calculator p, .situation p {
-     font-size: 10px;
-
-    }
-
-
-    .double_bottom_padding{
-      margin-bottom: 0px
-    }
-
-    .form-group {
-        margin-bottom: 15px;
-        margin-top: 20px;
-    }
- 
+   
     .img_size_square_75{
       width:45px ;
       height:45px;
     }
-
-    .barcode{
-        font-size: 10px
-    }
-
-
- 
-  .content_main_exercise {
-      margin-left: 0px;
-      margin-bottom: 15px;
-      /* margin-right: 15px; */
-  }
- 
-    h1, .h1 {
-    font-size: 26px;
 }
-
-}
-
-
-
-
-

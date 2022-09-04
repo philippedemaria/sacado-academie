@@ -22,14 +22,15 @@
 <section class="content_main content_main_exercise">
     {% get_available relation student  as available %}                                    <!-- Si le nombre de tentative est dépassée ou pas : même code que get_parcours_available mais pour une relationship -->
     {% get_parcours_available parcours student relation.exercise as parcours_available %} <!-- Si le nombre de tentative est dépassée ou pas : même code que get_available pour une parcours -->
-    <div class="col-sm-0 col-md-1 col-lg-1 full_screen_size">
+    <div class="col-sm-12 col-md-1 col-lg-1 full_screen_size">
         {% if student.ebep %}
         <div class="calculator_img"  class="calculator_img double_bottom_padding">
               <a href="#" id="use_tools" ><img src="{% static 'img/situation.png' %}"  class="img_size_square_75" /></a>            
               <p>Outils</p>
         </div>
         {% endif  %} 
-        <div class="calculator_img double_bottom_padding">
+
+        <div class="situation double_bottom_padding">
         {% if relation.exercise.supportfile.calculator %}
  
  
@@ -51,10 +52,14 @@
             <img src="{% static 'img/no_calculator.png' %}"    class="img_size_square_75" />
         {% endif  %} 
         </div>
-        <div class="barcode">
+
+        {% comment %}
+        <div class="situation">
             <a href="#" id="open_draft"><img src="{% static 'img/draft.png' %}"  class="img_size_square_75"  /></a> </br>
         </div>
-        <div class="horloge">
+        {% endcomment %}
+
+        <div class="situation">
             {% if relation.duration == 5 %}
               <img src="{% static 'img/horloge5.png' %}"   class="img_size_square_75" />
             {% elif relation.duration == 10 %}
@@ -85,39 +90,49 @@
             <p> {{ relation.duration }} minute{{ relation.duration|pluralize }}</p>
         </div>
         <div class="situation">
-             <i class="fa fa-refresh fa-5x"  style="color : #5d4391"></i>
+             <i class="fa fa-refresh refresh_5x" style="color : #5d4391"></i>
             <p>{{ relation.situation }} situation{{ relation.situation|pluralize }}</p>
         </div>
         <div class="situation" > 
-        {% if  parcours.maxexo > -1 %}
-            {% with nb_attempt=parcours_available.nbleft  %}
-                <div class="available" id="attempt" style="font-weight:800" >
-                      {{ nb_attempt }} 
-                </div>
-                <p>Tentative{{ nb_attempt|pluralize  }} restante{{ nb_attempt|pluralize  }}</p>
-            {% endwith %}
-        {% else %}
-            {% if  relation.maxexo > -1 %}
-                {% with nb_attempt=available.nbleft  %}
+          {% if  parcours.maxexo > -1 %}
+              {% with nb_attempt=parcours_available.nbleft  %}
+
                   <div class="available" id="attempt" style="font-weight:800" >
-                     {{ nb_attempt }}   
+                        {{ nb_attempt }} 
                   </div>
-                  <p>Tentative{{ nb_attempt|pluralize  }} restante{{ nb_attempt|pluralize  }}</p>
-                {% endwith %}
-            {% else  %} 
-                <div class="available_infinite" id="attempt" style="font-weight:800" > 
-                   $ \infty $ 
-                </div>
-                <p>Tentatives restantes</p>
-            {% endif  %} 
-        {% endif %}
+                  <p>Tentative{{ nb_attempt|pluralize  }} <span class="left_attempt">restante{{ nb_attempt|pluralize  }}</span></p>
+              {% endwith %}
+          {% else %}
+              {% if  relation.maxexo > -1 %}
+                  {% with nb_attempt=available.nbleft  %}
+                    <div class="available" id="attempt" style="font-weight:800" >
+                       {{ nb_attempt }}   
+                    </div>
+                    <p>Tentative{{ nb_attempt|pluralize  }} <span class="left_attempt">restante{{ nb_attempt|pluralize  }}</span></p>
+                  {% endwith %}
+              {% else  %} 
+                  <div class="available_infinite" id="attempt" style="font-weight:800" > 
+                     &infin;  
+                  </div>                  
+                  {% with nb_attempt=available.nbleft  %}
+                  <p>Tentative{{ nb_attempt|pluralize  }} <span class="left_attempt">restante{{ nb_attempt|pluralize  }}</span></p>
+                  {% endwith %}
+              {% endif  %} 
+          {% endif %}
         </div>
-        <div class="barcode">
+
+        <div class="situation coefficient_small" style="text-align: center">
+            <div style="font-weight:800;font-size: 25px;" >{{ relation.coefficient }}</div>
+            <p class="coefficient_small_label">Coefficient</p>
+        </div>
+
+        <div class="barcode left_attempt">
             <i class="fa fa-barcode fa-4x"></i>
             <p>{{ relation.exercise.supportfile.code }}</p>
         </div>
+
     </div>  
-    <div class="col-sm-10 col-md-8 col-lg-8">
+    <div class="col-sm-12 col-md-8 col-lg-8">
       {% for remediation in relation.relationship_remediation.all %}
           {% if remediation.consigne %}
           <audio controls>
