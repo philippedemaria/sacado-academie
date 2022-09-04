@@ -2074,7 +2074,7 @@ def play_printing_teacher(request, id):
     response['Content-Disposition'] = 'attachment; filename="fiche_reponse_'+str(quizz.id)+'.pdf"'
     p = canvas.Canvas(response)
 
-    img_file = 'https://sacado.xyz/static/img/sacado-icon-couleur.jpg'
+    img_file = 'https://sacado-academie.fr/static/img/sacado-icon-couleur.jpg'
     x_start , y_start = 20 , 760
     p.drawImage(img_file, x_start, y_start, width=50, preserveAspectRatio=True )
     x_starting , y_starting = 540 , 760

@@ -516,7 +516,7 @@ def print_proformat_school(request):
     normal = ParagraphStyle(name='Normal',fontSize=10,)
     normalr = ParagraphStyle(name='Normal',fontSize=12,alignment= TA_RIGHT)
  
-    logo = Image('https://sacado.xyz/static/img/sacadoA1.png')  
+    logo = Image('https://sacado-academie.fr/static/img/sacadoA1.png')  
     logo_tab = [[logo, "SAS SANSPB \n2B avenue de la pinède \n83400 La Capte Hyères \nFrance" ]]
     logo_tab_tab = Table(logo_tab, hAlign='LEFT', colWidths=[0.7*inch,5*inch])
 
@@ -834,7 +834,7 @@ def creation_facture(facture):
     normalr = ParagraphStyle(name='Normal',fontSize=12,alignment= TA_RIGHT)
      #### Mise en place du logo
     #logo = Image('D:/uwamp/www/sacadogit/sacado/static/img/sacadoA1.png') # local
-    logo = Image('https://sacado.xyz/static/img/sacadoA1.png') # on a server
+    logo = Image('https://sacado-academie.fr/static/img/sacadoA1.png') # on a server
     logo_tab = [[logo, "SACADO" ]]
     logo_tab_tab = Table(logo_tab, hAlign='LEFT', colWidths=[0.7*inch,5*inch])
     logo_tab_tab.setStyle(TableStyle([ ('TEXTCOLOR', (0,0), (-1,0), colors.Color(0,0.5,0.62))]))

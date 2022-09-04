@@ -93,7 +93,7 @@ active
 {% endcomment %}  
 
 
-{% if request.user.is_in_academy and request.user.student.data_menu.id > 2 %}
+{% if request.user.is_in_academy and request.user.student.data_menu.id > 1 %}
 <li class='dropdown'>
     <a href="{% url 'list_discussion_lesson' request.user.id %}" class="main" >
         <i class="bi bi-envelope icon_size"></i> 
@@ -103,7 +103,7 @@ active
 {% endif %}
 
 
-{% if request.user.is_in_academy and request.user.student.data_menu.id > 3 %}
+{% if request.user.is_in_academy and request.user.student.data_menu.id > 2 %}
 <li class='dropdown'>
     <a href="{% url 'detail_student_lesson' request.user.id %}" class="main" >
         <i class="bi bi-camera-video icon_size"></i> 

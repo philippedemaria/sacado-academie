@@ -1,8 +1,9 @@
 {% load static %}
 {% load widget_tweaks %} 
+{% load item_tags %} 
 
 <script>
-    console.log("cfoucou")  ; 
+
 
     $('#update_div').hide();
 
@@ -35,7 +36,7 @@
                                 Le {{ event.date|date:"l j b Y"  }} 
                             </h3>
                             <h5>
-                                De {{ event.start|date:"H:i:s"  }} pendant {{ event.duration  }} mintes
+                                De {{ event.start|date:"H:i:s"  }} pendant {{ event.duration|int_minutes  }} minutes
                             </h5>
                       </div> 
                     </div> 
@@ -73,4 +74,4 @@
           </div>
       </div>
 
-
+ 

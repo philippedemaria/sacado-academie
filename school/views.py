@@ -800,8 +800,8 @@ def print_bill_school(request,a_id):
     normal = ParagraphStyle(name='Normal',fontSize=10,)
     normalr = ParagraphStyle(name='Normal',fontSize=12,alignment= TA_RIGHT)
  
-    logo = Image('https://sacado.xyz/static/img/sacadoA1.png')  
-    logo_tab = [[logo, "ASSOCIATION SACADO.XYZ \n2B avenue de la pinède \n83400 La Capte Hyères \nFrance" ]]
+    logo = Image('https://sacado-academie.fr/static/img/sacadoA1.png')  
+    logo_tab = [[logo, "ASSOCIATION sacado-academie.fr \n2B avenue de la pinède \n83400 La Capte Hyères \nFrance" ]]
     logo_tab_tab = Table(logo_tab, hAlign='LEFT', colWidths=[0.7*inch,5*inch])
 
     elements.append(logo_tab_tab)
@@ -821,7 +821,7 @@ def print_bill_school(request,a_id):
     demandeur =  school_datas+   "\n\nMontant de la cotisation : "+str(school.amount )+"€" 
 
 
-    demandeur_tab = [[demandeur, "ASSOCIATION SACADO.XYZ \n2B avenue de la pinède \n83400 La Capte \nHyères \nFrance \n\n\n\n" ]]
+    demandeur_tab = [[demandeur, "ASSOCIATION sacado-academie.fr \n2B avenue de la pinède \n83400 La Capte \nHyères \nFrance \n\n\n\n" ]]
     demandeur_tab_tab = Table(demandeur_tab, hAlign='LEFT', colWidths=[5*inch,2*inch])
 
     elements.append(demandeur_tab_tab)
@@ -829,7 +829,7 @@ def print_bill_school(request,a_id):
 
 
 
-    my_texte_ = "Sous réserve du bon fonctionnement de son hébergeur LWS, l'association SACADO met l'ensemble des fonctionnalités du site https://sacado.xyz à disposition des enseignants de l'établissement sus-mentionné et dénommé par "+school.name+"."
+    my_texte_ = "Sous réserve du bon fonctionnement de son hébergeur LWS, l'association SACADO met l'ensemble des fonctionnalités du site https://sacado-academie.fr à disposition des enseignants de l'établissement sus-mentionné et dénommé par "+school.name+"."
     paragraph = Paragraph( my_texte_  , normal )
     elements.append(paragraph)
     elements.append(Spacer(0, 0.2*inch))
@@ -930,14 +930,14 @@ def send_account(request, id):
 		school = this_school_in_session(request)
 		for user in school.users.filter(user_type=2):
 			if user.email : 
-				msg = f'Bonjour, votre compte Sacado est disponible.\r\n\r\nVotre identifiant est {user.username} \r\n\r\nPour une première connexion, le mot de passe est : sacado2020 . Il faut le modifier lors de la première connexion.\r\n\r\n Dans le cas contraire, utilisez votre mot de passe habituel.\r\n\r\nPour vous connecter, redirigez-vous vers https://sacado.xyz.\r\n\r\nCeci est un mail automatique. Ne pas répondre.'
-				send_mail('Compte Sacado', msg ,'info@sacado.xyz', [user.email])
+				msg = f'Bonjour, votre compte Sacado est disponible.\r\n\r\nVotre identifiant est {user.username} \r\n\r\nPour une première connexion, le mot de passe est : sacado2020 . Il faut le modifier lors de la première connexion.\r\n\r\n Dans le cas contraire, utilisez votre mot de passe habituel.\r\n\r\nPour vous connecter, redirigez-vous vers https://sacado-academie.fr.\r\n\r\nCeci est un mail automatique. Ne pas répondre.'
+				send_mail('Compte Sacado', msg ,'info@sacado-academie.fr', [user.email])
 
 	else:
 		user = User.objects.get(id=id)
 		if user.email : 
-			msg = f'Bonjour, votre compte Sacado est disponible.\r\n\r\nVotre identifiant est {user.username} \r\n\r\nPour une première connexion, le mot de passe est : sacado2020 . Il faut le modifier lors de la première connexion.\r\n\r\n Dans le cas contraire, utilisez votre mot de passe habituel.\r\n\r\nPour vous connecter, redirigez-vous vers https://sacado.xyz.\r\n\r\nCeci est un mail automatique. Ne pas répondre.'
-			send_mail('Compte Sacado', msg ,'info@sacado.xyz', [user.email])
+			msg = f'Bonjour, votre compte Sacado est disponible.\r\n\r\nVotre identifiant est {user.username} \r\n\r\nPour une première connexion, le mot de passe est : sacado2020 . Il faut le modifier lors de la première connexion.\r\n\r\n Dans le cas contraire, utilisez votre mot de passe habituel.\r\n\r\nPour vous connecter, redirigez-vous vers https://sacado-academie.fr.\r\n\r\nCeci est un mail automatique. Ne pas répondre.'
+			send_mail('Compte Sacado', msg ,'info@sacado-academie.fr', [user.email])
 
 	
 
@@ -987,7 +987,7 @@ def pdf_account(request,id):
 		p.setFont("Helvetica", 12)
 		p.drawString(50, 490, "Si vous avez déjà un compte, utilisez votre mot de passe habituel.")
 		p.setFont("Helvetica", 12)
-		p.drawString(50, 460, "Pour vous connecter, redirigez-vous vers https://sacado.xyz.")
+		p.drawString(50, 460, "Pour vous connecter, redirigez-vous vers https://sacado-academie.fr.")
 		p.showPage()
 	p.save()
  

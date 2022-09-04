@@ -58,7 +58,7 @@ def create_abonnement_gar(today,school,abonnement ,user):
 
     header  =  { 'Content-type': 'application/xml;charset=utf-8' , 'Accept' : 'application/xml' } 
     body      = web_abonnement_xml(abonnement,id_abonnement, today) 
-    r         = requests.put(host, data=body, headers=header, cert=(directory + 'sacado.xyz-PROD-2021.pem', directory + 'sacado_prod.key'))
+    r         = requests.put(host, data=body, headers=header, cert=(directory + 'sacado-academie.fr-PROD-2021.pem', directory + 'sacado_prod.key'))
 
     if r.status_code == 201 or r.status_code==200 :
         return True , "ok" , "ok" , "ok" 

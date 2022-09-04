@@ -104,10 +104,15 @@
 
 <div class="modal fade" id="new_event" tabindex="-1" role="dialog" aria-labelledby="new_event" aria-hidden="true" >
   <div class="modal-dialog" role="document">
-    <form  action="{% url 'create_event' %}" method="POST">
-      {% csrf_token %}  
+
+
+
+
         {% include 'lesson/form.html' %}
-    </form>
+ 
+
+
+
   </div>
 </div>
 

@@ -319,7 +319,7 @@ def create_discussion(request):
 
 				try :
 					for teacher in Teacher.objects.filter(is_mailing=1).values_list("user__email",flat=True).distinct():
-						send_mail("sacado Forum : " +new_f.discussion  , cleanhtml(unescape_html(new_f.texte)) +"\n Pour répondre connectez-vous à Sacado : https://sacado.xyz", settings.DEFAULT_FROM_EMAIL, [teacher.user.email] )
+						send_mail("sacado Forum : " +new_f.discussion  , cleanhtml(unescape_html(new_f.texte)) +"\n Pour répondre connectez-vous à Sacado : https://sacado-academie.fr", settings.DEFAULT_FROM_EMAIL, [teacher.user.email] )
 				except :
 					pass
 				return redirect('emails')
@@ -360,7 +360,7 @@ def show_discussion(request,idd):
 					for e in discussion.discussion_message.values_list("user__email",flat=True).distinct():
 						dest.append(e)
  
-					send_mail("sacado Forum : " +new_f.discussion  , cleanhtml(unescape_html(new_f.texte)) +"\n Pour répondre connectez-vous à Sacado : https://sacado.xyz", settings.DEFAULT_FROM_EMAIL, dest )
+					send_mail("sacado Forum : " +new_f.discussion  , cleanhtml(unescape_html(new_f.texte)) +"\n Pour répondre connectez-vous à Sacado : https://sacado-academie.fr", settings.DEFAULT_FROM_EMAIL, dest )
 				except :
 					pass
 			else :
@@ -474,7 +474,7 @@ def show_discussion_lesson(request,idd):
 					for e in discussion.discussion_message.values_list("user__email",flat=True).distinct():
 						dest.append(e)
  
-					send_mail("sacado Forum : " +new_f.discussion  , cleanhtml(unescape_html(new_f.texte)) +"\n Pour répondre connectez-vous à Sacado : https://sacado.xyz", settings.DEFAULT_FROM_EMAIL, dest )
+					send_mail("sacado Forum : " +new_f.discussion  , cleanhtml(unescape_html(new_f.texte)) +"\n Pour répondre connectez-vous à Sacado : https://sacado-academie.fr", settings.DEFAULT_FROM_EMAIL, dest )
 				except :
 					pass
 			else :

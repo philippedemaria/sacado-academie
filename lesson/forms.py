@@ -1,5 +1,5 @@
 from django import forms
-from .models import Event,ConnexionEleve 
+from .models import Event,ConnexionEleve , Slot
 from account.models import User
 from datetime import datetime, timedelta
 from django.core.exceptions import ValidationError
@@ -58,21 +58,19 @@ class EventForm(forms.ModelForm):
 
  
 
+ 
 
 
-"""	def clean(self):
-		cleaned_data=super().clean()
-		sstart=cleaned_data.get("start")  #start de self
-		send=cleaned_data.get('end')      # end de self
 
-		if sstart>=send :
-			raise ValidationError("La date de début est postérieure à la date de fin", code="datesinversees")
-		        # verification : pas de conflit avec une autre visio du prof
-		test1=Event.objects.filter(user=user,start__lte=sstart, end__gte=sstart)
-		if len(test1)!=0 :
-			raise ValidationError("Cette visio est en conflit avec la visio "+str(test1[0]), code="conflitVisios")
-            
-		test2=Event.objects.filter(user=user,start__gte=sstart, start__lte=send)
-		if len(test2)!=0 :
-			raise ValidationError("Cette visio est en conflit avec la visio "+str(test2[0]), code="conflitVisios")
-"""
+class SlotForm(forms.ModelForm):
+
+	class Meta:
+	    model = Slot
+	    fields =  ( 'user', 'datetime')	    
+
+
+	def __init__(self, user, *args, **kwargs):
+		super(SlotForm, self).__init__(*args, **kwargs)
+
+
+ 

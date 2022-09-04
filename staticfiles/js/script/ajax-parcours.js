@@ -1326,32 +1326,9 @@ define(['jquery','bootstrap'], function ($) {
 
 
  
-        // $('.select_this').on('click', function (event) {
-
-        //     let parcours_id = $(this).data("parcours_id"); 
-        //     let group_id    = $(this).data("group_id"); 
-        //     let csrf_token  = $("input[name='csrfmiddlewaretoken']").val();
-
-        //     $.ajax(
-        //         {
-        //             type: "POST",
-        //             dataType: "json",
-        //             data: {
-        //                 csrfmiddlewaretoken: csrf_token,
-        //                 'parcours_id': parcours_id,
-        //                 'group_id': group_id,
-        //             },
-        //             url: "ajax_group_to_parcours",
-        //             success: function (data) {
-
-        //                 $('#gp'+ parcours_id ).html( data.html );  
-
-        //             }
-        //         }
-        //     )
-        // });
-
-
+        // Permet d'avoir les vignettes de cours plus jolies
+        $(".display_annoncement_for_courses").find("*").css("font-size","12px");
+        $('.display_annoncement_for_courses').find("table").css("width","0px");
 
     });
 });

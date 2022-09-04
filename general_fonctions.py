@@ -186,30 +186,30 @@ def code_couleur(score,teacher):
         stage = Stage.objects.get(school = teacher.user.school)
         if score < stage.low :
             #return Image('D:/uwamp/www/sacado/static/img/code_red.png')
-            return Image('https://sacado.xyz/static/img/code_red.png')
+            return Image('https://sacado-academie.fr/static/img/code_red.png')
         elif score < stage.medium :
             #return Image('D:/uwamp/www/sacado/static/img/code_orange.png')
-            return Image('https://sacado.xyz/static/img/code_orange.png')
+            return Image('https://sacado-academie.fr/static/img/code_orange.png')
         elif score < stage.up :
             #return Image('D:/uwamp/www/sacado/static/img/code_green.png')
-            return Image('https://sacado.xyz/static/img/code_green.png')
+            return Image('https://sacado-academie.fr/static/img/code_green.png')
         else :
             #return Image('D:/uwamp/www/sacado/static/img/code_darkgreen.png')
-            return Image('https://sacado.xyz/static/img/code_darkgreen.png')
+            return Image('https://sacado-academie.fr/static/img/code_darkgreen.png')
 
     except :
         if score < 25 :
             #return Image('D:/uwamp/www/sacado/static/img/code_red.png')
-            return Image('https://sacado.xyz/static/img/code_red.png')
+            return Image('https://sacado-academie.fr/static/img/code_red.png')
         elif score < 50 :
             #return Image('D:/uwamp/www/sacado/static/img/code_orange.png')
-            return Image('https://sacado.xyz/static/img/code_orange.png')
+            return Image('https://sacado-academie.fr/static/img/code_orange.png')
         elif score < 75 :
             #return Image('D:/uwamp/www/sacado/static/img/code_green.png')
-            return Image('https://sacado.xyz/static/img/code_green.png')
+            return Image('https://sacado-academie.fr/static/img/code_green.png')
         else :
             #return Image('D:/uwamp/www/sacado/static/img/code_darkgreen.png')
-            return Image('https://sacado.xyz/static/img/code_darkgreen.png')
+            return Image('https://sacado-academie.fr/static/img/code_darkgreen.png')
 
 
 

@@ -887,8 +887,8 @@ def print_accounting(request, id ):
     ### Logo Sacado
     #########################################################################################
     dateur = "Date : " + accounting.date.strftime("%d-%m-%Y")
-    logo = Image('https://sacado.xyz/static/img/sacadoA1.png')
-    logo_tab = [[logo, "Association SacAdo\nhttps://sacado.xyz \nassociation@sacado.xyz", dateur]]
+    logo = Image('https://sacado-academie.fr/static/img/sacadoA1.png')
+    logo_tab = [[logo, "Association SacAdo\nhttps://sacado-academie.fr \nassociation@sacado-academie.fr", dateur]]
     logo_tab_tab = Table(logo_tab, hAlign='LEFT', colWidths=[0.7*inch,5.2*inch,inch])
     elements.append(logo_tab_tab)
     #########################################################################################
@@ -1141,8 +1141,8 @@ def print_bilan(request):
     #########################################################################################
     ### Logo Sacado
     #########################################################################################
-    logo = Image('https://sacado.xyz/static/img/sacadoA1.png')
-    logo_tab = [[logo, "Association SacAdo \nContact : assocation@sacado.xyz"]]
+    logo = Image('https://sacado-academie.fr/static/img/sacadoA1.png')
+    logo_tab = [[logo, "Association SacAdo \nContact : assocation@sacado-academie.fr"]]
     logo_tab_tab = Table(logo_tab, hAlign='LEFT', colWidths=[0.7*inch,5.52*inch])
     logo_tab_tab.setStyle(TableStyle([ ('TEXTCOLOR', (0,0), (-1,0), colors.Color(0,0.5,0.62))]))
     elements.append(logo_tab_tab)
@@ -1384,8 +1384,8 @@ def create_voting(request,id):
         nf.save()
         try : 
             rcv = ["sacado.asso@gmail.com"]
-            msg = "Une proposition de membre est postée par "+str(request.user)+". Rendez-vous sur https://sacado.xyz"
-            send_mail("Proposition de membre", msg , 'info@sacado.xyz', rcv)
+            msg = "Une proposition de membre est postée par "+str(request.user)+". Rendez-vous sur https://sacado-academie.fr"
+            send_mail("Proposition de membre", msg , 'info@sacado-academie.fr', rcv)
         except :
             pass
         return redirect('list_associate')

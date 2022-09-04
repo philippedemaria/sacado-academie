@@ -755,7 +755,7 @@ def show_group(request, id ):
     authorizing_access_group(request,teacher,group )
 
     factory = qrcode.image.svg.SvgImage
-    img = qrcode.make('https://sacado.xyz/group/'+group.code , image_factory=factory, box_size=40)
+    img = qrcode.make('https://sacado-academie.fr/group/'+group.code , image_factory=factory, box_size=40)
     stream = BytesIO()
     img.save(stream)
     show_qr = stream.getvalue().decode()
@@ -1280,7 +1280,7 @@ def enroll(request, slug):
                 try :    
                     if user_form.cleaned_data['email']:
                         send_mail('Création de compte sur Sacado',
-                                  'Bonjour, votre compte SacAdo est maintenant disponible. \n\n Votre identifiant est '+str(username) +". \n Votre mot de passe est "+str(password)+'.\n\n Pour vous connecter, redirigez-vous vers https://sacado.xyz.\n Ceci est un mail automatique. Ne pas répondre.',
+                                  'Bonjour, votre compte SacAdo est maintenant disponible. \n\n Votre identifiant est '+str(username) +". \n Votre mot de passe est "+str(password)+'.\n\n Pour vous connecter, redirigez-vous vers https://sacado-academie.fr.\n Ceci est un mail automatique. Ne pas répondre.',
                                   settings.DEFAULT_FROM_EMAIL,
                                   [request.POST.get("email")])
                 except :
@@ -1485,7 +1485,7 @@ def print_statistiques(request, group_id, student_id):
 
     for student in students :
         #logo = Image('D:/uwamp/www/sacado/static/img/sacadoA1.png')
-        logo = Image('https://sacado.xyz/static/img/sacadoA1.png')
+        logo = Image('https://sacado-academie.fr/static/img/sacadoA1.png')
         logo_tab = [[logo, "SACADO \nBilan des acquisitions" ]]
         logo_tab_tab = Table(logo_tab, hAlign='LEFT', colWidths=[0.7*inch,5*inch])
         logo_tab_tab.setStyle(TableStyle([ ('TEXTCOLOR', (0,0), (-1,0), colors.Color(0,0.5,0.62))]))
@@ -1816,7 +1816,7 @@ def print_monthly_statistiques(request):
 
     for student in students :
         #logo = Image('D:/uwamp/www/sacado/static/img/sacadoA1.png')
-        logo = Image('https://sacado.xyz/static/img/sacadoA1.png')
+        logo = Image('https://sacado-academie.fr/static/img/sacadoA1.png')
         logo_tab = [[logo, "SACADO Académie\nBilan des acquisitions" ]]
         logo_tab_tab = Table(logo_tab, hAlign='LEFT', colWidths=[0.7*inch,5*inch])
         logo_tab_tab.setStyle(TableStyle([ ('TEXTCOLOR', (0,0), (-1,0), colors.Color(0,0.5,0.62))]))
@@ -1972,13 +1972,13 @@ def print_monthly_statistiques(request):
     p = canvas.Canvas(response)
     i = 1
 
-    img_file = 'https://sacado.xyz/static/img/sacado-icon-couleur.jpg'
+    img_file = 'https://sacado-academie.fr/static/img/sacado-icon-couleur.jpg'
     x_start  = 20
     for student in group.students.exclude(user__username__contains= "_e-test") :
 
     # Create the HttpResponse object with the appropriate PDF headers.
         string0 = "Bonjour {} {},".format(student.user.first_name, student.user.last_name) 
-        string1 = "allez sur le site https://sacado.xyz et cliquez sur le bouton bleu Se connecter." 
+        string1 = "allez sur le site https://sacado-academie.fr et cliquez sur le bouton bleu Se connecter." 
         string2 = "Votre identifiant est : {}    . Votre mot de passe est :    sacado2020".format(student.user.username)
         p.setFont("Helvetica", 12)
 
@@ -2021,7 +2021,7 @@ def print_ids(request, id):
 
     p = canvas.Canvas(response)
     i = 1
-    img_file = 'https://sacado.xyz/static/img/sacado-icon-couleur.jpg'
+    img_file = 'https://sacado-academie.fr/static/img/sacado-icon-couleur.jpg'
     x_start  = 20
     for i in range(len(students)//2) :
         y_start = 860-100*i
@@ -2036,7 +2036,7 @@ def print_ids(request, id):
             ]
         )
 
-    logo = Image('https://sacado.xyz/static/img/sacado_print.jpg')
+    logo = Image('https://sacado-academie.fr/static/img/sacado_print.jpg')
     logo.drawWidth  = 0.4*inch
     logo.drawHeight = 1.3*inch 
     
@@ -2053,7 +2053,7 @@ def print_ids(request, id):
             msg += "\nsite d'entrainement personnalisé "
             msg += "\nauto-corrigé,vous a été fourni."
             msg += "\nVous pouvez vous connecter sur"
-            msg += "\nsacado.xyz avec les identifiants suivants :"
+            msg += "\nsacado-academie.fr avec les identifiants suivants :"
             msg += "\n   Id : {} \n   Mot de passe : sacado2020".format(student.user.username)
             liste.append(msg) 
             grid.append( ('BOX', (0,i), (1,i), 0.25, colors.gray, None, (2,2,1)) )
@@ -2067,7 +2067,7 @@ def print_ids(request, id):
         msg += "\nsite d'entrainement personnalisé "
         msg += "\nauto-corrigé,vous a été fourni."
         msg += "\nVous pouvez vous connecter sur"
-        msg += "\nsacado.xyz avec le code suivant :"
+        msg += "\nsacado-academie.fr avec le code suivant :"
         msg += "\n   Id : {} \n   Mot de passe : sacado2020".format(students[len(students)-1].user.username)          
         dataset.append( (logo,msg) )
         grid.append( ('BOX', (0,i+1), (1,i+1), 0.25, colors.gray, None, (2,2,1)) )
@@ -2113,7 +2113,7 @@ def print_list_ids(request, id):
             ]
         )
 
-    logo = Image('https://sacado.xyz/static/img/sacadoA1.png')
+    logo = Image('https://sacado-academie.fr/static/img/sacadoA1.png')
     logo_tab = [[logo, "SACADO \nListes des identifiants par élève" ]]
     logo_tab_tab = Table(logo_tab, hAlign='LEFT', colWidths=[0.7*inch,5*inch])
     logo_tab_tab.setStyle(TableStyle([ ('TEXTCOLOR', (0,0), (-1,0), colors.Color(0,0.5,0.62))]))
@@ -2181,7 +2181,7 @@ def print_school_ids(request):
             teacher = Teacher.objects.get(user=request.user)
 
 
-            logo = Image('https://sacado.xyz/static/img/sacadoA1.png')
+            logo = Image('https://sacado-academie.fr/static/img/sacadoA1.png')
             logo_tab = [[logo, "SACADO "+group.name+"\nListes de identifiants par élève" ]]
             logo_tab_tab = Table(logo_tab, hAlign='LEFT', colWidths=[0.7*inch,5*inch])
             logo_tab_tab.setStyle(TableStyle([ ('TEXTCOLOR', (0,0), (-1,0), colors.Color(0,0.5,0.62))]))

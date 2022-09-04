@@ -6,33 +6,34 @@ from xml.etree import ElementTree # pour lire le xml de la reponse de BBB
 from subprocess import Popen,run
 from django.utils import timezone
 from django.shortcuts import render, redirect
-from lesson.models import Event, ConnexionEleve
-from lesson.forms import EventForm
+from lesson.models import Event, ConnexionEleve , Slot
+from lesson.forms import EventForm , SlotForm
 from account.models import User, Student , Parent, Teacher
 from school.models import School
 import locale
 locale.setlocale(locale.LC_TIME,'')
-from datetime import datetime,timedelta
+
 from django.template.loader import render_to_string
 from django.http import JsonResponse 
 #from django.core import serializers
 from django.core.mail import send_mail
 from general_fonctions import time_zone_user
-from datetime import datetime, timedelta
+ 
 
 import urllib.parse
 import requests # debuggage, à enlever en developpement
 from hashlib import sha1  # pour l'API de bbb
 from lesson.models import *
-
+from datetime import datetime, timedelta , time as temps
 
 
 def events_json(request):
 
     user =  request.user 
     events = user.events.all()
-    event_list = []
+    slots = user.slots.all()
 
+    event_list = []
     for event in events:
         # On récupère les dates dans le bon fuseau horaire
         event_date  = event.date
@@ -47,6 +48,18 @@ def events_json(request):
                     'color' : event.color,
                     })
 
+    for slot in slots:
+        # On récupère les dates dans le bon fuseau horaire
+        slot_start = slot.datetime
+        slot_end   = slot_start + timedelta(minutes=15)
+        event_list.append({
+                    'id': event.id,
+                    'start': slot_start.strftime('%Y-%m-%d %H:%M:%S'),
+                    'end': slot_end.strftime('%Y-%m-%d %H:%M:%S'),
+                    'title': "",
+                    'color' : '#CCC',
+                    })
+
     if len(event_list) == -1: 
         raise http.Http404
     else:
@@ -55,10 +68,23 @@ def events_json(request):
 
 
 def calendar_show(request,id=0):
-    user  = request.user
-    form = EventForm(user, request.POST or None)
-    students = user.teacher.students.all()
-    context = { 'user_shown' : user , 'form' : form ,  'students' : students , }  
+
+    hours = []
+    hour, minute = 8,0
+    for i in range(12) :
+        for j in range(4) :
+            minute = 15*j
+            if minute == 0:
+                minute = "00"
+            time = str(hour)+":"+str(minute)
+            hours.append(time)
+        hour=hour+1
+
+    user      = request.user
+    form      = EventForm(user, request.POST or None)
+    form_slot = SlotForm(user, request.POST or None)
+    students  = user.teacher.students.all()
+    context   = { 'user_shown' : user , 'form' : form , 'hours' : hours , 'form_slot' : form_slot ,  'students' : students , }  
 
     return render(request, "lesson/calendar_show.html" , context )
  
@@ -66,71 +92,91 @@ def calendar_show(request,id=0):
 
 def create_event(request):
 
-    user =  request.user  
-    form = EventForm(user, request.POST or None)
-    if form.is_valid():
-        event = form.save(commit=False)
-        event.user = request.user
-        event.save()  # pour avoir un id, necessaire pour les relations M2M
-        users=form.cleaned_data.get("users")
-        send_list = []
-        ListeUrls=[]
-        for eleve in users :
-            event.users.add(eleve)
-            conn=ConnexionEleve.objects.get(event=event,user=eleve)
-            conn.urlJoinEleve=bbb_urlJoin(event,"VIEWER",eleve.first_name+" "+user.last_name)
-            ListeUrls.append(conn.urlJoinEleve)
-            conn.save()
-            if eleve.email!=None : 
-                send_list.append(eleve.email)    
-        event.save()
-        #-------------- envoi du mail au prof
-        CorpsMessage="""Bonjour, 
-Vous venez de créer une nouvelle leçon intitulée : {}.
-Elle se déroulera le {} à {} pour {} minutes.
-Voici le lien qui vous permettra d'accéder à la visio :
-{}
+    user   =  request.user  
+    form   = EventForm(user, request.POST or None)
+    form_s = SlotForm(user, request.POST or None)
 
-Normalement, la visio sera créée automatiquement 3 minutes avant le rendez-vous. 
-En cas de problème, ou pour la créer à la main, voici le lien :
-{}  
-""".format(str(event.title) ,str(event.date.strftime("%A %d/%m")),str(event.start),str(event.duration),event.urlJoinProf,event.urlCreate)
-        if len(users)==0 :
-            CorpsMessage+="Cette leçon n'a pas d'élève, ce qui est curieux..."
-        elif len(users)==1 :
-            CorpsMessage+="Cette leçon est destinée à {} {}, et son lien d'accès est : \n{}\n"\
-            .format(users[0].first_name.capitalize(), users[0].last_name.capitalize(),ListeUrls[0])
-        else :
-            CorpsMessage+="Voici la liste des élèves inscrits à cette leçon, et leurs liens d'accès respectifs : \n"
-			
+    is_lesson = request.POST.get("is_lesson",None)
+    duration  = request.POST.get("duration",None)
+
+    #new_form.start = new_form.start + timedelta(hours=int(tabs[0]),minutes=int(tabs[1]))
+    if is_lesson == "1" :
+        if form.is_valid():
+            event = form.save(commit=False)
+            event.user = request.user
+            event.save()  # pour avoir un id, necessaire pour les relations M2M
+            users=form.cleaned_data.get("users")
+            send_list = []
+            ListeUrls=[]
+            for eleve in users :
+                event.users.add(eleve)
+                conn=ConnexionEleve.objects.get(event=event,user=eleve)
+                conn.urlJoinEleve=bbb_urlJoin(event,"VIEWER",eleve.first_name+" "+user.last_name)
+                ListeUrls.append(conn.urlJoinEleve)
+                conn.save()
+                if eleve.email!=None : 
+                    send_list.append(eleve.email)    
+            event.save()
+            #-------------- envoi du mail au prof
+            CorpsMessage="""Bonjour, 
+            Vous venez de créer une nouvelle leçon intitulée : {}.
+            Elle se déroulera le {} à {} pour {} minutes.
+            Voici le lien qui vous permettra d'accéder à la visio :
+            {}
+
+            Normalement, la visio sera créée automatiquement 3 minutes avant le rendez-vous. 
+            En cas de problème, ou pour la créer à la main, voici le lien :
+            {}  
+            """.format(str(event.title) ,str(event.date.strftime("%A %d/%m")),str(event.start),str(event.duration),event.urlJoinProf,event.urlCreate)
+            if len(users)==0 :
+                CorpsMessage+="Cette leçon n'a pas d'élève, ce qui est curieux..."
+            elif len(users)==1 :
+                CorpsMessage+="Cette leçon est destinée à {} {}, et son lien d'accès est : \n{}\n"\
+                .format(users[0].first_name.capitalize(), users[0].last_name.capitalize(),ListeUrls[0])
+            else :
+                CorpsMessage+="Voici la liste des élèves inscrits à cette leçon, et leurs liens d'accès respectifs : \n"
+    			
+                for i,eleve in enumerate(users):
+                    CorpsMessage+=" - {} {} \n   {}\n".format(eleve.first_name.capitalize(),eleve.last_name.capitalize(),ListeUrls[i])
+            CorpsMessage+="Cordialement,\nL'équipe de Sacado Académie"	  
+            send_mail("Création d'une leçon",CorpsMessage,DEFAULT_FROM_EMAIL,[user.email])
+            #---------------envoi du mail aux parents d'élèves et eventuellement aux eleves.
             for i,eleve in enumerate(users):
-                CorpsMessage+=" - {} {} \n   {}\n".format(eleve.first_name.capitalize(),eleve.last_name.capitalize(),ListeUrls[i])
-        CorpsMessage+="Cordialement,\nL'équipe de Sacado Académie"	  
-        send_mail("Création d'une leçon",CorpsMessage,DEFAULT_FROM_EMAIL,[user.email])
-        #---------------envoi du mail aux parents d'élèves et eventuellement aux eleves.
-        for i,eleve in enumerate(users):
-            student=Student.objects.get(user=eleve)
-            dest=[p.user.email for p in student.students_parent.all()]
-            if eleve.email != None : 
-                dest.append(eleve.email) 
-            send_mail("Programmation d'une leçon par visio","""
-Bonjour,
-Une leçon par visio a été programmée par {} {}, à destination de {} {}.
-Elle aura lieu le {} de {} à {}.
-Voici le lien d'accès à la visio :
+                student=Student.objects.get(user=eleve)
+                dest=[p.user.email for p in student.students_parent.all()]
+                if eleve.email != None : 
+                    dest.append(eleve.email) 
+                send_mail("Programmation d'une leçon par visio","""
+            Bonjour,
+            Une leçon par visio a été programmée par {} {}, à destination de {} {}.
+            Elle aura lieu le {} de {} à {}.
+            Voici le lien d'accès à la visio :
 
-{}
+            {}
 
-Merci de bien vouloir contacter l'enseignant à l'adresse {} en cas d'indisponibilité.
+            Merci de bien vouloir contacter l'enseignant à l'adresse {} en cas d'indisponibilité.
 
-Très cordialement,
+            Très cordialement,
 
-L'équipe Sacado Académie.
-""".format(user.civilite,user.last_name.capitalize(),eleve.first_name.capitalize(),eleve.last_name.capitalize(), 
-           str(date_of_event.strftime("%A %d/%m")),str(start_hour),str(end_hour),ListeUrls[i],user.email),DEFAULT_FROM_EMAIL,dest) 
-    else:
-        print(form.errors)
-        
+            L'équipe Sacado Académie.
+            """.format(user.civilite,user.last_name.capitalize(),eleve.first_name.capitalize(),eleve.last_name.capitalize(), 
+                       str(date_of_event.strftime("%A %d/%m")),str(start_hour),str(end_hour),ListeUrls[i],user.email),DEFAULT_FROM_EMAIL,dest) 
+        else :  
+            print(form.errors)
+    else :
+        if form_s.is_valid():
+            start_hour = request.POST.get("start_hour")
+            tabs       = start_hour.split(":")
+            start_hour = timedelta(hours=int(tabs[0]),minutes=int(tabs[1]))
+            y,m,d      = request.POST.get("datetime").split("-")
+            datet      = datetime(int(y),int(m),int(d)) + start_hour
+            for i in range(0,int(duration),15) :
+                dateti = datet + timedelta(hours=1,minutes=i)
+                Slot.objects.create(user = request.user , datetime = dateti , is_occupied = 0 )
+
+        else :  
+            print(form_slot.errors)
+
     return redirect('calendar_show' , 0)
 
 
@@ -143,16 +189,28 @@ def update_event(request,id):
     event = Event.objects.get(pk=id)
     form = EventForm(user, request.POST or None, instance = event)
 
-    if form.is_valid():
-        new_form = form.save(commit=False)
-        new_form.user = user 
-        new_form.urlCreate=bbb_urlCreate(new_form)
-        new_form.urlJoinProf=bbb_urlJoin(new_form,"MODERATOR")
-        new_form.urlJoinEleve=bbb_urlJoin(new_form,"VIEWER")
-        new_form.save()
+    is_lesson = request.POST.get("is_lesson",None)
+    duration  = request.POST.get("duration",None)
+
+
+    if is_lesson == "1" :
+        if form.is_valid():
+            new_form = form.save(commit=False)
+            new_form.user = user 
+            new_form.urlCreate=bbb_urlCreate(new_form)
+            new_form.urlJoinProf=bbb_urlJoin(new_form,"MODERATOR")
+            new_form.urlJoinEleve=bbb_urlJoin(new_form,"VIEWER")
+            new_form.save()
+        else :
+            print(form.errors)
 
     else :
-        print(form.errors)
+        if form_slot.is_valid():
+            slot      = form_slot.save(commit=False)
+            slot.user = request.user
+            slot.save()
+        else :
+            print(form_slot.errors)
         
     return redirect('calendar_show' , 0)
 
@@ -166,17 +224,16 @@ def shift_event(request):
     data = {} 
     return JsonResponse(data)
 
+
 def show_event(request):
     event_id = request.POST.get('event_id')
     event = Event.objects.get(pk=event_id)   
     user = User.objects.get(pk=request.user.id) 
     form = EventForm(user, request.POST or None, instance = event) 
 
-    same_day=   (event.end - event.start)<=timedelta(days=1)
- 
     data = {}
      
-    html = render_to_string('lesson/show.html',{ 'event' : event  , 'same_day': same_day ,  'form' : form  , 'Prof' : request.user.user_type==user.TEACHER  })
+    html = render_to_string('lesson/show.html',{ 'event' : event  ,   'form' : form  , 'Prof' : request.user.user_type==user.TEACHER  })
     data['html'] = html       
 
     return JsonResponse(data)
@@ -259,7 +316,17 @@ def ask_lesson(request,id):
 
 
 
+def ajax_display_calendar(request) :
+    data       = {}
+    teacher_id =  request.POST.get("teacher_id")    
+    teacher    =  Teacher.objects.get(user_id = teacher_id)
 
+    #context    = {  'level': level,   }
+
+    data['name'] = teacher.user.civilite+ " " +teacher.user.last_name
+    #data['html'] = render_to_string('lesson/calendar_default_popup.html', context)
+ 
+    return JsonResponse(data)
 
 
 def CalcMeetingID(event):

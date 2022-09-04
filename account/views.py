@@ -630,7 +630,7 @@ def newpassword_student(request, id,idg):
     user.set_password("sacado2020")
     user.save()
 
-    sending_mail('Réinitialisation de mot de passe Sacado', "Bonjour, votre mot de passe est réinitialisé. Il est générique. Votre identifiant est : "+user.username+"\n\n Votre mot de passe est : sacado2020.\n\n  Pour plus de sécurité, vous devez le modifier dès votre connexion.\n\n Pour vous connecter, redirigez-vous vers https://sacado.xyz et cliquez sur le bouton bleu Se connecter.\n Ceci est un mail automatique. Ne pas répondre.", settings.DEFAULT_FROM_EMAIL, [user.email])
+    sending_mail('Réinitialisation de mot de passe Sacado', "Bonjour, votre mot de passe est réinitialisé. Il est générique. Votre identifiant est : "+user.username+"\n\n Votre mot de passe est : sacado2020.\n\n  Pour plus de sécurité, vous devez le modifier dès votre connexion.\n\n Pour vous connecter, redirigez-vous vers https://sacado-academie.fr et cliquez sur le bouton bleu Se connecter.\n Ceci est un mail automatique. Ne pas répondre.", settings.DEFAULT_FROM_EMAIL, [user.email])
  
     if idg > 0 :
         return redirect('show_group', idg )
@@ -1196,7 +1196,7 @@ def register_teacher(request):
             try :
                 #teacher.notify_registration()
                 teacher.notify_registration_to_admins()
-                msg = "Bonjour "+ user.first_name +" " + user.last_name+",\n\n Votre compte Sacado est maintenant disponible.\n\nVotre identifiant est : "+user.username+".\n\nVotre mot de passe est : "+password+" \n\nPour vous connecter, redirigez-vous vers  https://sacado.xyz .\n\nCeci est un mail automatique. Merci de ne pas répondre."
+                msg = "Bonjour "+ user.first_name +" " + user.last_name+",\n\n Votre compte Sacado est maintenant disponible.\n\nVotre identifiant est : "+user.username+".\n\nVotre mot de passe est : "+password+" \n\nPour vous connecter, redirigez-vous vers  https://sacado-academie.fr .\n\nCeci est un mail automatique. Merci de ne pas répondre."
                 msg_ = "Bonjour,\n\n Un enseignant vient de rejoindre SacAdo : " + user.last_name + "  "+user.first_name 
                 if user.email :
                     send_mail('INSCRIPTION SACADO', msg ,settings.DEFAULT_FROM_EMAIL,[user.email, ])
@@ -1331,7 +1331,7 @@ def register_teacher_from_admin(request):
             teacher_form.save_m2m()
 
             sending_mail('Création de compte sur Sacado',
-                          f'Bonjour {teacher.user}, votre compte Sacado est maintenant disponible.\r\n\r\nVotre identifiant est {u_form.username} \r\n\r\nVotre mot de passe est : sacado2020 \r\n\r\nVous pourrez le modifier une fois connecté à votre espace personnel.\r\n\r\nPour vous connecter, redirigez-vous vers https://sacado.xyz.\r\n\r\nCeci est un mail automatique. Ne pas répondre.',
+                          f'Bonjour {teacher.user}, votre compte Sacado est maintenant disponible.\r\n\r\nVotre identifiant est {u_form.username} \r\n\r\nVotre mot de passe est : sacado2020 \r\n\r\nVous pourrez le modifier une fois connecté à votre espace personnel.\r\n\r\nPour vous connecter, redirigez-vous vers https://sacado-academie.fr.\r\n\r\nCeci est un mail automatique. Ne pas répondre.',
                           settings.DEFAULT_FROM_EMAIL,
                           [u_form.email, ])
  
@@ -1411,7 +1411,7 @@ def register_by_csv(request, key, idg=0):
 
                 if email != "" :
                     sending_mail('Création de compte sur Sacado',
-                      f'Bonjour {user}, votre compte Sacado est maintenant disponible.\r\n\r\nVotre identifiant est {user.username} \r\n\r\nVotre mot de passe est : sacado2020 \r\n\r\nVous pourrez le modifier une fois connecté à votre espace personnel.\r\n\r\nPour vous connecter, redirigez-vous vers https://sacado.xyz.\r\n\r\nCeci est un mail automatique. Ne pas répondre.',
+                      f'Bonjour {user}, votre compte Sacado est maintenant disponible.\r\n\r\nVotre identifiant est {user.username} \r\n\r\nVotre mot de passe est : sacado2020 \r\n\r\nVous pourrez le modifier une fois connecté à votre espace personnel.\r\n\r\nPour vous connecter, redirigez-vous vers https://sacado-academie.fr.\r\n\r\nCeci est un mail automatique. Ne pas répondre.',
                       settings.DEFAULT_FROM_EMAIL, [email,])
             except :
                 pass
@@ -1525,7 +1525,7 @@ def updatepassword(request):
             update_session_auth_hash(request, userport) # Important!
             messages.success(request, 'Votre mot de passe a été modifié avec succès !')
 
-            sending_mail('Changement de mot de passe sur sacAdo', 'Bonjour, votre nouveau mot de passe sacado est '+str(request.POST.get("new_password1"))+'. Pour vous connecter, redirigez-vous vers https://sacado.xyz .', settings.DEFAULT_FROM_EMAIL, [request.user.email])
+            sending_mail('Changement de mot de passe sur sacAdo', 'Bonjour, votre nouveau mot de passe sacado est '+str(request.POST.get("new_password1"))+'. Pour vous connecter, redirigez-vous vers https://sacado-academie.fr .', settings.DEFAULT_FROM_EMAIL, [request.user.email])
 
             return redirect('logout')
         else :
@@ -1565,7 +1565,7 @@ def register_parent(request):
                 login(request, user,  backend='django.contrib.auth.backends.ModelBackend' )
                 messages.success(request, "Inscription réalisée avec succès !")            
                 if user_form.cleaned_data['email'] :
-                    sending_mail('Création de compte sur Sacado', 'Bonjour, votre compte SacAdo est maintenant disponible. \n\n Votre identifiant est '+str(username) +". \n\n votre mot de passe est "+str(password)+'.\n\n Pour vous connecter, redirigez-vous vers https://sacado.xyz.\n Ceci est un mail automatique. Ne pas répondre.', settings.DEFAULT_FROM_EMAIL, [request.POST.get("email")])
+                    sending_mail('Création de compte sur Sacado', 'Bonjour, votre compte SacAdo est maintenant disponible. \n\n Votre identifiant est '+str(username) +". \n\n votre mot de passe est "+str(password)+'.\n\n Pour vous connecter, redirigez-vous vers https://sacado-academie.fr.\n Ceci est un mail automatique. Ne pas répondre.', settings.DEFAULT_FROM_EMAIL, [request.POST.get("email")])
        
         else:
             messages.error(request, "Erreur lors de l'enregistrement. Reprendre l'inscription...")
@@ -1844,7 +1844,7 @@ def passwordResetView(request):
         if form.is_valid():
             this_form = form.save()
 
-            link = "https://sacado.xyz/account/newpassword/"+this_form.code
+            link = "https://sacado-academie.fr/account/newpassword/"+this_form.code
             msg = "Bonjour, \nvous venez de demander la réinitialisation de votre mot de passe. Cliquez sur le lien suivant : \n"+ link +"\n\nMerci. \n\n Ceci est un mail automatique, ne pas répondre."
           
             send_mail('SacAdo : Ré-initialisation de mot de passe', msg ,settings.DEFAULT_FROM_EMAIL,[this_form.email, ])

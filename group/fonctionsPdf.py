@@ -160,7 +160,7 @@ def pdfPeriode2(student, date_start,date_stop):
 
 
 
-	logo = Image('https://sacado.xyz/static/img/sacadoA1.png')
+	logo = Image('https://sacado-academie.fr/static/img/sacadoA1.png')
 	logo_tab = [[logo, "SACADO Académie\nBilan des acquisitions" ]]
 	logo_tab_tab = Table(logo_tab, hAlign='LEFT', colWidths=[0.7*inch,5*inch])
 	logo_tab_tab.setStyle(TableStyle([ ('TEXTCOLOR', (0,0), (-1,0), colors.Color(0,0.5,0.62))]))
