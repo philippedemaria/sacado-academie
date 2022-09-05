@@ -105,7 +105,8 @@ def create_event(request):
             event = form.save(commit=False)
             event.user = request.user
             event.urlCreate=bbb_urlCreate(event)
-            event.urlJoinProf=bbb_urlJoin(event,"MODERATOR")
+            fullName = user.last_name+" "+user.first_name
+            event.urlJoinProf=bbb_urlJoin(event,"MODERATOR",fullname)
             event.save()  # pour avoir un id, necessaire pour les relations M2M
             students=form.cleaned_data.get("users")
             send_list = []
@@ -198,9 +199,10 @@ def update_event(request,id):
         if form.is_valid():
             new_form = form.save(commit=False)
             new_form.user = user 
+            fullName = user.last_name+" "+user.first_name
             new_form.urlCreate=bbb_urlCreate(new_form)
-            new_form.urlJoinProf=bbb_urlJoin(new_form,"MODERATOR")
-            new_form.urlJoinEleve=bbb_urlJoin(new_form,"VIEWER")
+            new_form.urlJoinProf=bbb_urlJoin(new_form,"MODERATOR",fullName)
+            new_form.urlJoinEleve=bbb_urlJoin(new_form,"VIEWER",fullName)
             new_form.save()
         else :
             print(form.errors)
