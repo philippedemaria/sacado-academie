@@ -105,8 +105,7 @@ def create_event(request):
             event = form.save(commit=False)
             event.user = request.user
             event.urlCreate=bbb_urlCreate(event)
-            fullName = user.last_name+" "+user.first_name
-            event.urlJoinProf=bbb_urlJoin(event,"MODERATOR",fullname)
+            event.urlJoinProf=bbb_urlJoin(event,"MODERATOR",user.last_name+" "+user.first_name)
             event.save()  # pour avoir un id, necessaire pour les relations M2M
             students=form.cleaned_data.get("users")
             send_list = []
