@@ -341,7 +341,7 @@ def bbb_urlCreate(event):
     meetingID=CalcMeetingID(event)
     welcome="Leçon par vidéo, enseignant"+( "e" if event.user.civilite=="Mme" else "")
     welcome+=" "+event.user.first_name+" "+event.user.last_name
-    duration=str(  int((event.duration).total_seconds()+900) //60)  #arrêt automatique de la session 30mn après la durée prévue de fin, au cas ou qq'un laisserait la session ouverte
+    duration=str(event.duration+15)  #arrêt automatique de la session 30mn après la durée prévue de fin, au cas ou qq'un laisserait la session ouverte
     endWhenNoModerator="false" #la session se ferme lorsque le prof se deconnecte
     request="name={}&meetingID={}&welcome={}&duration={}&endWhenNoModerator={}"
     request=request.format(urllib.parse.quote(name),meetingID,urllib.parse.quote(welcome),duration,endWhenNoModerator)
