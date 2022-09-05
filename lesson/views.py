@@ -355,7 +355,7 @@ def bbb_urlCreate(event):
     date_ouv = datetime.combine(event.date, event.start) - timedelta(minutes=3)
     date_ouv = date_ouv.strftime("%H:%M %m%d%y")
     com=open("/tmp/commande_"+str(event.id)+".txt","w")  #commande executée
-    print("curl "+request, file=com)
+    print("curl "+request+"#"+str(event.id)+"---->"+date_ouv, file=com)
     com.close()
     run(['at', date_ouv, "-f", "/tmp/commande_"+str(event.id)+".txt"])
     return request
