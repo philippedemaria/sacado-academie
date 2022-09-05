@@ -147,12 +147,12 @@
                 <!-- small box -->
                 <div class="small-box bg-red">
                     <div class="inner" style="border-bottom: solid 1px #f1eef7;font-size: 18px">
-                        {% for data in dataset %}
-                            <li class="sanspuce"><a href="{% url 'create_academy'  data.id %}" class="white">{{ data.level }}</a></li>
-                        {% endfor %}
+                        <span style="font-size: 10px">Ici vous clonez tous les groupes et documents de sacadoProf</span>
                     </div>
                     <div class="inner">
-                        <span style="font-size: 10px">Ici vous clonez tous les groupes et documents de sacadoProf</span>
+                        {% for data in dataset %}
+                            <a href="{% url 'create_academy'  data.id %}" class="white">{{ data.level }}</a> - 
+                        {% endfor %}
                     </div>
                 </div>
             </div>  
@@ -167,12 +167,12 @@
                 <!-- small box -->
                 <div class="small-box bg-red">
                     <div class="inner" style="border-bottom: solid 1px #f1eef7;font-size: 18px">
-                        {% for data in dataset %}
-                            <li class="sanspuce"><a href="{% url 'add_presentation'  data.id %}" class="white">{{ data.level }}</a></li>
-                        {% endfor %}
+                        <span style="font-size: 10px">Ajouter une section Présentation</span>
                     </div>
                     <div class="inner">
-                        <span style="font-size: 10px">Ajouter une section Présentation</span>
+                        {% for data in dataset %}
+                            <a href="{% url 'add_presentation'  data.id %}" class="white">{{ data.level }}</a> - 
+                        {% endfor %}
                     </div>
                 </div>
             </div>  
