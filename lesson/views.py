@@ -352,7 +352,7 @@ def bbb_urlCreate(event):
     request="https://"+BBB_SERVEUR+"/bigbluebutton/api/create?"+request+"&checksum="+hash
     
     # modification de crontab pour creer la reunion qq mn avant son début
-    date_ouv = combine(event.date, event.start) - timedelta(minutes=3)
+    date_ouv = datetime.combine(event.date, event.start) - timedelta(minutes=3)
     date_ouv = date_ouv.strftime("%H:%M %m%d%y")
     com=open("/tmp/commande_"+str(event.id)+".txt","w")  #commande executée
     print("curl "+request, file=com)
