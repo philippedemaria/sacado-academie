@@ -149,7 +149,7 @@ En cas de problème, ou pour la créer à la main, voici le lien :
                 send_mail("Programmation d'une leçon par visio","""
 Bonjour,
 Une leçon par visio a été programmée par {} {}, à destination de {} {}.
-Elle aura lieu le {} de {} à {}.
+Elle aura lieu le {} de {} et durera {} minutes.
 Voici le lien d'accès à la visio :
 
     {}
