@@ -104,7 +104,8 @@ def create_event(request):
     if is_lesson == "1" :
         if form.is_valid():    
             event = form.save(commit=False)
-            event.user = request.user
+            event.user = request.user            
+            event.save()
             event.urlCreate=bbb_urlCreate(event)
             event.urlJoinProf=bbb_urlJoin(event,"MODERATOR",user.last_name+" "+user.first_name)
             event.save()  # pour avoir un id, necessaire pour les relations M2M
