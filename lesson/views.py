@@ -105,17 +105,17 @@ def create_event(request):
             event = form.save(commit=False)
             event.user = request.user
             event.save()  # pour avoir un id, necessaire pour les relations M2M
-            users=form.cleaned_data.get("users")
+            students=form.cleaned_data.get("users")
             send_list = []
             ListeUrls=[]
-            for eleve in users :
-                event.users.add(eleve)
-                conn=ConnexionEleve.objects.get(event=event,user=eleve)
-                conn.urlJoinEleve=bbb_urlJoin(event,"VIEWER",eleve.first_name+" "+user.last_name)
+            for student in students :
+                event.users.add(student.user)
+                conn=ConnexionEleve.objects.get(event=event,user=student.user)
+                conn.urlJoinEleve=bbb_urlJoin(event,"VIEWER",student.user.first_name+" "+student.user.last_name)
                 ListeUrls.append(conn.urlJoinEleve)
                 conn.save()
-                if eleve.email!=None : 
-                    send_list.append(eleve.email)    
+                if student.user.email!=None : 
+                    send_list.append(student.user.email)    
             event.save()
             #-------------- envoi du mail au prof
             CorpsMessage="""Bonjour, 
@@ -128,24 +128,24 @@ def create_event(request):
             En cas de problème, ou pour la créer à la main, voici le lien :
             {}  
             """.format(str(event.title) ,str(event.date.strftime("%A %d/%m")),str(event.start),str(event.duration),event.urlJoinProf,event.urlCreate)
-            if len(users)==0 :
+            if len(students)==0 :
                 CorpsMessage+="Cette leçon n'a pas d'élève, ce qui est curieux..."
-            elif len(users)==1 :
+            elif len(students)==1 :
                 CorpsMessage+="Cette leçon est destinée à {} {}, et son lien d'accès est : \n{}\n"\
-                .format(users[0].first_name.capitalize(), users[0].last_name.capitalize(),ListeUrls[0])
+                .format(students[0].first_name.capitalize(), students[0].last_name.capitalize(),ListeUrls[0])
             else :
                 CorpsMessage+="Voici la liste des élèves inscrits à cette leçon, et leurs liens d'accès respectifs : \n"
     			
-                for i,eleve in enumerate(users):
-                    CorpsMessage+=" - {} {} \n   {}\n".format(eleve.first_name.capitalize(),eleve.last_name.capitalize(),ListeUrls[i])
+                for i,student in enumerate(students):
+                    CorpsMessage+=" - {} {} \n   {}\n".format(student.user.first_name.capitalize(),student.user.last_name.capitalize(),ListeUrls[i])
             CorpsMessage+="Cordialement,\nL'équipe de Sacado Académie"	  
             send_mail("Création d'une leçon",CorpsMessage,DEFAULT_FROM_EMAIL,[user.email])
             #---------------envoi du mail aux parents d'élèves et eventuellement aux eleves.
-            for i,eleve in enumerate(users):
-                student=Student.objects.get(user=eleve)
+            for i,student in enumerate(students):
+                student=Student.objects.get(user=student)
                 dest=[p.user.email for p in student.students_parent.all()]
-                if eleve.email != None : 
-                    dest.append(eleve.email) 
+                if student.user.email != None : 
+                    dest.append(student.user.email) 
                 send_mail("Programmation d'une leçon par visio","""
             Bonjour,
             Une leçon par visio a été programmée par {} {}, à destination de {} {}.
@@ -159,8 +159,8 @@ def create_event(request):
             Très cordialement,
 
             L'équipe Sacado Académie.
-            """.format(user.civilite,user.last_name.capitalize(),eleve.first_name.capitalize(),eleve.last_name.capitalize(), 
-                       str(date_of_event.strftime("%A %d/%m")),str(start_hour),str(end_hour),ListeUrls[i],user.email),DEFAULT_FROM_EMAIL,dest) 
+            """.format(user.civilite,user.last_name.capitalize(),student.user.first_name.capitalize(),student.user.last_name.capitalize(), 
+                       str(event.date.strftime("%A %d/%m")),str(event.start),str(event.duration),ListeUrls[i],user.email),DEFAULT_FROM_EMAIL,dest) 
         else :  
             print(form.errors)
     else :

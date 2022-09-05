@@ -30,6 +30,8 @@ define(['jquery', 'bootstrap','moment', 'fullcalendar'], function ($) {
 
 
 		$(".calendar").fullCalendar({
+			defaultView: 'agendaWeek',
+			aspectRatio: 1.5,
 	        header: {
 	                  left: 'prev,next today',
 	                  center: 'title',
