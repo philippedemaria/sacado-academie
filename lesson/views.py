@@ -45,7 +45,7 @@ def events_json(request):
             student_connex = ConnexionEleve.objects.get(user = request.user, event =event)
             url = student_connex.urlJoinEleve
         else : 
-            url = None  
+            url = ""  
 
 
         event_list.append({
