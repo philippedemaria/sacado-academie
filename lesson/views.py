@@ -53,7 +53,7 @@ def events_json(request):
         slot_start = slot.datetime
         slot_end   = slot_start + timedelta(minutes=15)
         event_list.append({
-                    'id': event.id,
+                    'id': slot.id,
                     'start': slot_start.strftime('%Y-%m-%d %H:%M:%S'),
                     'end': slot_end.strftime('%Y-%m-%d %H:%M:%S'),
                     'title': "",
