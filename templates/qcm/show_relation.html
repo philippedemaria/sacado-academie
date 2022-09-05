@@ -100,7 +100,7 @@
           {% if  parcours.maxexo > -1 %}
               {% with nb_attempt=parcours_available.nbleft  %}
 
-                  <div class="available" id="attempt" style="font-weight:800" >
+                  <div class="available_attempt" id="attempt" style="font-weight:800" >
                         {{ nb_attempt }} 
                   </div>
                   <p>Tentative{{ nb_attempt|pluralize  }} <span class="left_attempt">restante{{ nb_attempt|pluralize  }}</span></p>
@@ -108,7 +108,7 @@
           {% else %}
               {% if  relation.maxexo > -1 %}
                   {% with nb_attempt=available.nbleft  %}
-                    <div class="available" id="attempt" style="font-weight:800" >
+                    <div class="available_attempt" id="attempt" style="font-weight:800" >
                        {{ nb_attempt }}   
                     </div>
                     <p>Tentative{{ nb_attempt|pluralize  }} <span class="left_attempt">restante{{ nb_attempt|pluralize  }}</span></p>
@@ -129,7 +129,7 @@
             <p class="coefficient_small_label">Coefficient</p>
         </div>
 
-        <div class="barcode left_attempt">
+        <div class="situation left_attempt">
             <i class="fa fa-barcode fa-4x"></i>
             <p>{{ relation.exercise.supportfile.code }}</p>
         </div>

@@ -1807,6 +1807,81 @@ def list_sub_parcours_group_student(request,idg,idf):
         return redirect("index")
 
 
+def change_situations_in_all_relationships(request,idf,idp):
+
+    parcours      = Parcours.objects.get(id=idp)
+    relationships = parcours.parcours_relationship.filter(exercise__supportfile__is_title=0)
+    teacher       = request.user.teacher
+    role, group , group_id , access = get_complement(request, teacher, parcours)
+
+    if request.method == "POST" :
+        global_situation = request.POST.get('global', None)
+
+        for r in relationships :
+            Relationship.objects.filter(pk=r.id).update(situation = global_situation)
+
+        return redirect('show_parcours' , idf , idp )
+
+
+
+    context = { 'parcours': parcours, 'relationships': relationships , 'role' : role , 'teacher': teacher   }
+
+    return render(request, 'qcm/change_situations.html', context)
+
+
+
+
+
+def change_durations_in_all_relationships(request,idf,idp):
+
+    parcours      = Parcours.objects.get(id=idp)
+    relationships = parcours.parcours_relationship.filter(exercise__supportfile__is_title=0)
+    teacher       = request.user.teacher
+    role, group , group_id , access = get_complement(request, teacher, parcours)
+
+    if request.method == "POST" :
+        global_duration = request.POST.get('global', None)
+
+        for r in relationships :
+            Relationship.objects.filter(pk=r.id).update(duration = global_duration)
+
+        return redirect('show_parcours' , idf , idp )
+
+
+
+    context = { 'parcours': parcours, 'relationships': relationships , 'role' : role , 'teacher': teacher   }
+
+    return render(request, 'qcm/change_durations.html', context)
+
+
+
+
+def change_publications_in_all_relationships(request,idf,idp):
+
+    parcours      = Parcours.objects.get(id=idp)
+    relationships = parcours.parcours_relationship.filter(exercise__supportfile__is_title=0)
+    teacher       = request.user.teacher
+    role, group , group_id , access = get_complement(request, teacher, parcours)
+
+    if request.method == "POST" :
+        global_publication = request.POST.get('global', 0)
+
+        for r in relationships :
+            Relationship.objects.filter(pk=r.id).update(is_publish = global_publication)
+
+        parcours_publication = request.POST.get('parcours', 0)
+        # si tous les exercices sont dépubliés, on dépublie le parcours et si vous publiez tous 
+        Parcours.objects.filter(pk=idp).update(is_publish = parcours_publication)
+
+
+
+        return redirect('show_parcours' , idf , idp )
+
+
+
+    context = { 'parcours': parcours, 'relationships': relationships , 'role' : role , 'teacher': teacher   }
+
+    return render(request, 'qcm/change_publications.html', context)
 ############################################################################################################################################
 ############################################################################################################################################
 ##################   Fin des listes dossiers parcours évaluation archives  #################################################################
@@ -9514,15 +9589,11 @@ def actioner_pef(request):
  
     elif request.POST.get("action") == "archiver" :  
 
-        print(idps) 
-        print(idfs)
-
         for idp in idps :
             parcours = Parcours.objects.get(id=idp) 
             parcours.is_archive = 1
             parcours.is_favorite = 0
             parcours.save()
-            print(parcours) 
 
         for idf in idfs :
             folder = Folder.objects.get(id=idf) 
@@ -9536,9 +9607,6 @@ def actioner_pef(request):
                 p.save()
  
     else :
-
-        print("la",idps) 
-        print("la",idfs)
 
         for idp in idps :
             parcours = Parcours.objects.get(id=idp) 
@@ -9558,19 +9626,16 @@ def actioner_pef(request):
                 p.is_favorite = 0
                 p.save()
 
-    return redirect('parcours')
+    provenance = request.POST.get("from",None)
+    
+    if provenance == "sequence" :
+        return redirect('sequences')
 
+    elif  provenance == "evaluation" :
+        return redirect('evaluations')
 
-
-
-
-
-
-
-
-
-
-
+    else :
+        return redirect('parcours')
 
 
 # def ajax_group_to_parcours(request):

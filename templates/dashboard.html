@@ -183,7 +183,7 @@
         {% if request.user.is_authenticated %}
             {% if user.is_teacher %}
                 {% get_com_is_reading user as boolean_reader %}
-                {% if not boolean_reader %}        
+                {% if not boolean_reader and communications.count  %}        
                     <div id="advises" class="advises">
                         <div class="row"> 
                             <div class="col-xs-11 col-md-11 col-lg-11" id ="principal_section">

@@ -1,0 +1,28 @@
+{% load static %}
+{% load widget_tweaks %}
+{% load item_tags %}
+     
+
+         {% if  student.user.school %}  
+            {% if  data_min.pc > 0 %}
+            <div class="background_badge" >
+                <i class="fa fa-trophy" style="color:{{ data_min.colored }};font-size:18px;z-index:999999; "></i>
+                <br/>
+                <font style="font-size:10px;color:{{parcours.color }};">{{ data_min.label }}</font><br/>
+                <font style="font-size:14px;color:{{parcours.color }};">{{ data_min.score_ggb }}</font>
+            </div>
+            {% endif  %}
+        {% else  %} 
+
+
+
+            <div class="background_badge" >
+                <i class="fa fa-trophy"></i>
+                <br/>
+                <font style="font-size:9px;">V. Etab. Requise<br/>Score</font>
+            </div>
+
+        {% endif  %}
+
+  
+       

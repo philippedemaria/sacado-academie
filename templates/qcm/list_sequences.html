@@ -44,10 +44,10 @@
 
 
 {% block inside_folder_actions %}
-    <button class="btn btn-default" name="action" value="archiver" onclick="return TestArchive('ces dossiers/évaluations')"> 
+    <button class="btn btn-default" name="action" value="archiver" onclick="return TestArchive('ces dossiers/séquences')"> 
         <i class="fa fa-archive"> </i>  {% if 'archive' in request.path %} Désarchiver {% else %} Archiver {% endif %}  la sélection
     </button>
-
+    <input type="hidden" name="from" value="sequence" />
 
     <button class="btn btn-default" name="action" value="deleter" onclick="return TestDelete('ces dossiers/séquences')"> 
         <i class="fa fa-trash"> </i>   Supprimer la sélection

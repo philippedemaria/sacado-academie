@@ -46,7 +46,8 @@
         <i class="fa fa-archive"> </i>  {% if 'archive' in request.path %} Désarchiver {% else %} Archiver {% endif %}  la sélection
     </button>
 
-
+    <input type="hidden" name="from" value="evaluation" />
+    
     <button class="btn btn-default" name="action" value="deleter" onclick="return TestDelete('ces dossiers/évaluations')"> 
         <i class="fa fa-trash"> </i>   Supprimer la sélection
     </button>

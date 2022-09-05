@@ -7,13 +7,7 @@
 
 <div  class="box box-widget widget-user-2 folder_sorter"  style="{% if evaluation.vignette %}background-image: url('{{evaluation.vignette.url }}');background-size: 100% 100%;{% endif  %} background-color:{{evaluation.color }}"> 
     <div class="handler widget-user-header">
-         {% if  student.user.school %}  
-            {% if  data_min.boolean %}
-            <div class="background_badge" >
-            <i class="fa fa-trophy" style="color:{{ data_min.colored }};font-size: {{ data_min.size }};z-index:999999; "></i><br/><font style="font-size:12px;color:{{evaluation.color }};">{{ data_min.label }}</font>
-            </div>
-            {% endif  %}
-        {% endif  %}
+        {% include 'qcm/evaluation_tag_student_badge_and_trophy.html'  %}
   
         {% if evaluation.vignette %}                
             <div class="box_title_underlay_vignette" style="background-color:{{ evaluation.color }};">

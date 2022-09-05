@@ -711,104 +711,124 @@ class Parcours(ModelWithCode):
 
 
 
+    def get_details_for_min_score(self,student):
+        ## Nombre de relationships dans le parcours => nbre  d'exercices
+        relationships    =  self.parcours_relationship.filter(students = student, is_publish=1,  exercise__supportfile__is_title=0 ) 
+        customs          =  self.parcours_customexercises.filter(students = student, is_publish=1) 
+        nb_relationships =  relationships.count()
+        nb_customs       =  customs.count()
+
+        ## Nombre de réponse avec exercice unique du parcours
+        answers                  = self.answers.filter(student=student).values_list("exercise",flat=True).order_by("exercise").distinct()
+        nb_studentanswers        = answers.count()
+
+        answers_c                = Customanswerbystudent.objects.filter(student=student, customexercise__parcourses=self).values_list("customexercise",flat=True).order_by("customexercise").distinct()
+        nb_customanswerbystudent = answers_c.count()
+
+        data = {}
+        nb_exercise_done = nb_studentanswers + nb_customanswerbystudent
+        data["nb"] = nb_exercise_done
+        data["nb_total"] = nb_relationships + nb_customs
+        try :
+            maxi = int(nb_exercise_done * 100/(nb_relationships+nb_customs))
+            if int(nb_exercise_done * 100/(nb_relationships+nb_customs)) > 100:
+                maxi = 100
+            data["pc"] = maxi
+            data["opac"] = 0.3 + 0.7*maxi/100
+        except :
+            data["pc"] = 0
+            data["opac"] = 1
+
+        return data  ,  relationships , customs, answers ,  answers_c
+
+
+
+
+
     def min_score(self,student):
         """
         min score d'un parcours par élève
         """
-        data = self.is_percent(student)
+        data  ,  relationships , custom_exercises, answers ,  answers_c = self.get_details_for_min_score(student)
         max_tab, max_tab_custom = [] , []
         nb_done = 0
-
-        exercises_ggb = self.parcours_relationship.filter(is_publish=1,students=student, exercise__supportfile__is_title=0  )
+        score_ggb, coeffs =  0 , 0
  
-
-        for exercise in exercises_ggb :
-            maxi = self.answers.all()
+        for r in relationships :
+            maxi = self.answers.filter(exercise = r.exercise, student = student)
             if maxi.count()>0 :
-                maximum = maxi.aggregate(Max('point'))
-                max_tab.append(maximum["point__max"])
+                maximum    = maxi.aggregate(Max('point'))
+                point_max  = maximum["point__max"]
+                score_ggb += point_max * r.coefficient
+                coeffs    += r.coefficient
                 nb_done +=1
 
-
-        custom_exercises = self.parcours_customexercises.filter(is_publish=1,students=student)
-        for custom_exercise in custom_exercises :
-            maxi = self.parcours_customknowledge_answer.filter( student=student , customexercise = custom_exercise )
-            if maxi.count()>0 :
-                maximum = maxi.aggregate(Max('point'))
-                max_tab_custom.append(maximum["point__max"])
-                nb_done +=1
-
-        nb_exo_in_parcours = exercises_ggb.count() + custom_exercises.count() 
- 
-
+        nb_exo_in_parcours = relationships.count()
         today = timezone.now()
 
-        data["nb_cours"] = self.course.filter( is_publish =1 ).count()
-        data["nb_quizz"] = self.quizz.filter( is_publish = 1 ).count()
-        data["nb_exercise"] = nb_exo_in_parcours
+
+        data["nb_cours"]     = self.course.filter( is_publish =1 ).count()
+        data["nb_quizz"]     = self.quizz.filter( is_publish = 1 ).count()
+        data["nb_exercise"]  = nb_exo_in_parcours
         data["nb_bibliotex"] = self.bibliotexs.filter( is_publish =1, students = student ).count()
         data["nb_flashpack"] = self.flashpacks.filter(Q(stop__gte=today)|Q(stop=None) ,  is_publish =1, students = student ).count()
 
+
+
         try :
             stage =  student.user.school.aptitude.first()
-            up = stage.up
-            med = stage.medium
-            low = stage.low
+            up    = stage.up
+            med   = stage.medium
+            low   = stage.low
         except :
-            up = 85
+            up  = 85
             med = 65
             low = 35
 
-        ### Si l'elève a fait tous les exercices du parcours
-        suff = ""
-        if student.user.civilite =="Mme":
-            suff = "e"
 
-        data["colored"] = "red"
-        data["label"] = ""
 
         try :
-            opacity = nb_exo_in_parcours/nb_done + 0.1
-        except:
-            opacity = 0.2
-
-        data["opacity"] = opacity
+            score_ggb = score_ggb / coeffs
+            data["score_ggb"] = score_ggb
+        except :
+            score_ggb = None
+            data["score_ggb"] = 0
+ 
 
         nb_exos = nb_exo_in_parcours // 2
-
         if nb_done > nb_exos :
-            data["size"] = "20px"
+            data["opacity"] = 0.95
+        else :
+            data["opacity"] = 0 
 
-            max_tab.sort()
 
-            if len(max_tab) >  nb_exos :
-                score = max_tab[0]
+        if score_ggb :
+            if score_ggb > up :
+                data["colored"] = "darkgreen"
+                data["label"] = "Expert"
+                if student.user.civilite =="Mme": 
+                    data["label"] = "Experte"
+            elif score_ggb >  med :
+                data["colored"] = "green"
+                data["label"] = "Confirmé"
+                if student.user.civilite =="Mme": 
+                    data["label"] = "Confirmée"
+            elif score_ggb > low :
+                data["colored"] = "orange"
+                data["label"] = "Amateur"
+                if student.user.civilite =="Mme": 
+                    data["label"] = "Amatrice"
             else :
-                score = None
-
-            if score :
-                if score > up :
-                    data["colored"] = "darkgreen"
-                    data["label"] = "Expert"+suff
-                elif score >  med :
-                    data["colored"] = "green"
-                    data["label"] = "Confirmé"+suff
-                elif score > low :
-                    data["colored"] = "orange"
-                    data["label"] = "Amateur"
-                    if student.user.civilite =="Mme": 
-                        data["label"] = "Amatrice"
-                else :
-                    data["colored"] = "red"
-                    data["label"] = "Explorateur"
-                    if student.user.civilite =="Mme": 
-                        data["label"] = "Exploratrice"
-            else :
-                data["boolean"] = True
                 data["colored"] = "red"
                 data["label"] = "Explorateur"
                 if student.user.civilite =="Mme": 
                     data["label"] = "Exploratrice"
+        else :
+            data["boolean"] = True
+            data["colored"] = "red"
+            data["label"] = "Explorateur"
+            if student.user.civilite =="Mme": 
+                data["label"] = "Exploratrice"
  
         return data
 

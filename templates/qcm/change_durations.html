@@ -1,0 +1,81 @@
+{% extends 'dashboard.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+
+{% block require %}
+ 
+ 
+
+{% endblock %} 
+
+
+{% block page_title %}
+ 
+   <i class="bi bi-folder sacado_color_text"></i> 
+ 
+
+      {% include 'qcm/breadcrumb.html' %}
+  
+    Durée par exercices 
+{% endblock %}
+
+
+{% block page_menu_right %}
+
+    {% include 'qcm/submenu_parcours.html' %}
+
+{% endblock %}
+
+ 
+
+
+{% block body %}  
+<section class="content_main">
+ 
+
+    <form action="" method="POST" enctype='multipart/form-data'> 
+            {% csrf_token %}
+
+            <div class="alert alert-warning"> 
+                <div class="col-sm-12 col-md-12">
+                    <div class="form-group"> <label>Durée estimée (en minutes) à répercuter sur <b>TOUS</b> les exercices du parcours</label> 
+                        <input name="global" type="number" min="0" step="1" max="60"  /> <small> <br/>Tous vos exercices auront donc la même durée. Pour leurs donner des durées différentes à chacun, il faudra les reprendre un par un depuis le parcours.</small>
+                    </div>
+                </div>    
+                <div class="form-group">
+                    <input value="Enregistrer" type="submit"  class="btn btn-primary"  />
+                    <a href="javascript:history.back()"><input type="button" value="Annuler" class="btn btn-default"/></a>
+                </div>
+            </div>
+ 
+
+    </form> 
+
+
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <table border=0>
+                {% for r in relationships %}
+                    <tr>
+                        <td>{% if r.exercise.supportfile.imagefile %}<img src="{{ r.exercise.supportfile.imagefile.url }}" class="imagefile" />{% endif %} {{ r.exercise.supportfile.title }}</td>
+                        <td ><div style="font-size:20px;text-align: center;width:50px;background-color: #f1eef7;"><b>{{ r.duration }}</b></div></td>
+                    </tr>
+                {% endfor %}
+                </table>
+            </div> 
+        </div>
+
+
+</section>   
+
+
+
+
+
+{% endblock %}
+
+
+      
+ 
+ 
