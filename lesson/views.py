@@ -40,11 +40,19 @@ def events_json(request):
         event_start = datetime.combine(event_date, event.start )
         event_end   = event_start + timedelta(minutes=event.duration)
 
+        if request.user.is_teacher : url = event.urlJoinProf 
+        elif request.user.is_student : 
+            student_connex = ConnexionEleve.objects.get(user = request.user, event =event)
+            url = student_connex.urlJoinEleve
+        else : 
+            url = None  
+
+
         event_list.append({
                     'id': event.id,
                     'start': event_start.strftime('%Y-%m-%d %H:%M:%S'),
                     'end': event_end.strftime('%Y-%m-%d %H:%M:%S'),
-                    'title': event.title,
+                    'title': event.title + url,
                     'color' : event.color,
                     })
 
