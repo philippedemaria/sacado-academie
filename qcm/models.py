@@ -511,7 +511,7 @@ class Parcours(ModelWithCode):
 
 
     def get_themes(self):
-        exercises = self.exercises.all()
+        exercises = self.exercises.filter(supportfile__is_title=0)
         theme_tab, theme_tab_id  = [] , []
         for exercise in exercises :
             data = {}
