@@ -30,8 +30,8 @@ class Event(models.Model):
 
 
 class ConnexionEleve(models.Model):
-	event=models.ForeignKey(Event, on_delete=models.CASCADE)
-	user=models.ForeignKey(User, on_delete=models.CASCADE)
+	event       =models.ForeignKey(Event, on_delete=models.CASCADE)
+	user        =models.ForeignKey(User, on_delete=models.CASCADE)
 	urlJoinEleve=models.CharField(_('url'), null=True,  blank=True,  max_length=250)
 
 
