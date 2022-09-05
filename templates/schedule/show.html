@@ -13,17 +13,12 @@
  
 </script>
 
- 
-
-
       <div class="modal-content">
           <div class="modal-header" style="background-color: {{ event.color }}">
               <div class="row" style="color:#FFF">                      
                   <div class="col-sm-12 col-md-12">
                      <div class="event-group">
-                        <h2>{{ event.title  }}<small><a href="#" class="vue" data-dismiss="modal"><i class="fa fa-times pull-right"></i></a></small>
-
-                        </h2>
+                        <h2>{{ event.title  }}<small><a href="#" class="vue" data-dismiss="modal"><i class="fa fa-times pull-right"></i></a></small></h2>
                     </div>
                   </div>
               </div>
@@ -31,17 +26,11 @@
                     <div class="col-sm-9 col-md-9">                        
                       <div class="event-group">
                             <h5>
-                            {% if event.is_allday == 0 %}
-                                {% if same_day  %}
-                                {{ event.start|date:"l j b Y"  }} <br><small  style="color:#FFF">de {{ event.start|date:"H:i"  }}  à {{ event.end|date:"H:i"   }}</small>
-                                {% else %}  
-                                Du {{ event.start|date:"l j b Y"  }} au {{ event.end|date:"l j b Y"   }}
-                                {% endif %}
-                             {% else %}  
-                                Toute la journée
+                                {{ event.start|date:"l j b Y"  }} <br><small  style="color:#FFF">à {{ event.start|date:"H:i"  }}  pendant {{ event.duration  }} minutes</small>
+                            </h5>
+                            {% if request.user.is_teacher and event.urlJoinProf %}
+                            <a href="{{ event.urlJoinProf }}" target="_blank">Lien de connexion </a>
                             {% endif %}
-
-                            </h5>  
                       </div> 
                     </div> 
                     <div class="col-sm-3 col-md-3"> 
