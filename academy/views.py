@@ -378,12 +378,14 @@ def add_presentation(request,idl):
 
     sequences  = Parcours.objects.filter(subject_id=1,level_id=idl,is_sequence=1)
     for sequence in sequences :
-        nb=Relationship.objects.filter(exercise_id=10155, parcours = sequence,ranking=0,situation=5).count()
-        np=Relationship.objects.filter(exercise_id=10154, parcours = sequence,ranking=0,situation=5).count()
-        if nb == 0 and np == 0 :
+        try :
             Relationship.objects.create(exercise_id=10155, parcours = sequence,ranking=0,situation=5)
+        except :
+            pass
+        try :
             Relationship.objects.create(exercise_id=10154, parcours = sequence,ranking=0,situation=5)
-
+        except :
+            pass
     
     return redirect("gestion_academy_dashboard" )
 
