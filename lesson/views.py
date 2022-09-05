@@ -3,7 +3,7 @@ from django import http
 from sacado.settings import BBB_SERVEUR, BBB_SECRET, DEFAULT_FROM_EMAIL
 import json
 from xml.etree import ElementTree # pour lire le xml de la reponse de BBB
-from subprocess import run
+import subprocess
 from django.utils import timezone
 from django.shortcuts import render, redirect
 from lesson.models import Event, ConnexionEleve , Slot
@@ -358,7 +358,7 @@ def bbb_urlCreate(event):
     com=open("/tmp/commande_"+str(event.id)+".txt","w")  #commande executée
     print("curl "+request+"#"+str(event.id)+"---->"+date_ouv, file=com)
     com.close()
-    run(['at', date_ouv, "-f", "/tmp/commande_"+str(event.id)+".txt"])
+    subprocess.run(['at', date_ouv, "-f", "/tmp/commande_"+str(event.id)+".txt"])
     return request
 
 def bbb_urlJoin(event,role,fullName):
