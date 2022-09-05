@@ -38,6 +38,9 @@
                             <h5>
                                 De {{ event.start|date:"H:i:s"  }} pendant {{ event.duration|int_minutes  }} minutes
                             </h5>
+                            {% if request.user.is_teacher and event.urlJoinProf %}
+                            <a href="{{ event.urlJoinProf }}" target="_blank">Lien de connexion </a>
+                            {% endif %}
                       </div> 
                     </div> 
                     <div class="col-sm-3 col-md-3"> 
