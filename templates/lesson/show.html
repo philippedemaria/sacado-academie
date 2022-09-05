@@ -35,12 +35,13 @@
                             <h3>
                                 Le {{ event.date|date:"l j b Y"  }} 
                             </h3>
-                            <h5>
-                                A {{ event.start|date:"H:i"  }} pendant {{ event.duration   }}  minutes
+                            <h5>          
+                              {% if event.urlJoinProf %}
+                              <a href="{{ event.urlJoinProf }}" target="_blank" class="pull-right white">Lien de connexion ici</a>
+                              {% endif %}
+                              A {{ event.start|date:"H:i"  }} pendant {{ event.duration   }}  minutes
                             </h5>
-                            {% if event.urlJoinProf %}
-                            <p><a href="{{ event.urlJoinProf }}" target="_blank" class="white">Lien de connexion ici</a></p>
-                            {% endif %}
+                  
                       </div> 
                     </div> 
                     <div class="col-sm-3 col-md-3"> 
