@@ -41,7 +41,7 @@ class Slot(models.Model): # disponibilité des profs
     user        = models.ForeignKey(User, null=True, blank = True, related_name='slots' , on_delete=models.CASCADE )    
     datetime    = models.DateTimeField(default=timezone.now,verbose_name=_('date'))
     is_occupied = models.BooleanField(_('Notification?'), default=False, blank=True) 
- 
+    is_oupied = models.BooleanField(_('Notification?'), default=False, blank=True) 
 
     def __str__(self):
         return "Dispo : prof={}, le {},  début = {}, libre ? {}".format(self.user.last_name, self.date.strftime("%d %n"), self.is_occupied)   
