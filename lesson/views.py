@@ -175,7 +175,7 @@ def create_event(request):
                 Slot.objects.create(user = request.user , datetime = dateti , is_occupied = 0 )
 
         else :  
-            print(form_slot.errors)
+            print(form_s.errors)
 
     return redirect('calendar_show' , 0)
 

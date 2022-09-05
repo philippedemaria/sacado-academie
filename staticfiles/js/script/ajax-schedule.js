@@ -59,7 +59,7 @@ define(['jquery', 'bootstrap','moment', 'fullcalendar'], function ($) {
 			select: function(startDate) {
 						$("#new_event").modal('show');
 						$("#id_date").val(startDate.format("YYYY-MM-DD"));
-						$("#id_datetime").val(startDate.format());
+						$("#id_datetime").val(startDate.format("YYYY-MM-DD"));
 			    },
 	        eventDrop: function(event, delta, revertFunc) {
 

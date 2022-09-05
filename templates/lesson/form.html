@@ -94,7 +94,7 @@
                   <form  action="{% url 'create_event' %}" method="POST"><input name="is_lesson" value="0" type="hidden" />
                       {% csrf_token %}  
 
-                      <div class="row" style="display:none">              
+                      <div class="row">              
                           <div class="col-sm-8 col-md-8" >                        
                               <div class="form-group">
                                 <label>Date</label> <input id="id_datetime" name="datetime" type="datetime" class="form-control" /> 
