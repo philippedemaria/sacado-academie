@@ -40,10 +40,13 @@ def events_json(request):
         event_start = datetime.combine(event_date, event.start )
         event_end   = event_start + timedelta(minutes=event.duration)
 
-        if request.user.is_teacher : url = event.urlJoinProf 
+        if request.user.is_teacher and event.urlJoinProf  : url = event.urlJoinProf 
         elif request.user.is_student : 
             student_connex = ConnexionEleve.objects.get(user = request.user, event =event)
-            url = student_connex.urlJoinEleve
+            try :
+                url = student_connex.urlJoinEleve
+            except :
+                url = ""
         else : 
             url = ""  
 
