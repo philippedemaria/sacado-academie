@@ -141,9 +141,6 @@ def delete_relations(request):
     return redirect("gestion_academy_dashboard" )
   
 
-
-
-
 def create_academy(request,idl):
 
     # if Group.objects.filter(level_id=idl).count()>3:
@@ -376,6 +373,28 @@ def associate_student_docs(request) :
 
 
  
+def add_presentation(request,idl):
+
+
+    sequences  = Parcours.objects.filter(teacher_id=2480,level_id=idl,is_sequence=1)
+    for sequence in sequences :
+        Relationship.objects.create(exercise_id=10155, parcours = sequence,ranking=0,situation=5)
+        Relationship.objects.create(exercise_id=10154, parcours = sequence,ranking=0,situation=5)
+
+    
+    return redirect("gestion_academy_dashboard" )
+
+
+
+#---------------------------------------------------------------------------------------------------------
+#   FIN GESTION DE L'ACADEMIE 
+#---------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
 
 
 

@@ -36,6 +36,7 @@ urlpatterns = [
     path('delete_relations', delete_relations , name='delete_relations'),
     path('delete_teachers', delete_teachers , name='delete_teachers'),
     path('delete_users', delete_users , name='delete_users'),
+    path('add_presentation/<int:idl>', add_presentation , name='add_presentation'),
 
 
     path('create_academy/<int:idl>', create_academy , name='create_academy'), 
