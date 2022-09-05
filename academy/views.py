@@ -376,7 +376,7 @@ def associate_student_docs(request) :
 def add_presentation(request,idl):
 
 
-    sequences  = Parcours.objects.filter(teacher_id=2480,level_id=idl,is_sequence=1)
+    sequences  = Parcours.objects.filter(subject_id=1,level_id=idl,is_sequence=1)
     for sequence in sequences :
         Relationship.objects.create(exercise_id=10155, parcours = sequence,ranking=0,situation=5)
         Relationship.objects.create(exercise_id=10154, parcours = sequence,ranking=0,situation=5)
