@@ -119,14 +119,14 @@ def create_event(request):
             event.save()
             #-------------- envoi du mail au prof
             CorpsMessage="""Bonjour, 
-            Vous venez de créer une nouvelle leçon intitulée : {}.
-            Elle se déroulera le {} à {} pour {} minutes.
-            Voici le lien qui vous permettra d'accéder à la visio :
-            {}
+Vous venez de créer une nouvelle leçon intitulée : {}.
+Elle se déroulera le {} à {} pour {} minutes.
+Voici le lien qui vous permettra d'accéder à la visio :
+    {}
 
-            Normalement, la visio sera créée automatiquement 3 minutes avant le rendez-vous. 
-            En cas de problème, ou pour la créer à la main, voici le lien :
-            {}  
+Normalement, la visio sera créée automatiquement 3 minutes avant le rendez-vous. 
+En cas de problème, ou pour la créer à la main, voici le lien :
+    {}  
             """.format(str(event.title) ,str(event.date.strftime("%A %d/%m")),str(event.start),str(event.duration),event.urlJoinProf,event.urlCreate)
             if len(students)==0 :
                 CorpsMessage+="Cette leçon n'a pas d'élève, ce qui est curieux..."
@@ -147,19 +147,18 @@ def create_event(request):
                 if student.user.email != None : 
                     dest.append(student.user.email) 
                 send_mail("Programmation d'une leçon par visio","""
-            Bonjour,
-            Une leçon par visio a été programmée par {} {}, à destination de {} {}.
-            Elle aura lieu le {} de {} à {}.
-            Voici le lien d'accès à la visio :
+Bonjour,
+Une leçon par visio a été programmée par {} {}, à destination de {} {}.
+Elle aura lieu le {} de {} à {}.
+Voici le lien d'accès à la visio :
 
-            {}
+    {}
 
-            Merci de bien vouloir contacter l'enseignant à l'adresse {} en cas d'indisponibilité.
+Merci de bien vouloir contacter l'enseignant à l'adresse {} en cas d'indisponibilité.
 
-            Très cordialement,
+Très cordialement,
 
-            L'équipe Sacado Académie.
-            """.format(user.civilite,user.last_name.capitalize(),student.user.first_name.capitalize(),student.user.last_name.capitalize(), 
+L'équipe Sacado Académie.""".format(user.civilite,user.last_name.capitalize(),student.user.first_name.capitalize(),student.user.last_name.capitalize(), 
                        str(event.date.strftime("%A %d/%m")),str(event.start),str(event.duration),ListeUrls[i],user.email),DEFAULT_FROM_EMAIL,dest) 
         else :  
             print(form.errors)
