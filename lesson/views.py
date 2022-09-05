@@ -104,6 +104,8 @@ def create_event(request):
         if form.is_valid():    
             event = form.save(commit=False)
             event.user = request.user
+            event.urlCreate=bbb_urlCreate(event)
+            event.urlJoinProf=bbb_urlJoin(event,"MODERATOR")
             event.save()  # pour avoir un id, necessaire pour les relations M2M
             students=form.cleaned_data.get("users")
             send_list = []
@@ -116,7 +118,7 @@ def create_event(request):
                 conn.save()
                 if student.user.email!=None : 
                     send_list.append(student.user.email)    
-            event.save()
+
             #-------------- envoi du mail au prof
             CorpsMessage="""Bonjour, 
 Vous venez de créer une nouvelle leçon intitulée : {}.
