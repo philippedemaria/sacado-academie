@@ -56,9 +56,9 @@ define(['jquery', 'bootstrap','moment', 'fullcalendar'], function ($) {
 	              day:      'Jour'
 	          },
 				events: '../events_json',	                  
-			select: function(startDate, endDate) {
+			select: function(startDate) {
 						$("#new_event").modal('show');
-						$("#id_date").val(startDate.format());
+						$("#id_date").val(startDate.format("YYYY-MM-DD"));
 						$("#id_datetime").val(startDate.format());
 			    },
 	        eventDrop: function(event, delta, revertFunc) {

@@ -101,7 +101,7 @@ def create_event(request):
 
     #new_form.start = new_form.start + timedelta(hours=int(tabs[0]),minutes=int(tabs[1]))
     if is_lesson == "1" :
-        if form.is_valid():
+        if form.is_valid():    
             event = form.save(commit=False)
             event.user = request.user
             event.save()  # pour avoir un id, necessaire pour les relations M2M
@@ -132,7 +132,7 @@ def create_event(request):
                 CorpsMessage+="Cette leçon n'a pas d'élève, ce qui est curieux..."
             elif len(students)==1 :
                 CorpsMessage+="Cette leçon est destinée à {} {}, et son lien d'accès est : \n{}\n"\
-                .format(students[0].first_name.capitalize(), students[0].last_name.capitalize(),ListeUrls[0])
+                .format(students[0].user.first_name.capitalize(), students[0].user.last_name.capitalize(),ListeUrls[0])
             else :
                 CorpsMessage+="Voici la liste des élèves inscrits à cette leçon, et leurs liens d'accès respectifs : \n"
     			
