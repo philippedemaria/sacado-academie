@@ -36,10 +36,10 @@
                                 Le {{ event.date|date:"l j b Y"  }} 
                             </h3>
                             <h5>
-                                A {{ event.start|date:"H:i:s"  }} pendant {{ event.duration|int_minutes  }} minutes
+                                A {{ event.start|date:"H:i"  }} pendant {{ event.duration   }}  minutes
                             </h5>
                             {% if event.urlJoinProf %}
-                            <p><a href="{{ event.urlJoinProf }}" target="_blank">Lien de connexion </a></p>
+                            <p><a href="{{ event.urlJoinProf }}" target="_blank" class="white">Lien de connexion ici</a></p>
                             {% endif %}
                       </div> 
                     </div> 
