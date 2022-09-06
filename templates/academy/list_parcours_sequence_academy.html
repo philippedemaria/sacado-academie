@@ -45,7 +45,7 @@
                         {% if r.type_id == 0  %}
                             {% if r.exercise.supportfile.imagefile %}
                                 <img src="{{ r.exercise.supportfile.imagefile.url }}" width="150px" title="{{ r.exercise.supportfile.knowledge }}" style="float:left;" />
-                            {% else %}"
+                            {% else %}
                                 <h6 style="clear:both">{{ r.exercise.supportfile.title }}</h6>
                             {% endif %}
                         {% else  %}
