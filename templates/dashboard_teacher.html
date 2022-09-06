@@ -173,7 +173,7 @@
             {% endif %}
         {% endfor %}
 
-        {% if teacher.groups.count > 0 and teacher.user.username|length < 50 %} 
+        {% if teacher.groups.count > 0 and teacher.user.is_staff %} 
         <div class="col-lg-2 col-xs-2">
             <a href="{% url 'create_group' %}" class="helper_tip"><i class="fa fa-plus-circle fa-3x btn-create-group" ></i> 
                 <div class="helper_tip_text" >Nouveau groupe</div>
