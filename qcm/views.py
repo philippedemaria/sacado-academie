@@ -8041,6 +8041,28 @@ def only_update_course(request,idc):
 
 
 
+#@user_is_parcours_teacher
+def only_update_course_from_sequence(request,idc=0,idf=0 , ids=0):
+    """
+    idc : course_id et id = parcours_id pour correspondre avec le decorateur
+    """
+    teacher =  request.user.teacher
+    course  =  Course.objects.get(pk=idc)
+    parcours  =  Parcours.objects.get(pk=ids)
+    form    =  CourseNPForm(request.POST or None, instance = course , teacher = teacher , initial = {   'subject' : course.parcours.subject  , 'level' : course.parcours.level , 'parcours' : parcours })
+    if request.method == "POST" :
+        if form.is_valid():
+            nf =  form.save(commit = False)
+            nf.teacher = teacher
+            nf.author = teacher
+            nf.save()
+            return redirect('show_parcours', idf , ids)
+        else:
+            print(form.errors)
+
+    context = {  'form': form , 'teacher': teacher, 'course': course , 'parcours': course.parcours ,    }
+
+    return render(request, 'qcm/course/form_np_course.html', context)
 
 
 

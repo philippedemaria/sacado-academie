@@ -903,18 +903,25 @@
              
             <!-- Appel de partage  -->
  
-                <a  class="white"
-                    {% if rc.type_id == 1 %}  href="{%  url 'show_custom_sequence'  rc.type_of_document.id %}"
-                    {% elif rc.type_id == 2 %}  href="{%  url 'show_one_course'  rc.document_id   %}"
-                    {% elif rc.type_id == 3 %}  href="{%  url 'show_quizz_shared'  rc.document_id   %}"
-                    {% elif rc.type_id == 4 %}  href="{%  url 'show_flashpack'  rc.document_id    %}"
-                    {% elif rc.type_id == 5 %}  href="{%  url 'show_bibliotex'  rc.document_id  %}"
-                    {% endif %}
-                    target="_blank" style="font-size:14px"><i class="fa fa-share-square fa-fw"></i>
-                </a>
+              <a  class="white"
+                  {% if rc.type_id == 1 %}  href="{%  url 'show_custom_sequence'  rc.type_of_document.id %}"
+                  {% elif rc.type_id == 2 %}  href="{%  url 'show_one_course'  rc.document_id   %}"
+                  {% elif rc.type_id == 3 %}  href="{%  url 'show_quizz_shared'  rc.document_id   %}"
+                  {% elif rc.type_id == 4 %}  href="{%  url 'show_flashpack'  rc.document_id    %}"
+                  {% elif rc.type_id == 5 %}  href="{%  url 'show_bibliotex'  rc.document_id  %}"
+                  {% endif %}
+                  target="_blank" style="font-size:14px"><i class="fa fa-share-square fa-fw"></i>
+              </a>
 
-
-                                     
+              <a  class="white"
+                  {% if rc.type_id == 1 %}  href="{%  url 'parcours_update_custom_exercise'  rc.type_of_document.id  parcours.id %}"
+                  {% elif rc.type_id == 2 %}  href="{% if folder %}{%  url 'only_update_course_from_sequence'  rc.document_id folder.id parcours.id  %}{% else %}{%  url 'only_update_course_from_sequence'  rc.document_id 0 parcours.id  %}{% endif %}"
+                  {% elif rc.type_id == 3 %}  href="{%  url 'update_quizz'  rc.document_id   %}"
+                  {% elif rc.type_id == 4 %}  href="{%  url 'update_flashpack'  rc.document_id    %}"
+                  {% elif rc.type_id == 5 %}  href="{%  url 'update_bibliotex'  rc.document_id  %}"
+                  {% endif %}
+                  target="_blank" style="font-size:14px"><i class="fa fa-cogs fa-fw"></i>
+              </a>                           
  
              <a href = "#" data-toggle = 'modal'  
                 data-target = '#individualisation_exercice'  

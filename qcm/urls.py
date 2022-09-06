@@ -238,7 +238,11 @@ urlpatterns = [
 
     path('parcours_show_courses_from_folder/<int:idf>/0', show_courses_from_folder, name='show_courses_from_folder'),  
     path('parcours_only_create_course/0', only_create_course, name='only_create_course'), 
+
+
     path('parcours_only_update_course/<int:idc>', only_update_course, name='only_update_course'), 
+    path('only_update_course_from_sequence/<int:idc>/<int:idf>/<int:ids>', only_update_course_from_sequence, name='only_update_course_from_sequence'), 
+
 
     path('get_course_in_this_parcours/<int:id>', get_course_in_this_parcours, name='get_course_in_this_parcours'), 
     path('get_this_course_for_this_parcours/<int:typ>/<int:id_target>/<int:idp>', get_this_course_for_this_parcours, name='get_this_course_for_this_parcours'), 

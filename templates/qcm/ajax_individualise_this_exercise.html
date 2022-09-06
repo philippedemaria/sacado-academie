@@ -7,7 +7,10 @@
     <div class="col-sm-12 col-md-6">
 
         {% if rc.exercise %}
+            {% if rc.exercise.supportfile.imagefile %}
             <img  src="{{ rc.exercise.supportfile.imagefile.url }}"  width="400px" />
+            {% endif %}
+
         {% else %} 
             {% if rc.imagefile %}
                 <img  src="{{ rc.imagefile.url }}"  width="400px" />
