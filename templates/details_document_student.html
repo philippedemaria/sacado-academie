@@ -471,7 +471,7 @@
 {% with  rc.type_of_document as course %}
 <div  class="card_freeze"  style="background-color:#f1eef7;border-radius: 0px 30px 0px 0px;border: 3px solid {{ parcours.color}}">
 
-        <h1 style="color: #5d4391;margin-left:10px">COURS</h1>
+        <h1 style="color: #5d4391;margin-left:10px"> {{ course.forme }}</h1>
         <h3 style="color: #5d4391;margin-left:10px;">      {% if course.title|length > 40 %}
                       {{ course.title|truncatechars:"40" }}
                     {% else %}

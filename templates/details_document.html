@@ -787,7 +787,8 @@
                        
           <div class="card-score" style="margin-left:10px;width:100%;font-size: 30px;color: #5d4391">
    
-                    {% if rc.type_id == 2 %}  COURS   
+                    {% if rc.type_id == 2 %}  
+                        {{ rc.type_of_document.forme }}
                     {% elif rc.type_id == 3 %} QUIZ  
                     {% elif rc.type_id == 4 %} FLASHPACK   
                     {% elif rc.type_id == 5 %} BIBLIOTEX
