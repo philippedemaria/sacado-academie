@@ -2280,7 +2280,7 @@ class Exerciselocker(ModelWithCode):
 class Course(models.Model): # pour les 
     FORMES = (
         ("COURS"  , "COURS"),
-        ("METHODE", "METHODE"),
+        ("MÉTHODE", "MÉTHODE"),
         ("EXEMPLE", "EXEMPLE"),
         ("VIDEO"  , "VIDEO"),
         (""       , "PRESENTATION"),
