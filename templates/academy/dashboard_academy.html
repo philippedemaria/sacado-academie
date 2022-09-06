@@ -84,28 +84,7 @@
 
                     <a href="{% url 'delete_parcours'   %}" class="small-box-footer" onclick="return TestDelete('les parcours ')"><i class="fa fa-arrow-circle-right"></i> Tout supprimer </a>                    
                 </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-xs-6">
-                <!-- small box -->
-                <div class="small-box bg-purple">
-                    <div class="inner" style="border-bottom: solid 1px #f1eef7;font-size: 18px">
-                        <span style="font-size: 30px">Voir les séquences</span>
-                    </div>
-                    <div class="inner">
-                        {% for data in dataset %}
-                            <a href="{% url 'list_parcours_sequence_academy' 1 data.id %}" class="white">{{ data.level }}</a> - 
-                        {% endfor %}
-                    </div>
-                    <div class="inner" style="border-bottom: solid 1px #f1eef7;font-size: 18px">
-                        <span style="font-size: 30px">Voir les parcours</span>
-                    </div>
-                    <div class="inner">
-                        {% for data in dataset %}
-                            <a href="{% url 'list_parcours_sequence_academy' 0 data.id %}" class="white">{{ data.level }}</a> - 
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>          
+            </div>         
             <div class="col-lg-3 col-md-4 col-xs-6">
                 <!-- small box -->
                 <div class="small-box bg-purple">
