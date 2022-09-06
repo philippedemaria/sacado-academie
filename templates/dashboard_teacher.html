@@ -211,8 +211,8 @@
                                 <i class="fa fa-trash"></i>
                             </a>  
                                                                                   
-                            {% if parcours.is_folder %} 
-                                <a href="{% url 'update_folder' parcours.id 0 %}" class="btn btn-info btn-xs" >   Affecter ce dossier à un groupe</a><br>
+                            {% if parcours.is_sequence %} 
+                                <a href="{% url 'update_sequence' parcours.id 0 %}" class="btn btn-info btn-xs" >   Affecter ce dossier à un groupe</a><br>
                             {% else %}   
                                 {% if parcours.is_evaluation %} 
                                     <a href="{% url 'update_evaluation' parcours.id 0 %}" class="btn btn-default btn-xs" >   Affecter à un groupe</a><br>
