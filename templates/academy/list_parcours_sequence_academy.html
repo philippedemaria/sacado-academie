@@ -1,0 +1,79 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% load item_tags %}
+
+
+{% block require %}
+   
+{% endblock %}
+
+ 
+
+{% block page_title %}
+    Liste des parcours  > <small>{{ parcourses.count }} parcours</small>
+{% endblock %}
+
+
+
+{% block page_menu_right %}
+ 
+{% endblock %}
+
+
+
+{% block css_files %}
+{% endblock %}
+
+
+
+{% block body  %}
+
+{% include 'preloader.html' %}
+
+<section class="content_list" id="principal_section"> 
+
+
+    
+  
+    <div class="row "> 
+        <div class="col-sm-12 col-md-12">
+                <form action="" method="POST">             {% csrf_token %}
+                {% for parcours in parcourses  %}
+                    <label class="sacado_color"><h3><input type="checkbox" name="parcours" id="id_parcours" value="{{ parcours.id }}" /> {{ parcours.title }} - Auteur : {{ parcours.author }} - {{ parcours.teacher}} </label></h3>
+                    {% for r  in parcours.parcours_relationship.all|dictsort:"ranking" %}
+                        {% if r.type_id == 0  %}
+                            {% if r.exercise.supportfile.imagefile %}
+                                <img src="{{ r.exercise.supportfile.imagefile.url }}" width="150px" title="{{ r.exercise.supportfile.knowledge }}" />
+                            {% else %}
+                                <h6 style="clear:both">{{ r.exercise.supportfile.title }}</h6>
+                            {% endif %}
+                        {% else  %}
+                            <div style="float:left; width:150px; height:110px;border-radius:0px 20px 0px 0px; background-color:#f1eef7;border:#5d4391;padding-top:10px;font-size:10px">
+                                {{ r.exercise.supportfile.title }}
+                            </div>
+                        {% endif  %}
+                    {% endfor %}
+                    <div class="row"><hr/></div>
+                {% endfor %}
+                    <div class="row">  
+                        <div class="col-xs-12"> 
+                            <div class="form-group">
+                                <input value="Supprimer" type="submit"  class="btn btn-danger" onclick="return TestDelete('ces choix' )"  /> <a href="javascript:history.back()"  class="btn btn-default " >Retour </a>
+                            </div>  
+                        </div> 
+                    </div>
+                </form>
+        </div>
+    </div>
+  
+    
+     
+</section>
+
+
+
+
+ 
+
+{% endblock  %}   

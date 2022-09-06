@@ -80,7 +80,7 @@ def gestion_academy_dashboard(request):
     nbu      = User.objects.order_by("user__last_name").count()
 
     ids      = [14,1,2,3,4,5,6,7,8,9,10,11,12]
-    suffixes = ["Maternelle","CP" , "CE1", "CE2", "CM1", "CM2", "Sxième", "Cinquième", "Quatrième", "Troisième", "Seconde", "Première", "Terminale"]
+    suffixes = ["Maternelle","CP" , "CE1", "CE2", "CM1", "CM2", "Sixième", "Cinquième", "Quatrième", "Troisième", "Seconde", "Première", "Terminale"]
     dataset = []
     for i in range(len(ids)) :
         data= dict()
@@ -390,12 +390,23 @@ def add_presentation(request,idl):
     return redirect("gestion_academy_dashboard" )
 
 
+def list_parcours_sequence_academy(request,isp,idl):
+
+    parcourses = Parcours.objects.filter(is_sequence=isp,level_id=idl)
+    parcours = request.POST.getlist('parcours',None)
+
+    if request.method == "POST" :
+        for pid in parcours :
+            p=Parcours.objects.get(pk=pid)
+            p.delete()
+        messages.success(request,"suppression réussie")
+
+    context = { 'parcourses' : parcourses  }
+    return render(request, "academy/list_parcours_sequence_academy.html" , context)
 
 #---------------------------------------------------------------------------------------------------------
 #   FIN GESTION DE L'ACADEMIE 
 #---------------------------------------------------------------------------------------------------------
-
-
 
 
 
