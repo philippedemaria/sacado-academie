@@ -52,7 +52,7 @@
                             <div style="float:left; width:150px; height:110px;border-radius:0px 20px 0px 0px; background-color:#f1eef7;border:solid 1px#5d4391; margin-right:1px;padding-top:10px;font-size:12px">
 
                                 <p style="font-size:12px"> {% if r.type_id == 1 %} EXO PERSO
-                                    {% elif r.type_id == 2 %} {{ rc.type_of_document.forme }}
+                                    {% elif r.type_id == 2 %} {{ r.type_of_document.forme }}
                                     {% elif r.type_id == 3 %} QUIZZ
                                     {% elif r.type_id == 4 %} FLASHPACK
                                     {% else %} BIBLIOTEX{% endif  %}
