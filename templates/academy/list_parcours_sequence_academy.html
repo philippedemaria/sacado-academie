@@ -40,7 +40,7 @@
         <div class="col-sm-12 col-md-12">
                 <form action="" method="POST">             {% csrf_token %}
                 {% for parcours in parcourses  %}
-                    <label class="sacado_color"><h3><input type="checkbox" name="parcours" id="id_parcours" value="{{ parcours.id }}" /> {{ parcours.title }} - Auteur : {{ parcours.author }} - {{ parcours.teacher}} </label></h3>
+                    <label class="sacado_color"><h3><input type="checkbox" name="parcours" id="id_parcours" value="{{ parcours.id }}" />#{{ parcours.id }}. {{ parcours.title }} - Auteur : {{ parcours.author }} - {{ parcours.teacher}} </label></h3>
                     {% for r  in parcours.parcours_relationship.all|dictsort:"ranking" %}
                         {% if r.type_id == 0  %}
                             {% if r.exercise.supportfile.imagefile %}

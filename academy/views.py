@@ -392,7 +392,7 @@ def add_presentation(request,idl):
 
 def list_parcours_sequence_academy(request,isp,idl):
 
-    parcourses = Parcours.objects.filter(is_sequence=isp,level_id=idl)
+    parcourses = Parcours.objects.filter(is_sequence=isp,level_id=idl).order_by("title")
     parcours = request.POST.getlist('parcours',None)
 
     if request.method == "POST" :
