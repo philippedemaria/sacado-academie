@@ -3806,14 +3806,15 @@ def clone_sequence(request, id ):
     parcours.code = str(uuid.uuid4())[:8]  
     parcours.save()
 
-    # ajoute le group au parcours si group    
+    # ajoute le group au parcours si group
+    group_id = request.session.get("group_id",None)    
     try :
-        group_id = request.session.get("group_id",None)
         if group_id :
             group = Group.objects.get(pk = group_id)
             parcours.groups.add(group)
             Parcours.objects.filter(pk = parcours.id).update(subject = group.subject)
             Parcours.objects.filter(pk = parcours.id).update(level = group.level)
+            messages.success(request, "Duplication réalisée avec succès. Bonne utilisation. Vous pouvez placer le parcours dans le dossier en cliquant sur la config. du parcours")
         else :
             messages.error(request,"Non affecté au groupe et placé dans le tableau de bord pour réaffectation manuelle")
             group = None   
@@ -3834,8 +3835,10 @@ def clone_sequence(request, id ):
         messages.error(request,"Non affecté au dossier et placé dans le tableau de bord pour réaffectation manuelle")
         folder = None
 
-
-
+    if group_id :
+        messages.success(request, "Duplication réalisée avec succès. Bonne utilisation. Vous pouvez placer le parcours dans le dossier en cliquant sur la config. du parcours")
+    else :
+        messages.error(request,"Non affecté au dossier et placé dans le tableau de bord pour réaffectation manuelle")
 
     for relationship in relationships :
         try :
@@ -3845,7 +3848,7 @@ def clone_sequence(request, id ):
         except :
             pass
 
-    messages.success(request, "Duplication réalisée avec succès. Bonne utilisation. Vous pouvez placer le parcours dans le dossier en cliquant sur la config. du parcours")
+
 
     if folder_id :
         return redirect('list_sub_parcours_group', 0 , folder_id)
