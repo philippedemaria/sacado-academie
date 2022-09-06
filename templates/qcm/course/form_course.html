@@ -48,10 +48,17 @@
 
         <div class="row">
             <div class="col-sm-12 col-lg-8">
-                <div class="form-group">
-                    {{ form.title.label_tag }} <em>50 caractères max.</em><br>
-                    {{ form.title|add_class:"form-control"   }}
-                    {{ form.title.errors }} 
+                <div class="row">
+                    <div class="col-sm-12 col-lg-8">                
+                            {{ form.title.label_tag }} <em>50 caractères max.</em><br>
+                            {{ form.title|add_class:"form-control"   }}
+                            {{ form.title.errors }} 
+                    </div>
+                    <div class="col-sm-12 col-lg-4">   
+                            {{ form.forme.label_tag }}  
+                            {{ form.forme|add_class:"form-control select2" }} 
+                            {{ form.forme.errors }}
+                    </div>
                 </div>
                 <div class="form-group">
                     {{ form.annoncement.label_tag }}<br>
