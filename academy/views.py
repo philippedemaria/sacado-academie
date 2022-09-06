@@ -392,7 +392,16 @@ def add_presentation(request,idl):
 
 def list_parcours_sequence_academy(request,isp,idl):
 
-    parcourses = Parcours.objects.filter(is_sequence=isp,level_id=idl).order_by("title")
+    parcourses_all = Parcours.objects.filter(is_sequence=isp,level_id=idl).order_by("title")
+    dataset        = []
+    for parcours in parcourses_all :
+        data = {}
+        data["parcours"] = parcours
+        data["relationships"] =  parcours.parcours_relationship.order_by("ranking") 
+        dataset.append(data)
+
+
+
     parcours = request.POST.getlist('parcours',None)
 
     if request.method == "POST" :
@@ -401,7 +410,7 @@ def list_parcours_sequence_academy(request,isp,idl):
             p.delete()
         messages.success(request,"suppression réussie")
 
-    context = { 'parcourses' : parcourses  }
+    context = { 'dataset' : dataset  }
     return render(request, "academy/list_parcours_sequence_academy.html" , context)
 
 #---------------------------------------------------------------------------------------------------------

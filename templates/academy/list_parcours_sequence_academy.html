@@ -39,9 +39,9 @@
     <div class="row "> 
         <div class="col-sm-12 col-md-12">
                 <form action="" method="POST">             {% csrf_token %}
-                {% for parcours in parcourses  %}
-                    <label class="sacado_color"><h3><input type="checkbox" name="parcours" id="id_parcours" value="{{ parcours.id }}" />#{{ parcours.id }}. {{ parcours.title }} - Auteur : {{ parcours.author }} - {{ parcours.teacher}} </label></h3>
-                    {% for r  in parcours.parcours_relationship.all|dictsort:"ranking" %}
+                {% for data in dataset  %}
+                    <label class="sacado_color"><h3><input type="checkbox" name="parcours" id="id_parcours" value="{{ data.parcours.id }}" />#{{ data.parcours.id }}. {{ data.parcours.title }} - <small>Auteur : {{ data.parcours.author }} - Enseignant : {{ data.parcours.teacher}}</small> </label></h3>
+                    {% for r  in  data.relationships %}
                         {% if r.type_id == 0  %}
                             {% if r.exercise.supportfile.imagefile %}
                                 <img src="{{ r.exercise.supportfile.imagefile.url }}" width="150px" title="{{ r.exercise.supportfile.knowledge }}" />
