@@ -230,10 +230,10 @@
                                         {% endif %}
 
 
-                                          {% if relationship.type_id == 2 %} {% if relationship.type_of_document.forme %}   {{ relationship.type_of_document.forme }} > {% endif %}{{ relationship.type_of_document.title }}
-                                          {% elif relationship.type_id == 3 %} QUIZ >  
-                                          {% elif relationship.type_id == 4 %} FLASHPACK >  
-                                          {% elif relationship.type_id == 5 %} BIBLIOTEX >
+                                          {% if relationship.type_id == 2 %} {% if relationship.type_of_document.forme %} <b>  {{ relationship.type_of_document.forme }}</b> > {% endif %}{{ relationship.type_of_document.title }}
+                                          {% elif relationship.type_id == 3 %} <b>QUIZZ </b> >  {{ relationship.type_of_document.title }}
+                                          {% elif relationship.type_id == 4 %} <b>FLASHPACK </b> > {{ relationship.type_of_document.title }}
+                                          {% elif relationship.type_id == 5 %} <b>BIBLIOTEX </b> > {{ relationship.type_of_document.title }}
                                           {% endif %}
 
                                             {{ relationship.type_of_document.title }} 
