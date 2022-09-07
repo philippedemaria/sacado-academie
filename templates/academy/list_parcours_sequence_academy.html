@@ -5,9 +5,14 @@
 
 
 {% block require %}
-   
-{% endblock %}
+ 
 
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common4.js' %}"></script>
+
+    <script>
+        require(['script/ajax-academy_sorter']);
+    </script> 
+{% endblock %} 
  
 
 {% block page_title %}
@@ -38,18 +43,21 @@
   
     <div class="row "> 
         <div class="col-sm-12 col-md-12">
-                <form action="" method="POST">             {% csrf_token %}
+                <form action="" method="POST" >             
+                {% csrf_token %}
                 {% for data in dataset  %}
-                    <label class="sacado_color">
+                    <label class="sacado_color_text">
                         <h3>
-                            <input type="checkbox" name="parcours" id="id_parcours" value="{{ data.parcours.id }}" />
+                            <input type="checkbox" name="parcours"  value="{{ data.parcours.id }}" />
                             #{{ data.parcours.id }}. {{ data.parcours.title }} - <small>Auteur : {{ data.parcours.author }} - Enseignant : {{ data.parcours.teacher}}</small>
                             {% if data.parcours.is_publish %}<span style="background-color: #1bc074; padding:5px" class='pull-right'> Publié </span> {% else %}<span  class='pull-right' style="background-color: #cb2131; padding:5px"> Dépublié </span>   {% endif %}
                         </h3>
                     </label> 
                     <div class="row" style="clear:both"> 
-                        <div class="col-sm-12 col-md-12">
+                        <div class="col-sm-12 col-md-12 sequence_sorter_academy" id="sequence_sorter_academy{{ data.parcours.id }}" data-parcours_id="{{ data.parcours.id }}">
                             {% for r  in  data.relationships %}
+                                <div style="float:left;width:150px; height:110px;cursor:move"> 
+                                    <input value="{{ r.id }}" type="hidden" class="relationship_id_sequence" />
                                 {% if r.type_id == 0  %}
                                     {% if r.exercise.supportfile.imagefile %}
                                         <img src="{{ r.exercise.supportfile.imagefile.url }}" width="150px" height="110px" title="{{ r.exercise.supportfile.knowledge }}" style="float:left;" />
@@ -67,6 +75,7 @@
                                         <p style="background-color:#fff;font-size:12px">{{ r.type_of_document.title }}</p>    
                                     </div>
                                 {% endif  %}
+                                </div>
                             {% endfor %}
                         </div>
                     </div>

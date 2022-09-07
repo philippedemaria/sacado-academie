@@ -45,9 +45,6 @@ urlpatterns = [
     path('associate_student_docs', associate_student_docs , name='associate_student_docs'),
 
 
-
-
-
     
 ]
 
