@@ -78,28 +78,26 @@
                                         </p>
                                         <input value="{{ r.id }}" type="hidden" class="relationship_id_sequence" />
                                         <p style="background-color:#fff;font-size:12px">{{ r.type_of_document.title }}</p><small>#{{ r.type_of_document.id }}</small>  
-                                          
-                                          <a  
-                                              {% if r.type_id == 1 %}  href="{%  url 'show_custom_sequence'  r.type_of_document.id %}"
-                                              {% elif r.type_id == 2 %}  href="{%  url 'show_one_course'  r.document_id   %}"
-                                              {% elif r.type_id == 3 %}  href="{%  url 'show_quizz_shared'  r.document_id   %}"
-                                              {% elif r.type_id == 4 %}  href="{%  url 'show_flashpack'  r.document_id    %}"
-                                              {% elif r.type_id == 5 %}  href="{%  url 'show_bibliotex'  r.document_id  %}"
-                                              {% endif %}
-                                              target="_blank" style="font-size:16px"><i class="fa fa-share-square fa-fw"></i>
-                                          </a>
-
-                                          <a 
-                                              {% if r.type_id == 1 %}  href="{%  url 'parcours_update_custom_exercise'  r.type_of_document.id  parcours.id %}"
-                                              {% elif r.type_id == 2 %}  href="{% if folder %}{%  url 'only_update_course_from_sequence'  r.document_id folder.id parcours.id  %}{% else %}{%  url 'only_update_course_from_sequence'  r.document_id 0 parcours.id  %}{% endif %}"
-                                              {% elif r.type_id == 3 %}  href="{%  url 'update_quizz'  r.document_id   %}"
-                                              {% elif r.type_id == 4 %}  href="{%  url 'update_flashpack'  r.document_id    %}"
-                                              {% elif r.type_id == 5 %}  href="{%  url 'update_bibliotex'  r.document_id  %}"
-                                              {% endif %}
-                                              target="_blank" style="font-size:16px"><i class="fa fa-cogs fa-fw"></i>
+                                          {% if r.type_id == 1 %}
+                                          <a href="{%  url 'show_custom_sequence'  r.type_of_document.id %}" target="_blank" style="font-size:16px"><i class="fa fa-share-square fa-fw"></i></a>
+                                          <a href="{%  url 'parcours_update_custom_exercise'  r.type_of_document.id  r.parcours.id %}" target="_blank" style="font-size:16px"><i class="fa fa-cogs fa-fw"></i></a>  
+                                            {% elif r.type_id == 2 %}
+                                            <a href="{%  url 'show_one_course'  r.document_id   %}" target="_blank" style="font-size:16px"><i class="fa fa-share-square fa-fw"></i></a>
+                                          <a href="{% if folder %}{%  url 'only_update_course_from_sequence'  r.document_id folder.id r.parcours.id  %}{% else %}{%  url 'only_update_course_from_sequence'  r.document_id 0 r.parcours.id  %}{% endif %}" target="_blank" style="font-size:16px"><i class="fa fa-cogs fa-fw"></i>
                                           </a>  
+                                            {% elif r.type_id == 3 %}
+                                          <a href="{%  url 'show_quizz_shared'  r.document_id   %}"target="_blank" style="font-size:16px"><i class="fa fa-share-square fa-fw"></i></a>
+                                          <a href="{%  url 'update_quizz'  r.document_id   %}" target="_blank" style="font-size:16px"><i class="fa fa-cogs fa-fw"></i></a> 
 
-
+                                            {% elif r.type_id == 4 %}
+                                              <a href="{%  url 'show_flashpack'  r.document_id    %}" target="_blank" style="font-size:16px"><i class="fa fa-share-square fa-fw"></i>
+                                              </a>
+                                              <a href="{%  url 'update_flashpack'  r.document_id    %}"target="_blank" style="font-size:16px"><i class="fa fa-cogs fa-fw"></i>
+                                              </a> 
+                                            {% else %}
+                                                <a href="{%  url 'show_bibliotex'  r.document_id  %}" target="_blank" style="font-size:16px"><i class="fa fa-share-square fa-fw"></i></a>
+                                                <a href="{%  url 'update_bibliotex'  r.document_id  %}" target="_blank" style="font-size:16px"><i class="fa fa-cogs fa-fw"></i></a> 
+                                            {% endif %}
                                     </div>
                                 {% endif  %}
                             {% endfor %}
