@@ -2279,11 +2279,15 @@ class Exerciselocker(ModelWithCode):
 ########################################################################################################################################### 
 class Course(models.Model): # pour les 
     FORMES = (
+        ("APPLICATION", "APPLICATION"),
         ("COURS"  , "COURS"),
-        ("MÉTHODE", "MÉTHODE"),
         ("EXEMPLE", "EXEMPLE"),
-        ("VIDEO"  , "VIDEO"),
+        ("EXPLICATION", "EXPLICATION"),
+        ("HISTOIRE", "HISTOIRE"),
+        ("ILLUSTRATION", "ILLUSTRATION"),
+        ("MÉTHODE", "MÉTHODE"),
         (""       , "PRESENTATION"),
+        ("VIDEO"  , "VIDEO"),
     )
     parcours = models.ForeignKey(Parcours,  on_delete=models.CASCADE, blank=True, null=True,  related_name='course') 
     title = models.CharField(max_length=50, default='',  blank=True, verbose_name="Titre")    
