@@ -171,14 +171,31 @@
             <div class="col-lg-3 col-md-4 col-xs-6">
                 <!-- small box -->
                 <div class="small-box bg-red">
-                    <div class="inner" style="border-bottom: solid 1px #f1eef7;font-size: 18px">
-                        <span style="font-size: 20px">Ajout section Présentation aux séquences</span>
+                    <div class="inner" style="border-bottom: solid 1px #f1eef7;font-size: 14px">
+                        <span style="font-size: 18px">Ajout section Présentation aux séquences</span>
                     </div>
                     <div class="inner">
                         {% for data in dataset %}
                             <a href="{% url 'add_presentation'  data.id %}" class="white">{{ data.level }}</a> - 
                         {% endfor %}
                     </div>
+
+
+
+                    <div class="inner" style="border-bottom: solid 1px #f1eef7;font-size: 14px">
+                        <span style="font-size: 18px">Ajout section Présentation aux séquences</span>
+                    </div>
+                    <div class="inner">
+                        {% for data in dataset %}
+                            <a href="{% url 'add_exo_presentation'  data.id %}" class="white">{{ data.level }}</a> - 
+                        {% endfor %}
+                    </div>
+
+
+
+
+
+
                 </div>
             </div>  
 
