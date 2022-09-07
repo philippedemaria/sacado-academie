@@ -394,6 +394,7 @@ def list_parcours_sequence_academy(request,isp,idl):
 
     parcourses_all = Parcours.objects.filter(is_sequence=isp,level_id=idl).order_by("title")
     dataset        = []
+    level = Level.objects.get(pk=idl)
     for parcours in parcourses_all :
         data = {}
         data["parcours"] = parcours
@@ -411,7 +412,7 @@ def list_parcours_sequence_academy(request,isp,idl):
         messages.success(request,"suppression réussie")
         return redirect("gestion_academy_dashboard" )
 
-    context = { 'dataset' : dataset  }
+    context = { 'dataset' : dataset  , 'level' : level }
     return render(request, "academy/list_parcours_sequence_academy.html" , context)
 
 
