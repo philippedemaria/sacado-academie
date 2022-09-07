@@ -198,10 +198,10 @@
                                             <div class="pull-right"  style="margin-top:20px">
                                                   <div id="starter{{relationship.id}}" style="display:{% if relationship.is_publish %}none{% else %}block{% endif  %} " >
                                                   A partir de ?<br/>
-                                                  <input type="type" name="starter" data-relationship_id="{{relationship.id}}" data-type ="0" value="{{ relationship.start|date:"Y-m-d" }}" class="datepicker dates" />
+                                                  <input type="type" name="starter" data-relationship_id="{{relationship.id}}" data-type ="0" value='{{ relationship.start|date:"Y-m-d" }}' class="datepicker dates" />
                                                   </div>
                                                   Tâche pour le ?<br/>
-                                                  <input type="type" name="dateur" data-relationship_id="{{relationship.id}}" data-type ="1" value="{{ relationship.date_limit|date:"Y-m-d" }}" class="datepicker dates" />
+                                                  <input type="type" name="dateur" data-relationship_id="{{relationship.id}}" data-type ="1" value='{{ relationship.date_limit|date:"Y-m-d" }}' class="datepicker dates" />
                                             </div>
                                             {{  relationship.instruction|safe }}  
                                             {% if relationship.calculator %}
