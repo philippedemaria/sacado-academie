@@ -56,13 +56,17 @@
                     <div class="row" style="clear:both"> 
                         <div class="col-sm-12 col-md-12 sequence_sorter_academy" id="sequence_sorter_academy{{ data.parcours.id }}" data-parcours_id="{{ data.parcours.id }}">
                             {% for r  in  data.relationships %}
-                                <div style="cursor:move"> 
-                                    <input value="{{ r.id }}" type="hidden" class="relationship_id_sequence" />
                                 {% if r.type_id == 0  %}
                                     {% if r.exercise.supportfile.imagefile %}
-                                        <img src="{{ r.exercise.supportfile.imagefile.url }}" width="150px" height="110px" title="{{ r.exercise.supportfile.knowledge }}" style="float:left;" />
+                                        <div style="float:left;width:150px; height:110px;cursor:move"> 
+                                            <input value="{{ r.id }}" type="hidden" class="relationship_id_sequence" />
+                                            <img src="{{ r.exercise.supportfile.imagefile.url }}" width="150px" height="110px" title="{{ r.exercise.supportfile.knowledge }}" />
+                                        </div>
                                     {% else %}
-                                        <h6 style="clear:both">{{ r.exercise.supportfile.title }}</h6>
+                                        <div style="cursor:move;clear:both"> 
+                                            <input value="{{ r.id }}" type="hidden" class="relationship_id_sequence" />
+                                            <h6>{{ r.exercise.supportfile.title }}</h6>
+                                        </div>
                                     {% endif %}
                                 {% else  %}
                                     <div style="float:left; width:150px; height:110px;border-radius:0px 20px 0px 0px; background-color:#f1eef7;border:solid 1px#5d4391; margin-right:1px;padding-top:10px;font-size:12px">
@@ -72,10 +76,10 @@
                                             {% elif r.type_id == 4 %} FLASHPACK
                                             {% else %} BIBLIOTEX{% endif  %}
                                         </p>
+                                        <input value="{{ r.id }}" type="hidden" class="relationship_id_sequence" />
                                         <p style="background-color:#fff;font-size:12px">{{ r.type_of_document.title }}</p>    
                                     </div>
                                 {% endif  %}
-                                </div>
                             {% endfor %}
                         </div>
                     </div>
