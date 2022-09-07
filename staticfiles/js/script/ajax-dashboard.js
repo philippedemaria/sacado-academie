@@ -1055,10 +1055,11 @@ define(['jquery', 'bootstrap', 'ui', 'ui_sortable'], function ($) {
                     });
                 }    
 
-
- 
-        sorter_exercises('#exercise_sorter' , ".div_exercise_id");
         sorter_sequence('#sequence_sorter' , ".relationship_id_sequence");
+        sorter_sequence('#exercise_sortable' , ".div_relationship_id");
+
+
+        sorter_exercises('#exercise_sorter' , ".div_exercise_id");
         sorter_exercises('#exercise_sortable_list' , ".sorted_exercise_id");
 
         function sorter_parcours($div_class , $exercise_class, $choice ) {

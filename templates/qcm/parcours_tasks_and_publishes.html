@@ -48,7 +48,7 @@
             {% csrf_token %} 
             <div class="row">
                 <div style="background-color: #F2F1F0; border : 1px solid #e6e2dd; padding:20px">
-                    <div class="panel panel-default exercise_sortable" style="border-radius:5px" id="miseEnAttenteDashboard" > 
+                    <div class="panel panel-default" id="exercise_sortable" style="border-radius:5px" > 
                         {% for relationship in relationships_customexercises|dictsort:"ranking" %}  
                             <div  class="panel-body  {% if not forloop.last %} separation_dashed{% endif %}" 
                                   style="line-height: 30px; {% if not forloop.first %} border-bottom-right-radius:5px; border-bottom-left-radius:5px;{% endif %} 
@@ -57,8 +57,8 @@
                                                             {% if relationship.is_publish %} border-left: #1fd14c solid 2px; {% endif %} 
                                                             {% if relationship.exercise.supportfile.is_title  %} background-color : #F2F1F0;{% endif %}" 
                                   id="new_title{{ relationship.exercise.id }}" >
-                                {% if  relationship.exercise %}                                  
-                                    <input type="hidden" value="{{ relationship.exercise.id }}" data-custom=0  name="input_exercise_id" class="div_exercise_id"/><!--  sert à classer les exercices  -->
+                                <input type="hidden" value="{{ relationship.id }}" name="input_exercise_id" class="div_relationship_id"/><!--  sert à classer les exercices  -->                                  
+                                {% if  relationship.type_id == 0 %}                                  
                                     {% if not relationship.exercise.supportfile.is_title %}
                                         <div class="header_exercise">
                                             <div class="pull-right"> 
@@ -165,8 +165,7 @@
                                                
                                         {% endif %}
                                     {% endif %}
-                                {% else %} 
-                                    <input type="hidden" value="{{ relationship.id }}" data-custom=1  name="input_exercise_id" class="div_exercise_id"/><!--  sert à classer les exercices  -->
+                                {% elif  relationship.type_id == 1 %}  
                                     <div class="header_exercise">
                                         <div class="pull-right"> 
                                               <a href="#" class="btn btn-{% if not relationship.is_publish %}danger{% else  %}success{% endif  %} action_content" style="margin-left:5px;" id="publisher{{relationship.id}}"  data-relationship_id="{{relationship.id}}" data-statut="{{relationship.is_publish }}" >  
@@ -196,7 +195,6 @@
                                             <a data-toggle="collapse" href="#collapside{{ forloop.counter}}"><i class="fa fa-caret-down"></i></a> 
                                     </div>          
                                     <div id="collapside{{ forloop.counter}}" class="collapse" style="clear:both">  
-
                                             <div class="pull-right"  style="margin-top:20px">
                                                   <div id="starter{{relationship.id}}" style="display:{% if relationship.is_publish %}none{% else %}block{% endif  %} " >
                                                   A partir de ?<br/>
@@ -205,20 +203,50 @@
                                                   Tâche pour le ?<br/>
                                                   <input type="type" name="dateur" data-relationship_id="{{relationship.id}}" data-type ="1" value="{{ relationship.date_limit|date:"Y-m-d" }}" class="datepicker dates" />
                                             </div>
-                                             
-           
-                                                                                
- 
                                             {{  relationship.instruction|safe }}  
- 
-                                        
                                             {% if relationship.calculator %}
                                               <img src="{% static 'img/calculator.png' %}" width="30px" />
                                             {% else %}
                                               <img src="{% static 'img/no_calculator.png' %}"  width="30px" />
                                             {% endif  %}  
+                                    </div>
+                                {% else %}  
+                                    <div class="header_exercise">
+                                        <div class="pull-right"> 
+                                              <a href="#" class="btn btn-{% if not relationship.is_publish %}danger{% else  %}success{% endif  %} action_content" style="margin-left:5px;" id="publisher{{relationship.id}}"  data-relationship_id="{{relationship.id}}" data-statut="{{relationship.is_publish }}" >  
+                                             {% if relationship.is_publish %} Publié  {% else %} Dépublié {% endif  %} 
+                                              </a>
+                                              <a href="#collapside{{ forloop.counter}}" class="btn btn-default" style="margin-left:5px;" id="date_limit{{relationship.id}}" data-toggle="collapse"  >  
+                                             Tâche ?
+                                              </a>
+                                        </div>
+                                            <span id="pub_task{{relationship.id}}">{% if relationship.date_limit > today %}<span class="label label-success">Tâche</span>{% endif %}</span> 
+                                        {% if relationship.is_publish %}
+                                        <i class="fas fa-grip-vertical fa-xs"
+                                           style="color:MediumSeaGreen;padding-right:10px;cursor: move;"></i>
+                                        {% else %}
+                                        <i class="fas fa-grip-vertical fa-xs"
+                                           style="color:SlateGrey;padding-right:10px;cursor: move;"></i>
+                                        {% endif %}
 
 
+                                          {% if relationship.type_id == 2 %}  {{ rc.type_of_document.forme }} >
+                                          {% elif relationship.type_id == 3 %} QUIZ >  
+                                          {% elif relationship.type_id == 4 %} FLASHPACK >  
+                                          {% elif relationship.type_id == 5 %} BIBLIOTEX >
+                                          {% endif %}
+
+                                            {{ relationship.type_of_document.title }} 
+                                    </div>          
+                                    <div id="collapside{{ forloop.counter}}" class="collapse" style="clear:both">  
+                                            <div class="pull-right"  style="margin-top:20px">
+                                                  <div id="starter{{relationship.id}}" style="display:{% if relationship.is_publish %}none{% else %}block{% endif  %} " >
+                                                  A partir de ?<br/>
+                                                  <input type="type" name="starter" data-relationship_id="{{relationship.id}}" data-type ="0" value="{{ relationship.start|date:"Y-m-d" }}" class="datepicker dates" />
+                                                  </div>
+                                                  Tâche pour le ?<br/>
+                                                  <input type="type" name="dateur" data-relationship_id="{{relationship.id}}" data-type ="1" value="{{ relationship.date_limit|date:"Y-m-d" }}" class="datepicker dates" />
+                                            </div>
                                     </div>
                                 {% endif %}
                             </div>
