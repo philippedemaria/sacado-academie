@@ -412,7 +412,7 @@ def list_parcours_sequence_academy(request,isp,idl):
         messages.success(request,"suppression réussie")
         return redirect("gestion_academy_dashboard" )
 
-    context = { 'dataset' : dataset  , 'level' : level }
+    context = { 'dataset' : dataset  , 'level' : level , 'isp' : isp }
     return render(request, "academy/list_parcours_sequence_academy.html" , context)
 
 
