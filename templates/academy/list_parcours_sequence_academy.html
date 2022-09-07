@@ -44,7 +44,7 @@
                         <h3>
                             <input type="checkbox" name="parcours" id="id_parcours" value="{{ data.parcours.id }}" />
                             #{{ data.parcours.id }}. {{ data.parcours.title }} - <small>Auteur : {{ data.parcours.author }} - Enseignant : {{ data.parcours.teacher}}</small>
-                            {% if data.parcours.is_publish %}<span style="background-color: #1bc074; padding:5px"> Publié </span> {% else %}<span style="background-color: #cb2131; padding:5px"> Dépublié </span>   {% endif %}
+                            {% if data.parcours.is_publish %}<span style="background-color: #1bc074; padding:5px" class='pull-right'> Publié </span> {% else %}<span  class='pull-right' style="background-color: #cb2131; padding:5px"> Dépublié </span>   {% endif %}
                         </h3>
                     </label>  
                     {% for r  in  data.relationships %}
