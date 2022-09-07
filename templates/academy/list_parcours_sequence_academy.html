@@ -44,7 +44,7 @@
                     {% for r  in  data.relationships %}
                         {% if r.type_id == 0  %}
                             {% if r.exercise.supportfile.imagefile %}
-                                <img src="{{ r.exercise.supportfile.imagefile.url }}" width="150px" title="{{ r.exercise.supportfile.knowledge }}" style="float:left;" />
+                                <img src="{{ r.exercise.supportfile.imagefile.url }}" width="150px" height="110px" title="{{ r.exercise.supportfile.knowledge }}" style="float:left;" />
                             {% else %}
                                 <h6 style="clear:both">{{ r.exercise.supportfile.title }}</h6>
                             {% endif %}
