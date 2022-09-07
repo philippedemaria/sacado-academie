@@ -16,7 +16,7 @@
  
 
 {% block page_title %}
-    Liste des parcours  > {{ level.name }} > <small>{{ parcourses.count }} parcours</small>
+    Liste des {% if isp %}parcours {% else %}séquences {% endif %}  > {{ level.name }} > <small>{{ parcourses.count }} {% if isp %}parcours {% else %}séquences  {% endif %}</small>
 {% endblock %}
 
 
