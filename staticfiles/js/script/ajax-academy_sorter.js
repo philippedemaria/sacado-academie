@@ -22,9 +22,9 @@ define(['jquery', 'bootstrap', 'ui', 'ui_sortable'], function ($) {
 
                         console.log(parcours_id) ;
 
-                        $exercise_class = "#sequence_sorter_academy"+parcours_id+" .relationship_id_sequence"
-                        $($exercise_class).each(function() {
-                            let div_exercise_id = $("#sequence_sorter_academy"+parcours_id+" .relationship_id_sequence").val();
+ 
+                        $("#sequence_sorter_academy"+parcours_id+" .relationship_id_sequence").each(function() {
+                            let div_exercise_id = $(this).val();
                             valeurs = valeurs + div_exercise_id +"-";
                         });
                         console.log(valeurs) ;
