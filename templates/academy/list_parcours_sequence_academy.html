@@ -56,7 +56,7 @@
                     <div class="row" style="clear:both"> 
                         <div class="col-sm-12 col-md-12 sequence_sorter_academy" id="sequence_sorter_academy{{ data.parcours.id }}" data-parcours_id="{{ data.parcours.id }}">
                             {% for r  in  data.relationships %}
-                                <div style="float:left;width:150px; height:110px;cursor:move"> 
+                                <div style="cursor:move"> 
                                     <input value="{{ r.id }}" type="hidden" class="relationship_id_sequence" />
                                 {% if r.type_id == 0  %}
                                     {% if r.exercise.supportfile.imagefile %}
