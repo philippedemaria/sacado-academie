@@ -2279,8 +2279,10 @@ class Exerciselocker(ModelWithCode):
 ########################################################################################################################################### 
 class Course(models.Model): # pour les 
     FORMES = (
+        ("ACTIVITE", "ACTIVITE"),
         ("APPLICATION", "APPLICATION"),
         ("COURS"  , "COURS"),
+        ("CONSIGNE"  , "CONSIGNE"),
         ("EXEMPLE", "EXEMPLE"),
         ("EXPLICATION", "EXPLICATION"),
         ("HISTOIRE", "HISTOIRE"),
