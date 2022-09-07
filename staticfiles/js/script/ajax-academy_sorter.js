@@ -20,14 +20,14 @@ define(['jquery', 'bootstrap', 'ui', 'ui_sortable'], function ($) {
                         var valeurs = "";
                         let parcours_id = $(this).attr("data-parcours_id");   
 
-                        console.log(parcours_id) ;
+    
 
  
                         $("#sequence_sorter_academy"+parcours_id+" .relationship_id_sequence").each(function() {
                             let div_exercise_id = $(this).val();
                             valeurs = valeurs + div_exercise_id +"-";
                         });
-                        console.log(valeurs) ;
+   
 
 
                         $(ui.item).css("box-shadow", "0px 0px 0px transparent");  
