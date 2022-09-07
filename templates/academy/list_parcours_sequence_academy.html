@@ -46,7 +46,8 @@
                             #{{ data.parcours.id }}. {{ data.parcours.title }} - <small>Auteur : {{ data.parcours.author }} - Enseignant : {{ data.parcours.teacher}}</small>
                             {% if data.parcours.is_publish %}<span style="background-color: #1bc074; padding:5px" class='pull-right'> Publié </span> {% else %}<span  class='pull-right' style="background-color: #cb2131; padding:5px"> Dépublié </span>   {% endif %}
                         </h3>
-                    </label>  
+                    </label> 
+                    <div class="row" style="clear:both"> 
                     {% for r  in  data.relationships %}
                         {% if r.type_id == 0  %}
                             {% if r.exercise.supportfile.imagefile %}
@@ -66,6 +67,7 @@
                             </div>
                         {% endif  %}
                     {% endfor %}
+                    </div>
                     <div class="row" style="clear:both"><hr/></div>
                 {% endfor %}
                     <div class="row">  
