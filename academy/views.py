@@ -378,16 +378,31 @@ def add_presentation(request,idl):
 
     sequences  = Parcours.objects.filter(subject_id=1,level_id=idl,is_sequence=1)
     for sequence in sequences :
-        # try :
-        #     Relationship.objects.create(exercise_id=10155, parcours = sequence,ranking=0,situation=5)
-        # except :
-        #     pass
+        try :
+            Relationship.objects.create(exercise_id=10155, parcours = sequence,ranking=0,situation=5)
+        except :
+            pass
         try :
             Relationship.objects.create(exercise_id=10154, parcours = sequence,ranking=0,situation=5)
         except :
             pass
     
     return redirect("gestion_academy_dashboard" )
+
+
+ 
+def add_exo_presentation(request,idl):
+
+
+    sequences  = Parcours.objects.filter(subject_id=1,level_id=idl,is_sequence=1)
+    for sequence in sequences :
+        try :
+            Relationship.objects.create(exercise_id=10154, parcours = sequence,ranking=0,situation=5)
+        except :
+            pass
+    
+    return redirect("gestion_academy_dashboard" )
+
 
 
 def list_parcours_sequence_academy(request,isp,idl):
