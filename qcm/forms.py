@@ -283,7 +283,6 @@ class CourseNPForm(forms.ModelForm):
  
 		self.fields['level']   = forms.ModelChoiceField(queryset=teacher.levels.all(), required=False )
 		self.fields['subject'] = forms.ModelChoiceField(queryset=teacher.subjects.all(), required=False )
-		self.fields['parcours'] = forms.ModelChoiceField(queryset=teacher.teacher_parcours.all(), required=False )
 
 
 class DemandForm(forms.ModelForm):
