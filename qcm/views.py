@@ -5402,7 +5402,13 @@ def execute_exercise(request, idp,ide):
 @csrf_exempt    
 def store_the_score_relation_ajax(request):
 
-    parcours_id = int(request.POST.get("parcours_id"))
+    p_id = request.POST.get("parcours_id",None)
+    if p_id :
+        parcours_id = int(p_id)
+    else :        
+        messages.error(request, "Score non enregistré. Le parcours n'est pas reconnu.")
+        return redirect('index')
+
     try :
         time_begin = request.POST.get("start_time",None)
 
@@ -8049,7 +8055,7 @@ def only_update_course_from_sequence(request,idc=0,idf=0 , ids=0):
     teacher =  request.user.teacher
     course  =  Course.objects.get(pk=idc)
     parcours  =  Parcours.objects.get(pk=ids)
-    form    =  CourseNPForm(request.POST or None, instance = course , teacher = teacher , initial = {   'subject' : course.parcours.subject  , 'level' : course.parcours.level , 'parcours' : parcours })
+    form    =  CourseNPForm(request.POST or None, instance = course , teacher = teacher , initial = {   'subject' : course.parcours.subject  , 'level' : course.parcours.level , 'parcours' : course.parcours })
     if request.method == "POST" :
         if form.is_valid():
             nf =  form.save(commit = False)
