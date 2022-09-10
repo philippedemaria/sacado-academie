@@ -9,8 +9,8 @@
 
 
 {% if folder and group %}  
-	<a href="{% url 'list_sub_parcours_group_student' group.id  folder.id%}"   class="helper_tip" style="font-size:36px;color:{{ folder.color }}" > {{ folder.title|truncatechars:"18" }}</a>
-		{% if folder.title.count > 18 %}
+	<a href="{% url 'list_sub_parcours_group_student' group.id  folder.id%}"   class="helper_tip" style="font-size:36px;color:{{ folder.color }}" > {{ folder.title|truncatechars:"30" }}</a>
+		{% if folder.title.count > 30 %}
 	            <div class="helper_tip_text_right thin" style="font-size:36px; color:{{ folder.color }};">
 	                 {{ folder.title }} 
 	            </div>
@@ -22,9 +22,9 @@
 
 {% if parcours %} 
 	<span class="helper_tip" style="font-size:36px; color:{{ parcours.color }}" >
-	{{ parcours.title|truncatechars:"18" }}  
+	{{ parcours.title|truncatechars:"30" }}  
 
-	{% if parcours.title.count > 18 %}
+	{% if parcours.title.count > 30 %}
         <div class="helper_tip_text_right thin" style="font-size:36px; color:{{ parcours.color }};">
              {{ parcours.title }}   
         </div>
