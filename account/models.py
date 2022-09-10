@@ -650,7 +650,9 @@ class Student(ModelWithCode):
         return adhesion
 
 
-
+    def nb_subjects(self):
+        subjects = self.students_to_group.values_list("subject",flat=True)
+        return  subjects.count()
 
 
 
