@@ -38,7 +38,7 @@
 
 
         <div style="margin-bottom: 15px"><br/>
-            {% for p in folder.parcours.all %}
+            {% for p in folder.parcours.all|dictsort:"ranking" %}
                 {% get_percent_to_parcours p student as data  %}
                 <li class="sanspuce">
                     <a href="{% url 'show_parcours_student' p.id %}" class="sommaire"><b><i class="bi bi-check {{ data.colored }}" ></i></b>{{ p.title|truncatechars:40 }} 
