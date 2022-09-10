@@ -1229,7 +1229,7 @@ define(['jquery', 'bootstrap', 'ui', 'ui_sortable'], function ($) {
                         type: "POST",
                         dataType: "json",
                         success: function (data) {
-                        $(data.html).insertBefore( $('#miseEnAttenteDashboard').children()[0] );
+                        $(data.html).insertBefore( $('#exercise_sortable').children()[0] );
                         },
                         cache: false,
                         contentType: false,
