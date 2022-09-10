@@ -19,9 +19,9 @@
 {% block page_title %}
 
 {% if student.nb_subjects > 2 %}
-    <span style="color:#5d4391"><i class='bi bi-markdown'></i> <a href="{% url 'index' %}" style="color:#5d4391">Matières </a></span>  
+    <span style="color:#5d4391"><i class='bi bi-markdown'></i> <a href="{% url 'index' %}" style="color:#5d4391"> Matières </a></span>  
 {% else %}
-    <span style="color:#5d4391"><i class="bi bi-grid-3x2-gap icon_size"></i><a href="{% url 'index' %}" style="color:#5d4391">Tableau de bord </a></span> 
+    <span style="color:#5d4391"><i class="bi bi-grid-3x2-gap icon_size"></i><a href="{% url 'index' %}" style="color:#5d4391"> Tableau de bord </a></span> 
 {% endif %}
 
 <img src="{% static 'img/angle-right.png' %}"/> {% include 'breadcrumb_student.html' %}
