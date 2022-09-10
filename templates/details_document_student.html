@@ -168,7 +168,7 @@
 
                             {% if not rdoc.is_display   %} 
                                 <div class="alert alert-danger" style="position: absolute; z-index:9; top:100px;font-size:12px;border-radius: 0px 4px 4px  0px;"> 
-                                      <i class="fa fa-lock"></i> Vous devez obtenir 80% de réussite au bloc précédent  
+                                      <i class="fa fa-lock"></i> Vous devez obtenir 80% de réussite à l'exercice précédent  
                                 </div>
                      
                                     <img src="{{ rc.exercise.supportfile.imagefile.url }}"  class="image_parcours"   style="opacity:0.8"    >
@@ -243,10 +243,18 @@
                     </div>
                 {% endif %}    
             {% endif %}   
+
+            {% if not rc.exercise.supportfile.id == 6520 %}            
             <div class="card-text" style="background-color:{{ parcours.color }};color:{{ parcours.color|contrast_color }}">
+
+
+
                 <i class="fa fa-fw fa-barcode"></i> {{ rc.exercise.supportfile.code }}
                 <i class="fa fa-fw fa-clock-o"></i> {{ rc.duration }} min.
                 <i class="fa fa-fw fa-save"></i> {{ rc.situation}}
+
+
+
                 
                 {% if not rc.parcours.is_evaluation %}
                 {% if rc.relationships_courses.all|length > 0 %}  
@@ -284,6 +292,7 @@
                     </span> 
                 {% endif  %}
             </div>
+            {% endif  %}
         </div>
     </div>
 <!---------------------------------------------------------->

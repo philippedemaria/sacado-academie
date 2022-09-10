@@ -1727,9 +1727,7 @@ class Relationship(models.Model):
             is_ok = False
         if self.maxexo == -1   :
             is_ok = True
-
-
-                       
+          
         data["is_ok"] = is_ok
         data["nbleft"] = nbleft
 
