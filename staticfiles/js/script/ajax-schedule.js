@@ -57,7 +57,9 @@ define(['jquery', 'bootstrap','moment', 'fullcalendar'], function ($) {
 	          },
 				events: '../events_json',	                  
 			select: function(startDate) {
-						$("#new_event").modal('show');
+						$("#new_event").modal('show');  
+						$(".start_hour").val(startDate.format("HH:mm")); 
+						$("#id_date").val(startDate.format("YYYY-MM-DD")); 
 						$("#id_date").val(startDate.format("YYYY-MM-DD"));
 						$("#id_datetime").val(startDate.format("YYYY-MM-DD"));
 			    },

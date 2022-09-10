@@ -61,6 +61,11 @@ urlpatterns = [
 
     path('detail_student_all_views/<int:id>', detail_student_all_views, name='detail_student_all_views'),
 
+
+    path('detail_student_academy/<int:id>', detail_student_academy, name='detail_student_academy'),
+
+
+
     path('newpassword_student/<int:id>/<int:idg>', newpassword_student, name='newpassword_student'),
     path('update_student/<int:id>/<int:idg>', update_student, name='update_student'),
     path('update_student_by_ajax', update_student_by_ajax, name='update_student_by_ajax'),

@@ -256,33 +256,4 @@
 
     </ul>
 </li>    
-   
 
-
-
-
-<!-- <li class="dropdown  dropdown-large">
-  <a href="#" class="dropdown-toggle no_button {% if 'student' in request.path %} active {% endif %}" data-toggle="dropdown"> Tâches  <b class="caret"></b></a> 
-    <ul class="dropdown-menu clearfix pull-right" role="menu">
-
-
-        <li class="dropdown dropdown-submenu {% if  'group_task' in request.path  %} active {% endif %}" >
-            {% if group.is_task_exists %}
-                <a href="{% url 'group_tasks' group.id %}"  > En cours de {{ group }}</a>
-            {% else %}
-                <span style="padding: 3px 20px;display: block ; clear:both; white-space: nowrap; color:#c90202;font-weight: 400">   Aucune tâche en cours </span>
-            {% endif %}
-        </li>
-         <li class="dropdown dropdown-submenu {% if  'tasks_all' in request.path  %} active {% endif %}" >
-                <a href="{% url 'group_tasks_all' group.id %}"  > Toutes de {{ group }} </a>
-        </li>
-        <li class="divider"></li>
-         <li class="dropdown dropdown-submenu {% if  'task_all' in request.path  %} active {% endif %}" >
-                <a href="{% url 'all_my_tasks'  %}"  > Toutes les taches en cours</a>
-        </li>
-         <li class="dropdown dropdown-submenu {% if  'task_all' in request.path  %} active {% endif %}" >
-                <a href="{% url 'these_all_my_tasks'    %}"  > Toutes les taches  </a>
-        </li>
-
-    </ul>
-</li>  -->

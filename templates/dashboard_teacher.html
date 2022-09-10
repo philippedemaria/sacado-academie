@@ -133,47 +133,52 @@
                 </div>
 
         {% empty %}
+            {% if teacher.user.is_superuser %} 
+                {% if nb_teacher_level == 0 %} 
 
-            {% if nb_teacher_level == 0 %} 
-
-                <div class="row">
-                    <div class="col-xs-10 col-xs-offset-1 col-md-8 col-md-offset-2 alert alert-warning"> 
-                        <h1>Bienvenue dans l'univers SACADO </h1>
-                        L'esprit SACADO se base sur des exercices auto corrigés à variables didactiques aléatoires. Chaque exercice est rattaché à un savoir faire du programme du MENJS.<br/>
-                        Gérer vos groupes ou classes, des parcours d'apprentissage, des évaluations, des cours (version établissement), des quizz et utiliser nos outils pédagogiques testés en classe avec nos élèves.<br/>
-                        Pour démarrer, nous vous proposons :
-                        <li style="list-style: none">1. de configurer votre compte</li>
-                        <li style="list-style: none">2. de créer votre premier groupe</li>
-                        <li style="list-style: none">3. de créer votre premier parcours</li>
-                        Bonne prise en main. Pour toute difficulté, nous écrire via <a href="#">info@sacado-academie.fr</a>. 
-                        <span class="pull-right">L'équipe SACADO </span>
-                    </div>
-                </div>     
-                <div class="row">
-                    <div class="round" style="margin-top: 50px;"> 
-                        <h1 class="sacado">1.<br>Démarrez  avec </h1>
-                        <a href="{% url 'profile' %}">Configurer mon compte</a>
-                        <h1 class="sacado">sacAdo </h1>
-                    </div>
-                </div>
-            {% else %}  
-
-
-
-                <div class="row">
-                    <div class="col-lg-12 col-xs-12">
-                        <p></p>
-                        <div class="round" style="background-color: #FFB400">
-                            <h1 class="sacado">2.<br>Démarrez  avec </h1>
-                            <a href="{% url 'create_group' %}" >Créer mon premier groupe</a>
+                    <div class="row">
+                        <div class="col-xs-10 col-xs-offset-1 col-md-8 col-md-offset-2 alert alert-warning"> 
+                            <h1>Bienvenue dans l'univers SACADO </h1>
+                            L'esprit SACADO se base sur des exercices auto corrigés à variables didactiques aléatoires. Chaque exercice est rattaché à un savoir faire du programme du MENJS.<br/>
+                            Gérer vos groupes ou classes, des parcours d'apprentissage, des évaluations, des cours (version établissement), des quizz et utiliser nos outils pédagogiques testés en classe avec nos élèves.<br/>
+                            Pour démarrer, nous vous proposons :
+                            <li style="list-style: none">1. de configurer votre compte</li>
+                            <li style="list-style: none">2. de créer votre premier groupe</li>
+                            <li style="list-style: none">3. de créer votre premier parcours</li>
+                            Bonne prise en main. Pour toute difficulté, nous écrire via <a href="#">info@sacado-academie.fr</a>. 
+                            <span class="pull-right">L'équipe SACADO </span>
+                        </div>
+                    </div>     
+                    <div class="row">
+                        <div class="round" style="margin-top: 50px;"> 
+                            <h1 class="sacado">1.<br>Démarrez  avec </h1>
+                            <a href="{% url 'profile' %}">Configurer mon compte</a>
                             <h1 class="sacado">sacAdo </h1>
                         </div>
                     </div>
+                {% else %}  
+
+
+
+                    <div class="row">
+                        <div class="col-lg-12 col-xs-12">
+                            <p></p>
+                            <div class="round" style="background-color: #FFB400">
+                                <h1 class="sacado">2.<br>Démarrez  avec </h1>
+                                <a href="{% url 'create_group' %}" >Créer mon premier groupe</a>
+                                <h1 class="sacado">sacAdo </h1>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="alert alert-warning">
+                    Vous n'avez aucun groupe affecté.
                 </div>
             {% endif %}
         {% endfor %}
 
-        {% if teacher.groups.count > 0 and teacher.user.is_staff %} 
+        {% if teacher.groups.count > 0 and teacher.user.is_superuser %} 
         <div class="col-lg-2 col-xs-2">
             <a href="{% url 'create_group' %}" class="helper_tip"><i class="fa fa-plus-circle fa-3x btn-create-group" ></i> 
                 <div class="helper_tip_text" >Nouveau groupe</div>
@@ -181,118 +186,116 @@
         </div>
         {% endif %}
  
-                                
-        {% if folders_tab|length > 0 %}    
-            <div class="row"></div>
-            <h2 class="thin"> Mes dossiers non affectés</h2>
-            {% for folder in folders_tab %}  
-                {% include 'qcm/folder_tag.html' %}
-            {% endfor %}
-        {% endif %}
-
-
-
-
-        {% if parcours_tab|length > 0 %}
-  
-
-            {% regroup parcours_tab by is_evaluation as list_parcours %} 
-
-            {% for parcours_sort in list_parcours %}  
-            <div class="row"></div>
-            <h2 class="thin">{% if parcours_sort.grouper %}Mes évaluations non affectées{% else %} Mes parcours non affectés{% endif %}</h2>
-            <div class="row"></div><hr style="margin-top: 0px"/>             
-                {% for parcours in parcours_sort.list %}  
-                    <div  class="box box-widget widget-user-2"  
-                          style="opacity:0.7;{% if parcours.vignette %}background-image: url('{{ parcours.vignette.url }}'); background-size: cover; {% endif %} background-color:{{parcours.color }};">
-                          <!-- Add the bg color to the header using any of the bg-* classes -->
-                        <div class="handler widget-user-header">
-                            <a href="{% url 'delete_parcours' parcours.id 0 %}" class="pull-right btn btn-danger btn-xs"  onclick="return TestDelete('ce parcours')">
-                                <i class="fa fa-trash"></i>
-                            </a>  
-                                                                                  
-                            {% if parcours.is_sequence %} 
-                                <a href="{% url 'update_sequence' parcours.id 0 %}" class="btn btn-info btn-xs" >   Affecter cette séquence à un groupe</a><br>
-                            {% else %}   
-                                {% if parcours.is_evaluation %} 
-                                    <a href="{% url 'update_evaluation' parcours.id 0 %}" class="btn btn-default btn-xs" >   Affecter cette évaluation  à un groupe</a><br>
-                                {% else %}
-                                    <a href="{% url 'update_parcours' parcours.id 0 %}" class="btn btn-default btn-xs" >   Affecter ce parcours à un groupe</a><br>
-                                {% endif %}
-                            {% endif %}
-
-
-                                <div class="icon" style="opacity:0.9;top:50px;z-index:999;">
-
-
-                                    {% if parcours.level %}                
-                                        {{ parcours.level.shortname }} 
-                                    {% else %}                
-                                        {{ parcours.level_by_exercises }} 
-                                    {% endif  %}                 
-                                </div>                                    
-                          
-
-                            {% if parcours.vignette %}                
-                                <div class="box_title_underlay_vignette" style="background-color:{{ parcours.color }};">
-                                </div> 
-                            {% endif  %}
-                            <div class="box_title_vignette"> 
-                                <a {% if parcours.is_evaluation%} href="{% url 'show_evaluation'   parcours.id  %}" {% else %} href="{% url 'show_parcours' 0  parcours.id  %}"{% endif %}  style="color:{{ parcours.color|contrast_color }};"> {{ parcours.title|truncatechars:"18" }}
-                                    <span style="font-size:12px"> 
-                                        {% with parcours.nb_exercises as nb_p_exercises %}
-                                            {{ nb_p_exercises }} exercice{{ nb_p_exercises|pluralize }}
-                                        {% endwith %}
-                                        {{  parcours.duration_overall|int_minutes }}min.
-                                     </span>
-                                </a>
-                                {% if parcours.parcours_shared %}
-                                <span class="shared" style="color:{{ parcours.color }};">Parcours partagé</span>
-                                {% endif %} 
-                            </div>
-                        </div>
-                        <div class="box-footer">
-                            <div class="row extend">                              
-                                <div class="col-lg-3 col-xs-3">
-                                    {% if  is_folder %} 
-                                            <a href="{% url 'update_folder' parcours.id 0 %}" class="edit" >   
-                                    {% else %}
-                                        {% if parcours.is_evaluation %} 
-                                            <a href="{% url 'update_evaluation' parcours.id 0 %}" class="edit" >  
-                                        {% else %}
-                                            <a href="{% url 'update_parcours' parcours.id 0 %}" class="edit" >   
-                                        {% endif %}
-                                    {% endif %}
-                                        <i class="fa fa-edit"></i><span class="label_icon tool_tip">Conf.
-                                            <div class="tool_tip_text" >
-                                                <small>Configurer les paramètres.</small>
-                                            </div>
-                                        <span></a> 
-                                </div>                             
-                                <div class="col-lg-3 col-xs-3">
-                                    <a href="{% url 'peuplate_parcours' parcours.id   %}" class="edit"><i class="fa fa-cloud"></i><span class="label_icon tool_tip"> Sélec.
-                                        <div class="tool_tip_text"><small>Sélectionner les exercices du parcours</small></div>
-                                    </span></a>  
-                                </div>    
-                                <div class="col-lg-3 col-xs-3">
-                                     <a href="{% url 'show_course' 0 parcours.id   %}"  class="edit"><i class="fa fa-desktop"></i><span class="label_icon tool_tip"> Cours 
-                                        <div class="tool_tip_text"><small>Créer un cours attaché</small></div>
-                                     </span></a> 
-                                </div>  
-                                <div class="col-lg-3 col-xs-3">
-                                    <a href="{% url 'parcours_tasks_and_publishes' parcours.id %}"  class="edit"><i class="fa fa-indent"></i><span class="label_icon tool_tip"> Gérer
-                                        <div class="tool_tip_text"><small>Gérer les sections comme des chapitres</small></div>
-                                    </span></a> 
-                                </div>  
-                            </div>
-                        </div>
-                    </div>   
-                {% empty %}
-                    <div class="col-sm-12 col-md-12">
-                        <div class="alert alert-danger">Aucun parcours créé ou affecté. <a href="{% url 'parcours' %}" >Voir la liste de mes parcours</a></div>
-                    </div>
+        {% if teacher.user.is_superuser %}                        
+            {% if folders_tab|length > 0 %}    
+                <div class="row"></div>
+                <h2 class="thin"> Mes dossiers non affectés</h2>
+                {% for folder in folders_tab %}  
+                    {% include 'qcm/folder_tag.html' %}
                 {% endfor %}
-            {% endfor %}
+            {% endif %}
+
+            {% if parcours_tab|length > 0 %}
+      
+
+                {% regroup parcours_tab by is_evaluation as list_parcours %} 
+
+                {% for parcours_sort in list_parcours %}  
+                <div class="row"></div>
+                <h2 class="thin">{% if parcours_sort.grouper %}Mes évaluations non affectées{% else %} Mes parcours non affectés{% endif %}</h2>
+                <div class="row"></div><hr style="margin-top: 0px"/>             
+                    {% for parcours in parcours_sort.list %}  
+                        <div  class="box box-widget widget-user-2"  
+                              style="opacity:0.7;{% if parcours.vignette %}background-image: url('{{ parcours.vignette.url }}'); background-size: cover; {% endif %} background-color:{{parcours.color }};">
+                              <!-- Add the bg color to the header using any of the bg-* classes -->
+                            <div class="handler widget-user-header">
+                                <a href="{% url 'delete_parcours' parcours.id 0 %}" class="pull-right btn btn-danger btn-xs"  onclick="return TestDelete('ce parcours')">
+                                    <i class="fa fa-trash"></i>
+                                </a>  
+                                                                                      
+                                {% if parcours.is_sequence %} 
+                                    <a href="{% url 'update_sequence' parcours.id 0 %}" class="btn btn-info btn-xs" >   Affecter cette séquence à un groupe</a><br>
+                                {% else %}   
+                                    {% if parcours.is_evaluation %} 
+                                        <a href="{% url 'update_evaluation' parcours.id 0 %}" class="btn btn-default btn-xs" >   Affecter cette évaluation  à un groupe</a><br>
+                                    {% else %}
+                                        <a href="{% url 'update_parcours' parcours.id 0 %}" class="btn btn-default btn-xs" >   Affecter ce parcours à un groupe</a><br>
+                                    {% endif %}
+                                {% endif %}
+
+
+                                    <div class="icon" style="opacity:0.9;top:50px;z-index:999;">
+
+
+                                        {% if parcours.level %}                
+                                            {{ parcours.level.shortname }} 
+                                        {% else %}                
+                                            {{ parcours.level_by_exercises }} 
+                                        {% endif  %}                 
+                                    </div>                                    
+                              
+
+                                {% if parcours.vignette %}                
+                                    <div class="box_title_underlay_vignette" style="background-color:{{ parcours.color }};">
+                                    </div> 
+                                {% endif  %}
+                                <div class="box_title_vignette"> 
+                                    <a {% if parcours.is_evaluation%} href="{% url 'show_evaluation'   parcours.id  %}" {% else %} href="{% url 'show_parcours' 0  parcours.id  %}"{% endif %}  style="color:{{ parcours.color|contrast_color }};"> {{ parcours.title|truncatechars:"18" }}
+                                        <span style="font-size:12px"> 
+                                            {% with parcours.nb_exercises as nb_p_exercises %}
+                                                {{ nb_p_exercises }} exercice{{ nb_p_exercises|pluralize }}
+                                            {% endwith %}
+                                            {{  parcours.duration_overall|int_minutes }}min.
+                                         </span>
+                                    </a>
+                                    {% if parcours.parcours_shared %}
+                                    <span class="shared" style="color:{{ parcours.color }};">Parcours partagé</span>
+                                    {% endif %} 
+                                </div>
+                            </div>
+                            <div class="box-footer">
+                                <div class="row extend">                              
+                                    <div class="col-lg-3 col-xs-3">
+                                        {% if  is_folder %} 
+                                                <a href="{% url 'update_folder' parcours.id 0 %}" class="edit" >   
+                                        {% else %}
+                                            {% if parcours.is_evaluation %} 
+                                                <a href="{% url 'update_evaluation' parcours.id 0 %}" class="edit" >  
+                                            {% else %}
+                                                <a href="{% url 'update_parcours' parcours.id 0 %}" class="edit" >   
+                                            {% endif %}
+                                        {% endif %}
+                                            <i class="fa fa-edit"></i><span class="label_icon tool_tip">Conf.
+                                                <div class="tool_tip_text" >
+                                                    <small>Configurer les paramètres.</small>
+                                                </div>
+                                            <span></a> 
+                                    </div>                             
+                                    <div class="col-lg-3 col-xs-3">
+                                        <a href="{% url 'peuplate_parcours' parcours.id   %}" class="edit"><i class="fa fa-cloud"></i><span class="label_icon tool_tip"> Sélec.
+                                            <div class="tool_tip_text"><small>Sélectionner les exercices du parcours</small></div>
+                                        </span></a>  
+                                    </div>    
+                                    <div class="col-lg-3 col-xs-3">
+                                         <a href="{% url 'show_course' 0 parcours.id   %}"  class="edit"><i class="fa fa-desktop"></i><span class="label_icon tool_tip"> Cours 
+                                            <div class="tool_tip_text"><small>Créer un cours attaché</small></div>
+                                         </span></a> 
+                                    </div>  
+                                    <div class="col-lg-3 col-xs-3">
+                                        <a href="{% url 'parcours_tasks_and_publishes' parcours.id %}"  class="edit"><i class="fa fa-indent"></i><span class="label_icon tool_tip"> Gérer
+                                            <div class="tool_tip_text"><small>Gérer les sections comme des chapitres</small></div>
+                                        </span></a> 
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>   
+                    {% empty %}
+                        <div class="col-sm-12 col-md-12">
+                            <div class="alert alert-danger">Aucun parcours créé ou affecté. <a href="{% url 'parcours' %}" >Voir la liste de mes parcours</a></div>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
         {% endif %}
     </div>
      <!-- ****************************************************************************************-->

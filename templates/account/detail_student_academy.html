@@ -1,0 +1,394 @@
+{% extends 'account/detail_student.html' %}
+{% load static %}
+{% load item_tags %}
+{% load widget_tweaks %}
+
+
+{% block require %}
+    <script src="{% static 'js/require.js' %}" data-main="{% static 'js/common3.js' %}"></script> 
+    <script>
+        require(['script/ajax-group']);
+    </script>
+
+
+    <script>
+        require(['script/details_graph_bar']);
+    </script>
+{% endblock %}
+
+          
+
+
+{% block page_title %}
+    <span   style="color:{{ group.color|contrast_color_title }}" ><i class="fa fa-mortar-board"></i> </span>
+        Mes bilans et suivis : {{student }}
+{% endblock %}
+
+
+
+{% block page_menu_right %}
+
+
+        {% if request.user.is_student %}
+        <li><a href="{% url 'synthese_parcours' user.id %}"  class="btn btn-new-violet"> Synthèse des parcours</a></li>
+        {% else %}
+            <li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle no_button"  style="font-size:18px;"> Mes élèves </a>
+                <ul id="products-menu" class="dropdown-menu clearfix pull-right" role="menu">
+                    <li {% if 'detail_student/' in request.path %} class="active" {% endif %} ><a href="{% url 'detail_student'  student.user.id  %}" > Général</a></li>
+                    <li class="divider"></li>
+
+                    {% for s in students   %}
+                        <li class="sanspuce" >
+                             <a href="{% url 'detail_student_academy' s.user.id %}">{{ s }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
+
+        {% endif %}
+        
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+{% block datae %} 
+<style>
+.table  > tr {
+    min-width:70%
+}
+</style>
+
+{% if exercises|length > 0 %}
+<div class="row">
+    <div class="col-sm-12 col-md-12">
+
+
+    {% for group in groups %}
+
+        {% if groups|length > 1 %}
+        <a href="#groups{{ forloop.counter }}" data-toggle="collapse"  class="bilan_title"><i class="fa fa-angle-right"></i> <i class="fa fa-angle-down"></i>  Bilans de {{ group.subject.name }}</a>
+        <div id="groups{{ forloop.counter }}" class="collapse bilan_details">
+        {% endif %}
+
+            <div class="row ">
+                <div class="col-sm-12 col-md-10">
+                    <h3>Nombre d'exercices faits et pourcentage moyen de réussite par jour <small class="pull-right">Dernière connexion : {{ student.user.last_login|date:"d N Y, H:i"  }}</small></h3>
+                </div>
+            </div>
+
+
+            <form method="POST">
+            {% for dataset in maxiset %}
+                {% if dataset.is_display  %}
+                <div class="row ">
+                    <div class="col-sm-12 col-md-10">
+                        <div class="graph_container">
+                            {% for data in dataset.datas %}
+                                {% if data.n %}
+                                <div class="container_bars" style="height:{{ data.hn }}px;left:{{ data.l }}%;"><label>{{ data.n }}</label>
+                                    <div class="bars {{ data.c }}" style="height:{{ data.h }}px; ">
+                                        <div class="average">
+                                            {{ data.a }}% 
+                                        </div>
+                                        <div class="detail_bar_score">
+                                            <a href="#" data-toggle='modal' data-target='#detail_bar_score' data-student_id="{{ student.user.id}}" data-date="{{ data.date}}"  data-month="{{ data.m}}" class="get_details_bar white"><i class="bi bi-question-circle"></i></a> 
+                                        </div>
+                                    </div>
+                                </div>  
+                                {% endif %}
+                                <div class="legend_dates" style="left:{{ data.l }}%;">{{ data.date|date:"d F"}}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-2 bilan_div">
+                        <h3>Pour la période</h3>
+                        <table class="table table-bordered table-hover">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        Exercices faits <span class="pull-right">{{ dataset.nb_exo_g  }}</span>
+                                    </td>
+                                </tr>  
+                                <tr>
+                                    <td>
+                                        Compétences travaillées <span class="pull-right">{{ dataset.k_count_g  }}</span>
+                                    </td>
+                                </tr> 
+                                <tr>
+                                    <td>
+                                        Score moyen  <span class="pull-right">{{ dataset.average_score_g  }}%</span> 
+                                    </td>
+                                </tr>    
+                                <tr>
+                                    <td> 
+                                        Durée totale  <span class="pull-right">{{ dataset.duration_g|time_done  }}</span> 
+                                    </td>
+                                </tr> 
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% else %}
+                <div class="row ">
+                    <div class="col-sm-12 col-md-10">
+                        <div class="graph_container">
+                            {% for data in dataset.datas %}
+                                {% if data.n %}
+                                <div class="container_bars" style="height:{{ data.hn }}px;left:{{ data.l }}%;"><label>{{ data.n }}</label>
+                                    <div class="bars {{ data.c }}" style="height:{{ data.h }}px; ">
+                                        <div class="average">
+                                            {{ data.a }}% 
+                                        </div>
+                                        <div class="detail_bar_score">
+                                            <a href="#" data-toggle='modal' data-target='#detail_bar_score' data-student_id="{{ student.user.id}}" data-date="{{ data.date}}"  data-month="{{ data.m}}" class="get_details_bar white"><i class="bi bi-question-circle"></i></a> 
+                                        </div>
+                                    </div>
+                                </div>  
+                                {% endif %}
+                                <div class="legend_dates" style="left:{{ data.l }}%;">{{ data.date|date:"d F"}}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-2 bilan_div">
+                        <h3>Pour la période</h3>
+                        <table class="table table-bordered table-hover">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        Exercices faits <span class="pull-right">0</span>
+                                    </td>
+                                </tr>  
+                                <tr>
+                                    <td>
+                                        Compétences travaillées <span class="pull-right">0</span>
+                                    </td>
+                                </tr> 
+                                <tr>
+                                    <td>
+                                        Score moyen  <span class="pull-right">0%</span> 
+                                    </td>
+                                </tr>    
+                                <tr>
+                                    <td> 
+                                        Durée totale  <span class="pull-right">0</span> 
+                                    </td>
+                                </tr> 
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+                {% endif %}
+            {% endfor %}
+            </form>
+
+
+
+            <div class="modal fade" id='detail_bar_score' tabindex="-1" role="dialog" aria-labelledby='detail_bar_score'>
+                <div class="modal-dialog" role="document" style="width:70%">
+                    <div class="modal-content" >
+                        <div class="modal-header">
+                            <h2 > Exercices du <span id="title_detail_bar"></span> </h2>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button> 
+
+                        </div>
+                        <div class="modal-body" id="body_detail_bar">
+ 
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <hr/>
+
+            <div class="row bilan_div">
+                <div class="col-sm-12 col-md-12">
+                    <form action="{% url 'print_monthly_statistiques' %}" method="POST">{% csrf_token %}
+                        <img src="{% static 'img/pdf.png' %}" width="20px"/> Je veux imprimer le bilan pdf du <input type="date" id="date_start_id" name="date_start" /> au <input type="date" id="date_stop_id" name="date_stop" />
+                        <input type="hidden" name="group_id" id="group_id" value="{{ group.id }}" />
+                        <input type="hidden" name="student_id" id="student_id" value="{{ student.user.id }}" />
+
+                        <input type="submit"  value="Imprimer" class="btn btn-primary" />
+                    </form>
+                </div>
+            </div>
+     
+            <hr/>
+
+
+
+
+
+            <div class="row bilan_div">
+                    <div class="col-sm-12 col-md-12">
+                        <a href="#knowledges{{ forloop.counter }}" data-toggle="collapse"  class="bilan_title"><i class="fa fa-angle-right"></i> <i class="fa fa-angle-down"></i>  Bilan des compétences </a>
+                        <div id="knowledges{{ forloop.counter }}" class="collapse bilan_details">
+                            {% with student.resultknowledge_dict as results %}
+                            <table class="table   table-hover"  >
+
+                                {% for knowledge in knowledges %}                    
+                                <tr>
+                                    <td style="width:45px">
+                                            {% get_score2 results knowledge.pk  as score %}
+
+                                            {% if score != "" %}
+                                                <a class="markdown  square
+                                                        {% if score < 30 %}
+                                                         red 
+                                                        {% elif score < 60 %}
+                                                        orange
+                                                        {% elif score < 80 %}
+                                                        green
+                                                        {% else %}
+                                                        darkgreen
+                                                        {% endif %}" >
+                                                    {{ score }}
+                                                </a>
+                                            {% else %}
+                                                <a href="#" class="markdown square"> 
+                                                </a>
+                                            {% endif %}
+                                    </td>
+                                    <td>
+                                        {{ knowledge.name }} 
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                            {% endwith %}
+                        </div>
+                    </div>
+            </div>
+
+            <div class="row bilan_div">
+                <div class="col-sm-12 col-md-12">
+                    <a href="#exercises{{ forloop.counter }}" data-toggle="collapse" class="bilan_title"><i class="fa fa-angle-right"></i><i class="fa fa-angle-down"></i>   Bilan des exercices faits</a>
+                    <div id="exercises{{ forloop.counter }}" class="collapse bilan_details">
+                        {% regroup exercises by theme as theme_list %}
+                        {% for thme in theme_list %}  
+                        <div class="bilan_title exercise_details">
+                            <a href="#exercise_details{{ forloop.counter }}" data-toggle="collapse" class="bilan_title "><i class="fa fa-angle-right"></i><i class="fa fa-angle-down"></i>  {{ thme.grouper.name }}</a>
+                        </div>
+                        <div id="exercise_details{{ forloop.counter }}" class="collapse">
+                            <table class="table  table-hover">
+                                {% for exercise in thme.list %}  
+                                {% get_score exercise student as score %}
+                                <tr>
+                                    <td> 
+                                        {% if exercise.supportfile.imagefile %}
+                                        <img src="{{ exercise.supportfile.imagefile.url }}" class="imagefile">
+                                        {% endif %}
+                                    </td>
+                                    <td> 
+                                        {{ exercise.knowledge.name }} <br/><br/>
+                                        {% if score %}
+                                        <a class="markdown square
+                                                {% if score < 30 %}
+                                                 red 
+                                                {% elif score < 60 %}
+                                                orange
+                                                {% elif score < 80 %}
+                                                green
+                                                {% else %}
+                                                darkgreen
+                                                {% endif %}">
+                                            {{ score }}
+                                        </a>
+                                        {% else %}
+                                            <a class="markdown square"> 
+                                            </a>
+                                        {% endif %}                                           
+                                    </td>
+                                </tr>
+                                {% endfor %}   
+                            </table>
+                        </div>
+                        {% endfor %}  
+
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+        {% if groups|length > 1 %}
+        </div>
+        {% endif %}
+        {% if not forloop.last %} <hr/>{% endif %}
+    {% endfor %}
+ 
+{% else %}
+<div class="row">
+    <div class="row">
+
+            <div class="col-md-12 col-lg-12 col-sm-12" style="text-align: center">
+                <div class="alert alert-info">
+                    <h1 class="thin"> Aucun exercice n'est proposé à cet élève.</h1>
+                    <div style="border-radius: 50%;width:250px;height:250px; margin-right: auto; margin-left: auto; background-color: #FFF;text-align: center">
+                        <img src="{% static 'img/sacado_color.png' %}"   />  
+                    </div>
+                </div>
+            </div>
+
+    </div>
+</div>
+{% endif  %}  
+
+ 
+
+
+{% if request.user.user_type == 2 %}  
+    <div class="modal fade" id="writer" tabindex="-1" role="dialog" aria-labelledby="writer" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>                
+                    <h5 class="modal-title" >Ecrire un message à  <span id="modal_student_name"></span></h5>
+                </div>
+                <div class="modal-body">
+                    <form  method="POST" > 
+                          {% csrf_token %}
+                        <div class="form-group"><input type="hidden" name="student_id" value="{{ student.user.id }}" id="student_id"/>
+                          <input type="text" name="name" class="form-control" id="name" placeholder="Nom" value="{{ student.user }}" />
+                        </div>
+                        <div class="form-group">
+                          <input type="email" class="form-control" name="email" id="email" placeholder="Email" value="{{ student.user.email }}" />
+                        </div>
+                        <div class="form-group">
+                            {{ form.subject|add_class:"form-control"|attr:"placeholder:Objet"|attr:"required" }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.texte|attr:"required"  }}
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary" id="sender_message">Envoyer</button>   
+                            <a href="#"  class="btn btn-default" class="close" data-dismiss="modal" aria-label="Close">Retour</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div> 
+{% endif %}
+
+
+{% endblock %}

@@ -84,7 +84,9 @@
                     <h4 style="background-color: #f1eef7"> {{ l.grouper }}</h4> 
                     <ul style="padding: 10px!important;">
                     {% for s in l.list %} 
-                    <li>{{ s }} <a href="{% url 'delete_student_to_my_lesson_group' s.user.id %}" class="pull-right"><i class="bi bi-trash"></i></a></li> 
+                    <li><a href="{% url 'detail_student_academy' s.user.id %}">{{ s }}</a> 
+                        <a href="{% url 'delete_student_to_my_lesson_group' s.user.id %}" class="pull-right" onclick="return TestRemove('{{ s.user }}')"><i class="bi bi-trash"></i></a>
+                    </li> 
                     {% endfor  %}
                     </ul>
                     

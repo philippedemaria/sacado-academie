@@ -901,12 +901,6 @@ def detail_student_all_views(request, id):
     student = user.student
     tracker_execute_exercise(False,user)
 
-
-    if not logged_user_has_permission_to_this_student(request.user, student) :
-        messages.error(request, "Erreur...Vous n'avez pas accès à ces résultats.")
-        return redirect('index')
-
-
     studentanswers = student.answers.all()
     today = time_zone_user(user)
     parcourses_tab, parcourses_set = [] , set()
@@ -928,7 +922,7 @@ def detail_student_all_views(request, id):
         if relation.exercise.knowledge not in knowledges:
             knowledges.append(relation.exercise.knowledge)
 
- 
+    months = []
     score_bool = False
     if request.user.is_teacher:
         students = []
@@ -951,17 +945,15 @@ def detail_student_all_views(request, id):
                    'student': student, 'parcours': None, 'sprev_id': nav[0], 'snext_id': nav[1] , 'teacher' : teacher,'months':months }
         else :
             messages.error(request, "Erreur...L'élève "+str(student.user.first_name)+" "+str(student.user.last_name)+" n'est pas associé à un groupe.")
-            return redirect("index")
+            context = {'exercises': exercises, 'knowledges': knowledges,    'themes': themes, 'students' : students ,  'group' : None , 'communications' : [], 'today' : today , 'form' : form ,  'groups' : groups ,
+                   'student': student, 'parcours': None,  'teacher' : teacher,'months':months }
  
     else :
-
         group = Group.objects.filter(students=student).last()
         groups = student.students_to_group.all()
         themes = set()
         for g in groups :
             themes.update(student.level.themes.filter(subject=g.subject)) 
-
-
 
         ###################
         #### Suivi si academie
@@ -984,14 +976,17 @@ def detail_student_all_views(request, id):
             max_student_answers_nb = 1
             step = 0
             init , end = 1 + 10*j, 11+10*j
+            real_month = [0,31,28,31,30,31,30,31,31,30,31,30,31]
+            end = min(real_month[month],end )
+
             begin   = datetime( year , month , init)
             last_d  = datetime( year , month , end)
 
             if j == 2 :
-                end = int(res.day+1)
+                end = min(  end,res.day+1)
                 last_d = datetime( year , month+1 , 1)
 
- 
+
             student_answers_global = Studentanswer.objects.filter( student  = student , date__gte  = begin , date__lte  = last_d )
             nb_exo_count_g = student_answers_global.count()
             data_g = student_answers_global.aggregate( duration = Sum("secondes"), average_score_g=Avg('point'))
@@ -1056,13 +1051,150 @@ def detail_student_all_views(request, id):
 
             maxiset.append(upper_set)
 
-            #datebar = "du "+str(date_start.strftime("%d/%m/%Y"))+" au "+str(today.strftime("%d/%m/%Y"))
+
  
         context = {'exercises': exercises, 'knowledges': knowledges,   'themes': themes, 'communications' : [], 'group' : group ,  'today' : today  , 'teacher' : None , 'groups' : groups ,
                    'student': student, 'parcours': None, 'sprev_id': None, 'snext_id': None, 'score_bool' : score_bool  ,  'maxiset' : maxiset  }
 
 
     return render(request, 'account/detail_student_all_views.html', context)
+
+
+
+
+#@user_can_read_details
+def detail_student_academy(request, id):
+
+    user = User.objects.get(pk=id)
+    student = user.student
+    tracker_execute_exercise(False,user)
+
+    studentanswers = student.answers.all()
+    today = time_zone_user(user)
+    parcourses_tab, parcourses_set = [] , set()
+    exercise_tab = []
+    prcrs = student.students_to_parcours.filter(is_publish=1)
+
+    parcourses_set.update(set(prcrs))
+
+    relations = student.students_relationship.filter(parcours__in=parcourses_set,is_publish=1,exercise__supportfile__is_title=0).order_by("exercise__theme")
+
+    exercises = []
+    for relation in relations:
+        if relation.exercise not in exercises:
+            exercises.append(relation.exercise)
+ 
+
+    knowledges = []
+    for relation in relations:
+        if relation.exercise.knowledge not in knowledges:
+            knowledges.append(relation.exercise.knowledge)
+
+
+    group = Group.objects.filter(students=student).last()
+    groups = student.students_to_group.all()
+    themes = set()
+    for g in groups :
+        themes.update(student.level.themes.filter(subject=g.subject)) 
+
+    i = 1
+
+    today   = time_zone_user(request.user) 
+    year  = int(today.strftime("%Y"))
+    month = int( today.strftime("%m"))
+    
+
+    nxt_mnth = today.replace(day=28) +  timedelta(days=4)
+    res = nxt_mnth -  timedelta(days=nxt_mnth.day) 
+
+    maxiset = []
+    for j in range(3):
+        upper_set = dict()
+        dataset = []
+        max_student_answers_nb = 1
+        step = 0
+        init , end = 1 + 10*j, 11+10*j
+        real_month = [0,31,28,31,30,31,30,31,31,30,31,30,31]
+        end = min(real_month[month],end )
+
+        begin   = datetime( year , month , init)
+        last_d  = datetime( year , month , end)
+
+        if j == 2 :
+            end += 1
+            last_d = datetime( year , month+1 , 1)
+
+        student_answers_global = Studentanswer.objects.filter( student  = student , date__gte  = begin , date__lte  = last_d )
+        nb_exo_count_g = student_answers_global.count()
+        data_g = student_answers_global.aggregate( duration = Sum("secondes"), average_score_g=Avg('point'))
+        if data_g["average_score_g"] : average_score_g = int(data_g["average_score_g"]) 
+        else : average_score_g = 0
+        if data_g["duration"] : duration_g = data_g["duration"] 
+        else : duration_g = 0
+        e_k_count_g = Studentanswer.objects.values_list("exercise__knowledge" ,flat =True).filter( student  = student , date__gte  = begin , date__lte  = last_d ).distinct().count()
+
+        for i in range(init,end):
+            datas = {}
+            test_date = datetime( year , month , i)
+            if i == res.day: 
+                mnth = month + 1
+                test_date_last = datetime( year , mnth , 1)
+            else : test_date_last = datetime( year , month , i+1)
+
+            student_answers    = Studentanswer.objects.filter( student  = student , date__gte  = test_date , date__lte  = test_date_last)
+            student_answers_nb = student_answers.count()
+            average            = student_answers.aggregate( duration = Sum("secondes"), average_score=Avg('point'))
+
+            if not average["average_score"] : average["average_score"] = 0
+
+            datas["date"] = test_date
+            datas["hn"]   = 0
+            datas["h"]    = student_answers_nb
+            datas["a"]    = int(average["average_score"])
+            datas["n"]    = student_answers_nb
+            datas["l"]    = 9*step
+            datas["le"]   = student_answers  
+            datas["m"]    = month
+
+            if int(average["average_score"]) < 50 :
+                datas["c"] = "red" 
+            elif int(average["average_score"]) < 70 :
+                datas["c"] = "orange" 
+            elif int(average["average_score"]) < 85 :
+                datas["c"] = "green"
+            else :
+                datas["c"] = "darkgreen"
+            step +=1
+
+            dataset.append(datas)
+ 
+            if max_student_answers_nb < student_answers_nb :
+                max_student_answers_nb = student_answers_nb
+        
+        for d in dataset :
+            d["h"]  = int((d["h"]/max_student_answers_nb)*300)
+            d["hn"] = d["h"]+20
+
+        upper_set['datas']           = dataset 
+        upper_set['nb_exo_g']        = nb_exo_count_g
+        upper_set['average_score_g'] = average_score_g
+        upper_set['duration_g']      = duration_g
+        upper_set['k_count_g']       = e_k_count_g
+
+
+        if nb_exo_count_g : is_display = True
+        else : is_display = False 
+        upper_set['is_display']      = is_display
+
+        maxiset.append(upper_set)
+
+        students = request.user.teacher.students.all()
+ 
+        context = {'exercises': exercises, 'knowledges': knowledges,   'themes': themes, 'communications' : [], 'group' : None ,  'today' : today  , 'teacher' : None , 'groups' : groups ,
+                   'student': student, 'parcours': None, 'sprev_id': None, 'snext_id': None,  'maxiset' : maxiset , 'students' : students  }
+
+
+    return render(request, 'account/detail_student_academy.html', context)
 
 
 

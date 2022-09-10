@@ -62,7 +62,7 @@
                           </div>
                           <div class="col-sm-3 col-md-3">
                               <div class="form-group"><label>Début</label> 
-                                  {{ form.start|add_class:"form-control" }} 
+                                  {{ form.start|add_class:"form-control start_hour" }} 
                               </div>
                           </div>
                           <div class="col-sm-3 col-md-3">
@@ -104,11 +104,7 @@
                       <div class="row">
                           <div class="col-sm-3 col-md-3">
                               <div class="form-group">De 
-                                  <select  id='start_hour' name='start_hour' class="form-control select2">
-                                      {% for h in hours %}
-                                          <option value="{{ h }}" {% if event.start_hour == h %} selected {% endif %}>{{ h }}</option>
-                                      {% endfor %}
-                                  </select>  
+                                    <input id="id_start_hour" name="start_hour" type="text" class="start_hour form-control" maxlength="5" /> 
                               </div>
                           </div>
                           <div class="col-sm-3 col-md-3">

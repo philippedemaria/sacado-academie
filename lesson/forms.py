@@ -33,7 +33,7 @@ class EventForm(forms.ModelForm):
 		sdate     =   cleaned_data.get("date")#start de self
 		sstart    = cleaned_data.get("start")  #start de self
 		sduration = cleaned_data.get('duration')  # end de self
-		sstart =  datetime.strptime( sstart  , "%H:%M:%S").time()
+		sstart    =  datetime.strptime( sstart  , "%H:%M:%S").time()
 		# verification : pas de conflit avec une autre visio du prof
 		events = Event.objects.filter(user=user, date=sdate ,start__lte=sstart)
 		for e in events :

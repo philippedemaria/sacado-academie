@@ -458,6 +458,7 @@ def attribute_all_documents_of_groups_to_all_new_students(groups):
 
 
 def duplicate_all_folders_of_group_to_a_new_student(group , folders, teacher,  student):
+
     for folder in folders :
         parcourses = folder.parcours.all() # récupération des parcours
         #clone du dossier
@@ -473,7 +474,7 @@ def duplicate_all_folders_of_group_to_a_new_student(group , folders, teacher,  s
             quizzes         = parcours.quizz.all() # récupération des quizzes
             flashpacks      = parcours.flashpacks.all() # récupération des flashpacks
             bibliotexs      = parcours.bibliotexs.all() # récupération des bibliotexs
-
+            is_sequence     = parcours.is_sequence
             #clone du parcours
             parcours.pk = None
             parcours.teacher = teacher
@@ -492,6 +493,7 @@ def duplicate_all_folders_of_group_to_a_new_student(group , folders, teacher,  s
                 for r  in relationships : 
                     skills = r.skills.all() 
                     r.pk = None
+                    r.parcours = parcours 
                     r.save()                        
                     r.skills.set(skills)
                     r.students.add(student)
@@ -502,6 +504,7 @@ def duplicate_all_folders_of_group_to_a_new_student(group , folders, teacher,  s
                     skills     = c.skills.all() 
                     knowledges = c.knowledges.all() 
                     c.pk       = None
+                    c.code    = str(uuid.uuid4())[:8]
                     c.teacher  = teacher
                     c.save()
                     c.students.add(student)
@@ -548,6 +551,7 @@ def duplicate_all_folders_of_group_to_a_new_student(group , folders, teacher,  s
                     levels    = quizz.levels.all()  
 
                     quizz.pk      = None
+                    quizz.code    = str(uuid.uuid4())[:8]
                     quizz.teacher = teacher
                     quizz.save()
 
@@ -568,7 +572,45 @@ def duplicate_all_folders_of_group_to_a_new_student(group , folders, teacher,  s
                     quizz.themes.set(themes)
                     quizz.students.add(student)
 
+                for bibliotex in bibliotexs :  
+                    relationtexs = bibliotex.relationtexs.all()    
+                    themes       = bibliotex.subjects.all()  
+                    levels       = bibliotex.levels.all()    
 
+                    bibliotex.pk      = None
+                    bibliotex.teacher = teacher
+                    bibliotex.save()
+
+                    for relationtex in relationtexs :
+                        relationtex.pk        = None
+                        relationtex.bibliotex = bibliotex
+                        relationtex.teacher   = teacher
+                        relationtex.save()
+                        relationtex.skills.set(skills)
+                        relationtex.knowledges.set(knowledges)
+     
+                    bibliotex.themes.set(themes)
+                    bibliotex.levels.set(levels)
+
+
+
+                for flashpack in flashpacks :  
+                    flashcards = flashpack.flashcards.all()    
+                    themes     = flashpack.subjects.all()  
+                    levels     = flashpack.levels.all()    
+     
+                    flashpack.pk      = None
+                    flashpack.teacher = teacher
+                    flashpack.save()
+
+                    for flashcard in flashcards :
+                        flashcard.pk        = None
+                        flashcard.save()
+     
+                    flashpack.authors.add(teacher.user)
+                    flashpack.parcours.add(parcours)
+                    flashpack.themes.set(themes)
+                    flashpack.levels.set(levels)
 
 
 def duplicate_all_parcours_of_group_to_a_new_student(group , parcourses, teacher,  student):
@@ -592,12 +634,14 @@ def duplicate_all_parcours_of_group_to_a_new_student(group , parcourses, teacher
         parcours.code = str(uuid.uuid4())[:8]
         parcours.save()
         parcours.students.add(student)
+ 
         # fin du clone
 
         if is_sequence :
             for r  in relationships : 
                 skills = r.skills.all() 
                 r.pk = None
+                r.parcours = parcours
                 r.save()                        
                 r.skills.set(skills)
                 r.students.add(student)
@@ -608,6 +652,7 @@ def duplicate_all_parcours_of_group_to_a_new_student(group , parcourses, teacher
                 skills     = c.skills.all() 
                 knowledges = c.knowledges.all() 
                 c.pk       = None
+                c.code    = str(uuid.uuid4())[:8]
                 c.teacher  = teacher
                 c.save()
                 c.students.add(student)
@@ -655,6 +700,7 @@ def duplicate_all_parcours_of_group_to_a_new_student(group , parcourses, teacher
 
                 quizz.pk      = None
                 quizz.teacher = teacher
+                quizz.code    = str(uuid.uuid4())[:8]
                 quizz.save()
 
                 for question in questions :
@@ -674,27 +720,43 @@ def duplicate_all_parcours_of_group_to_a_new_student(group , parcourses, teacher
                 quizz.themes.set(themes)
                 quizz.students.add(student)
 
+            for bibliotex in bibliotexs :  
+                relationtexs = bibliotex.relationtexs.all()    
+                themes       = bibliotex.subjects.all()  
+                levels       = bibliotex.levels.all()    
+ 
+                bibliotex.pk      = None
+                bibliotex.teacher = teacher
+                bibliotex.save()
 
+                for relationtex in relationtexs :
+                    relationtex.pk        = None
+                    relationtex.bibliotex = bibliotex
+                    relationtex.teacher   = teacher
+                    relationtex.save()
+                    relationtex.skills.set(skills)
+                    relationtex.knowledges.set(knowledges)
+ 
+                bibliotex.themes.set(themes)
+                bibliotex.levels.set(levels)
 
+            for flashpack in flashpacks :  
+                flashcards = flashpack.flashcards.all()    
+                themes     = flashpack.subjects.all()  
+                levels     = flashpack.levels.all()    
+ 
+                flashpack.pk      = None
+                flashpack.teacher = teacher
+                flashpack.save()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                for flashcard in flashcards :
+                    flashcard.pk        = None
+                    flashcard.save()
+ 
+                flashpack.authors.add(teacher.user)
+                flashpack.parcours.add(parcours)
+                flashpack.themes.set(themes)
+                flashpack.levels.set(levels)
 
 
 
