@@ -1228,7 +1228,7 @@ define(['jquery', 'bootstrap', 'ui', 'ui_sortable'], function ($) {
                         data: formData ,
                         type: "POST",
                         dataType: "json",
-                        success: function (data) {
+                        success: function (data) { 
                         $(data.html).insertBefore( $('#exercise_sortable').children()[0] );
                         },
                         cache: false,
