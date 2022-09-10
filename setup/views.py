@@ -1105,8 +1105,8 @@ def add_adhesion(request) :
             msg += "Votre référence d'adhésion est "+chrono+".\n\n"
             msg += "Vous avez inscrit : \n"
             msg += "- "+student.user.first_name+" "+student.user.last_name+", l'identifiant de connexion est : "+student.user.username +" \n"
-            msg += "\n\nRetrouvez ces détails à partir de votre tableau de bord après votre connexion à https://sacado-academie.fr\n\n"
-            msg += "L'équipe de SACADO Académie vous remercie de votre confiance.\n\n"
+            msg += "\n\nRetrouvez ces détails à partir de votre tableau de bord après votre connexion à https://sacado-academie.fr"
+            msg += "\n\nL'équipe de SACADO Académie vous remercie de votre confiance.\n\n"
 
 
 
@@ -1280,9 +1280,9 @@ def save_adhesion(request) :
         for s in students_of_adhesion :
             msg += "- "+s["first_name"]+" "+s["last_name"]+", l'identifiant de connexion est : "+s["username"]+", le mot de passe est "+s["password_no_crypted"]+" \n"
 
-        msg += "\n\nRetrouvez ces détails à partir de votre tableau de bord après votre connexion à https://sacado-academie.fr\n\n"
+        msg += "\n\nRetrouvez ces détails à partir de votre tableau de bord après votre connexion à https://sacado-academie.fr"
 
-        msg += "L'équipe de SACADO Académie vous remercie de votre confiance.\n\n"
+        msg += "\n\nL'équipe de SACADO Académie vous remercie de votre confiance.\n\n"
 
         ###### Quelques recommandations pour les parents
 
@@ -1321,11 +1321,11 @@ def save_adhesion(request) :
         srcv = []        
         if s["email"] : 
             srcv.append(s["email"])
-            smsg = "Bonjour "+s["first_name"]+" "+s["last_name"]+",\n\n vous venez de souscrire à une adhésion "+formule_adhesion +" à SACADO Académie avec le menu "+formule_name+". \n"
+            smsg = "Bonjour "+s["first_name"]+" "+s["last_name"]+",\n\nvous venez de souscrire à une adhésion "+formule_adhesion +" à SACADO Académie avec le menu "+formule_name+". \n"
             smsg += "votre référence d'adhésion est "+chrono+".\n\n"
             smsg += "Votre identifiant est "+s["username"]+" et votre mot de passe est "+s["password_no_crypted"]+"\n\n"
             smsg += "Il est possible de retrouver ces détails à partir de votre tableau de bord après votre connexion à https://sacado-academie.fr"
-            smsg += "L'équipe SACADO vous remercie de votre confiance.\n\n"
+            smsg += "\n\nL'équipe SACADO vous remercie de votre confiance.\n\n"
 
             send_mail("Inscription SACADO académie", smsg, settings.DEFAULT_FROM_EMAIL, srcv)
 
