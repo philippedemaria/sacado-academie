@@ -756,7 +756,7 @@ def details_of_adhesion(request) :
 
 
     data_post = request.POST
-    levels    = Level.objects.all()
+    levels    = Level.objects.exclude(pk=13)
     formule   = Formule.objects.get(pk = formule_id)
 
     if request.user.is_authenticated and request.user.is_in_academy :

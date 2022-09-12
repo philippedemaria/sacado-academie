@@ -55,19 +55,7 @@
     <i class="bi bi-upc"></i>
     <small>{{ quizz.code }}</small>
 </td>
-<td> 
-    <a href="{% url 'update_quizz' quizz.id  %}" title="Modifier le quizz"> 
-        <i class="bi bi-pencil"></i>
-    </a>
-    <br/><br/>
-    <a href="{% url 'clone_quizz' quizz.id  %}" title="Cloner le quizz" onclick="return clone('le quizz' , {{ quizz.title }} )"> 
-        <i class="bi bi-clouds"></i>
-    </a>    <br/><br/>
-    <a href="#" data-toggle='modal' data-target='#quizz_to_pdf_modal' data-title="{{ quizz.title }}"  data-idq="{{ quizz.id }}"  class="quizz_to_pdf_modal"  title="Imprimer le quizz"><i class="bi bi-file-pdf"></i> </a>
 
-
-
-</td>
 <td>
     {% for p in quizz.parcours.all %}
         {{ p }}{% if not forloop.last %}, {% endif %} 
@@ -149,6 +137,23 @@
     {% else  %}
         <div class="text-warning" style="margin-bottom: 10px;font-size:14px"><i class="fa fa-desktop"></i> Version numérique  </div> 
     {% endif  %}
-    <a href="{% url 'delete_quizz'  quizz.id %}"  class="quizz_action"   style="font-size:14px" onclick="return TestDelete('ce quizz')"><i class="bi bi-trash"></i>  Supprimer</a> 
 
+    <div style="font-size:14px">
+    <a href="{% url 'update_quizz' quizz.id  %}" title="Modifier le quizz"> 
+        <i class="bi bi-pencil"></i> Modifier    
+    </a>
+
+    {% if sacado_asso %} 
+        | <a href="{% url 'clone_quizz' quizz.id  %}" title="Cloner le quizz" onclick="return clone('le quizz' , '{{ quizz.title }}' )"> 
+            <i class="bi bi-clouds"></i> Cloner
+        </a>  
+        | <a href="#" data-toggle='modal' data-target='#quizz_to_pdf_modal' data-title="{{ quizz.title }}"  data-idq="{{ quizz.id }}"  class="quizz_to_pdf_modal"  title="Télécharger le quizz en pdf"><i class="bi bi-file-pdf"></i> Imprimer</a> |
+    {% else %}| 
+        <a href="#" title="Version établissement requise"><i class="bi bi-clouds"></i> Cloner </a> |    
+        <a href="#" title="Version établissement requise"><i class="bi bi-file-pdf"></i> Imprimer </a> |
+    {% endif  %}
+
+ 
+    <a href="{% url 'delete_quizz'  quizz.id %}"  class="quizz_action text-danger"   style="font-size:14px" onclick="return TestDelete('ce quizz')"><i class="bi bi-trash"></i>  Supprimer</a> 
+    </div>
 </td>
