@@ -95,18 +95,18 @@
 
          fetch(url).then(reponse => reponse.text())
           .then(text=>{
-           docu=parser.parseFromString(text,"text/xml");
-          returncode=docu.getElementsByTagName("returncode")[0].innerHTML;
-          messageKey=docu.getElementsByTagName("messageKey")[0].innerHTML;
+            docu=parser.parseFromString(text,"text/xml");
+            returncode=docu.getElementsByTagName("returncode")[0].innerHTML;
+            messageKey=docu.getElementsByTagName("messageKey")[0].innerHTML;
 
-               ujp=document.getElementsByName("urlJoinProf")[0];
-               if (returncode=="SUCCESS" || messageKey=="idNotUnique") {
+              ujp=document.getElementsByName("urlJoinProf")[0];
+              if (returncode=="SUCCESS" || messageKey=="idNotUnique") {
                    ujp.setAttribute("style","color:green")
-           }
-               else
+                  }
+              else
                  {ujp.setAttribute("style","color:red")
-           }
-              })
+                }
+            })
          }
         
     url="{{ event.urlCreate }}";
