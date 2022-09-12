@@ -1,0 +1,235 @@
+\documentclass[12pt]{article}
+\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{xspace}
+\usepackage{array}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{fancyvrb} %verbatim
+\usepackage{tabularx}
+\usepackage{stmaryrd}
+\usepackage{amssymb}
+\usepackage[?]{amsmath}
+\usepackage{epsfig}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{enumerate}
+\usepackage[np]{numprint} %\np{12345} donne 12 345 
+\usepackage{multicol}
+\newcommand{\second}{2\up{d}\xspace}
+\newcommand{\seconde}{2\up{de}\xspace}
+\newcommand{\R}{\mathbb R}
+\newcommand{\Rp}{\R_+}
+\newcommand{\Rpe}{\R_+^*}
+\newcommand{\Rm}{\R_-}
+\newcommand{\Rme}{\R_-^*}
+\newcommand{\N}{\mathbb N}
+\newcommand{\D}{\mathbb D}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\C}{\mathbb C}
+\newcommand{\grs}{\mathfrak S}
+\newcommand{\IN}[1]{\llbracket 1,#1\rrbracket}
+\newcommand{\card}{\text{Card}\,}
+\usepackage{mathrsfs}
+\newcommand{\parties}{\mathscr P}
+\renewcommand{\epsilon}{\varepsilon}
+\newcommand{\rmd}{\text{d}}
+\newcommand{\diff}{\mathrm D}
+\newcommand{\Id}{{\rm Id}}
+\newcommand{\e}{{\rm e}}
+\newcommand{\I}{{\rm i}}
+\newcommand{\J}{{\rm j}}
+\newcommand{\ro}{\circ}
+\newcommand{\exu}{\exists\,!\,}
+\newcommand{\telq}{\,\, \mid \,\,}
+\newcommand{\para}{\raisebox{0.1em}{\text{\footnotesize /\hspace{-0.1em}/}}}   
+\newcommand{\vect}[1]{\overrightarrow{#1}}
+\newcommand{\scal}[2]{\left(\, #1 \mid #2 \, \right)}
+\newcommand{\ortho}[1]{{#1}^\perp}
+\newcommand{\veci}{\vec{\text{\it \i}}}
+\newcommand{\vecj}{\vec{\text{\it \j}}}
+\newcommand{\rep}{$(O;\veci,\vecj,\vec{k})$\xspace}
+\newcommand{\Oijk}{$(O, \veci,\vecj,\vec{k})$\xspace}
+\newcommand{\rond}{repère orthonormal direct}
+\newcommand{\bond}{base orthonormale directe}
+\newcommand{\eq}{\Longleftrightarrow}
+\newcommand{\implique}{\Longrightarrow}
+\newcommand{\noneq}{\ \ \ /\hspace{-1.45em}\eq}
+\newcommand{\tend}{\longrightarrow}
+\newcommand{\egx}[2]{\underset{#1 \tend #2}=}
+\newcommand{\asso}{\longmapsto}
+\newcommand{\vers}{\longrightarrow}
+\newcommand{\eqn}{~\underset{n \rightarrow \infty}{\sim}~}
+\newcommand{\eqx}[2]{~\underset{#1 \rightarrow #2}{\sim}~}
+\newcommand{\egn}{~\underset{n \rightarrow \infty}{=}~}
+\renewcommand{\descriptionlabel}{\hspace{\labelsep}$\bigcirc$}
+\renewcommand{\bar}{\overline}
+\DeclareMathOperator{\ash}{{Argsh}}
+\DeclareMathOperator{\cotan}{{cotan}}
+\DeclareMathOperator{\ach}{{Argch}}
+\DeclareMathOperator{\ath}{{Argth}}
+\DeclareMathOperator{\sh}{{sh}}
+\DeclareMathOperator{\ch}{{ch}}
+%\DeclareMathOperator{\tanh}{{th}}
+\DeclareMathOperator{\Mat}{{Mat}}
+\DeclareMathOperator{\Vect}{{Vect}}
+\DeclareMathOperator{\trace}{{tr}}
+\newcommand{\tr}{{}^{\mathrm t}}
+\newcommand{\divi}{~\big|~}
+\newcommand{\ndivi}{~\not{\big|}~}
+\newcommand{\et}{\wedge}
+\newcommand{\ou}{\vee}
+%\DeclareMathOperator{\trace}{{trace}}
+\renewcommand{\det}{\operatorname{\text{dét}}}
+%\DeclareMathOperator{\det}{{dét}}
+\DeclareMathOperator{\grad}{{grad}}
+%\DeclareMathOperator{\th}{th}
+%\renewcommand{\tanh}{\mathop{\mathrm{th}}{}}
+\renewcommand{\arcsin}{{\mathop{\mathrm{Arcsin}}}}
+\renewcommand{\arccos}{{\mathop{\mathrm{Arccos}}}}
+\renewcommand{\arctan}{{\mathop{\mathrm{Arctan}}}}
+%\DeclareMathOperator{\arctan}{{Arctan}}
+\renewcommand{\tanh}{{\mathop{\mathrm{th}}}}
+\newcommand{\pgcd}{\mathop{\mathrm{pgcd}}}
+\newcommand{\ppcm}{\mathop{\mathrm{ppcm}}}
+\newcommand{\fonc}[4]{\left\{\begin{tabular}{ccc}$#1$ & $\vers$ & $#2$ \\
+$#3$ & $\asso$ & $#4$ \end{tabular}\right.}
+\renewcommand{\geq}{\geqslant}
+\renewcommand{\leq}{\leqslant}
+\renewcommand{\Re}{\text{\rm Re}}
+\renewcommand{\Im}{\text{\rm Im}}
+\renewcommand{\ker}{\mathop{\mathrm{Ker}}}
+\newcommand{\Lin}{\mathcal L}
+\newcommand{\GO}{\mathcal O}
+\newcommand{\GSO}{\mathcal{SO}}
+\newcommand{\GL}{\mathcal{GL}}
+\renewcommand{\emptyset}{\varnothing}
+\newcommand{\arc}[1]{\overset{\frown}{#1}}
+\newcommand{\rg}{\mathop{\mathrm{rg}}}
+\newcommand{\ds}{\displaystyle}
+\newcommand{\co}[3]{\begin{pmatrix}#1 \\ #2 \\ #3\end{pmatrix}}
+\newcommand{\demi}{\frac 1 2}
+
+\newcommand{\exod}[1]{\addtocounter{cexo}{1} \vskip 1em 
+\noindent{\bf \large Exercice \thecexo.\ #1}}
+\newcounter{cact}
+\renewcommand{\thecact}{\arabic{cact}}
+\newcommand{\act}{\addtocounter{cact}{1} \vskip 1em \noindent{\bf Activité \thecact.\ }}
+%\renewcommand{\labelitemi}{\m@th$\star$}
+\newcommand{\limi}[2]{\underset{#1 \rightarrow #2}\lim}    
+\newcommand{\nterme}[1]{{\em #1}}
+\newcommand{\dif}[1]{#1}
+\renewcommand{\FrenchLabelItem}{\textbullet} %bullet dans les items
+%\renewcommand{\labelitemi}{\textbullet}
+%\renewcommand{\labelitemii}{\textbullet}
+%\renewcommand{\labelitemiii}{\textbullet}
+%\renewcommand{\theenumi}{\alph{enumi}}
+%\setenumerate[0]{label=\alph}
+\usepackage{xr}
+\usepackage{hyperref}
+\usepackage{textcomp} %pour les ' dans lstlisting
+\usepackage{listings}
+%------------------ info
+\lstset{
+  language=Python,
+  commentstyle=\color{red},
+  upquote=true,
+  literate={é}{{\'e}}1
+           {ê}{{\^e}}1
+           {à}{{\`a}}1
+           {è}{{\`e}}1
+           {û}{{\^e}}1
+           {ê}{{\^e}}1
+           {ï}{{\"i}}1
+           {ù}{{\`u}}1, 
+  columns=flexible,
+  basicstyle=\ttfamily,
+  keywordstyle=\color{blue},
+  %identifierstyle=\color{green},
+  stringstyle=\ttfamily,
+  showstringspaces=false,
+  %numbers=left, 
+  %numberstyle=\tiny, 
+  %stepnumber=1, 
+  %numbersep=5pt,
+  frame=L
+}
+
+
+\ifdefined\HCode
+  \def\pgfsysdriver{pgfsys-dvisvgm4ht.def}
+\fi 
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+%\usepackage{mathrsfs}
+\usetikzlibrary{arrows}
+
+%-----------------------
+\usepackage{fancybox}
+\usepackage{fancyhdr}
+
+
+\definecolor{bleusad}{HTML}{0056B3}
+\newcommand{\titreFiche}[2]{\centerline{\Ovalbox{\parbox[t]{0.7\textwidth}{
+\vspace{-0.5em}\begin{center} \bf \large #1
+\end{center}
+\vspace{-0.5em}}}}
+
+  \bigskip
+\fancyfoot[L]{\includegraphics[height=1em]{/var/www/sacado/static/img/sacadoA1.png}\textcolor{bleusad}{\textsf{\ \raisebox{2pt}{SACADO. {\tt https://sacado.xyz}}}}}
+\fancypagestyle{Page1}{\fancyhead{}\renewcommand{\headrulewidth}{0pt}}
+\thispagestyle{Page1}
+\fancyhead[L]{#1}
+\fancyfoot[R]{\textsc{#2}}
+\renewcommand{\footrulewidth}{0.4pt}
+\pagestyle{fancy}
+}
+
+\newcounter{cexo}
+\renewcommand{\thecexo}{\arabic{cexo}}
+\newcommand{\exo}{\refstepcounter{cexo} \vskip 1.5em \noindent{\bf Exercice \thecexo.\ }}
+
+
+\newcommand{\competence}[1]{
+%  {\bf Compétence ciblée : } #1
+%  \medskip
+  \hfill\textcolor{bleusad}{#1}
+
+}
+\newcommand{\competences}[1]{
+  {\bf Compétences ciblées : }
+  \begin{enumerate}
+
+    #1
+  \end{enumerate}
+
+  \medskip
+}
+
+\newcommand{\savoir}[1]{
+  {\bf Autre savoir-faire ciblé : } 
+  #1
+  \medskip
+}
+
+\newcommand{\savoirs}[1]{
+  %  {\bf Autres savoir-faire ciblés : }
+ \vspace{-1em}
+  \textcolor{bleusad}{\it \begin{itemize}
+    #1
+  \end{itemize}
+  \centerline{\rule[0.5em]{5cm}{0.5pt}}}
+  \medskip
+}
+
+
+\newcommand{\entreexo}{ % entre les exos}
+  \medskip
+  \centerline{\hrule{5cm}{1pt}}
+  \medskip
+}
+
+\setlength{\parindent}{0cm}
+\usepackage[left=1.5cm,right=1.5cm,top=2cm,bottom=2cm]{geometry}

@@ -16,7 +16,7 @@ urlpatterns = [
     path('update_quizz/<int:id>', update_quizz, name='update_quizz'),
     path('delete_quizz/<int:id>', delete_quizz, name='delete_quizz'),
     path('show_quizz/<int:id>', show_quizz, name='show_quizz'), 
-    path('print_quizz/<int:idq>', print_quizz, name='print_quizz'),
+ 
     
     path('create_quizz_folder/<int:idf>', create_quizz_folder, name='create_quizz_folder'),
     path('create_quizz_parcours/<int:idp>', create_quizz_parcours, name='create_quizz_parcours'),
@@ -24,6 +24,8 @@ urlpatterns = [
     path('peuplate_quizz_parcours/<int:idp>', peuplate_quizz_parcours, name='peuplate_quizz_parcours'),
     path('ajax_find_peuplate_sequence', ajax_find_peuplate_sequence, name='ajax_find_peuplate_sequence'), 
 
+    path('print_quizz_to_pdf', print_quizz_to_pdf, name='print_quizz_to_pdf'), 
+ 
     path('create_quizz_sequence/<int:id>', create_quizz_sequence , name='create_quizz_sequence'),
 
     path('all_quizzes/search', all_quizzes, name='all_quizzes'), 

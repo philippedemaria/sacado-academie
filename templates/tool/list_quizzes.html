@@ -102,6 +102,10 @@
             {% endfor %} 
         </tbody>
     </table>
+
+
+
+
 {% endblock %}
 
      
@@ -153,5 +157,48 @@
         </div>
     </div>
 </div>
+
+
+
+<div class="modal fade" id="quizz_to_pdf_modal" tabindex="-1" role="dialog" aria-labelledby="quizz_to_pdf_modal">
+    <div class="modal-dialog" role="document" style="width: 750px;">
+        <div class="modal-content" >
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button> 
+                <h1 class='thin'><i class="bi bi-printer"></i> Imprimer le quizz <span id="idq_title"></span> en pdf</h1>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'print_quizz_to_pdf' %}" method="POST">
+                    <div class="row">            {% csrf_token %}
+                        <div class="col-sm-12 col-md-12"> 
+                            <input type="hidden" id="index_idq" name="idq" />
+                            <table class="table borderless">
+                                <tr>
+                                    <td>Questions mélangées ?</td>
+                                    <td><input type="checkbox" name="is_ranking" data-toggle="toggle" data-onstyle="primary" data-offstyle="default" data-on="Oui" data-off="Non"/>
+                                </tr>
+                                <tr>
+                                    <td>Propositions mélangées ?</td>
+                                    <td><input type="checkbox" name="is_order" data-toggle="toggle" data-onstyle="primary" data-offstyle="default" data-on="Oui" data-off="Non"/>
+                                </tr>
+                            </table>
+                        </div>    
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12"> 
+                            <div class="form-group">
+                                <input value="Valider" type="submit" class="btn btn-primary"/>
+                                <a href="javascript:history.back()"><input type="button" value="Annuler" class="btn btn-default "/></a>
+                            </div>
+                        </div>    
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 {% endblock %}

@@ -1,10 +1,11 @@
+from django.conf import settings # récupération de variables globales du settings.py
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse , FileResponse
 from django.core import serializers
 from django.template.loader import render_to_string
 from django.contrib import messages
 from django.core.mail import send_mail
-
+ 
 from tool.models import Tool , Question  , Choice  , Quizz , Diaporama  , Slide ,Qrandom ,Variable , VariableImage , Answerplayer , Display_question ,  Videocopy #, Generate_quizz , Generate_qr
 from tool.forms import ToolForm ,  QuestionForm ,  ChoiceForm , QuizzForm,  DiaporamaForm , SlideForm, QrandomForm, VariableForm , AnswerplayerForm,  VideocopyForm
 from group.models import Group 
@@ -47,7 +48,7 @@ import pytz
 from datetime import datetime , timedelta
 from general_fonctions import *
 from qcm.views import tracker_execute_exercise
-
+import subprocess
 
 #################################################################################
 #   Fonctions
@@ -415,61 +416,7 @@ def ajax_chargethemes_quizz(request):
     return JsonResponse(data)
 
 
-def print_quizz(request,idq):
-    """TODO """
 
-    # ouverture du texte dans le fichier tex
-    preamb = settings.TEX_PREAMBULE_PDF_FILE
-
-    entetes=open(preamb,"r")
-    elements=entetes.read()
-    entetes.close()
-
-    elements +=r"\begin{document}"+"\n"   
-
-    ## Création du texte dans le fichier tex   
- 
-    quizz    =  Quizz.objects.get(pk = idq) 
-    document =  "quizz" + str(idq)
-    title    =  quizz.title
-    author   = "Équipe SACADO"
-
-    elements +=r"\titreFiche{"+title+r"}{"+quizz.teacher+r"}"
-
-    for q in quizz.questions.all() :
-        ctnt =  q.title
-
-    document       = "relationtex" + str(relationtex_id)
-    title          =  exotex.title
-    author         = "Équipe SACADO"
-
-    elements += ctnt
-    elements += r"\vspace{0,4cm}"
-    # Fermeture du texte dans le fichier tex
-    elements +=  r"\end{document}"
-
-    elements +=  settings.DIR_TMP_TEX    
-
-    ################################################################# 
-    ################################################################# Attention ERREUR si non modif
-    # pour windows
-    #file = settings.DIR_TMP_TEX+r"\\"+document
-    # pour le serveur Linux
-    file = settings.DIR_TMP_TEX+"/"+document
-    ################################################################# 
-    ################################################################# 
-
-    f_tex = open(file+".tex","w")
-    f_tex.write(elements)
-    f_tex.close()
-
-
-    if output=="pdf" :
-        result = subprocess.run(["pdflatex", "-interaction","nonstopmode",  "-output-directory", settings.DIR_TMP_TEX ,  file ])
-        return FileResponse(open(file+".pdf", 'rb'),  as_attachment=True, content_type='application/pdf')
-    else : 
-        print("format output non reconnu")
-        return 
 
 
 def list_quizzes(request):
@@ -1790,6 +1737,93 @@ def quizz_unarchive(request):
             quizz.save()
  
     return redirect('list_quizzes')
+ 
+
+
+
+
+def print_quizz_to_pdf(request):
+
+
+    idq        = request.POST.get("idq",None)
+    is_ranking = request.POST.get("is_ranking",None) 
+    is_order   = request.POST.get("is_order",None)
+    if not idq :
+        return redirect('list_quizzes')
+
+    quizz = Quizz.objects.get(pk = idq) 
+ 
+    preamb = settings.TEX_PREAMBULE_PDF_QCM
+    entetes=open(preamb,"r")
+    elements=entetes.read()
+    entetes.close()
+
+    elements +=r"\begin{document}"+"\n"   
+    elements +=r"\titreFiche{"+quizz.title+r"}"
+
+    question_ids =  list(quizz.questions.values_list("id",flat=True).filter(is_publish=1).order_by("ranking"))
+    if not quizz.is_ranking : random.shuffle(question_ids)
+
+    i=1
+    letters = ["A","B","C","D","E","F","G","H","I","J","K"]
+    for question_id in question_ids :
+        question = Question.objects.get(pk=question_id)
+        elements += r"\exo {\bf }" +question.title+r"\hfill{"+str(question.point)+r" points}"
+        if question.imagefile :
+            elements += r"\includegraphics[scale=1]{"+question.imagefile.url+r"}"
+        
+        if question.qtype > 2 :
+            if  question.qtype == 3 : elements += r"\textit{Vous devez cocher les réponses qui vous semblent bonnes.}"
+        else :  elements += r"\textit{Vous devez cocher la réponse qui vous semble bonne.}"
+
+            elements += r"\begin{description}"
+            choice_ids = list(question.choices.values_list("id",flat=True))
+            if not is_order :
+                random.shuffle(choice_ids)
+            j=0
+            for choice_id in choice_ids :
+                choice = Choice.objects.get(pk=choice_id)
+                if choice.imageanswer :
+                    elements += r"\includegraphics[scale=1]{"+choice.imageanswer.url+r"}"
+                else :
+                    elements += r" \item[\quad "+letters[j]+".] " +  choice.answer
+                j+=1  
+            elements += r"\end{description}"
+        elif  question.qtype == 2 :
+            elements += r"\textit{Vous devez répondre à la question posée.}"
+            elements += r"\vspace{0,4cm}\\"
+            elements += r" \hrule  "
+            elements += r"\vspace{0,4cm}\\"
+            elements += r" \hrule  "
+        else :
+            elements += r"\textit{Vous devez cocher la réponse qui vous semble bonne.}"
+            elements += r"\begin{description}"
+            elements += r" \item[\quad  VRAI] " 
+            elements += r" \item[\quad  FAUX] " 
+            elements += r"\end{description}"  
+
+
+        i+=1
+    elements += r"\vspace{0,4cm}\\"
+    elements += r"\end{document}"
+    elements += settings.DIR_TMP_TEX    
+
+    ################################################################# 
+    ################################################################# Attention ERREUR si non modif
+    # pour windows
+    #file = settings.DIR_TMP_TEX+r"\\quizz_pdf_"+str(quizz.id)
+    # pour Linux
+    file = settings.DIR_TMP_TEX+"/quizz_pdf_"+str(quizz.id)
+    ################################################################# 
+    ################################################################# 
+    f_tex = open(file+".tex","w")
+    f_tex.write(elements)
+    f_tex.close()
+
+
+    result = subprocess.run(["pdflatex", "-interaction","nonstopmode",  "-output-directory", settings.DIR_TMP_TEX ,  file ])
+    return FileResponse(open(file+".pdf", 'rb'),  as_attachment=True, content_type='application/pdf')
+
 
 
 

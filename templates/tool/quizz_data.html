@@ -62,10 +62,9 @@
     <br/><br/>
     <a href="{% url 'clone_quizz' quizz.id  %}" title="Cloner le quizz" onclick="return clone('le quizz' , {{ quizz.title }} )"> 
         <i class="bi bi-clouds"></i>
-    </a>
-    {% comment %}
-    <a href="{% url 'print_quizz'  quizz.id   %}" title="Imprimer le quizz"><i class="bi bi-printer"></i> </a>
-    {% endcomment %}
+    </a>    <br/><br/>
+    <a href="#" data-toggle='modal' data-target='#quizz_to_pdf_modal' data-title="{{ quizz.title }}"  data-idq="{{ quizz.id }}"  class="quizz_to_pdf_modal"  title="Imprimer le quizz"><i class="bi bi-file-pdf"></i> </a>
+
 
 
 </td>
