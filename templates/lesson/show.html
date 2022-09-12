@@ -2,18 +2,6 @@
 {% load widget_tweaks %} 
 {% load item_tags %} 
 
-<script>
-
-
-    $('#update_div').hide();
-
-    $('.update_event_modal').on('click', function () { 
-          
-            $('#update_div').toggle(500);
-    });
-
- 
-</script>
 
  
 
@@ -78,4 +66,60 @@
           </div>
       </div>
 
+<script>
+
+
+    $('#update_div').hide();
+
+    $('.update_event_modal').on('click', function () { 
+          
+            $('#update_div').toggle(500);
+    });
+
+
+
+   // si il est temps d'ouvrir la visio (si maintenant est compris
+   //entre le debut de la visio -3 mn et la fin de la visio)
+   // alors : essaye d'ouvrir la visio et traite le résultat.
+   // sinon, si la visio est dans le futur : relance cette même fonction 3 mn avant la visio
+   // sinon, la visio est passée, on ne fait rien.
+
+   m="0{{ event.date.month}}".slice(-2); // mois sur 2 chiffres
+   d="0{{ event.date.day}}".slice(-2); // jour sur 2 chiffres
+   start=new Date("{{ event.date.year }}-"+m+"-"+d+"T{{event.start}}:00");
+   start=new Date(start.getTime()-180000); // 3 min avant
+   end=new Date(start.getTime()+({{ event.duration }})*60*1000);
+   now=new Date();
+
+   function testVisio() {
+
+         fetch(url).then(reponse => reponse.text())
+          .then(text=>{
+           docu=parser.parseFromString(text,"text/xml");
+          returncode=docu.getElementsByTagName("returncode")[0].innerHTML;
+          messageKey=docu.getElementsByTagName("messageKey")[0].innerHTML;
+
+               ujp=document.getElementsByName("urlJoinProf")[0];
+               if (returncode=="SUCCESS" || messageKey=="idNotUnique") {
+                   ujp.setAttribute("style","color:green")
+           }
+               else
+                 {ujp.setAttribute("style","color:red")
+           }
+              })
+         }
+        
+    url="{{ event.urlCreate }}";
+    parser = new DOMParser();
+   
+     if (now>start  &&   now<end) {
+         testVisio()
+     }
+     else
+         if (now<start)
+      {
+      setTimeout(testVisio,start.getTime()-now.getTime())
+      }
+
  
+</script>
