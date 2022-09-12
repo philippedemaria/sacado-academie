@@ -1806,8 +1806,7 @@ def print_quizz_to_pdf(request):
         i+=1
     elements += r"\vspace{0,4cm}\\"
     elements += r"\end{document}"
-    elements += settings.DIR_TMP_TEX    
-
+ 
     ################################################################# 
     ################################################################# Attention ERREUR si non modif
     # pour windows
