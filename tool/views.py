@@ -1773,7 +1773,7 @@ def print_quizz_to_pdf(request):
             elements += r"\includegraphics[scale=1]{"+question.imagefile.url+r"}"
         
         if question.qtype > 2 :
-            if  question.qtype == 3 : elements += r"\textit{Vous devez cocher les réponses qui vous semblent bonnes.}"
+            if  question.qtype == 3 : elements += r"\textit{Vous devez cocher les réponses qui vous semblent bonnes.}\\"
             else :  elements += r"\textit{Vous devez cocher la réponse qui vous semble bonne.}"
 
             elements += r"\begin{description}"
