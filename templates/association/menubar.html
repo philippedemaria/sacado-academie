@@ -1,10 +1,106 @@
-<li>
- <a href="{% url 'accountings' %}" class="no_button">Comptabilité</a>
+
+<li class="dropdown">
+    <a href="#" data-toggle="dropdown" class="dropdown-toggle no_button"> Opérations <b class="caret"></b> </a>
+    <ul   class="dropdown-menu clearfix pull-right" role="menu">
+        <li>
+            <a href="{% url 'create_accounting' 0 %}" > Nouvelle opération Client   </a>   
+        </li>
+        <li>
+            <a href="{% url 'list_accountings' 0 %}"  class="no_button" > 
+                Journal opérations Client
+            </a> 
+        </li> 
+        {% comment %}
+        <li class="divider"></li>
+        <li>
+            <a href="{% url 'create_accounting' 1 %}" > Nouvelle opération Fournisseur    </a>   
+        </li>
+        <li>
+            <a href="{% url 'list_accountings' 1 %}"  class="no_button" > 
+                Journal opérations Fournisseur 
+            </a> 
+        </li> 
+        {% endcomment %}
+        <li class="divider"></li>
+        <li>
+            <a href="{% url 'create_accounting' 2 %}" > Nouvelle opération Bancaire </a>  
+        </li>
+        <li>
+            <a href="{% url 'list_accountings' 2 %}"  class="no_button" > Journal opérations bancaires  CA</a> 
+        </li>
+        <li>
+         <a href="{% url 'list_paypal' %}" class="no_button">Journal opérations bancaires Paypal</a>
+        </li>
+
+
+
+
+
+    </ul>
 </li>
 
-<li>
- <a href="{% url 'bank_bilan' %}" class="no_button">Résultats</a>
+
+<li class="dropdown">
+    <a href="#" data-toggle="dropdown" class="dropdown-toggle no_button"> Options <b class="caret"></b> </a>
+    <ul   class="dropdown-menu clearfix pull-right" role="menu">
+        <li>
+            <a href="{% url 'academy_list_adhesions'  %}" ><i class="bi bi-badge-ad"></i> Liste des adhésions  </a>   
+        </li>    
+        <li>
+             <a href="{% url 'academy_list_parents' %}" ><i class="bi bi-people"></i> Liste des parents  </a> 
+        </li> 
+        <li class="divider"></li>  
+		<li>
+		 <a href="{% url 'create_school_admin' %}"  class="no_button"><i class="bi bi-plus"></i> Nouveau partenaire</a>
+		</li>
+
+        <li>
+             <a href="{% url 'all_schools' %}" ><i class="bi bi-bank"></i> Liste des partenaires  </a> 
+        </li> 
+        <li class="divider"></li>   
+        <li>
+            <a href="{% url 'activeyears'  %}" ><i class="bi bi-calendar3"></i> Années d'exercice </a>   
+        </li>
+  
+        <li class="divider"></li>    
+        {% if request.user.is_superuser %}
+        <li>
+            <a href="{% url 'gestion_academy_dashboard'  %}" ><i class="bi bi-arrow-counterclockwise"></i> Ré initialisation </a>   
+        </li>   
+        {% endif %}
+
+    </ul>
 </li>
- 
+
+<li class="dropdown">
+    <a href="#" data-toggle="dropdown" class="dropdown-toggle no_button"> Comptabilité <b class="caret"></b> </a>
+    <ul   class="dropdown-menu clearfix pull-right" role="menu">
 
 
+        <li>
+            <a href="{% url 'create_accountancy' %}" class="no_button">Nouvelle opération comptable</a>
+        </li>
+
+        <li>
+            <a href="{% url 'list_accountancy' %}" class="no_button">Journal de comptabilité</a>
+        </li> 
+        <li class="divider"></li>
+        <li>
+            <a href="{% url 'bank_bilan' %}" class="no_button">Bilan</a>
+        </li>
+        <li>
+            <a href="{% url 'activeyears' %}" class="no_button">Archive</a>
+        </li>
+        <li class="divider"></li>
+
+        <li>
+            <a href="{% url 'print_balance' %}" class="no_button"><i class="bi bi-file-earmark-pdf text-danger"></i> Imprimer la Balance</a>   
+        </li>
+
+        <li>
+            <a href="{% url 'print_big_book' %}"  class="no_button" ><i class="bi bi-file-earmark-pdf text-danger"></i> Imprimer le Grand livre</a> 
+        </li>  
+
+
+    </ul>
+</li>

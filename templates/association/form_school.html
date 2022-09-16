@@ -1,0 +1,148 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block page_title %} 
+   <i class="fa fa-bank"></i> {% if school %}Modification   {% else %}Création {% endif %}du partenaire
+{% endblock  %}
+
+
+{% block require %}
+{% if school %}
+<script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common3.js' %}"></script>
+{% else %}
+<script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common-index.js' %}"></script>
+{% endif %}
+{% endblock %} 
+
+
+{% block page_menu_right %}
+
+    {% include 'association/menubar.html' %}
+
+{% endblock %}
+
+
+
+
+
+{% block body  %}    
+ 
+<section class="content_main">
+    <div class="row">
+        <div class="col-sm-12 col-md-6">
+            <form  action="" method="POST" enctype='multipart/form-data'>
+                {% csrf_token %}
+
+                        <div class="form-group">
+                            {{ form.name.label_tag }}
+                            {{ form.name |add_class:"form-control" }}
+                            {{ form.name.errors }}
+                        </div>
+ 
+                        <div class="form-group">
+                            <label>Pays :</label>
+                            {{ form.country |add_class:"form-control select2" }}
+                            {{ form.country.errors }}
+                        </div>
+ 
+                        <div class="form-group">                
+                            {{ form.address.label_tag }}
+                            {{ form.address |add_class:"form-control" }}
+                            {{ form.address.errors }}
+                        </div>
+ 
+                        <div class="form-group">                
+                            {{ form.complement.label_tag }}
+                            {{ form.complement |add_class:"form-control" }}
+                            {{ form.complement.errors }}
+                        </div>
+ 
+                        <div class="form-group">                
+                            {{ form.zip_code.label_tag }}
+                            {{ form.zip_code |add_class:"form-control" }}
+                            {{ form.zip_code.errors }}
+                        </div>
+ 
+                        <div class="form-group">                
+                            {{ form.town.label_tag }}
+                            {{ form.town |add_class:"form-control" }}
+                            {{ form.town.errors }}
+                        </div>
+ 
+                        <div class="form-group">                
+                            {{ form.code_acad.label_tag }}
+                            {{ form.code_acad |add_class:"form-control" }}
+                            {{ form.code_acad.errors }}
+                        </div>
+                         <div class="form-group">                
+                            <label>Logo de l'établissement : <em>20ko max. 60px*60px (optionnel)</em></label>
+                            {{ form.logo }}
+                            {{ form.logo.errors }}
+                        </div>
+                        <div class="form-group">                
+                            {{ form.nbstudents.label_tag }}
+                            {{ form.nbstudents |add_class:"form-control" }}
+                            {{ form.nbstudents.errors }}
+                        </div>
+ 
+                        <div class="form-group">
+                            <input value="Enregistrer" type="submit" class="btn btn-primary"/>            
+                            <a href="javascript:history.back()"><input type="button" value="Annuler" class="btn btn-default "/></a>
+                        </div>
+ 
+         
+           
+                    {% if school and  request.user.is_superuser %}
+                
+ 
+                            <div class="form-group">
+                                <a href="{% url 'delete_school'  school.id %}"  class="btn btn-danger pull-right"  onclick="return TestDelete(' cet établissement ')">Supprimer l'établissement</a>
+                            </div>           
+        
+                    
+                    {% endif %} 
+            </form>
+        </div>
+        <div class="col-sm-12 col-md-6">
+
+            {% if school and  request.user.is_superuser %}
+                <h1 class="thin"> Initialisation </h1>   
+
+                 <div class="text-danger"><b>Selon le nombre d'élèves, cette action peut être longue.</b></div>
+
+                <h3 class="thin"> Ré-initialisation</h3>
+
+                    <div class="alert alert-danger">Le bouton ci-dessous ré-initialise la base de données en supprimant toutes les données existantes. L'action est irréversible. <hr/> Cette action est cependant nécessaire en fin d'année  pour recréer une nouvelle structure d'établissement. La suppression s'opère par lot de 150 élèves.</div>
+
+ 
+                    <div>
+                        {% if nb > 0 %}
+                            <a href="{% url 'reset_all_students_school' %}" class="btn btn-danger" onclick="return TestDelete('ces données ... action irréversible')">Effacer les données de {{ nb }}/{{ nb_total }} élèves</a> 
+
+                        {% else %}
+                            <a href="#" class="btn btn-default link_not_allowed">Aucun élève </a>
+                        {% endif %}                             
+                    </div>
+
+ 
+
+ 
+                    <div style="margin-top: 30px">
+                        {% if nb_total > 0%}
+                            <a href="#" class="btn btn-default link_not_allowed">Pour effacer tous les groupes, supprimer tous les élèves</a>
+ 
+                        {% else %}
+                            <a href="{% url 'reset_all_groups_school' %}" class="btn btn-danger" onclick="return TestDelete('ces données ... action irréversible')">Effacer tous les groupes</a>
+                        {% endif %}                             
+                    </div>
+
+
+
+
+            {% endif %} 
+ 
+        </div> 
+    </div>
+</section>
+{% endblock  %}

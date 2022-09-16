@@ -41,6 +41,84 @@
 
   
         <div id="content_exercises">
+
+            <div class="alert alert-warning">
+                <div class="row">
+                    <div class="col-xs-2 col-md-1" align="center">
+                        <i class="fa fa-warning fa-2x"></i>
+                    </div>
+                    <div class="col-xs-10 col-md-11">
+                        Cette page vous permet de regarder les exercices proposés par niveau et par thème. Pour proposer à vos élèves, vous devez d'abord construire un parcours puis les insérer dans le parcours.<br/>Si aucun niveau n'apparait, vous devez sélectionner vos niveaux d'enseignement <a href="{% url 'profile' %}" class="btn btn-sacado">ici</a>
+                    </div>
+                </div>
+
+            </div>  
+
+            <div class="row"> 
+                <div class="col-sm-12 col-md-12">
+                    <div class="alert alert-warning">
+                        <div class="row">
+                            <div class="col-xs-2 col-md-1" align="center">
+                                <i class="fa fa-info fa-2x"></i>
+                            </div>
+                            <div class="col-xs-10 col-md-11">
+                                Créer vos groupes avant de créer dossiers ou parcours. Sans groupe (donc sans élèves) vos documents ne seront pas affectés. Il faudra le faire dans un second temps..
+                            </div>
+                        </div>   
+                        <div class="row">
+                            <div class="col-xs-12 col-md-12">
+                                <p class='thin'> 2 façons de disposer d'un parcours </p>  
+                            
+                                <ol><i class="fa fa-hand-o-right"></i> <label style="font-size:18px"> Les parcours personnalisés</label> 
+                                    <p>Vous souhaitez tout paramétrer et créer le parcours en simplement quelques clics.<br>  Créer votre parcours personnalisé dans un premier temps puis sélectionner les exercices de votre choix. 
+                                    </p>
+                                </ol>
+
+                                <ol><i class="fa fa-hand-o-right"></i> <label style="font-size:18px"> Les parcours mutualisés</label> (<em>Version ETABLISSEMENT seulement</em>)
+                                    <p>La mutualisation des parcours vous permet de sélectionner tous les parcours de l'équipe SACADO ou de récupérer un parcours mutualisé par un enseignant de votre établissement. Il vous sera possible de le modifier une fois cloné.
+                                    </p>
+                                </ol>
+                                <p class='thin'><i class="fa fa-question-circle text-warning"></i> Conseils : Classer vos parcours par dossier - 2 approches au choix.</p> 
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6 col-md-6 col-lg-4">
+                                <div class="alert alert-warning">
+                                    <ol>Méthode privilégiée <i class="fa fa-check text-success"></i> </ol>
+                                    <ol><label style="font-size:18px">1. Créer un dossier </label> </ol>
+                                    <ol><label style="font-size:18px">2. Depuis le dossier, créer vos parcours</label></ol>
+                                    <div align="center">
+                                    <img src="{% static 'img/dossier2.png' %}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-lg-4">
+                                <div class="alert alert-warning">
+                                    <ol><label style="font-size:18px">1. Créer vos parcours</label> </ol>
+                                    <ol><label style="font-size:18px">2. Créer votre dossier</label></ol>
+                                    <ol><label style="font-size:18px">3. Inclure les parcours créés dans le dossier</label></ol>
+                                    <div align="center">
+                                    <img src="{% static 'img/dossier1.png' %}"  />
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12 col-lg-12" align="center">
+
+                                {% if request.user.is_staff %}<a href="{% url 'create_group'  %}" class="btn btn-sacado">Créer un groupe</a>{% endif %}
+
+                                <a href="{% url 'create_folder' 0 %}" class="btn btn-sacado">Créer un dossier</a>
+
+           
+                                <a href="{% url 'create_parcours' 0 %}" class="btn btn-sacado">Créer un parcours</a>
+      
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     {% else %}
 

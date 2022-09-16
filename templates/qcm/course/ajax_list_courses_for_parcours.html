@@ -22,10 +22,10 @@
                         {% if parcours %}
                             <a href="{% url 'get_this_course_for_this_parcours' 0 parcours.id pcs.grouper.id %}" class="pull-right getter_course" style="color:white;"
                                 onclick="return get_this_confirmation('tous les cours')"  title="Récupérer ce cours"  >
-                                <i class="fa fa-clone"></i></a>
+                                <i class="bi bi-plus-circle" style="font-size:30px"></i></a>
                         {% else %} 
                             <a href="#" data-toggle='modal' data-target='#clone_course' data-course_id =0 data-parcours_id = '{{ pcs.grouper.id  }}' class="pull-right getter_course edit" title="Récupérer ce cours" >
-                                <i class="fa fa-clone"></i>
+                                <i class="bi bi-plus-circle" style="font-size:30px"></i>
                             </a>
                         {% endif %}
                         </div>
@@ -58,8 +58,10 @@
                                 <a href="#" data-toggle='modal' data-target='#get_course' data-course_id = '{{ course.id }}'  data-parcours_id =0 class="pull-right shower_this_course edit"><i class="fa fa-eye fa-xs"></i></a>
                             {% else %} 
                                 <a href="#" data-toggle='modal' data-target='#clone_course' data-course_id = '{{ course.id }}' data-parcours_id =0  class="pull-right  getter_course edit" title="Récupérer ce cours" >
-                                    <i class="fa fa-clone fa-xs"></i></a>
-                                <a href="#" data-toggle='modal' data-target='#get_course' data-course_id = '{{ course.id }}'  data-parcours_id =0 class="pull-right shower_course edit"><i class="fa fa-eye fa-xs"></i></a>
+                                    <i class="bi bi-plus-circle" style="font-size:10px"></i></a>
+                                <a href="#" data-toggle='modal' data-target='#get_course' data-course_id = '{{ course.id }}'  data-parcours_id =0 class="pull-right shower_course edit">
+                                    <i class="bi bi-eye" style="font-size:12px"></i>
+                                </a>
                             {% endif %}
                                 
 

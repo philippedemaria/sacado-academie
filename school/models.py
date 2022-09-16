@@ -18,19 +18,17 @@ class Country(models.Model):
 
 
 class School(models.Model):
-    name                = models.CharField(max_length=255, verbose_name="nom")
-    country             = models.ForeignKey(Country, default='', blank=True, related_name='school', related_query_name="school", on_delete=models.PROTECT, verbose_name="Pays")
-    town                = models.CharField(max_length=255, default='', verbose_name="ville")
-    code_acad           = models.CharField(max_length=255, default='999efe',   verbose_name="Code UAI")
-    address             = models.CharField(max_length=255, blank=True, verbose_name="Adresse")
-    complement          = models.CharField(max_length=255, blank=True, verbose_name="Complément d'adresse")
-    zip_code            = models.CharField(max_length=255, default='99999', blank=True, verbose_name="Code postal")
-    get_seconde_to_comp = models.BooleanField(default=0,   editable=False)# L'établissement a récupéré le groupe prépa math comp
-    nbstudents          = models.PositiveIntegerField(default=500, verbose_name="Nombre d'élèves")
-    rythme              = models.BooleanField(default=1, verbose_name="Rythme")# Nord ou Sud
-    is_active           = models.BooleanField(default=0,   editable=False)
-    gar                 = models.BooleanField(default=0, verbose_name="Connexion via le GAR souhaitée")
-    logo                = models.ImageField(upload_to=image_directory_path, verbose_name="Logo de l'établissement", blank=True, default="")
+    name        = models.CharField(max_length=255, verbose_name="nom")
+    country     = models.ForeignKey(Country, default='', blank=True, related_name='school', related_query_name="school", on_delete=models.PROTECT, verbose_name="Pays")
+    town        = models.CharField(max_length=255, default='', verbose_name="ville")
+    code_acad   = models.CharField(max_length=255, default='999efe',   verbose_name="Code UAI ou RNE")
+    address     = models.CharField(max_length=255, blank=True, verbose_name="Adresse")
+    complement  = models.CharField(max_length=255, blank=True, verbose_name="Complément d'adresse")
+    zip_code    = models.CharField(max_length=255, default='99999', blank=True, verbose_name="Code postal")
+    nbstudents  = models.PositiveIntegerField(default=500, verbose_name="Nombre d'élèves")
+    is_active   = models.BooleanField(default=0,   editable=False)
+    logo        = models.ImageField(upload_to=image_directory_path, verbose_name="Logo de l'établissement", blank=True, default="")
+    is_managing = models.BooleanField(default=1, verbose_name="Admin unique ?")
 
     def __str__(self):
         return "{} - {} ".format(self.name, self.town)

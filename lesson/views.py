@@ -7,12 +7,12 @@ import subprocess
 from django.utils import timezone
 from django.shortcuts import render, redirect
 from lesson.models import Event, ConnexionEleve , Slot
-from lesson.forms import EventForm , SlotForm
+from lesson.forms import EventForm , SlotForm , GetEventForm
 from account.models import User, Student , Parent, Teacher
 from school.models import School
 import locale
 locale.setlocale(locale.LC_TIME,'')
-
+from django.contrib import messages
 from django.template.loader import render_to_string
 from django.http import JsonResponse 
 #from django.core import serializers
@@ -25,6 +25,7 @@ import requests # debuggage, à enlever en developpement
 from hashlib import sha1  # pour l'API de bbb
 from lesson.models import *
 from datetime import datetime, timedelta , time as temps
+import pytz
 
 
 def events_json(request):
@@ -68,6 +69,31 @@ def events_json(request):
  
 
 
+def events_my_teacher(request,idt):
+
+    slots = Slot.objects.filter(user_id=idt,is_occupied=0)
+ 
+    event_list = []
+    for slot in slots:
+        # On récupère les dates dans le bon fuseau horaire
+        slot_start = slot.datetime
+        slot_end   = slot_start + timedelta(minutes=15)
+        event_list.append({
+                    'id': slot.id,
+                    'start': slot_start.strftime('%Y-%m-%d %H:%M:%S'),
+                    'end': slot_end.strftime('%Y-%m-%d %H:%M:%S'),
+                    'title': "",
+                    'color' : '#CCC',
+                    })
+
+    if len(event_list) == -1: 
+        raise http.Http404
+    else:
+        return http.HttpResponse(json.dumps(event_list), content_type='application/json')
+ 
+
+
+
 def calendar_show(request,id=0):
 
     hours = []
@@ -81,17 +107,17 @@ def calendar_show(request,id=0):
             hours.append(time)
         hour=hour+1
 
+
     user      = request.user
     form      = EventForm(user, request.POST or None)
     form_slot = SlotForm(user, request.POST or None)
     students  = user.teacher.students.all()
-    context   = { 'user_shown' : user , 'form' : form , 'hours' : hours , 'form_slot' : form_slot ,  'students' : students , }  
+    context   = { 'user_shown' : user , 'form' : form , 'hours' : hours , 'form_slot' : form_slot ,  'students' : students }  
 
     return render(request, "lesson/calendar_show.html" , context )
  
 
-
-def create_event(request):
+def create_event(request): # CREATION PAR LE PROF
 
     user   =  request.user  
     form   = EventForm(user, request.POST or None)
@@ -104,7 +130,8 @@ def create_event(request):
     if is_lesson == "1" :
         if form.is_valid():    
             event = form.save(commit=False)
-            event.user = request.user            
+            event.user = request.user
+            event.is_validate = 2      
             event.save()
             event.urlCreate=bbb_urlCreate(event)
             event.urlJoinProf=bbb_urlJoin(event,"MODERATOR",user.last_name+" "+user.first_name)
@@ -184,7 +211,134 @@ L'équipe Sacado Académie.""".format(user.civilite,user.last_name.capitalize(),
 
 
  
+
+def get_the_slot(request): # CREATION PAR LE PROF
+
  
+    form = GetEventForm(request.POST or None)
+    idt  = request.POST.get("teacher_id")
+    utc  = pytz.UTC
+
+    if request.method == "POST" :
+        if form.is_valid():    
+            event             = form.save(commit=False)
+            event.user_id     = idt
+            event.title       = "Demande de leçon par visio"
+            event.is_validate = request.user.user_type    
+            event.save()
+
+            duration = event.duration//15
+
+            for i in range(duration) :
+                event_date = datetime.combine(event.date, event.start ) + timedelta(minutes=i*15)
+                datetmi    = event_date - timedelta(minutes=1)
+                datetma    = event_date + timedelta(minutes=1)
+
+                datetmin = datetmi.replace(tzinfo=utc) # transforme le temps naive en utc
+                datetmax = datetma.replace(tzinfo=utc) 
+                slots    = Slot.objects.filter(user_id=idt,datetime__gte=datetmin,datetime__lte=datetmax)
+                slots.update(is_occupied = 1)
+
+            if request.user.user_type  == 0 : 
+                event.users.add(request.user)
+
+                #conn=ConnexionEleve.objects.get(event=event,user=request.user.)
+                # conn.urlJoinEleve=bbb_urlJoin(event,"VIEWER",student.user.first_name+" "+student.user.last_name)
+                #ListeUrls.append(conn.urlJoinEleve)
+                #conn.save()
+
+                #-------------- envoi du mail au prof
+                CorpsMessage="""Bonjour, 
+                Vous venez de demander une nouvelle leçon intitulée : {}.
+                Date    : {} 
+                Horaire : {}
+                Durée   : {}
+                En attente de validation par votre(vos) parent(s).
+                Ceci est un mail automatique, ne pas répondre.
+                Merci.
+                """.format(str(event.title) ,str(event.date.strftime("%A %d/%m")),str(event.start),str(event.duration))
+
+                CorpsMessage+="Cordialement,\nL'équipe de Sacado Académie" 
+                if request.user.email :
+                    send_mail("Création d'une leçon",CorpsMessage,DEFAULT_FROM_EMAIL,[request.user.email])
+
+                #---------------envoi du mail aux parents d'élèves et eventuellement aux eleves.
+                code = 1331371257987*event.id-43526754
+                dest=[p.user.email for p in request.user.student.students_parent.all()]
+                send_mail("Programmation d'une leçon par visio","""
+                Bonjour,
+                Une leçon a été demandée par votre enfant {} {}.
+                Elle aura lieu le {} à {} et durera {} minutes.
+                 
+                Vous devez confirmer cette demande pour votre enfant en cliquant sur le lien : https://sacado-academie.fr/lesson/confirmation/{} 
+
+                Merci de bien vouloir contacter l'enseignant à l'adresse {} en cas d'indisponibilité.
+
+                Très cordialement,
+
+                L'équipe Sacado Académie.""".format(request.user.first_name.capitalize(),request.user.last_name.capitalize(), 
+                               str(event.date.strftime("%A %d/%m")),str(event.start),str(event.duration),str(code) , event.user.email),DEFAULT_FROM_EMAIL,dest)  
+                messages.success(request,"Demande de leçon prise en compte")
+
+
+            elif request.user.user_type  == 1 :
+
+                event.users.add(user)
+                #---------------envoi du mail aux parents d'élèves et eventuellement aux eleves.
+                dest=[p.user.email for p in request.user.student.students_parent.all()]
+                send_mail("Programmation d'une leçon par visio","""
+                Bonjour,
+                Une leçon par visio a été demandée par {} {}.
+                Elle aura lieu le {} à {} et durera {} minutes.
+                 
+                Merci de bien vouloir contacter l'enseignant à l'adresse {} en cas d'indisponibilité.
+
+                Très cordialement,
+
+                L'équipe Sacado Académie.""".format(request.user.first_name.capitalize(),request.user.last_name.capitalize(), 
+                           str(event.date.strftime("%A %d/%m")),str(event.start),str(event.duration),event.user.email),DEFAULT_FROM_EMAIL,dest)  
+
+                #---------------envoi du mail au prof.
+                send_mail("DEMANDE d'une leçon par visio","""
+                Bonjour,
+                Une leçon par visio a été demandée par {} {}.
+                Elle aura lieu le {} à {} et durera {} minutes.
+                L'équipe Sacado Académie.""".format(request.user.first_name.capitalize(),request.user.last_name.capitalize(), 
+                           str(event.date.strftime("%A %d/%m")),str(event.start),str(event.duration)),DEFAULT_FROM_EMAIL,[event.user.email])  
+                
+
+                messages.success(request,"Demande de leçon SACADO ACADEMIE")
+
+        else :  
+            print(form.errors)
+ 
+ 
+    return redirect( "display_calendar_teacher" , idt )
+
+ 
+
+def confirmation(request,code):
+
+    etape             = code + 43526754
+    event_id          = etape//1331371257987
+    event             = Event.objects.get(pk=event_id)
+    event.is_validate = 1
+    event.save()
+
+    #---------------envoi du mail au prof.
+    send_mail("DEMANDE d'une leçon par visio","""
+Bonjour,
+
+La leçon #{} du {} à {} d'une durée de {} minutes vient dêtre confirmée.
+
+L'équipe Sacado Académie.""".format(event.id, str(event.date.strftime("%A %d/%m")),str(event.start),str(event.duration)),DEFAULT_FROM_EMAIL,[event.user.email])  
+                
+
+
+
+    return redirect('index')
+
+
 
 
 def update_event(request,id):
@@ -300,7 +454,7 @@ def detail_student_lesson(request,id):
  
     user = request.user
     student = Student.objects.get(user_id=id)
-    lessons = student.user.these_events.all()
+    lessons = student.user.these_events.order_by("-date")
     
     context = { 'user' : user , 'student' : student , 'lessons' : lessons   }   
     return render(request, "lesson/list_lessons.html" , context )
@@ -314,23 +468,23 @@ def ask_lesson(request,id):
     user = request.user
     student = Student.objects.get(user_id=id)
     teachers = Teacher.objects.filter(user__school_id=50,is_lesson=1).order_by("user__last_name")
-    
-    context = { 'user' : user , 'student' : student , 'teachers' : teachers   }   
+    try :
+        event = user.events.order_by("date").last()
+        my_teacher = event.user.teacher
+    except :
+        my_teacher = None
+    context = { 'user' : user , 'student' : student , 'teachers' : teachers , 'my_teacher' : my_teacher   }   
     return render(request, "lesson/ask_lesson.html" , context )
 
 
 
-def ajax_display_calendar(request) :
-    data       = {}
-    teacher_id =  request.POST.get("teacher_id")    
-    teacher    =  Teacher.objects.get(user_id = teacher_id)
-
-    #context    = {  'level': level,   }
-
-    data['name'] = teacher.user.civilite+ " " +teacher.user.last_name
-    #data['html'] = render_to_string('lesson/calendar_default_popup.html', context)
- 
-    return JsonResponse(data)
+def display_calendar_teacher(request,idt) :
+   
+    teacher =  Teacher.objects.get(user_id = idt)
+    user =  request.user
+    form = GetEventForm(request.POST or None)
+    context = { 'user' : user ,  'teacher' : teacher ,  'form' : form   }   
+    return render(request, "lesson/display_calendar_teacher.html" , context )
 
 
 def CalcMeetingID(event):

@@ -51,8 +51,8 @@
                     <tr>
                         <th>Nom Prénom</th>
                         <th>Courriel</th>
-                        <th>Admin</th>
- 
+                        <th>Admin ?</th>
+                        <th>Créateur de groupe ?</th>
                         <th>Inscription</th>
                         <th>Dernière connexion</th>
                         <th>Compte</th>                        
@@ -79,7 +79,14 @@
                                         <i class="fa fa-ban text-danger"></i> 
                                     {% endif %}
                                 </td>
- 
+                                <td>
+                                    {% if teacher.is_staff %} 
+                                        <span style="font-size: 10px;color:#FFF"> oui</span> 
+                                        <i class="fa fa-check-circle text-success"></i>{% else %} 
+                                        <span style="font-size: 10px;color:#FFF"> non</span>  
+                                        <i class="fa fa-ban text-danger"></i> 
+                                    {% endif %}
+                                </td>
                                 <td>
                                     {{ teacher.date_joined|date:"d m Y" }}   
                                 </td>

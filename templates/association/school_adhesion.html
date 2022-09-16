@@ -1,0 +1,179 @@
+{% extends 'dashboard.html' %}
+
+{% load widget_tweaks %}
+{% load static %}
+
+
+
+
+{% block body %}
+
+<section class="container" style="margin-top:100px">
+    <h3 class="thin">Demande d'adhésion à la version Etablissement  <a href="#" id="show_fonctions" style="font-size : 14px">Fonctionnalités proposées</a>
+
+          <span  class="btn btn-periode_test"> 15 j d'essai gratuit* </span><span style="font-size : 10px;color: #CCC"> *Pour tout nouvelle adhésion</span>
+
+    </h3>    
+
+    <div class="row">
+       <div class="col-sm-12 col-md-12">
+        {% include 'table_price.html' %}
+       </div>
+    </div>
+ 
+ 
+ 
+    <div class="row" id="fonctions">
+        <div class="col-sm-12 col-md-12">
+            {% include 'table_fonctions.html' %}
+            <a href="#" id="close_tab" class="btn btn-default">Fermer</a>
+        </div>
+    </div> 
+
+ 
+
+
+
+    <form action="" method="POST" enctype='multipart/form-data'>
+        <div class="row">   
+            <div class="col-sm-12 col-md-12">
+                <div class="alert alert-danger">
+                Si votre établissement est déjà inscrit, l'administrateur ou le DAF doit procéder à un renouvellement via son <a href="{% url 'index' %}">espace Admin</a>. 
+                </div>
+            </div>
+        </div>
+        <div class="row">                    
+            <div class="col-sm-12 col-md-6">
+
+                  {% csrf_token %}
+
+                  <div class="form-group">
+                      <label>Nom de l'établissement  : </label>   
+                      {{ form.name |add_class:"form-control" }}
+                      {{ form.name.errors }}
+                  </div>
+                  <div class="form-group">
+                      <label>Logo de l'établissement : <em>20ko max. 60px*60px (optionnel)</em></label>
+                      {{ form.logo }}
+                      {{ form.logo.errors }}
+                  </div>
+                  <div class="form-group">                
+                      {{ form.code_acad.label_tag }} <small>Pour les établissements sans UAI, renseigner 999efe</small>
+                      {{ form.code_acad |add_class:"form-control" }}
+                      {{ form.code_acad.errors }}
+                  </div>
+                  <div class="form-group">                
+                      {{ form.address.label_tag }}
+                      {{ form.address |add_class:"form-control" }}
+                      {{ form.address.errors }}
+                  </div>
+
+                  <div class="form-group">                
+                      {{ form.complement.label_tag }}
+                      {{ form.complement |add_class:"form-control" }}
+                      {{ form.complement.errors }}
+                  </div>
+
+
+                  <div class="row">     
+                      <div class="col-sm-12 col-md-6">
+                          <div class="form-group">
+                              {{ form.town.label_tag }}
+                              {{ form.town |add_class:"form-control" }}
+                              {{ form.town.errors }}
+                          </div>
+                      </div>
+
+                      <div class="col-sm-12 col-md-6">
+                          <div class="form-group">
+                              {{ form.zip_code.label_tag }}
+                              {{ form.zip_code |add_class:"form-control" }}
+                              {{ form.zip_code.errors }}
+                          </div>
+                      </div>
+                  </div>
+ 
+                  <div class="form-group">
+                      <label>Pays :</label>
+                      {{ form.country |add_class:"form-control select2" }}
+                      {{ form.country.errors }}
+                  </div>
+  
+
+                  <div class="row">     
+
+                      <div class="col-sm-12 col-md-4">
+                          <div class="form-group">
+                              <img src="{% static 'img/gar.png' %}" width="150px"  />
+                          </div>
+                      </div>
+                      <div class="col-sm-12 col-md-5">
+                          <div class="form-group">
+                              Connexion souhaitée via le GAR depuis votre ENT 
+                          </div>
+                      </div>
+                      <div class="col-sm-12 col-md-3">
+                          <div class="form-group">
+                              {{ form.gar |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}
+                              {{ form.gar.errors }}
+                          </div>
+                      </div>
+                  </div>
+
+
+
+                  <div class="row">     
+                      <div class="col-sm-12 col-md-6">
+                          <div class="form-group">
+                              {{ form.nbstudents.label_tag }}
+                              {{ form.nbstudents |add_class:"form-control" }}
+                              {{ form.nbstudents.errors }}
+                          </div>
+                      </div>
+
+                      <div class="col-sm-12 col-md-6">
+                          <div class="form-group">
+                              <label>Cotisation en euros : </label> 
+                              <input name="somme" id="somme" value=90 type="number"class="form-control" required readonly />
+                          </div>
+                      </div>
+                  </div>
+
+
+
+            </div>
+            <div class="col-sm-12 col-md-6">
+                                      
+                  <label>Coordonnées du demandeur (DAF, enseignant, perdir,...)</label>
+                  {% include 'user_form.html' %}
+
+ 
+
+                  <div class="form-group">
+                      <img src="{% static 'img/som_token.png' %}" />
+                      <input type="text" name="token" class="form-control" id="token" placeholder="Ecrire le résultat de la somme"  />
+                  </div>
+                  <div class="form-group">
+                      <input value="Confirmer la demande" type="submit" class="btn btn-primary"/>            
+                      <a href="#" id="close_form" class="btn btn-default">Annuler</a>
+                  </div>
+
+                  <div class="row">
+                      <div class="col-sm-12 col-md-12">
+                          <div class="alert alert-danger">
+                              A partir du 1 juillet 2021, la version établissement ne sera activée qu'à partir de l'encaissement de la cotisation.
+                          </div>
+                      </div>
+                  </div> 
+
+
+
+            </div>  
+        </div> 
+    </form>
+ 
+
+</section> 
+
+ 
+{% endblock %}

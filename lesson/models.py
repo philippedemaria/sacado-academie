@@ -20,7 +20,9 @@ class Event(models.Model):
     urlCreate    = models.CharField(_('urlCreate'), null=True,  blank=True,  max_length=1000)
     urlJoinProf  = models.CharField(_('urlJoinProg'), null=True,  blank=True,  max_length=250)
     urlIsMeetingRunning = models.CharField(_('urlRunning?'), null=True,  blank=True,  max_length=250)
-    
+    is_validate  = models.PositiveIntegerField(_('Validation?'), default=0 , editable=False) # 0 : demande élève , 1 : validation parent, 2 validation prof
+
+
     def __str__(self):
         return "Visio : prof={}, le {},  début = {}, durée = {}".format(self.user.last_name, self.date.strftime("%d %n"), self.start.strftime("de %Hh%M"), self.duration)   
 
@@ -30,9 +32,9 @@ class Event(models.Model):
 
 
 class ConnexionEleve(models.Model):
-	event       =models.ForeignKey(Event, on_delete=models.CASCADE)
-	user        =models.ForeignKey(User, on_delete=models.CASCADE)
-	urlJoinEleve=models.CharField(_('url'), null=True,  blank=True,  max_length=250)
+	event       = models.ForeignKey(Event, related_name='ConnexionEleves' ,on_delete=models.CASCADE)
+	user        = models.ForeignKey(User, related_name='ConnexionEleves' , on_delete=models.CASCADE)
+	urlJoinEleve= models.CharField(_('url'), null=True,  blank=True,  max_length=250)
 
 
 

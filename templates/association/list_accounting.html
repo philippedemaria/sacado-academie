@@ -90,12 +90,12 @@
                             <td>
                                 <span >{{ accounting.date|date:"Y-m-d" }} </span> 
                             </td>
-                            <td><span class="helper_tip"><a href="{% url 'update_accounting'  accounting.id %}" >
+                            <td><span class="helper_tip"><a href="{% url 'update_accounting'  accounting.id tp %}" >
                                 {% if accounting.beneficiaire  %} {{ accounting.beneficiaire }} {% else %}{{ accounting.school.name }}, {{ accounting.school.country.name }} {% endif %}
-                                    <div class="helper_tip_text" > {{ accounting.observation|safe }}</div>
+                                    {% if accounting.observation  %} <div class="helper_tip_text" > {{ accounting.observation|safe }}</div> {% endif %}
                                 </a></span>
 
-                                <a href="{% url 'delete_accounting'  accounting.id %}" class="pull-right"  onclick="return TestDelete('cette facture')"><i class="fa fa-trash"></i> </a>
+
                                 <a href="{% url 'print_accounting'  accounting.id %}" class="pull-right" style="margin-right:10px"><i class="fa fa-print"></i> </a>
                                 <a href="{% url 'show_accounting'  accounting.id %}" class="pull-right" style="margin-right:10px"><i class="fa fa-eye"></i> </a>
                             </td> 

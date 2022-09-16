@@ -107,16 +107,6 @@
                 </table>
             </div>
         </div>
-        {% else %}                        
-            <div class="round" style="background-color: #5d4391; padding-top: 60px;color:#FFF"> 
-                <a href="{% url 'get_school_students' %}"  onclick="return getAllStudents()">Récupérer <br/> les comptes <br/>élèves déjà <br/> existants</a>
-            </div> 
-        {% endif %}
-
-
-
-
-
         <div class="row">
 
             <div class="col-sm-12 col-md-12">     
@@ -126,5 +116,16 @@
                 <a href="{% url 'admin_tdb' %}"  class="btn btn-default" >Tableau de bord Admin </a>
             </div>
         </div>
+        {% else %}                        
+            <div class="alert alert-warning"> 
+                Aucun groupe créé
+            </div> 
+        {% endif %}
+
+
+
+
+
+
     </section>
 {% endblock %}

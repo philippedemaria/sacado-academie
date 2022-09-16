@@ -39,6 +39,9 @@ p{
   font-size: inherit!important;
 }
 
+.sacado_color{
+    color : #5d4391  ;
+}
 
 a.sommaire{
   color : #998fa6  ;
@@ -401,6 +404,21 @@ hr.divider {
 
 .tweeter > img{
   max-width:450px;
+}
+
+
+/* ------------------------------------------------------------------------------------------------------------*/
+/* ---------------------------------------------------      CALENDAR       ------------------------------------*/
+/* ------------------------------------------------------------------------------------------------------------*/
+
+.no_border_input{
+  border:1px solid white;
+}
+
+.back_colored{
+  background-color: #f1eef7;
+  font-size:18px;
+  color:  #5d4391 ;
 }
 
 /* ------------------------------------------------------------------------------------------------------------*/
@@ -8624,10 +8642,10 @@ text-align: center;
   border-radius:50%;
   width:40px;
   height:40px;
-  padding: 6px 9px;
+  padding: 2px 5px;
   color:#FFF;
   z-index: 1;
-  background-color: #DDD;
+  background-color: #f1eef7;
 }
 
 
@@ -8640,11 +8658,17 @@ text-align: center;
   border-radius:50%;
   width:40px;
   height:40px;
-  padding: 6px 9px;
+  padding: 2px 5px;
   color:#FFF;
   z-index: 1;
-  background-color: #777;
+  background-color: #5d4391;
 }
+
+.widget-user-header .disc_course:hover a, .course_section:hover a, .course_section a:hover{
+  color:#FFF;
+}
+
+
 
 .widget-user-header .overlay .overlay_expand{
   padding-bottom: 5px;

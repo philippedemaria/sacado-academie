@@ -9,6 +9,7 @@ urlpatterns = [
     path('create_activeyear', create_activeyear, name='create_activeyear'),
     path('update_activeyear/<int:id>', update_activeyear, name='update_activeyear'),
 
+ 
 
     path('accountings', accountings, name='accountings'),
     path('list_paypal', list_paypal, name='list_paypal'),
@@ -16,15 +17,21 @@ urlpatterns = [
     path('bank_bilan', bank_bilan, name='bank_bilan'),
     path('adhesions', adhesions, name='adhesions'),
 
-
     path('list_accountings/<int:tp>/', list_accountings, name='list_accountings'),
     path('new/<int:tp>/', create_accounting, name='create_accounting'),
-    path('update/<int:id>/', update_accounting, name='update_accounting'),
-    path('delete/<int:id>/', delete_accounting, name='delete_accounting'),
+    path('update/<int:id>/<int:tp>', update_accounting, name='update_accounting'),
+    path('create_avoir/<int:id>/', create_avoir, name='create_avoir'),
     path('show/<int:id>/', show_accounting, name='show_accounting'), 
     path('print/<int:id>/', print_accounting, name='print_accounting'), 
     path('renew/<int:ids>/', renew_accounting, name='renew_accounting'),
 
+    path('accounting_to_accountancy', accounting_to_accountancy, name='accounting_to_accountancy'),
+    path('create_accountancy', create_accountancy, name='create_accountancy'),
+    path('list_accountancy', list_accountancy, name='list_accountancy'),
+    path('print_balance', print_balance, name='print_balance'),
+    path('print_big_book', print_big_book, name='print_big_book'),
+    path('create_accountancy', create_accountancy, name='create_accountancy'),
+    path('print_bank_bilan', print_bank_bilan, name='print_bank_bilan'),
 
 
     path('new_voting/<int:id>/', create_voting, name='create_voting'),
@@ -40,8 +47,7 @@ urlpatterns = [
     path('create_section', create_section, name='create_section'),
     path('update_section/<int:id>/', update_section, name='update_section'),
     path('delete_section/<int:id>/', delete_section, name='delete_section'),
-
-
+ 
 
     path('list_documents', list_documents, name='list_documents'),
     path('create_document', create_document, name='create_document'),
@@ -73,7 +79,11 @@ urlpatterns = [
     path('delete_formule/<int:id>/', delete_formule, name='delete_formule'),
 
 
-    path('all_schools', all_schools, name='all_schools'),
+    path('all_schools', all_schools, name='all_schools'),# all_customers
+    path('create_school_admin', create_school_admin, name='create_school_admin'),
+    path('update_school_admin/<int:id>/', update_school_admin, name='update_school_admin'),
+    path('delete_selected_schools', delete_selected_schools, name='delete_selected_schools'),
+
 
 
 ]

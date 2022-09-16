@@ -19,10 +19,11 @@ urlpatterns = [
     path('detail_student_lesson/<int:id>', detail_student_lesson, name='detail_student_lesson'),
     path('ask_lesson/<int:id>', ask_lesson, name='ask_lesson'),
 
-    path('ajax_display_calendar', ajax_display_calendar, name='ajax_display_calendar'),
+    path('display_calendar_teacher/<int:idt>', display_calendar_teacher, name='display_calendar_teacher'),
 
-
-
+    path('events_my_teacher/<int:idt>', events_my_teacher, name='events_my_teacher'),
+    path('confirmation/<int:code>', confirmation, name='confirmation'),
+    path('get_the_slot', get_the_slot, name='get_the_slot'),
 
  ]
 

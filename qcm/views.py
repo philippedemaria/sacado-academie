@@ -2133,10 +2133,10 @@ def ajax_all_folders(request):
 
     teacher_id = get_teacher_id_by_subject_id(subject_id)
 
-    if request.user.is_superuser :
-        folders = Folder.objects.values_list("id",flat=True).distinct().filter(Q(teacher__user__school = teacher.user.school)| Q(teacher__user_id=teacher_id),is_share = 1).order_by('level')
-    else :
-        folders = Folder.objects.values_list("id",flat=True).distinct().filter(Q(teacher__user__school = teacher.user.school)| Q(teacher__user_id=teacher_id),is_share = 1).exclude(teacher=teacher).order_by('level')
+    # if request.user.is_superuser :
+    #     folders = Folder.objects.values_list("id",flat=True).distinct().filter(Q(teacher__user__school = teacher.user.school)| Q(teacher__user_id=teacher_id),is_share = 1).order_by('level')
+    # else :
+    #     folders = Folder.objects.values_list("id",flat=True).distinct().filter(Q(teacher__user__school = teacher.user.school)| Q(teacher__user_id=teacher_id),is_share = 1).exclude(teacher=teacher).order_by('level')
 
     keywords = request.POST.get('keywords',None)
 

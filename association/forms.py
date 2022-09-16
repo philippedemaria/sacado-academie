@@ -1,5 +1,6 @@
 from django import forms
-from .models import Accounting , Voting , Associate, Document , Section , Detail , Rate , Abonnement , Holidaybook , Activeyear
+from .models import Accounting , Voting , Associate, Document , Section , Detail , Rate , Abonnement , Holidaybook , Activeyear , Accountancy 
+from school.models import School
 from account.models import User
 
 class HolidaybookForm(forms.ModelForm):
@@ -10,8 +11,19 @@ class HolidaybookForm(forms.ModelForm):
 
 
 class AccountingForm(forms.ModelForm):
+
     class Meta:
         model = Accounting 
+        fields = '__all__' 
+    def __init__(self, *args, **kwargs):
+        super(AccountingForm, self).__init__(*args, **kwargs)        
+        schools = School.objects.all()
+        self.fields['school'] = forms.ModelChoiceField(queryset=schools,    required=False )
+
+
+class AccountancyForm(forms.ModelForm):
+    class Meta:
+        model = Accountancy 
         fields = '__all__' 
 
 

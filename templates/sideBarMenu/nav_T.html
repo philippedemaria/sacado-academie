@@ -82,7 +82,7 @@
 </li>
 {% endif %}
 
-{% if request.user.is_superuser   %}
+ 
 
 <li  class="dropdown {% if not request.session.tdb and 'qcm' in request.path  or 'bibliotex' in request.path  %}active{% endif %}">
     <a href="#" class="main"  id="documents" style="cursor: grab;">
@@ -193,5 +193,4 @@
     {% endif  %}
 
 
-
-{% endif %}
+ 

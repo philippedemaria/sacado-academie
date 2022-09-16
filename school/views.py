@@ -112,11 +112,8 @@ def sharing_teachers(request,group, teachers):
 @user_is_superuser
 def list_schools(request):
 
-	schools = list()
-	today = datetime.now()
-	abonnements = Abonnement.objects.filter( date_stop__gte=today, date_start__lte=today,is_active = 1 ).order_by("school__country")
-	for a in abonnements :
-		schools.append(a.school)
+
+	schools = School.objects.exclude(pk=50)
 	nb = len(schools)
 	return render(request, 'school/lists.html', { 'communications' : [], 'schools': schools, 'nb': nb})
 
@@ -931,13 +928,13 @@ def send_account(request, id):
 		for user in school.users.filter(user_type=2):
 			if user.email : 
 				msg = f'Bonjour, votre compte Sacado est disponible.\r\n\r\nVotre identifiant est {user.username} \r\n\r\nPour une première connexion, le mot de passe est : sacado2020 . Il faut le modifier lors de la première connexion.\r\n\r\n Dans le cas contraire, utilisez votre mot de passe habituel.\r\n\r\nPour vous connecter, redirigez-vous vers https://sacado-academie.fr.\r\n\r\nCeci est un mail automatique. Ne pas répondre.'
-				send_mail('Compte Sacado', msg ,'info@sacado-academie.fr', [user.email])
+				send_mail('Compte Sacado', msg , settings.DEFAULT_FROM_EMAIL , [user.email])
 
 	else:
 		user = User.objects.get(id=id)
 		if user.email : 
 			msg = f'Bonjour, votre compte Sacado est disponible.\r\n\r\nVotre identifiant est {user.username} \r\n\r\nPour une première connexion, le mot de passe est : sacado2020 . Il faut le modifier lors de la première connexion.\r\n\r\n Dans le cas contraire, utilisez votre mot de passe habituel.\r\n\r\nPour vous connecter, redirigez-vous vers https://sacado-academie.fr.\r\n\r\nCeci est un mail automatique. Ne pas répondre.'
-			send_mail('Compte Sacado', msg ,'info@sacado-academie.fr', [user.email])
+			send_mail('Compte Sacado', msg , settings.DEFAULT_FROM_EMAIL , [user.email])
 
 	
 

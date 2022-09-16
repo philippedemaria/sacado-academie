@@ -9,6 +9,8 @@ from school.models import School , Country
 # Pour créer un superuser, il faut depuis le shell taper :
 # from account.models import User
 # User.objects.create_superuser("admin","admin@gmail.com","motdepasse", user_type=0).save()
+from datetime import date
+
 
 
 class Plancomptable(models.Model):
@@ -18,17 +20,28 @@ class Plancomptable(models.Model):
     def __str__(self):
         return "{} : {}".format(self.code,self.name)
 
-YEARS = (
-         (2021, "2021-2022"  ), (2022, "2022-2023"  ), (2023, "2023-2024"  ),   (2024, "2024-2025"  ),   (2025, "2025-2026"  ) ,(2026, "2026-2027" ),   
-        )
+annee = date.today().year
+if date.today().month < 9 :  
+    annee = annee -1
 
+YEARS = []
+for i in range (20) :
+    a = annee + i
+    b = annee + i + 1
+    YEARS.append( (a , str(a)+"-"+str(b)) )
+
+ 
+def compta_directory_path(instance, filename):
+    return "accountancy/{}/{}".format(instance.year, filename)        
 
 class Activeyear(models.Model):
 
     year      = models.PositiveIntegerField(default=2021, choices=YEARS , verbose_name="Année de l'exercice") 
-    solde     = models.IntegerField(default=0, verbose_name="Résultat de l'exercice précédent")
+    solde     = models.DecimalField(default=0, blank=True , max_digits=10, decimal_places=2,   verbose_name="Résultat de l'exercice précédent")
     is_active = models.BooleanField(default=0,  verbose_name="Année active")
-
+    balance   = models.FileField(upload_to=compta_directory_path, verbose_name="Balance",blank=True, default="" )
+    book      = models.FileField(upload_to=compta_directory_path, verbose_name="Grand livre",blank=True, default="" )
+    bilan     = models.FileField(upload_to=compta_directory_path, verbose_name="Bilan",blank=True, default="" )
 
 
     def __str__(self):
@@ -153,9 +166,10 @@ class Accounting(models.Model):
         ("AVOIR", "AVOIR"),
     )
 
+
     amount = models.DecimalField(default=0, blank=True , max_digits=10, decimal_places=2, editable=False)
-    is_credit = models.BooleanField(default=0, )
-    is_paypal = models.BooleanField(default=0, )
+    is_credit = models.BooleanField(default=0, verbose_name="is_credit ?" )
+    is_paypal = models.BooleanField(default=0, verbose_name="is_paypal ?" )
     objet = models.CharField(max_length=255, verbose_name="Objet*")
     chrono = models.CharField(max_length=50, blank=True, unique =True,  editable=False)
 
@@ -174,14 +188,16 @@ class Accounting(models.Model):
 
     observation = RichTextUploadingField( blank=True, default="", null=True, verbose_name="Observation")
 
-    date_payment = models.DateTimeField(null=True, blank=True, verbose_name="Date d'effet") # date de paiement
-    date = models.DateTimeField(auto_now_add=True) # date de création de la facture
-    user = models.ForeignKey(User, related_name="accountings", null=True, blank=True,  on_delete=models.CASCADE, editable=False)
-    is_active = models.BooleanField(default=0, verbose_name="Actif")
-    is_abonnement = models.BooleanField(default=0, verbose_name="Abonnement")
-    ticket = models.FileField(upload_to=accounting_directory_path, blank=True, verbose_name="Justificatif",  default="" )
-    plan = models.ForeignKey(Plancomptable, default=17, related_name="plan_accountings", blank=True,  null=True,  on_delete=models.SET_NULL, verbose_name="Plan comptable")
-    tp  = models.PositiveIntegerField(default=0, editable=False)
+    date_payment  = models.DateTimeField(null=True, blank=True, verbose_name="Date d'effet") # date de paiement
+    date          = models.DateTimeField(auto_now_add=True) # date de création de la facture
+    user          = models.ForeignKey(User, related_name="accountings", null=True, blank=True,  on_delete=models.CASCADE, editable=False)
+    is_active     = models.BooleanField(default=0, verbose_name="Actif ?")
+    is_abonnement = models.BooleanField(default=0, verbose_name="Abonnement ?")
+
+    ticket        = models.FileField(upload_to=accounting_directory_path, blank=True, verbose_name="Justificatif",  default="" )
+    plan          = models.ForeignKey(Plancomptable, default=17, related_name="accountings", blank=True,  null=True,  on_delete=models.SET_NULL, verbose_name="Plan comptable")
+    tp            = models.PositiveIntegerField(default=0, editable=False)
+
 
     def __str__(self):
         return self.beneficiaire
@@ -191,7 +207,45 @@ class Accounting(models.Model):
         cs = self.school.users.filter(is_extra=1)
         return  cs
 
+
+    def solde(self):
+        if self.date_payment :
+            solde = 0
+        else :
+            solde = self.amount
+        return solde
+
+
+    def is_display(self):
+        ok = False
+        if not self.date_payment and self.forme=="FACTURE" and not "Avoir" in self.observation  :
+            ok = True
+        return ok
+
  
+    def total_solde(self):
+        accs = Accounting.objects.filter( date_payment__lte=self.date_payment,is_paypal=0).order_by("date_payment","id")
+        s=0
+        for a in accs :
+            if a.is_credit :
+                s +=a.amount
+            else :
+                s -=a.amount
+        return s
+
+
+    def total_solde_paypal(self):
+        accs = Accounting.objects.filter( date_payment__lte=self.date_payment,is_paypal=1).order_by("date_payment","id")
+        s=0
+        for a in accs :
+            if a.is_credit :
+                s +=a.amount
+            else :
+                s -=a.amount
+        return s
+
+
+
 class Detail(models.Model):
     """ detail d'un Accounting   """
  
@@ -203,11 +257,64 @@ class Detail(models.Model):
         return self.accounting
 
 
+class Provider(models.Model):
+    name       = models.CharField(max_length=255, verbose_name="Nom") 
+    address    = models.CharField(max_length=255, blank=True, verbose_name="Adresse")
+    complement = models.CharField(max_length=255, blank=True, verbose_name="Complément d'adresse")
+    town       = models.CharField(max_length=255, blank=True, verbose_name="Complément d'adresse")
+    country    = models.ForeignKey(Country, related_name="providers", blank=True,  null=True,  on_delete=models.SET_NULL, verbose_name="Pays")
+    contact    = models.CharField(max_length=255, blank=True ,  verbose_name="Contact")
+    phone      = models.CharField(max_length=255, blank=True ,  verbose_name="Téléphone")
 
 
+    def __str__(self):
+        return self.name
 
 
+class Bank(models.Model):
+    name       = models.CharField(max_length=255, verbose_name="Nom") 
+    address    = models.CharField(max_length=255, blank=True, verbose_name="Adresse")
+    complement = models.CharField(max_length=255, blank=True, verbose_name="Complément d'adresse")
+    town       = models.CharField(max_length=255, blank=True, verbose_name="Complément d'adresse")
+    country    = models.ForeignKey(Country, related_name="banks", blank=True,  null=True,  on_delete=models.SET_NULL, verbose_name="Pays")
+    contact    = models.CharField(max_length=255, blank=True ,  verbose_name="Contact")
+    phone      = models.CharField(max_length=255, blank=True ,  verbose_name="Téléphone")
 
+
+    def __str__(self):
+        return self.name
+ 
+
+class Accountancy(models.Model):
+    """ Accounting   """
+
+    TYPES = (
+
+        ("Période de test", "Période d'essai"),
+        ("par carte de crédit", "Carte de crédit"),
+        ("par virement bancaire", "Virement bancaire"),
+        ("en espèces", "Espèces"),
+        ("par mandatement administratif", "Mandatement administratif"),
+    )
+
+    FORMES = (
+        ("FACTURE", "FACTURE"),        
+        ("AVOIR", "AVOIR"),
+    )
+
+    accounting_id = models.PositiveIntegerField(default=0, blank=True,  null=True, editable=False) # cet id doit se mettre dans les 2 lignes
+    ranking       = models.PositiveIntegerField(default=1, editable=False) # cet id doit se mettre dans les 2 lignes
+    plan_id       = models.PositiveIntegerField(default=0, verbose_name="Plan comptable") # cet id doit se mettre dans les 2 lignes
+    is_credit     = models.BooleanField(default=0, verbose_name="is_credit ?" )
+    amount        = models.DecimalField(default=0, blank=True , max_digits=10, decimal_places=2,  verbose_name="Montant")
+    date          = models.DateTimeField(auto_now_add=True) # date de création de la facture
+    current_year  = models.PositiveIntegerField(default=2021, verbose_name="Année") # date de création de la facture
+
+    def __str__(self):
+        return "{}.{}".format(self.accounting_id,self.ranking )
+
+    def amount_valeur_absolue(self):
+        return abs( self.amount) 
 
 ########################################################################################################################################### 
 ########################################################################################################################################### 
@@ -255,13 +362,12 @@ class Document(models.Model): # pour l'asso'
 
 class Abonnement(models.Model):
 
-    school     = models.ForeignKey(School, on_delete=models.CASCADE, related_name='abonnement', editable=False)
-    date_start = models.DateTimeField( blank=True, verbose_name="Date de début")
-    date_stop  = models.DateTimeField( blank=True, verbose_name="Date de fin")
-    accounting = models.OneToOneField(Accounting, on_delete=models.CASCADE,  related_name="abonnement", editable=False)
-    user       = models.ForeignKey(User, on_delete=models.CASCADE, related_name='abonnement', editable=False)
-    is_gar     = models.BooleanField(default=0, verbose_name="Usage du GAR")
-    is_active  = models.BooleanField(default=0, verbose_name="Actif")
+    school              = models.ForeignKey(School, on_delete=models.CASCADE, related_name='abonnement', editable=False)
+    date_start          = models.DateTimeField( blank=True, verbose_name="Date de début")
+    date_stop           = models.DateTimeField( blank=True, verbose_name="Date de fin")
+    accounting          = models.OneToOneField(Accounting, on_delete=models.CASCADE,  related_name="abonnement", editable=False)
+    user                = models.ForeignKey(User, on_delete=models.CASCADE, related_name='abonnement', editable=False)
+    is_active           = models.BooleanField(default=0, verbose_name="Actif")
 
     def __str__(self):
         return "{}".format(self.school.name)

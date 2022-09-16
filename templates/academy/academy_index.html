@@ -15,46 +15,11 @@
 
 
 {% block page_title %}
-    <i class="fa fa-cloud"></i> Tableau de bord sacado académie 
+    <i class="fa fa-cloud"></i> Académie par niveaux
 {% endblock %} 
 
 {% block page_menu_right %}
- 
- <li class="dropdown">
-        <a href="#" data-toggle="dropdown" class="dropdown-toggle no_button"> Options <b class="caret"></b> </a>
-
-    <ul   class="dropdown-menu clearfix pull-right" role="menu">
-
-
-
-        
-        <li>
-            <a href="{% url 'academy_list_adhesions'  %}" > Liste des adhésions  </a>   
-        </li>
-          <li class="divider"></li>      
-        
-        <li>
-             <a href="{% url 'academy_list_parents' %}" > Liste des parents  </a> 
-        </li> 
-          <li class="divider"></li>    
-        
-        <li>
-            <a href="{% url 'activeyears'  %}" > Années d'exercice </a>   
-        </li>
-  
-        <li class="divider"></li>    
-        {% if request.user.is_superuser %}
-        <li>
-            <a href="{% url 'gestion_academy_dashboard'  %}" > Ré initialisation Académie </a>   
-        </li>   
-        {% endif %}
-
-    </ul>
-</li>
-
-
-
-
+     {% include 'association/menubar.html' %}
 {% endblock %}
 
 

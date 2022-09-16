@@ -82,7 +82,6 @@ define(['jquery', 'bootstrap','moment', 'fullcalendar'], function ($) {
 			                    },
 			                    url: "shift_event" ,
 			                    success: function (data) {
-										console.log("OK");
 			                    }
 			                }
 			            )
@@ -113,45 +112,6 @@ define(['jquery', 'bootstrap','moment', 'fullcalendar'], function ($) {
 
 			  }
 		}) ;
-
-
-
-
-        $('.display_calendar').on('click', function (event) {
-            
-            let teacher_id = $(this).data("teacher_id");
-            let csrf_token = $("input[name='csrfmiddlewaretoken']").val();
- 
-            $.ajax(
-                {
-                    type: "POST",
-                    dataType: "json",
-                    data: {
-                        'teacher_id': teacher_id,
-                        csrfmiddlewaretoken: csrf_token
-                    },
-                    url: "../ajax_display_calendar",
-                    success: function (data) {
-
-                        $('#show_teacher_name').html("").html(data.name);
-                        // $('#show_teacher_calendar').html("").html(data.html);
-                    }
-                }
-            )
-        }); 
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 				

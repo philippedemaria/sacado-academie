@@ -79,7 +79,7 @@ class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = '__all__'
-        exclude = ['user_permissions', 'groups', 'is_staff', 'is_active', 'is_superuser', 'last_login', 'date_joined', 'user_type', 'is_extra', 'password','school','cgu','schools','is_testeur','avatar','background']
+        exclude = ['user_permissions', 'groups',  'is_active', 'is_superuser', 'last_login', 'date_joined', 'user_type', 'is_extra', 'password', 'cgu','schools','is_testeur','avatar','background']
 
 
 
@@ -87,14 +87,14 @@ class ManagerForm(forms.ModelForm):
     class Meta:
         model = User
         fields = '__all__'
-        exclude = ['user_permissions', 'groups', 'is_staff', 'is_active', 'is_superuser', 'last_login', 'date_joined', 'username',   'user_type', 'password','cgu','avatar','background','schools','school']
+        exclude = ['user_permissions', 'groups',  'is_active', 'is_superuser', 'last_login', 'date_joined',    'user_type', 'password','cgu','avatar','background','schools' ]
 
 
 class ManagerUpdateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = '__all__'
-        exclude = ['user_permissions', 'groups', 'is_staff', 'is_active', 'is_superuser', 'last_login', 'date_joined',  'user_type', 'password','cgu','avatar','background','schools','school']
+        exclude = ['user_permissions', 'groups', 'is_active', 'is_superuser', 'last_login', 'date_joined',  'user_type', 'password','cgu','avatar','background','schools' ]
 
 
 class NewUserTForm(forms.ModelForm):
@@ -102,7 +102,7 @@ class NewUserTForm(forms.ModelForm):
     class Meta:
         model = User
         fields = '__all__'
-        exclude = ['user_permissions', 'groups', 'is_staff', 'is_active', 'is_superuser', 'last_login', 'date_joined',  'username', 'is_extra','user_type','time_zone', 'password','avatar','background','schools', 'school']
+        exclude = ['user_permissions', 'groups',  'is_active', 'is_superuser', 'last_login', 'date_joined',   'is_extra','user_type','time_zone', 'password','avatar','background','schools' ]
 
 
   
@@ -111,7 +111,7 @@ class NewUserSForm(forms.ModelForm):
     class Meta:
         model = User
         fields = '__all__'
-        exclude = ['user_permissions', 'groups', 'is_staff', 'is_active', 'is_superuser', 'last_login', 'date_joined',   'username', 'user_type', 'is_manager',  'is_extra',  'time_zone', 'password' ,'cgu','schools', 'school' ,'avatar','background']
+        exclude = ['user_permissions', 'groups',  'is_active', 'is_superuser', 'last_login', 'date_joined',   'user_type', 'is_manager',  'is_extra',  'time_zone', 'password' ,'cgu','schools' ,'avatar','background']
 
 
 

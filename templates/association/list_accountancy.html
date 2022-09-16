@@ -1,0 +1,79 @@
+{% extends 'dashboard.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+
+{% block require %}
+ 
+ 
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common2_mini.js' %}"></script>
+ 
+ 
+{% endblock %}
+
+
+{% block page_title %}  
+    <a href="{% url 'association_index' %}" ><i class="fa fa-cloud"></i> </a>  Journal  comptable 
+{% endblock %}
+
+{% block page_menu_right %}
+{% include 'association/menubar.html' %}
+{% endblock %}
+ 
+
+{% block body %}     
+<div class="content_main">
+    <form action="" method="POST">
+        {% csrf_token %}
+
+        <div class="row">                
+ 
+            <div class="col-sm-12 col-md-12">
+          
+                <table class="table standard_tab_sort300 table-bordered table-hover table-striped">
+                    <thead>
+                    <tr>  
+                        <td>Id</td> 
+                        <td>Id Opérations</td> 
+                        <td>Ordre </td>                       
+                        <td>Poste</td>                     
+                        <td>Débit</td>
+                        <td>Crédit </td>
+                        <td style="width:200px">Date </td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for accountancy in accontancies %}
+                            <tr id="this_tr_{{ accounting.id }}" class="this_tr_all">
+                                <td>
+                                    {{ accountancy.id }} 
+                                </td>
+                                <td>
+                                    {{ accountancy.accounting_id }} 
+                                </td>
+                                <td>
+                                     {{ accountancy.ranking }}  
+                                </td>
+                                <td>
+                                     {{ accountancy.plan_id }} 
+                                </td>   
+                                <td> 
+                                    {% if not accountancy.is_credit %}<span class="text-danger">{{  accountancy.amount_valeur_absolue }}</span>  {% endif %} 
+                                </td> 
+                                <td>
+                                    {% if  accountancy.is_credit %} <span class="text-success">{{  accountancy.amount }}</span>  {% endif %} 
+                                </td>
+                                <td style="width:80px">
+                                    {{ accountancy.date|date:"Y-m-d" }}
+                                </td>
+             
+                            </tr>
+
+                        {% endfor %}
+                    </tbody>
+                </table>  
+            </div>
+        </div>
+    </form>
+</div>  
+{% endblock %}

@@ -30,33 +30,95 @@
             <!-- small box -->
             <div class="small-box bg-purple">
                 <div class="inner">
-                     <span style="font-size: 35px">Comptabilité </span>    
-                     <h3  style="font-weight: 100">{{ active_year }} <a href="{% url 'update_activeyear' %}" style="font-size: 15px"><i class="fa fa-edit white"></i></a></h3>
-                 </div>
-                 <a href="{% url 'accountings'  %}" class="small-box-footer"><i
-                        class="fa fa-arrow-circle-right"></i> En détails </a>
-
-
- 
+                     <span style="font-size: 35px">Opérations </span>
+                </div>
+                <ul style="margin:0px;padding: 0px" >
+                    <li class="sanspuce">
+                        <a href="{% url 'create_accounting' 0 %}" class="white" style="padding-left: 10px" > Nouvelle opération Client   </a>   
+                    </li>
+                    <li class="sanspuce">
+                        <a href="{% url 'list_accountings' 0 %}"  class="no_button white" style="padding-left: 10px" > 
+                            Journal opérations Client
+                        </a> 
+                    </li> 
+                    <hr style="color:white"/>
+                    <li class="sanspuce">
+                        <a href="{% url 'create_accounting' 2 %}" class="white" style="padding-left: 10px"> Nouvelle opération Bancaire </a>  
+                    </li>
+                    <li class="sanspuce">
+                        <a href="{% url 'list_accountings' 2 %}"  class="no_button white" style="padding-left: 10px" > Journal opérations bancaires  CA</a> 
+                    </li>
+                    <li class="sanspuce">
+                     <a href="{% url 'list_paypal' %}" class="no_button white" style="padding-left: 10px">Journal opérations bancaires Paypal</a>
+                    </li>
+                </ul>
             </div>
         </div>
-
         <div class="col-lg-3 col-md-4 col-xs-6">
             <!-- small box -->
             <div class="small-box bg-purple">
                 <div class="inner">
                      <span style="font-size: 35px">Membres </span>
                 </div>
+                <ul style="margin:0px;padding-left: 0px"  >
+                    <li class="sanspuce">
+                        <a href="{% url 'academy_list_adhesions'  %}" class="white" style="padding-left: 10px"> Liste des adhésions  </a>   
+                    </li>    
+                    <li class="sanspuce">
+                         <a href="{% url 'academy_list_parents' %}" class="white" style="padding-left: 10px"> Liste des parents  </a> 
+                    </li> 
+                    <hr style="color:white"/>
+                    <li class="sanspuce">
+                     <a href="{% url 'create_school_admin' %}"  class="no_button white" style="padding-left: 10px"> Nouveau partenaire</a>
+                    </li>
 
-                <p style="text-align: center"><br/><br/>
-                <span class="counter">{{ nb_schools }}</span><br/>
-                Etablissements  </p>
+                    <li class="sanspuce">
+                         <a href="{% url 'all_schools' %}" class="white" style="padding-left: 10px"> Liste des partenaires  </a> 
+                    </li>   
+                    <li class="sanspuce">
+                        <a href="{% url 'activeyears'  %}" class="white" style="padding-left: 10px"> Années d'exercice </a>   
+                    </li>
+                    <hr style="color:white"/>
+                    <li class="sanspuce">
+                        <a href="{% url 'gestion_academy_dashboard'  %}" class="white" style="padding-left: 10px"> Ré initialisation </a>   
+                    </li>   
 
-                <a href="{% url 'list_associate' %}" class="small-box-footer"><i
-                        class="fa fa-arrow-circle-right"></i> En détails </a>
+
+                </ul>
             </div>
         </div>
+        <div class="col-lg-3 col-md-4 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-purple">
+                <div class="inner">
+                     <span style="font-size: 35px">Comptabilité </span>    
+                 </div>
+                <ul  style="margin:0px;padding-left: 0px" >
+                    <li class="sanspuce" style="padding-left: 10px" >
+                        <a href="{% url 'create_accountancy' %}" class="no_button white">Nouvelle opération comptable</a>
+                    </li>
 
+                    <li class="sanspuce" style="padding-left: 10px" >
+                        <a href="{% url 'list_accountancy' %}" class="no_button white">Journal de comptabilité</a>
+                    </li> 
+                    <hr style="color:white"/>
+                    <li class="sanspuce" style="padding-left: 10px">
+                        <a href="{% url 'bank_bilan' %}" class="no_button white">Bilan</a>
+                    </li>
+                    <li class="sanspuce" style="padding-left: 10px">
+                        <a href="{% url 'activeyears' %}" class="no_button white">Archive</a>
+                    </li>
+                    <hr style="color:white"/>
+                    <li class="sanspuce" style="padding-left: 10px">
+                        <a href="{% url 'print_balance' %}" class="no_button white"> Imprimer la Balance <i class="bi bi-file-earmark-pdf"></i></a>   
+                    </li>
+
+                    <li class="sanspuce" style="padding-left: 10px">
+                        <a href="{% url 'print_big_book' %}"  class="no_button white" > Imprimer le Grand livre <i class="bi bi-file-earmark-pdf"></i></a> 
+                    </li>  
+                </ul>
+            </div>
+        </div>
         <div class="col-lg-3 col-md-4 col-xs-6">
             <!-- small box -->
             <div class="small-box bg-purple">
@@ -69,128 +131,24 @@
             </div>
         </div>
 
-            <!-- ./col -->
-        <div class="col-lg-3 col-md-4 col-xs-6">
-            <!-- small box -->
-            <div class="small-box bg-purple">
-                <div class="inner">
-                     <span style="font-size: 35px">Tarifs </span>
-                 </div>
-
-
-                <p style="text-align: center"><br/><br/><br/><br/>
-                
-                    <a href="{% url 'display_holidaybook' %}" class="white" style="font-size: 25px">Cahiers de vacances <br/></a>
-
-                    <small>{% if holidaybook.is_display %}ouvert{% else %}fermé{% endif %}</small>  
-                </p>
-
-
  
-
-                <a href="{% url 'list_rates'  %}" class="small-box-footer"><i
-                        class="fa fa-arrow-circle-right"></i> En détails </a>
- 
-            </div>
-        </div>
     </div>
 
  
 
+ 
 
-    <hr/>
-
-    <div class="row">
-        <div class="col-lg-3 col-3 text-center">
-            <span class="counter">{{ nb_teachers }}</span>
-            <p>Enseignants</p>
-            <a href="{% url 'list_teacher' %}" class="btn btn-info">
-                Voir la liste
-            </a>
-        </div>
-        <div class="col-lg-3 col-3 text-center">
-            {% if nb_students > 0   %}
-                <span class="counter">{{ nb_students }}</span>
-                <p>Elèves</p>
-
-                <a href="{% url 'reset_all_students_sacado' %}" class="btn btn-danger" onclick="return TestDelete('les données élèves... action irréversible')">
-                    Ré-initialisation serveur.<br/> Effacer les données élèves
-                </a>
-
-            {% else %}
-                <div class="alert alert-success">
-                    <span class="counter">{{ nb_students }}</span>
-                    <p>Elèves</p>
-                </div>
-            {% endif %}
-        </div>
-        <div class="col-lg-3 col-3 text-center">
-            <span class="counter">{{ nb_exercises }}</span>
-            <p>Supports </p>
-        </div>
-        <div class="col-lg-3 col-3 text-center">
-            <span class="counter">{{ nb_answers }}</span>
-            <p>Exercices traités ce jour  </p>
-        </div>
-    </div>
+ 
     {% endif %} 
-
-    <hr/>
- 
-    <div class="row">
-        <div class="col-lg-12 col-12 text-center">
-
-            <canvas id="myChart" style="width:100%;max-height:400px"></canvas>
-
-        </div>
-    </div>
-
 </section> 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
- 
 
 
-<script>
 
-const months     = ['janvier','février','mars','avril','mai','juin','juillet','aout','septembre','octobre','novembre','décembre'] ;
-var month_start  = {{ month_start }}-1 ;
-
-newList = [];
-
-for (let i=month_start;i<month_start+13;i++){
-
-    if (i>11) 
-        { j = i-12}
-    else
-        {j=i}
-
-    newList.push(months[j]);
-}
- 
-var xValues =  newList  ;
-var yValues = [ {{ string }} ];
-
-var barColors = ["violet", "violet","violet","violet","violet", "violet","violet","violet","violet", "violet","violet","violet" ];
-
-new Chart("myChart", {
-  type: "bar",
-  data: {
-    labels: xValues,
-    datasets: [{
-      backgroundColor: barColors,
-      data: yValues
-    }]
-  },
-  options: {
-    legend: {display: false},
-    title: {
-      display: true,
-      text: "Statistiques des inscriptions ENSEIGNANT sur les 12 derniers mois"
-    }
-  }
-});
-</script>
 
 
 {% endblock %}
+
+
+
+ 

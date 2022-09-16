@@ -335,11 +335,9 @@
         <div class="col-lg-12 col-xs-12" style="text-align:center;">
             {% if user.user_type == 2 %}         
                 
-                {% if sacado_asso %}
-                    Etablissement <br/>{{ user.school.name }}
-                {% else %}
-                    Enseignant
-                {% endif  %}
+                {{ user.school.name }}
+
+       
             {% elif user.user_type == 1 %}
                 Parent
             {% else %}
@@ -761,12 +759,16 @@
     </div>
  
     {%  if request.user.is_board %}
-    <hr class="divider">    
+
+    <hr class="divider">
+    <p class="thin">SACADO </p>
     <div class="row">
         <div class="col-lg-12 col-xs-12">
-            <a href="{% url 'academy_index' %}">SACADO Académie </a>
+            <a href="{% url 'association_index' %}">Comptabilité </a>
         </div>
     </div>
+ 
+ 
     {% endif %}
 </div>
 {%  elif request.user.is_extra %}

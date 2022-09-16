@@ -27,7 +27,7 @@ from django.db.models import Count, Q
 from account.decorators import is_manager_of_this_school
 from account.forms import  UserForm, TeacherForm, StudentForm , BaseUserFormSet , NewpasswordForm
 from account.models import  User, Teacher, Student  , Parent , Adhesion , Facture
-from association.models import Accounting , Detail , Rate , Abonnement , Holidaybook
+from association.models import Accounting , Detail , Rate , Abonnement , Holidaybook , Activeyear
 from group.models import Group, Sharing_group
 from group.views import student_dashboard
 from qcm.models import Folder , Parcours, Exercise,Relationship,Studentanswer, Supportfile, Customexercise, Customanswerbystudent,Writtenanswerbystudent
@@ -1637,7 +1637,7 @@ def admin_tdb(request):
             school_id = 0
 
     rates       = Rate.objects.all() #tarifs en vigueur 
-    school_year = rates.first().year #tarifs pour l'année scolaire
+    school_year = Activeyear.objects.get(is_active=1).year  
 
     renew_propose = False
     last_accounting = school.accountings.filter(date_payment=None)

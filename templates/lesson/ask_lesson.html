@@ -48,23 +48,43 @@
 
 {% block body  %} 
 <section class="content_container">  
-
-    <div class="alert alert-warning">
  
-        Sacado Académie vous met en relation avec des enseignants qualifiés ou des étudiants approuvés. La transaction s'opère entre l'enseignant et vous. Sacado Académie n'est qu'une interface intermédiaire. <br/>
-        <ol>
-            <li>Choisir un enseignant. </li>
-            <li>Le contacter via le mail ou son numéro de téléphone s'il est renseigné. </li>
-            <li>L'enseignant vous inscrit sur son agenda et vous revevrez un email de confirmation avec le lien de connexion.</li>
-            <li>La visio est alors programmée et prête.</li>
-        </ol>
+
+
+    {% if my_teacher %}
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-xs-12">
+            <h1 class="thin">Mon  enseignant</h1>
+            <div class="box box-widget widget-user-2" style="padding:15px 15px 0px 15px"> 
+            <div class="handler widget-user-header">
+                <div class="row"> 
+                    <div class="col-sm-5 col-md-5">
+                        {% if my_teacher.user.avatar %}
+                            <img src="{{ teacher.user.avatar }}" class="avatar_big"  />
+                        {% endif %}
+                        <div class="box_title_vignette"> 
+                            <span class="thin"> {{ my_teacher.user.first_name  }} </span>
+                        </div> 
+                    </div>
+                    <div class="col-sm-7 col-md-7" style="font-size:15px">
+                        {% if my_teacher.comment %}
+                        {{ my_teacher.comment|safe }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <form method="POST">
+    <hr/>
+
+    {% endif %}
+
+
     <div class="row">
         <div class="col-md-12 col-lg-12 col-xs-12">
             {%  for teacher in teachers %}
 
-                <a href="#" data-toggle='modal' data-target='#teacher_calendar' data-teacher_id="{{ teacher.user.id }}" class="display_calendar" >
+                <a href="{% url 'display_calendar_teacher' teacher.user.id %}"   >
                 <div class="box box-widget widget-user-2" style="padding:15px 15px 0px 15px"> 
                       <!-- Add the bg color to the header using any of the bg-* classes -->
                     <div class="handler widget-user-header">
@@ -89,34 +109,14 @@
             {% endfor %}
         </div>
     </div>
-    </form>
+ 
 </section> 
 
 
 
 
 
-<div class="modal fade" id="teacher_calendar" tabindex="-1" role="dialog" aria-labelledby="teacher_calendar">
-    <div class="modal-dialog open_modal" role="document" >
-        <div class="modal-content" >
-            <div class="modal-header">
-                <div class="row">
-                        <div class="col-sm-10 col-md-10">
-                            <div style="font-size:30px;">  Calendrier de <span id="show_teacher_name"></span> </div>
-                        </div>
-                        <div class="col-sm-1 col-md-1">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button> 
-                        </div>
-                </div>
-            </div>
-            <div class="modal-body calendar" style="font-size:14px;" id="show_teacher_calendar" >
-
-            </div>
-        </div>
-    </div>
-</div>
+ 
 
 
 

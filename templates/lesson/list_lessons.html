@@ -30,24 +30,32 @@
                   <thead>
                       <tr>
 
-                        <th  style="width:300px">Horaire</th>                  
+                        <th>Horaire</th>                  
                         <th>Titre</th> 
                         <th>Lien</th> 
                         <th>Bénéficiaires</th> 
-                        <th style="width:10px">Enseignant </th>                                      
+                        <th>Enseignant </th>                                      
                         <th>Commentaire</th> 
                       </tr>
                   </thead>
                   <tbody>
                         {% for lesson in lessons %}
                         <tr> 
-                          <td style="background-color:{{ lesson.color }}">
-                          </td>
-                          <td>
-                             {{ lesson.start|date:"d m Y à H:i" }}  
+                          <td style="border-left : 5px solid {{ lesson.color }}">
+                             {{ lesson.date|date:"d m Y" }} à {{ lesson.start|date:"H:i" }} 
                           </td>
                           <td >
-                             {{ lesson.title }}
+                             {{ lesson.title }} 
+                              {% if lesson.is_validate == 0 %}
+                                <i class="fa fa-times text-danger" title="Validation Parent en attente"></i> 
+                              {% elif lesson.is_validate == 1 %}
+                                <i class="fa fa-times text-warning" title="Validation Enseignant en attente"></i>
+                              {% else %}
+                                <i class="fa fa-check text-success" title="Validation aceptée"></i>
+                              {% endif %}
+                          </td>
+                          <td >
+                             
                           </td>
                           <td >
                                {% for u in lesson.users.all  %}   

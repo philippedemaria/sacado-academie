@@ -1,0 +1,160 @@
+{% extends 'lesson/calendar_show.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% load item_tags %}
+
+
+{% block require %}
+    <script src="{% static 'js/require.js' %}"  data-main="{% static 'js/calendar.js' %}"></script>
+ 
+ 
+  <script>
+      require(['script/display_calendar_teacher']);
+  </script>
+
+
+{% endblock %} 
+
+ 
+
+
+{% block styleMk4ht %}
+    <link href="{% static 'plugins/schedule/fullcalendar/fullcalendar.min.css' %}" rel='stylesheet' />
+    <link href="{% static 'plugins/schedule/fullcalendar/fullcalendar.print.min.css' %}" rel='stylesheet' media='print' />
+    <style type='text/css'>
+        body {
+                font-size: 14px;
+                font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+                }
+        #calendar {
+                width: 900px;
+                margin: 0 auto;
+                }
+    </style>
+{% endblock  %}
+
+
+
+
+
+{% block page_title %} 
+    <i class="bi bi-camera-video sacado_color_text"></i> 
+  Calendrier des leçons  <small>{{ user_shown.last_name}} {{ user_shown.first_name}}</small> 
+{% endblock  %}
+
+
+
+
+
+{% block page_menu_right %} 
+ 
+ 
+{% endblock  %}
+
+
+
+
+
+
+
+
+{% block body  %} 
+<section class="content_bgwhite">
+
+    <div class="row">
+        <div class="col-xs-12 col-md-12  col-lg-12">
+ 
+         
+   
+
+              <input name="my_teacher_id"  id="my_teacher_id"  value="{{ teacher.user.id }}" type="hidden"  />
+              {% csrf_token %}  
+              <div class='calendar'></div>
+
+  
+
+        </div>
+
+    </div>
+</section>
+
+
+
+<div class="modal fade" id="new_event" tabindex="-1" role="dialog" aria-labelledby="new_event" aria-hidden="true" >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="row">                      
+                    <div class="col-sm-11 col-md-11">
+                       <div class="form-group">
+                          <font style="font-size:16px">Demande de leçon en visio<a href="#" class="vue" data-dismiss="modal"><i class="fa fa-times pull-right"></i></a></font>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+            <div class="modal-body">                                   
+
+                    <form  action="{% url 'get_the_slot' %}" method="POST"> 
+                        {% csrf_token %} 
+                        <div >{{ form.date }}{{ form.start }} <input name="teacher_id"  id="teacher_id"  value="{{ teacher.user.id }}" /></div> 
+                        <div class="row">              
+                            <div class="col-sm-12 col-md-12">                        
+                                <div class="form-group">
+                                    <label>Pour </label>
+                                    <span style="font-size:20px" class="sacado_color">{{ student }}</span><input value="{{ request.user.id }}" name="user" id="id_user" type="hidden" >
+                                </div> 
+                            </div>
+                        </div> 
+                        <div class="row">                                     
+                            <div class="col-sm-7 col-md-5">
+                                <input id="id_real_date" class="form-control no_border_input back_colored" readonly />     
+                                    
+                            </div>
+                            <div class="col-sm-1 col-md-1">
+                                <label>à</label>  
+                            </div>
+                            <div class="col-sm-4 col-md-4">
+                                <input id="id_real_start" class="form-control no_border_input back_colored" readonly />    
+                            </div>
+                        </div>
+                        <hr/>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12">
+                                    <label>Durée à renseigner : <small>en minutes</small></label> 
+                            </div>   
+                        </div>                     
+                        <div class="row">
+                            <div class="col-sm-3 col-md-3">
+                                    {{ form.duration|add_class:"form-control"|attr:"type:number"|attr:"step:15"|attr:"min:0" }}    
+                            </div>
+                        </div>
+                        <div class="row">                    
+                            <div class="col-sm-12 col-md-12">
+                                 <div class="form-group">
+                                    <div class="form-group"><label>Commentaire <small>optionnel</small></label>
+                                        {{ form.comment |add_class:"form-control"|attr:"rows:3"  }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                        <div class="row"> 
+                            <div class="col-sm-4 col-md-4">
+                                <div class="form-group"><br>
+                                  <input value="Demander ses créneaux" type="submit" class="btn btn-primary" style="width:100%"/> 
+                                </div>
+                            </div> 
+                        </div>
+                    </form>
+   
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock %}

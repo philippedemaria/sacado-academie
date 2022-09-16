@@ -52,7 +52,7 @@ def logout_view(request):
                  
 
 def list_teacher(request):
-    teachers = User.objects.filter(user_type=User.TEACHER)
+    teachers = User.objects.filter(user_type=User.TEACHER).exclude(pk__lte=131100)
     return render(request, 'account/list_teacher.html', {'teachers': teachers})
 
 
@@ -1310,10 +1310,11 @@ def close_my_account(request):
 #########################################Teacher #######################################################################
  
 def register_teacher(request):
+
+
+    user_form = UserForm(request.POST)
+
     if request.method == 'POST':
-
-        user_form = UserForm(request.POST)
-
         if user_form.is_valid():
             user = user_form.save(commit=False)
             user.user_type = User.TEACHER
@@ -1335,11 +1336,13 @@ def register_teacher(request):
             except :
                 pass
 
-
         else:
             messages.error(request, user_form.errors)
 
-    return redirect("index")
+        return redirect("index")
+
+
+    return render(request, 'account/teacher_form.html', {'user_form': user_form,  })
 
 
 
@@ -1445,17 +1448,15 @@ def register_teacher_from_admin(request):
     """ 
     user_form = ManagerForm(request.POST or None,initial = {'time_zone': request.user.time_zone , 'country': request.user.country })
     teacher_form = TeacherForm(request.POST or None)
-    school = this_school_in_session(request)
     new = False
     if request.method == 'POST':
         if all((user_form.is_valid(),teacher_form.is_valid())):
             u_form = user_form.save(commit=False)
-            u_form.password = make_password("sacado2020")
+            password = "sacado2020" #str(uuid.uuid4())[:8]
+            u_form.password = make_password(password)
             u_form.user_type = User.TEACHER
-            u_form.is_extra = 0
-            u_form.time_zone = request.user.time_zone
+            school = request.user.school
             u_form.school = school
-            u_form.username = get_username(request , u_form.last_name, u_form.first_name)
             u_form.save()
             teacher = teacher_form.save(commit=False)
             teacher.user = u_form
@@ -1463,7 +1464,7 @@ def register_teacher_from_admin(request):
             teacher_form.save_m2m()
 
             sending_mail('Création de compte sur Sacado',
-                          f'Bonjour {teacher.user}, votre compte Sacado est maintenant disponible.\r\n\r\nVotre identifiant est {u_form.username} \r\n\r\nVotre mot de passe est : sacado2020 \r\n\r\nVous pourrez le modifier une fois connecté à votre espace personnel.\r\n\r\nPour vous connecter, redirigez-vous vers https://sacado-academie.fr.\r\n\r\nCeci est un mail automatique. Ne pas répondre.',
+                          f'Bonjour {teacher.user}, votre compte Sacado est maintenant disponible.\r\n\r\nVotre identifiant est {u_form.username} \r\n\r\nVotre mot de passe est : {password} \r\n\r\nVous pourrez le modifier une fois connecté à votre espace personnel.\r\n\r\nPour vous connecter, redirigez-vous vers https://sacado-academie.fr.\r\n\r\nCeci est un mail automatique. Ne pas répondre.',
                           settings.DEFAULT_FROM_EMAIL,
                           [u_form.email, ])
  
@@ -1474,7 +1475,7 @@ def register_teacher_from_admin(request):
         new = True
 
     return render(request, 'account/teacher_form.html',
-                  {'user_form': user_form, 'communications': [] ,   "school" : school ,
+                  {'user_form': user_form, 'communications': [] , 
                    'teacher_form': teacher_form,
                    'new': new, })
 

@@ -19,16 +19,8 @@ from datetime import datetime
 
 
 def is_sacado_asso(this_user, today):
-    is_sacado = False
-    is_active = False
-
-    try :
-        abonnement = this_user.school.abonnement.last()
-        if today < abonnement.date_stop and abonnement.is_active :
-            is_sacado = True
-            is_active = True
-    except :
-        pass
+    is_sacado = True
+    is_active = True
     return is_sacado, is_active
 
 ##############################################################################################################################################
@@ -41,12 +33,8 @@ def menu(request):
 
     if request.user.is_authenticated:
 
-        try :
-            is_gar_check = request.session.get("is_gar_check",None)
-        except :
-            is_gar_check = None
-
-        sacado_asso = False
+ 
+        is_gar_check = None
         if request.user.time_zone:
             time_zome = request.user.time_zone
             timezone.activate(pytz.timezone(time_zome))

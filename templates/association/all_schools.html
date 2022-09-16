@@ -11,10 +11,11 @@
 
 
 {% block page_title %}
-    <a href="{% url 'association_index' %}" ><i class="fa fa-cloud"></i> </a> Tous les établissements - {{ schools.count }}
+    <a href="{% url 'association_index' %}" ><i class="fa fa-cloud"></i> </a> Tous les partenaires - {{ schools.count }}
 {% endblock %} 
 
 {% block page_menu_right %}
+ 
     {% include 'association/menubar.html' %}
 {% endblock %}
 
@@ -22,11 +23,13 @@
 {% block body %}
 <section class="content_main"> 
     {% if request.user.is_board %}
+        <form action="{% url 'delete_selected_schools' %}" method="POST" >                {% csrf_token %}
         <div class="col-lg-12 col-xs-12">
             <table class="table bg_white standard_tab_sort300">
                 <thead>
                     <tr>
-                        <td></td>
+                        <td style="width:40px"></td>
+                        <td style="width:40px"></td>
                         <td>Nom</td>
                         <td>Ville</td>
                         <td>Pays</td>
@@ -35,6 +38,7 @@
                 </thead>
                 {% for school in schools %}
                 <tr>
+                    <td><input type="checkbox" name='school_id' value='{{ school.id }}' /></td>
                     <td>
                         {% if school.adhesion %}
                             <span style="font-size:1px;color:#FFF">1</span><i class="fa fa-check text-success"></i>
@@ -58,6 +62,8 @@
                 {% endfor %}
             </table>
         </div>
+        <button type="submit"  class="btn btn-danger" > Supprimer les partenaires </button>
+        </form>
     {% endif %} 
 </section> 
 {% endblock %}
