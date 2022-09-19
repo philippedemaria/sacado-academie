@@ -2,7 +2,7 @@ import datetime
 from django import forms
 from .models import Tool , Question  , Choice  , Quizz , Diaporama , Slide , Qrandom ,Variable , Answerplayer, Videocopy
 from account.models import Student , Teacher
-from socle.models import Knowledge, Skill
+from socle.models import Knowledge, Skill , Level
 from group.models import Group
 from bootstrap_datepicker_plus import DatePickerInput, DateTimePickerInput
 from django.forms import MultiWidget, TextInput , CheckboxInput
@@ -34,7 +34,7 @@ class ToolForm(forms.ModelForm):
 
 	def __init__(self, *args, **kwargs):
 		super(ToolForm, self).__init__(*args, **kwargs)
-		self.fields['levels'] = forms.ModelMultipleChoiceField(queryset=level.objects.exclude(pk=13), required=False) 
+		self.fields['levels'] = forms.ModelMultipleChoiceField(queryset=Level.objects.exclude(pk=13), required=False) 
 
 
 class QuestionForm(forms.ModelForm):
