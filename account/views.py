@@ -1975,20 +1975,18 @@ def passwordResetView(request):
     if request.method == 'POST':
         form = NewpasswordForm(request.POST)
         if form.is_valid():
+            nb_user=User.objects.filter(email=this_form.email).count()
+            if nb_user :
+                link ="https://sacado-academie.fr/account/newpassword/"+this_form.code
+                msg = "Bonjour, \nvous venez de demander la réinitialisation de votre mot de passe. Cliquez sur le lien suivant :\n"+ link +"\n\nMerci. \n\n Ceci est un mail automatique, ne pas répondre."
 
-        nb_user=User.objects.filter(email=this_form.email).count()
-        if nb_user :
-            link ="https://sacado-academie.fr/account/newpassword/"+this_form.code
-            msg = "Bonjour, \nvous venez de demander la réinitialisation de votre mot de passe. Cliquez sur le lien suivant :\n"+ link +"\n\nMerci. \n\n Ceci est un mail automatique, ne pas répondre."
-
-            send_mail('SacAdo : Ré-initialisation de mot de passe',msg ,settings.DEFAULT_FROM_EMAIL,[this_form.email])
-            this_form=form.save()
-
-            return redirect("password_reset_done")
-        
-        else :
-            messages.error(request, "Adresse courriel inconnue. Contacter l'équipe SACADO.")
-            return redirect('index')
+                send_mail('SacAdo : Ré-initialisation de mot de passe',msg ,settings.DEFAULT_FROM_EMAIL,[this_form.email])
+                this_form=form.save()
+                return redirect("password_reset_done")
+            
+            else :
+                messages.error(request, "Adresse courriel inconnue. Contacter l'équipe SACADO.")
+                return redirect('index')
 
     messages.error(request, "une erreur est survenue. Contacter l'équipe SACADO.")
     return redirect('index')
