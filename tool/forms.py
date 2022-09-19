@@ -32,7 +32,9 @@ class ToolForm(forms.ModelForm):
 		model = Tool
 		fields = '__all__'
 
- 
+	def __init__(self, *args, **kwargs):
+		super(ToolForm, self).__init__(*args, **kwargs)
+		self.fields['levels'] = forms.ModelMultipleChoiceField(queryset=teacher.levels.exclude(pk=13), required=False) 
 
 
 class QuestionForm(forms.ModelForm):
