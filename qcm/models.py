@@ -6,6 +6,7 @@ from group.models import  Group
 from django.utils import timezone
 from account.models import Student, Teacher, ModelWithCode, generate_code, User
 from socle.models import  Knowledge, Level , Theme, Skill , Subject
+from tool.models import  Quizz
 from django.apps import apps
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.db.models import Q, Min, Max
