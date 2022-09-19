@@ -1975,6 +1975,7 @@ def passwordResetView(request):
     if request.method == 'POST':
         form = NewpasswordForm(request.POST)
         if form.is_valid():
+            this_form = form.save(commit=False)
             nb_user=User.objects.filter(email=this_form.email).count()
             if nb_user :
                 link ="https://sacado-academie.fr/account/newpassword/"+this_form.code
