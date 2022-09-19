@@ -1422,9 +1422,9 @@ def ajax_price_changement_formule(request) :
 
     if end_of_this_adhesion <  adhesion.stop :
         data["no_end"] = False
-        days_left = adhesion.stop - end_of_this_adhesion
+        days_left = adhesion.stop - today # nbre de jours de l'ancienne adhésion dèja payée mais pas consommée
         formule   = Formule.objects.get(pk=adhesion.formule_id)
-        old_price = days_left.days * formule.price/30
+        old_price = days_left.days * formule.price/30 # cout du relicat de jours
         price = max( price - old_price , 0 )
 
     else :
