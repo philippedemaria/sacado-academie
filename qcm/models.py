@@ -958,7 +958,7 @@ class Parcours(ModelWithCode):
             relationships = self.parcours_relationship.filter(type_id=3, students = student,is_publish = 1)
             nb_q = 0
             for relationship in relationships :
-                quizz = Quizz.objects.get(pk=document_id)
+                quizz = Quizz.objects.get(pk=relationship.document_id)
                 nb_q += quizz.questions.filter( students = student).values_list("id",flat=True).distinct().count() 
 
 
