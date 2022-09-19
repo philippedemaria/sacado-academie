@@ -1421,9 +1421,9 @@ def ajax_price_changement_formule(request) :
 
 
 
-    if end_of_this_adhesion <  adhesion.stop and adhesion.formule_id < formule_id :
+    if end_of_this_adhesion <  adhesion.stop and formule_id and  adhesion.formule_id < int(formule_id) :
         data["no_end"] = True
-        
+
     elif end_of_this_adhesion <  adhesion.stop :
         data["no_end"] = False
         days_left = adhesion.stop - today # nbre de jours de l'ancienne adhésion dèja payée mais pas consommée
