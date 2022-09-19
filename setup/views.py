@@ -1420,7 +1420,11 @@ def ajax_price_changement_formule(request) :
     end_of_this_adhesion = today + timedelta(days=30*int(duration)+ offset)
 
 
-    if end_of_this_adhesion <  adhesion.stop :
+
+    if end_of_this_adhesion <  adhesion.stop and adhesion.formule_id < formule_id :
+        data["no_end"] = True
+        
+    elif end_of_this_adhesion <  adhesion.stop :
         data["no_end"] = False
         days_left = adhesion.stop - today # nbre de jours de l'ancienne adhésion dèja payée mais pas consommée
         formule   = Formule.objects.get(pk=adhesion.formule_id)
