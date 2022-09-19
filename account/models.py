@@ -668,7 +668,7 @@ class Student(ModelWithCode):
 
     def can_ask_lesson(self):
         Credit = apps.get_model('lesson', 'Credit')
-        cd = Credit.objects.filter(user__in=self.students_parent.all()).aggregate(Sum("amount"))
+        cd = Credit.objects.filter(user__parent_id__in=self.students_parent.values_list("user_id",flat=True) ).aggregate(Sum("amount"))
         test = False
         if cd["amount__sum"]>0:
             test = True
