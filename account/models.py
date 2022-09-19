@@ -6,7 +6,6 @@ from django.contrib.auth.models import AbstractUser
 from django.core.mail import send_mail
 from django.db import models
 from django.db.models import  Q, Avg, Sum
-
 from socle.models import Level, Knowledge, Skill, Subject
 from school.models import School, Country
 
@@ -668,7 +667,7 @@ class Student(ModelWithCode):
 
 
     def can_ask_lesson(self):
-
+        Credit = apps.get_model('lesson', 'Credit')
         cd = Credit.objects.filter(user__in=self.students_parent.all()).aggregate(Sum("amount"))
         test = False
         if cd["amount__sum"]>0:
