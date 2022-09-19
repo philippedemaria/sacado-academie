@@ -246,7 +246,7 @@ define(['jquery', 'bootstrap'], function ($) {
                     success: function (data) {
 
                         if (data.no_end){
-                        $('#result_change_adhesion' ).html("").html("<div class='row'><div class='col-sm-12 col-md-12'><div class='alert alert-danger'>Vous ne pouvez pas souscrire cet abonnement, votre abonnement prévoit déjà une période plus longue.</div></div></div>" );
+                        $('#result_change_adhesion' ).html("").html("<div class='row'><div class='col-sm-12 col-md-12'><div class='alert alert-danger'>Dans votre intérêt, vous ne devez pas souscrire cet abonnement.</div></div></div>" );
                         $('#submit_change' ).prop("disabled",true)
                         }
                         else

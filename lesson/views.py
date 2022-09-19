@@ -221,8 +221,14 @@ def get_the_slot(request): # CREATION PAR LE PROF
     idt  = request.POST.get("teacher_id")
     utc  = pytz.UTC
 
-    if not request.user.can_ask_lesson() :
+    if request.user.is_student and not request.user.student.can_ask_lesson() :
         return redirect("detail_student_lesson",0)
+
+    elif request.user.is_parent :
+        student = Student.objects.get(user_id=request.session.get("student_id"))
+        if not request.user.student.can_ask_lesson() :
+            return redirect("detail_student_lesson",0)
+
 
     if request.method == "POST" :
         if form.is_valid():

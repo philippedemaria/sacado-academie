@@ -664,16 +664,22 @@ class Student(ModelWithCode):
 
 
 
+
+
+
     def can_ask_lesson(self):
+
         cd = Credit.objects.filter(user__in=self.students_parent.all()).aggregate(Sum("amount"))
         test = False
         if cd["amount__sum"]>0:
             test = True
         return test
-
-
-
-
+        # else :
+        #     cd = Credit.objects.filter(user = self).aggregate(Sum("amount"))
+        #     test = False
+        #     if cd["amount__sum"]>0:
+        #         test = True
+        #     return test
 
 class Adhesion(models.Model):
     """docstring for Facture"""
@@ -882,12 +888,7 @@ class Parent(models.Model):
         return test
 
 
-    def can_ask_lesson(self):
-        cd = Credit.objects.filter(user = self).aggregate(Sum("amount"))
-        test = False
-        if cd["amount__sum"]>0:
-            test = True
-        return test
+
 
 
 
