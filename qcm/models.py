@@ -6,7 +6,6 @@ from group.models import  Group
 from django.utils import timezone
 from account.models import Student, Teacher, ModelWithCode, generate_code, User
 from socle.models import  Knowledge, Level , Theme, Skill , Subject
-from tool.models import  Quizz
 from django.apps import apps
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.db.models import Q, Min, Max
@@ -953,7 +952,8 @@ class Parcours(ModelWithCode):
 
         data = {}
         today = timezone.now()
-        if self.is_sequence :
+        if self.is_sequence :        
+            Quizz = apps.get_model('tool', 'Quizz')
             nb_exercises  = self.parcours_relationship.filter(type_id=0, students = student,is_publish = 1).count() 
             relationships = self.parcours_relationship.filter(type_id=3, students = student,is_publish = 1)
             nb_q = 0
