@@ -46,6 +46,14 @@
     </div>
 </div>
 <div class="row">
+    <div class="col-sm-12 col-md-12"> 
+        <div class="form-group"> 
+            {{ form.levels.label_tag }}  
+            {{ form.levels|add_class:"form-control select2" }}
+        </div>
+    </div>
+</div>
+<div class="row">
     <div class="col-sm-12 col-md-8"> 
         <div class="form-group">
             <input value="Enregistrer" type="submit" class="btn btn-primary"/>
