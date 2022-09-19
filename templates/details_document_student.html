@@ -155,6 +155,13 @@
                 {% get_available rc student  as available %} 
                 {% get_parcours_available parcours student rc.exercise as parcours_available %}
 
+                {% if rc.relationship_mastering.all|length > 0  and data.score  %}
+                <a href="{% url 'mastering_student_show' rc.id %}" target="_blank" class="btn btn-danger" style="position: absolute; z-index:9; right:0px;top:150px;background-color:{{ parcours.color }}">
+                    Parcours de maîtrise proposé<br/><i class="fa fa-sitemap"></i>
+                </a>
+                {% endif  %}
+
+
                 {% if rc.exercise.supportfile.is_ggbfile %}  
                     {% if is_blck and rdoc.is_display  %}
                         <div class="alert alert-danger" style="position: absolute; z-index:9; top:100px;font-size:12px;border-radius: 0px 4px 4px  0px;"> 
@@ -275,12 +282,7 @@
                         {% endif %}
                     {% endif %}
                 {% endif %}
-                {% if rc.relationship_mastering.all|length > 0 %}
-                <a href="{% url 'mastering_student_show' rc.id %}" target="_blank" class="helper_tip_card" style="color:{{ parcours.color|contrast_color }}">
-                    <i class="fa fa-fw fa-sitemap pull-right"></i>
-                    <div class="helper_tip_text_card" >Cet exercice ouvre un parcours de maitrise.</div>
-                </a>
-                {% endif  %}
+
                 {% if rc.relationship_remediation.all|length > 0 %}
                     <span class="helper_tip_card"><i class="fa fa-fw fa-paperclip pull-right" style="color:{{ parcours.color|contrast_color }}"></i>
                     <div class="helper_tip_text_card" >Cet exercice contient une aide extérieure ou une consigne orale.</div>
@@ -407,7 +409,13 @@
 
             {% get_this_exercise_is_locked  student rc.type_of_document parcours  1 today as is_blck %}
 
+            {% if rc.customexercise_mastering_custom.all|length > 0  and data.score  %}
+            <a href="{% url 'mastering_custom_student_show' rc.id %}" target="_blank" class="btn btn-danger" style="position: absolute; z-index:9; right:0px;top:150px;background-color:{{ parcours.color }}">
+                Parcours de maîtrise proposé<br/><i class="fa fa-sitemap"></i>
+            </a>
+            {% endif  %}
 
+            
 
             {% if is_blck  %}
                 <img src="{% static 'img/custom_exercise.jpg' %}"  class="image_parcours" >
@@ -449,11 +457,7 @@
                 {% endif  %}
 
 
-               {% if rc.customexercise_mastering_custom.all|length > 0 %}
-                <a href="{% url 'mastering_custom_student_show' rc.id %}" target="_blank" style="color:{{ parcours.color|contrast_color }}">
-                    <i class="fa fa-fw fa-sitemap pull-right"></i>
-                </a>
-                {% endif  %}
+
                 
                 {% if  rc.is_publish_cor %}
                     <span class="helper_tip"> <i class="fa fa-copyright" style="color:{{ parcours.color|contrast_color }}"></i> 

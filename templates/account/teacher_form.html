@@ -214,7 +214,7 @@
                             <label>Administrateur établissement ?</label>
                             {{ user_form.is_manager |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"  }}
                             {{ user_form.is_manager.errors }}
-                        </div> 
+                        </div>  
                         <div class="form-group">
                             <label>Création de groupes ?</label>
                             {{ user_form.is_staff |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"  }}
@@ -225,6 +225,11 @@
                             <label>Propose des leçons</label> <small>(facultatif)</small> 
                             {{ teacher_form.is_lesson |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"  }}
                             {{ teacher_form.is_lesson.errors }}
+                        </div>
+                        <div class="form-group">
+                            <label>Tarif (€/h)</label>
+                            {{ user_form.tarif|add_class:"form-control" }}
+                            {{ user_form.tarif.errors }}
                         </div>
                         <div class="form-group"> 
                             <label>Descriptif pour les leçons</label> <small>(facultatif)</small> 

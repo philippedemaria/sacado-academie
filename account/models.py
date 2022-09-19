@@ -655,6 +655,25 @@ class Student(ModelWithCode):
         return  subjects.count()
 
 
+    def is_lesson(self):
+        adhesion = self.adhesions.last()
+        test = False
+        if adhesion.formule_id == 4:
+            test = True
+        return test
+
+
+
+    def can_ask_lesson(self):
+        cd = Credit.objects.filter(user__in=self.students_parent.all()).aggregate(Sum("amount"))
+        test = False
+        if cd["amount__sum"]>0:
+            test = True
+        return test
+
+
+
+
 
 class Adhesion(models.Model):
     """docstring for Facture"""
@@ -673,18 +692,18 @@ class Adhesion(models.Model):
 
     def formule(self):
         Formule = apps.get_model('setup', 'Formule')
-        return Formule.objects.get(pk = int(self.menu))
+        return Formule.objects.get(pk = int(self.formule_id))
 
 
 class Facture(models.Model):
     """docstring for Facture"""
-    chrono     = models.CharField(max_length=50,  verbose_name="Chrono", editable= False) # Insertion du code de la facture.
-    user       = models.ForeignKey(User, blank=True,  null=True, related_name="factures", on_delete=models.CASCADE, editable= False)
-    file       = models.FileField(upload_to=file_directory_path,verbose_name="fichier", blank=True, null= True, default ="", editable= False)
-    adhesions  = models.ManyToManyField(Adhesion, related_name="factures", blank=True, editable= False)
-    date       = models.DateTimeField(null=True, blank=True, editable= False)
-    orderID    = models.CharField(max_length=25, verbose_name="Numéro de paiement donné par Paypal", blank=True, default="") 
-
+    chrono    = models.CharField(max_length=50,  verbose_name="Chrono", editable= False) # Insertion du code de la facture.
+    user      = models.ForeignKey(User, blank=True,  null=True, related_name="factures", on_delete=models.CASCADE, editable= False)
+    file      = models.FileField(upload_to=file_directory_path,verbose_name="fichier", blank=True, null= True, default ="", editable= False)
+    adhesions = models.ManyToManyField(Adhesion, related_name="factures", blank=True, editable= False)
+    date      = models.DateTimeField(null=True, blank=True, editable= False)
+    orderID   = models.CharField(max_length=25, verbose_name="Numéro de paiement donné par Paypal", blank=True, default="") 
+    is_lesson = models.BooleanField(default=0, editable= False)
 
     def __str__(self):
         return "{} {}".format(self.user, self.file)
@@ -707,6 +726,8 @@ class Teacher(models.Model):
     students      = models.ManyToManyField(Student, related_name="teachers", blank=True, editable= False)
     is_lesson     = models.BooleanField(default=0, verbose_name="Propose des cours ?")
     comment       = models.TextField( blank=True, null=True, verbose_name="Commentaire")
+    tarif         = models.DecimalField(default=0, blank=True , max_digits=10, decimal_places=2)
+
 
     def __str__(self):
         return f"{self.user.last_name.capitalize()} {self.user.first_name.capitalize()}"
@@ -849,6 +870,26 @@ class Parent(models.Model):
             child += s.user.last_name + " " + s.user.first_name + "-"
 
         return "{} {} - {}".format(lname, fname, child)
+
+
+    def is_lesson(self):
+        test = False
+        for student in self.students.all() :
+            adhesion = student.adhesions.last()
+            if adhesion.formule_id == 4:
+                test = True
+                break
+        return test
+
+
+    def can_ask_lesson(self):
+        cd = Credit.objects.filter(user = self).aggregate(Sum("amount"))
+        test = False
+        if cd["amount__sum"]>0:
+            test = True
+        return test
+
+
 
 
 class Response(models.Model):

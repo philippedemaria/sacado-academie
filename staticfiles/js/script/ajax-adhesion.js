@@ -187,11 +187,6 @@ define(['jquery', 'bootstrap'], function ($) {
                 $("#verif_formule").html( f );
             });
 
-
-
-
-
- 
         $('.formule').on('change', function (event) {
             let formule_id = $(this).val();
             let csrf_token = $("input[name='csrfmiddlewaretoken']").val();
@@ -225,6 +220,93 @@ define(['jquery', 'bootstrap'], function ($) {
                 }
             )
         }); 
+
+
+
+
+
+        $('.duration_change').on('change', function (event) {
+
+            let formule_id = $("input[name='formule']:checked").val()
+            let csrf_token = $("input[name='csrfmiddlewaretoken']").val();
+            let duration   = $(this).val();
+            let student_id = $("#student_id").val();
+
+            $.ajax(
+                {
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        'student_id': student_id,
+                        'formule_id': formule_id,
+                        'duration'  : duration,
+                        csrfmiddlewaretoken: csrf_token
+                    },
+                    url: "../ajax_price_changement_formule",
+                    success: function (data) {
+
+                        if (data.no_end){
+                        $('#result_change_adhesion' ).html("").html("<div class='row'><div class='col-sm-12 col-md-12'><div class='alert alert-danger'>Vous ne pouvez pas souscrire cet abonnement, votre abonnement prévoit déjà une période plus longue.</div></div></div>" );
+                        $('#submit_change' ).prop("disabled",true)
+                        }
+                        else
+                        {
+                        $('#result_change_adhesion' ).html("").html("<div class='row' style='margin-bottom:100px'><div class='col-sm-12 col-md-12'><div class='alert alert-success'>Adhésion demandée jusqu'au "+data.end_of_this_adhesion+".<br/>Somme à payer : "+data.result+" €</div></div></div>");                            
+                        $('#submit_change' ).prop("disabled",false)
+
+                        $('#amount' ).val(data.amount);
+                        $('#start' ).val(data.start);
+                        $('#stop' ).val(data.stop);
+                        $('#year' ).val(data.year);
+                        $('#level_id' ).val(data.level_id);
+
+                        }
+                    }
+                }
+            )
+        });
+
+
+
+
+        $('.formule_change').on('change', function (event) {
+
+            let duration = $("input[name='duration']:checked").val()
+            let csrf_token = $("input[name='csrfmiddlewaretoken']").val();
+            let formule_id = $(this).val();
+            let student_id = $("#student_id").val();
+
+            if (duration)
+
+            {
+                $.ajax(
+                        {
+                            type: "POST",
+                            dataType: "json",
+                            data: {
+                                'student_id': student_id,
+                                'formule_id': formule_id,
+                                'duration'  : duration,
+                                csrfmiddlewaretoken: csrf_token
+                            },
+                            url: "../ajax_price_changement_formule",
+                            success: function (data) {
+        
+                                if (data.no_end){
+                                $('#result_change_adhesion' ).html("").html("<div class='alert alert-danger'>Vous ne pouvez pas souscrire cet abonnement, votre abonnement prévoit déjà une période plus longue.</div>" );
+                                }
+                                else
+                                {
+                                $('#result_change_adhesion' ).html("").html("<div class='alert alert-success'>Somme à payer : "+data.result+" €</div>");                            
+                                }
+                            }
+                        }
+                    )
+            }
+        });
+
+
+
   
     });
 

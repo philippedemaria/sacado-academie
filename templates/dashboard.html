@@ -123,6 +123,8 @@
                                         <a href="#" data-toggle='modal' data-target='#video_sacado' class="btn btn-violet" style="color:#FF0000; font-size:14px; margin-left: 100px"> 
                                             <i class="fa fa-play"></i> Sacado en vidéo
                                         </a>
+                                    {% elif user.is_parent %}                                        
+                                        <span style="color:#5d4391"><i class="bi bi-speedometer2 icon_size" ></i> Tableau de bord  </span>  
                                     {% endif %}
                                 {% endif %}
                         {% endblock %}
@@ -139,12 +141,15 @@
                                     </li>
  
                                 {% endif %}
-                            {% endif %}  
-                            <form method="post"  enctype='multipart/form-data' class="pull-right search_div" >{% csrf_token %}
-                                <input type="hidden"  name="from" id="from" value="{% if '/dashboard'  in request.path %}1{% else %}0{% endif %}"  /> 
-                                <input type="text"  name="search" id="search" class="form-control" placeholder="Recherche par code" /> 
-                            </form>
-
+                            {% endif %} 
+                            {% if request.user.is_authenticated %}
+                                {% if not user.is_parent %} 
+                                <form method="post"  enctype='multipart/form-data' class="pull-right search_div" >{% csrf_token %}
+                                    <input type="hidden"  name="from" id="from" value="{% if '/dashboard'  in request.path %}1{% else %}0{% endif %}"  /> 
+                                    <input type="text"  name="search" id="search" class="form-control" placeholder="Recherche par code" /> 
+                                </form>
+                                {% endif %}
+                            {% endif %}
                             {% if teacher_to_student %}
                             <li class="sans_puce"><a href="#" id="teacher_to_student_view" class="btn btn-sacado">Revenir au profil enseignant</a> </li>
 

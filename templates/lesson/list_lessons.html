@@ -13,20 +13,25 @@
 
  
 {% block page_title %}
-     Liste des leçons {{ student  }}  
+     Liste des leçons {% if student %}  {{ student  }}  {% endif %}
 {% endblock %}
 
 {% block page_menu_right %}
-    <li><a href="{% url 'ask_lesson' student.user.id %}" class="btn btn-new pull-right" ><i class="fa fa-plus-circle"></i> Nouvelle leçon</a> </li> 
+  {% if student %}
+    <li><a href="{% url 'ask_lesson' student.user.id %}" class="btn btn-new pull-right" ><i class="fa fa-plus-circle"></i> Nouvelle leçon</a> </li>
+  {% else %}
+    <li><a href="{% url 'buy_credit' %}" class="btn btn-new pull-right" ><i class="fa fa-plus-circle"></i> Crédits</a> </li>
+    <li><a href="{% url 'choose_student'  %}" class="btn btn-new pull-right" ><i class="fa fa-plus-circle"></i> Nouvelle leçon</a> </li>
+  {% endif %}
 {% endblock %}
 
 
 {% block  body %}
 <section class="content_main"> 
-
+    {% if student %}  
     <div class="row"> 
         <div class="col-sm-12 col-md-12">
-            <table class="table table-bordered table-hover standard_tab_sort2000" style="width:100%">
+            <table class="table  table-sacado  table-hover standard_tab_sort2000" style="width:100%;">
                   <thead>
                       <tr>
 
@@ -41,7 +46,7 @@
                   <tbody>
                         {% for lesson in lessons %}
                         <tr> 
-                          <td style="border-left : 5px solid {{ lesson.color }}">
+                          <td   class="left">
                              {{ lesson.date|date:"d m Y" }} à {{ lesson.start|date:"H:i" }} 
                           </td>
                           <td >
@@ -62,21 +67,79 @@
                                   {{ u.first_name }} {{ u.last_name }}{% if not forloop.last %},{% endif %}
                               {% endfor %} 
                           </td>
-
                           <td>
                              {{ lesson.user }}  
                           </td>
-                          <td >
+                          <td   class="right">
                              {{ lesson.comment|safe }}
                           </td>
-
-
                         </tr>
                         {% endfor %}
                   </tbody>
             </table>
         </div>
     </div>
+    {% else %}
+
+    <div class="row"> 
+        <div class="col-sm-12 col-md-12">
+            <table class="table table-sacado table-hover standard_tab_sort2000" style="width:100%">
+                  <thead>
+                      <tr>
+
+                        <th>Horaire</th>                  
+                        <th>Titre</th> 
+                        <th>Lien</th> 
+                        <th>Bénéficiaires</th> 
+                        <th>Enseignant </th>                                      
+                        <th>Commentaire</th> 
+                      </tr>
+                  </thead>
+                  <tbody>
+                        {% for lesson in lessons %}
+                        <tr> 
+                          <td  class="left"  style="border-left : 5px solid {{ lesson.color }}">
+                             {{ lesson.date|date:"d m Y" }} à {{ lesson.start|date:"H:i" }} 
+                          </td>
+                          <td >
+                             {{ lesson.title }} 
+                              {% if lesson.is_validate == 0 %}
+                                <i class="fa fa-times text-danger" title="Validation Parent en attente"></i> 
+                              {% elif lesson.is_validate == 1 %}
+                                <i class="fa fa-times text-warning" title="Validation Enseignant en attente"></i>
+                              {% else %}
+                                <i class="fa fa-check text-success" title="Validation aceptée"></i>
+                              {% endif %}
+                          </td>
+                          <td >
+                             
+                          </td>
+                          <td >
+                               {% for u in lesson.users.all  %}   
+                                  {{ u.first_name }} {{ u.last_name }}{% if not forloop.last %},{% endif %}
+                              {% endfor %} 
+                          </td>
+                          <td>
+                             {{ lesson.user }}  
+                          </td>
+                          <td class="right" >
+                             {{ lesson.comment|safe }}
+                          </td>
+                        </tr>
+                        {% endfor %}
+                  </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+
+
+
+
+
+
+
 
 </section>
 

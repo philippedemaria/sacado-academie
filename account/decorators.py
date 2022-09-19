@@ -87,7 +87,6 @@ def user_can_read_details(function):  # id est associé à un user
 def who_can_read_details(function):   # id est associé à un student
     def wrap(request, *args, **kwargs):
 
- 
 
         student = Student.objects.get(pk=kwargs['id'])
         testeur = decide(student, request.user.user_type, request.user)
@@ -99,6 +98,29 @@ def who_can_read_details(function):   # id est associé à un student
             messages.error(request, " Vous passez par un espace interdit.")
             return function(request, *args, **kwargs)
     return wrap
+
+
+
+def user_can_read_discussion(function):   # id est associé à un student
+    def wrap(request, *args, **kwargs):
+
+
+        discussion = Discussion.objects.get(pk=kwargs['idd'])
+        student = discussion.user.student
+        testeur = decide(student, request.user.user_type, request.user)
+
+        if testeur:
+            return function(request, *args, **kwargs)
+        else:
+            #raise PermissionDenied
+            messages.error(request, " Vous passez par un espace interdit.")
+            return function(request, *args, **kwargs)
+    return wrap
+
+
+
+
+
 
 
 def is_manager_of_this_school(function): 

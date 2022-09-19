@@ -21,7 +21,7 @@ class Event(models.Model):
     urlJoinProf  = models.CharField(_('urlJoinProg'), null=True,  blank=True,  max_length=250)
     urlIsMeetingRunning = models.CharField(_('urlRunning?'), null=True,  blank=True,  max_length=250)
     is_validate  = models.PositiveIntegerField(_('Validation?'), default=0 , editable=False) # 0 : demande élève , 1 : validation parent, 2 validation prof
-
+    is_done      = models.BooleanField(_('Réalisée ?'), default=False ) 
 
     def __str__(self):
         return "Visio : prof={}, le {},  début = {}, durée = {}".format(self.user.last_name, self.date.strftime("%d %n"), self.start.strftime("de %Hh%M"), self.duration)   
@@ -56,7 +56,7 @@ def credit_directory_path(instance, filename):
 class Credit(models.Model):
     """ Accounting   """
 
-    amount      = models.DecimalField(default=0, blank=True , max_digits=10, decimal_places=2, editable=False)# montant payé
+    amount      = models.DecimalField(default=0, blank=True , max_digits=10, decimal_places=2)# montant payé
     effective   = models.DecimalField(default=0, blank=True , max_digits=10, decimal_places=2, editable=False)# crédit attribué
     observation = models.TextField( blank=True, default="", null=True, verbose_name="Observation")
     date        = models.DateTimeField(auto_now_add=True) # date de création de la facture

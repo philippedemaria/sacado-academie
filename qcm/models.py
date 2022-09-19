@@ -1484,7 +1484,11 @@ class Relationship(models.Model):
         return document
 
 
-
+    def is_mastering(self):
+        test = False
+        if self.relationship_mastering.count() :
+            test = True
+        return test
 
 
 
@@ -2169,6 +2173,11 @@ class Customexercise(ModelWithCode):
         return data 
 
 
+    def is_mastering(self):
+        test = False
+        if self.customexercise_mastering_custom.count() :
+            test = True
+        return test
 
 
 class Autoposition(models.Model): # Commentaire et note pour les exercices customisés coté enseignant

@@ -5,7 +5,7 @@ from group.models import Group
 from socle.models import *
 from account.models import Student, Teacher, ModelWithCode , User
 from qcm.models import Parcours , Exercise , Folder
- 
+from socle.models import Level
 from django.utils import   timezone
 from django.db.models import Q
 from random import uniform , randint
@@ -60,6 +60,9 @@ class Tool(models.Model):
     is_ebep       = models.BooleanField(default=0, verbose_name="Outils EBEP ?")
     url           =  models.CharField(max_length=255, default='' ,   blank=True, verbose_name="url de substitution")  
     exercises     = models.ManyToManyField(Exercise, blank=True, related_name='tools', verbose_name="Outils inclusifs", editable=False)
+    levels        = models.ManyToManyField(Level, related_name = "tools", blank=True ) 
+
+
 
     def __str__(self):
         return self.title 

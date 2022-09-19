@@ -37,12 +37,10 @@ class Formule(models.Model):
 	    ('Accompagnement', 'Accompagnement'),
 	)
 
-	name     = models.CharField(max_length=255, verbose_name="Nom", choices=NAMES)
-	adhesion = models.CharField(max_length=255, default ="" ,verbose_name="Adhésion", choices=ADHESIONS)
-	price    = models.DecimalField(max_digits=6, decimal_places = 2 , verbose_name="Montant")
-
+	name      = models.CharField(max_length=255, verbose_name="Nom", choices=NAMES)
+	price     = models.DecimalField(max_digits=6, decimal_places = 2 , verbose_name="Montant")
 	is_family = models.BooleanField(default=0, verbose_name="Forfait famille ?") 
-	nb_month  = models.PositiveIntegerField(default=1, verbose_name="Nombre de mois")     
+	is_sale   = models.BooleanField(default=0, verbose_name="En vente ?")
 
 	def __str__(self):
 	    return "{}".format(self.name)
@@ -158,11 +156,6 @@ class Formule(models.Model):
 
 	def total(self) :
 		return round( self.price  * int(self.nb_month) , 2)
-
-
-
-
-
 
 
 class Formuleprice(models.Model):

@@ -1,0 +1,53 @@
+{% extends 'dashboard.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+
+{% block require %}
+ 
+    {% if group %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common3.js' %}"></script>
+    {% else %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common2.js' %}"></script>
+    {% endif %}
+
+     <script>
+        require(['script/ajax-adhesion']);
+    </script>
+ 
+ 
+{% endblock %}
+
+
+{% block page_title %}  
+    
+    <i class='bi bi-camera-video icon_size'></i> Achat de  crédits
+{% endblock %}
+
+
+ 
+{% block page_menu_right %}
+
+{% endblock %}
+
+
+ 
+     
+{% block body %}     
+<section class="content_main"> 
+    <div class="row">
+        <div class="col-sm-12 col-md-5">
+            {% for student in students %}
+                <div class="card" style="width:280px; padding:30px">
+                    <h2 class="thin">{{ student }}</h2>
+                    <a href="{% url 'ask_lesson' student.user.id %}" class="btn btn-sacado">Choisir</a>
+                </div>
+            {% endfor  %}
+        </div>
+ 
+    </div>
+
+
+
+</section>            
+{% endblock %}

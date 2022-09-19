@@ -31,6 +31,10 @@ urlpatterns = [
     path('delete_adhesion', delete_adhesion, name='delete_adhesion'), 
     path('ajax_remboursement', ajax_remboursement, name='ajax_remboursement'),
     path('add_adhesion', add_adhesion, name='add_adhesion'),
+    path('change_adhesion/<int:ids>', change_adhesion, name='change_adhesion'),  
+    path('ajax_price_changement_formule', ajax_price_changement_formule, name='ajax_price_changement_formule'),
+
+    
     path('save_renewal_adhesion', save_renewal_adhesion, name='save_renewal_adhesion'),
     path('accept_renewal_adhesion', accept_renewal_adhesion, name='accept_renewal_adhesion'),
     path('list_exercises_academy/<int:id>', list_exercises_academy, name='academy_level'),

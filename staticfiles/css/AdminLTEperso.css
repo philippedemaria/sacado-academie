@@ -4154,6 +4154,7 @@ table.table-bordered.dataTable {
     box-shadow: 2px 2px 6px rgba(79, 73, 66, .255);
     position:relative;
     border : 1px solid #e6e2dd;
+    background-color: #FFF;
 }
 
 .card_adhesion{
@@ -7453,7 +7454,7 @@ overflow-y: auto;
   position: relative;
   opacity:1;
   color:#d1c5de;
-  cursor:pointer;
+  cursor:help;
   font-size: 14px;
 
 }
@@ -8356,10 +8357,43 @@ a.white, a.white:active, a.white:visited, a.white:hover, .white{
 .table tr td .progress {
   margin-top: 5px;
 }
+
+
+.table-sacado > thead > tr > th,
+.table-sacado > tbody > tr > th,
+.table-sacado > tfoot > tr > th,
+.table-sacado > thead > tr > td,
+.table-sacado > tfoot > tr > td {
+  background-color:#F6F2FF;
+}
+
+.table-sacado  > tbody > tr > td {
+  border-top: 5px solid #F6F2FF;
+  background-color:#FFF ;
+  color: #444 ;
+}
+.table-sacado  > tbody > tr  > td.right {
+  border-radius: 0px 10px 7px 0px;
+}
+.table-sacado  > tbody > tr  > td.left {
+  border-radius: 10px 0px 0px 7px;
+}
+
+.table-sacado  > thead > tr > th {
+  border-bottom: 0px solid #F6F2FF;
+}
+
+.table-sacado  tr td .progress {
+  margin-top: 5px;
+} 
+
+
 .table-bordered {
   border: 1px solid #e0e0e0;
   background-color: #FFF;
 }
+
+
 .table-bordered > thead > tr > th,
 .table-bordered > tbody > tr > th,
 .table-bordered > tfoot > tr > th,
@@ -8372,11 +8406,16 @@ a.white, a.white:active, a.white:visited, a.white:hover, .white{
 .table-bordered > thead > tr > td {
   border-bottom-width: 2px;
 }
+
+
+
+
 .table.no-border,
 .table.no-border td,
 .table.no-border th {
   border: 0;
 }
+
 /* .text-center in tables */
 table.text-center,
 table.text-center td,

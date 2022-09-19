@@ -24,7 +24,7 @@
     {% else %}        
         Nouvelle discussion
     {% endif %}
-    </small>      
+    </small>   {{user.is_parent}}   
 {% endblock %}
 
 
@@ -35,12 +35,11 @@
 
 {% block body %}
 <div class="content_main">
+    {% block parent %}
     <div class="col-xs-12 col-md-12" align="center">
-
- 
         {% if request.user.student %}<a href="{% url 'create_discussion' %}"  class="btn btn-xs btn-danger"><i class="fa fa-plus"></i> Nouvelle discussion</a>{% endif %}
     </div>
-
+    {% endblock %}
 
     <div class="col-xs-12 col-md-12">
         <table class="table table-striped table-hover standard_tab_sort">

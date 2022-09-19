@@ -1,0 +1,134 @@
+{% extends 'dashboard.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+
+{% block require %}
+ 
+    {% if group %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common3.js' %}"></script>
+    {% else %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common2.js' %}"></script>
+    {% endif %}
+
+     <script>
+        require(['script/ajax-adhesion']);
+    </script>
+ 
+ 
+{% endblock %}
+
+
+{% block page_title %}  
+    
+    <i class='bi bi-camera-video icon_size'></i> Achat de  crédits
+{% endblock %}
+
+
+ 
+{% block page_menu_right %}
+
+{% endblock %}
+
+
+ 
+     
+{% block body %}     
+<section class="content_main"> 
+    <div class="row">
+        <div class="col-sm-12 col-md-5">
+            <div class="row ">
+                <div class="col-sm-12">
+                    <div class="col-sm-12 alert alert-warning" style="border:2px solid #5d4391">Vous disposez d'un crédit de {{ credit_dispo}}€</div>
+                </div>
+            </div>  
+
+
+
+            <form action="" method="POST" class="form-group alert alert-warning">
+                {% csrf_token %}
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12"> 
+                                <p>Acheter des crédits et les attribuer à ses enfants selon leurs besoins.</p>
+                        </div> 
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12 col-md-4">
+                            <div class="form-group">  
+                                <label>Montant</label> <small>en euros</small> :
+                                {{ form.amount |add_class:"form-control"|attr:"type:number"|attr:"min:30"|attr:"step:10" }}
+                                {{ form.amount.errors }}
+                            </div>
+                        </div> 
+                    </div>
+         
+
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12">
+                            <div class="form-group">  
+                                {{ form.observation.label_tag }}   
+                                {{ form.observation |add_class:"form-control"  }}
+                                {{ form.observation.errors }}
+                            </div>
+                        </div> 
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-4">
+                            <div class="form-group">  
+                                <input type="text" name = "code_promo" class="form-control" placeholder = "Code promo"maxlength="10" />
+                            </div>
+                        </div> 
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12">
+                            <button type="submit" class="btn btn-primary">Payer maintenant </button>   
+             
+                            <a href="javascript:history.back()"><input type="button" value="Annuler" class="btn btn-default"   /></a>
+                        </div>
+                    </div>    
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12">
+                            Le paiement se fait grace à un site sécurisé.
+                        </div>
+                    </div>  
+            </form>  
+        </div>
+        <div class="col-sm-12 col-md-7">
+            <h1>Historique de mes achats de crédit</h1>
+            <table class="table table-bordered table-hover standard_tab_sort2000" style="width:100%">
+                  <thead>
+                      <tr>
+
+                        <th>Date</th>                  
+                        <th>Montant payé</th>
+                        <th>Crédits effectifs</th>
+                        <th>Facture</th> 
+                      </tr>
+                  </thead>
+                  <tbody>
+                        {% for credit in credits %}
+                        <tr> 
+                          <td>
+                             {{ credit.date|date:"d m Y" }}  
+                          </td>
+                          <td >
+                             {{ credit.amount }} 
+                          </td>
+                          <td >
+                             {{ credit.effective }} 
+                          </td>
+                          <td >
+                             {{ credit.facture }}
+                          </td>
+                        </tr>
+                        {% endfor %}
+                  </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+</section>            
+{% endblock %}

@@ -21,26 +21,8 @@
 
  
 
-
-{% block styleMk4ht %}
-    <link href="{% static 'plugins/schedule/fullcalendar/fullcalendar.min.css' %}" rel='stylesheet' />
-    <link href="{% static 'plugins/schedule/fullcalendar/fullcalendar.print.min.css' %}" rel='stylesheet' media='print' />
-    <style type='text/css'>
-        body {
-                font-size: 14px;
-                font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
-                }
-        #calendar {
-                width: 900px;
-                margin: 0 auto;
-                }
-    </style>
-{% endblock  %}
-
-
-
-
 {% block page_menu_right %} 
+
 {% endblock  %}
 
 
@@ -109,7 +91,14 @@
             {% endfor %}
         </div>
     </div>
- 
+     <div class="row">
+        <div class="col-md-12 col-lg-12 col-xs-12">
+            <a href="javascript:history.back()"><input type="button" value="Retour" class="btn btn-default "/></a>
+        </div>
+    </div>
+
+
+
 </section> 
 
 

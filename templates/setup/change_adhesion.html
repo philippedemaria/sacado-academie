@@ -1,0 +1,103 @@
+{% extends 'dashboard.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+
+{% block require %}
+ 
+    {% if group %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common3.js' %}"></script>
+    {% else %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common2.js' %}"></script>
+    {% endif %}
+
+     <script>
+        require(['script/ajax-adhesion']);
+    </script>
+ 
+ 
+{% endblock %}
+
+
+{% block page_title %}  
+    
+    <i class='fa fa-audio-description'></i> Changer l'adhésion 
+{% endblock %}
+
+
+ 
+{% block page_menu_right %}
+
+{% endblock %}
+
+
+ 
+     
+{% block body %}     
+<section class="content_main"> 
+ 
+    <form action="" method="POST">
+        {% csrf_token %}
+        <input name="student_id" id="student_id" value="{{student.user.id }}"  type="hidden"   />
+        <input name="amount" id="amount" type="hidden"  />
+        <input name="start" id="start" type="hidden"  />
+        <input name="stop" id="stop" type="hidden"  />           
+        <input name="level_id" id="level_id"  type="hidden"  />
+        <input name="year" id="year" type="hidden"   />
+
+        <div class="card" style="padding: 20px">
+            <div class="row">
+                <div class="col-sm-12 col-md-12">
+                    <h2>{{student }}</h2>
+                </div> 
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12 col-md-12">
+                    <h4>Adhésion actuelle  </h4>
+                    <li class="sanspuce"><label>Formule  : {{ adhesion.formule }}</label></li>
+                    <li class="sanspuce"><label>Jusqu'au : {{ adhesion.stop|date:"d-m-Y" }}</label></li>
+                </div> 
+            </div>
+
+            <hr/>
+            <div class="row">
+                <div class="col-sm-12 col-md-12">                    
+                    <div class="form-group">  
+                    Sélectionner la formule désirée et la durée de l'engagement.  
+                    </div>
+                </div> 
+            </div> 
+            <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    <div class="form-group">                     
+                        <label>Formule souhaitée :</label>
+                            {% for f in formules  %}
+                                <li class="sanspuce"><label><input type="radio" value="{{ f.id }}" class="formule_change" name="formule"> {{ f.name }}</label></li>
+                            {% endfor %}
+                    </div>    
+                </div> 
+                <div class="col-sm-12 col-md-6">
+                    <div class="form-group">                     
+                        <label>Durée :</label>
+                        <li class="sanspuce"><label><input type="radio" value="1" name="duration" class="duration_change" > 1 mois</label></li>
+                        <li class="sanspuce"><label><input type="radio" value="3" name="duration" class="duration_change" > 3 mois</label></li>
+                        <li class="sanspuce"><label><input type="radio" value="12" name="duration" class="duration_change" > 12 mois</label></li>
+                    </div>    
+                </div> 
+            </div> 
+            <div id="result_change_adhesion">                     
+                 
+            </div>    
+            <div class="row">
+                <div class="col-sm-12 col-md-12">
+                    <button type="submit" id="submit_change" class="btn btn-primary">Valider </button>   
+     
+                    <a href="javascript:history.back()"><input type="button" value="Annuler" class="btn btn-default"   /></a>
+                </div>
+            </div>    
+        </div>
+    </form>  
+
+</section>            
+{% endblock %}

@@ -21,16 +21,7 @@
 {% block styleMk4ht %}
     <link href="{% static 'plugins/schedule/fullcalendar/fullcalendar.min.css' %}" rel='stylesheet' />
     <link href="{% static 'plugins/schedule/fullcalendar/fullcalendar.print.min.css' %}" rel='stylesheet' media='print' />
-    <style type='text/css'>
-        body {
-                font-size: 14px;
-                font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
-                }
-        #calendar {
-                width: 900px;
-                margin: 0 auto;
-                }
-    </style>
+
 {% endblock  %}
 
 
@@ -47,8 +38,7 @@
 
 
 {% block page_menu_right %} 
- 
- 
+ <a href="javascript:history.back()"><input type="button" value="Retour" class="btn btn-default "/></a>
 {% endblock  %}
 
 
@@ -63,18 +53,15 @@
 
     <div class="row">
         <div class="col-xs-12 col-md-12  col-lg-12">
- 
-         
-   
-
-              <input name="my_teacher_id"  id="my_teacher_id"  value="{{ teacher.user.id }}" type="hidden"  />
-              {% csrf_token %}  
-              <div class='calendar'></div>
-
-  
-
+            <input name="my_teacher_id"  id="my_teacher_id"  value="{{ teacher.user.id }}" type="hidden"  />
+            {% csrf_token %}  
+            <div class='calendar'></div>
         </div>
-
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-md-12  col-lg-12">
+            <a href="javascript:history.back()"><input type="button" value="Retour" class="btn btn-default "/></a>
+        </div>
     </div>
 </section>
 
@@ -96,11 +83,14 @@
 
                     <form  action="{% url 'get_the_slot' %}" method="POST"> 
                         {% csrf_token %} 
-                        <div >{{ form.date }}{{ form.start }} <input name="teacher_id"  id="teacher_id"  value="{{ teacher.user.id }}" /></div> 
+                        <div >{{ form.date }}{{ form.start }} 
+                            <input name="teacher_id"  id="teacher_id"  value="{{ teacher.user.id }}" />
+                            <input name="student_id"  id="student_id"  value="{{ student.user.id }}" />
+                        </div> 
                         <div class="row">              
                             <div class="col-sm-12 col-md-12">                        
                                 <div class="form-group">
-                                    <label>Pour </label>
+                                    <label>Pour  </label>
                                     <span style="font-size:20px" class="sacado_color">{{ student }}</span><input value="{{ request.user.id }}" name="user" id="id_user" type="hidden" >
                                 </div> 
                             </div>

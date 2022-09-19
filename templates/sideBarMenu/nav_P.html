@@ -22,7 +22,7 @@ active
         <img src="{{ request.user.avatar  }}" class="avatar" />
         <div class="captionmenu">{{ request.user.first_name }}</div>
     {% else %} 
-        <i class="fa fa-user fa-2x"></i> 
+        <i class="bi bi-person-circle icon_size"></i> 
         <div class="captionmenu">Compte</div>
     {% endif %} 
     </a>
@@ -30,7 +30,7 @@ active
 
 <li class='dropdown'>
     <a href="{% url 'index' %}" class="main" >
-        <i class="fa fa-tachometer-alt fa-2x"></i> 
+        <i class="bi bi-speedometer2 icon_size"></i> 
         <div class="captionmenu">Tableau de bord</div>
     </a>
 </li>
@@ -38,15 +38,26 @@ active
 
 <li class='dropdown'>
     <a href="{% url 'adhesions_academy' %}" class="main" >
-        <i class="fa fa-audio-description fa-2x"></i> 
+        <i class="bi bi-badge-ad fa-2x"></i> 
         <div class="captionmenu">Adhésions</div>
     </a>
 </li>
 
+{% if request.user.parent.is_lesson %}
+<li class='dropdown'>
+    <a href="{% url 'detail_student_lesson' 0 %}" class="main" >
+        <i class="bi bi-camera-video icon_size"></i> 
+        <div class="captionmenu">Leçons</div>
+    </a>
+</li>
+{% endif %}
+
+
+
 {% if request.user.is_in_academy %}
 <li class='dropdown'>
     <a href="{% url 'contact_academy' %}" class="main" >
-        <i class="fa fa-envelope fa-2x"></i> 
+        <i class="bi bi-envelope icon_size"></i> 
         <div class="captionmenu">Contact</div>
     </a>
 </li>

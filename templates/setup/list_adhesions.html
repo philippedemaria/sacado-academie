@@ -15,7 +15,7 @@
 
 
 {% block page_title %}
-    <i class='fa fa-audio-description'></i> Mes adhésions 
+    <i class='bi bi-badge-ad icon_size sacado_color'></i> Mes adhésions 
 {% endblock %}
 
 
@@ -34,10 +34,10 @@
 {% block body %}
     <section class="content_main"> 
         <div class="row">
-            <div class="col-sm-12 col-md-7">
+            <div class="col-sm-12 col-md-12">
                 <form action="" method="POST" enctype='multipart/form-data'>
                 {% csrf_token %}
-                    <table id="standard_tab" class="table table-bordered table-hover">
+                    <table class="table table-sacado table-hover standard_tab_sort">
                         <thead>
                         <tr>
                             <th>Chrono</th>
@@ -47,7 +47,7 @@
                         <tbody>
                             {% for facture in factures %}
                                 <tr>
-                                    <td>
+                                    <td  class="left">
                                         
 
                                         {% if facture.file %}
@@ -58,14 +58,11 @@
 
 
                                     </td>
-                                    <td>
+                                    <td class="right">
                                         {% for adh in facture.adhesions.all %}
                                             <li class="sanspuce">
                                                 {{ adh.student }}  - 
-                                                {%  if adh.formule_id == 1 %} Autonomie
-                                                {%  elif adh.formule_id == 2 %} ELI
-                                                {%  elif adh.formule_id == 3 %} Suivi
-                                                {%  else %}  Personnalisée    {%  endif %}  - {{ adh.amount }}  
+                                                {{  adh.formule}}   <small>jusqu'au</small> {{adh.stop|date:"d-m-Y" }} - <a href="{% url 'change_adhesion' adh.student.user.id %}">Changer de formule</a>  
                                             </li>
                                         {% endfor %}
                                     </td>

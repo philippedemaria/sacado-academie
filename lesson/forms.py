@@ -1,5 +1,5 @@
 from django import forms
-from .models import Event,ConnexionEleve , Slot
+from .models import Event,ConnexionEleve , Slot, Credit
 from account.models import User
 from datetime import datetime, timedelta
 from django.core.exceptions import ValidationError
@@ -110,3 +110,18 @@ class SlotForm(forms.ModelForm):
 
 
  
+
+
+class CreditForm(forms.ModelForm):
+
+	class Meta:
+	    model = Credit
+	    fields =  "__all__"  
+
+
+ 
+
+
+ 
+
+

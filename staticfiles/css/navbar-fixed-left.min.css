@@ -88,7 +88,11 @@
 }
 
  
-body{padding-top:0;margin-left:100px}
+body{
+  padding-top:0;
+  margin-left:100px;
+  background-color: #f6f2ff;
+}
 
 
   .navbarLeft-fixed-left{

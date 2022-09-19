@@ -6,9 +6,10 @@ from xml.etree import ElementTree # pour lire le xml de la reponse de BBB
 import subprocess
 from django.utils import timezone
 from django.shortcuts import render, redirect
-from lesson.models import Event, ConnexionEleve , Slot
-from lesson.forms import EventForm , SlotForm , GetEventForm
-from account.models import User, Student , Parent, Teacher
+from django.db.models import Q , Sum 
+from lesson.models import Event, ConnexionEleve , Slot , Credit 
+from lesson.forms import EventForm , SlotForm , GetEventForm , CreditForm
+from account.models import User, Student , Parent, Teacher , Facture
 from school.models import School
 import locale
 locale.setlocale(locale.LC_TIME,'')
@@ -18,7 +19,7 @@ from django.http import JsonResponse
 #from django.core import serializers
 from django.core.mail import send_mail
 from general_fonctions import time_zone_user
- 
+
 
 import urllib.parse
 import requests # debuggage, à enlever en developpement
@@ -26,7 +27,8 @@ from hashlib import sha1  # pour l'API de bbb
 from lesson.models import *
 from datetime import datetime, timedelta , time as temps
 import pytz
-
+from general_fonctions import *
+from payment_fonctions import *
 
 def events_json(request):
 
@@ -219,15 +221,22 @@ def get_the_slot(request): # CREATION PAR LE PROF
     idt  = request.POST.get("teacher_id")
     utc  = pytz.UTC
 
+    if not request.user.can_ask_lesson() :
+        return redirect("detail_student_lesson",0)
+
     if request.method == "POST" :
-        if form.is_valid():    
+        if form.is_valid():
+            user              = request.user     
             event             = form.save(commit=False)
             event.user_id     = idt
             event.title       = "Demande de leçon par visio"
-            event.is_validate = request.user.user_type    
+            event.is_validate = user.user_type    
             event.save()
-
             duration = event.duration//15
+            teacher = Teacher.objects.get(user_id=idt)
+
+            som     = teacher.tarif * duration/60
+            
 
             for i in range(duration) :
                 event_date = datetime.combine(event.date, event.start ) + timedelta(minutes=i*15)
@@ -239,8 +248,9 @@ def get_the_slot(request): # CREATION PAR LE PROF
                 slots    = Slot.objects.filter(user_id=idt,datetime__gte=datetmin,datetime__lte=datetmax)
                 slots.update(is_occupied = 1)
 
-            if request.user.user_type  == 0 : 
-                event.users.add(request.user)
+            if user.user_type  == 0 :
+
+                event.users.add(user)
 
                 #conn=ConnexionEleve.objects.get(event=event,user=request.user.)
                 # conn.urlJoinEleve=bbb_urlJoin(event,"VIEWER",student.user.first_name+" "+student.user.last_name)
@@ -264,7 +274,14 @@ def get_the_slot(request): # CREATION PAR LE PROF
 
                 #---------------envoi du mail aux parents d'élèves et eventuellement aux eleves.
                 code = 1331371257987*event.id-43526754
-                dest=[p.user.email for p in request.user.student.students_parent.all()]
+                dest=[]
+                for p in request.user.student.students_parent.all() :
+                    dest.append(p.user.email)
+                    cd = Credit.objects.filter(user=p.user).aggregate(Sum("amount"))
+                    if cd["amount__sum"] > 0 :
+                        Credit.objects.create(amount=-som , user=p.user,observation="Demande de réservation de leçon")
+
+
                 send_mail("Programmation d'une leçon par visio","""
                 Bonjour,
                 Une leçon a été demandée par votre enfant {} {}.
@@ -278,14 +295,13 @@ def get_the_slot(request): # CREATION PAR LE PROF
 
                 L'équipe Sacado Académie.""".format(request.user.first_name.capitalize(),request.user.last_name.capitalize(), 
                                str(event.date.strftime("%A %d/%m")),str(event.start),str(event.duration),str(code) , event.user.email),DEFAULT_FROM_EMAIL,dest)  
-                messages.success(request,"Demande de leçon prise en compte")
 
-
-            elif request.user.user_type  == 1 :
-
-                event.users.add(user)
+            elif user.user_type  == 1 :
+                student = Student.objects.get(user_id=request.session.get("student_id"))
+                event.users.add(student.user)
+                
                 #---------------envoi du mail aux parents d'élèves et eventuellement aux eleves.
-                dest=[p.user.email for p in request.user.student.students_parent.all()]
+                dest=[request.user.email ]
                 send_mail("Programmation d'une leçon par visio","""
                 Bonjour,
                 Une leçon par visio a été demandée par {} {}.
@@ -305,10 +321,17 @@ def get_the_slot(request): # CREATION PAR LE PROF
                 Elle aura lieu le {} à {} et durera {} minutes.
                 L'équipe Sacado Académie.""".format(request.user.first_name.capitalize(),request.user.last_name.capitalize(), 
                            str(event.date.strftime("%A %d/%m")),str(event.start),str(event.duration)),DEFAULT_FROM_EMAIL,[event.user.email])  
-                
+                # le user est le parent
+                Credit.objects.create(amount=-som, effective = -som, user = user , observation ="Demande de leçon à valider" )
+                # le user devient l'élève pour l'envoyer dans le redirect
+                user = student.user
 
-                messages.success(request,"Demande de leçon SACADO ACADEMIE")
+            messages.success(request,"Demande de leçon SACADO ACADEMIE") 
+            
+            if request.session.get('student_id',None) :
+                del request.session['student_id']
 
+            return redirect( "detail_student_lesson" , user.id )
         else :  
             print(form.errors)
  
@@ -334,9 +357,16 @@ La leçon #{} du {} à {} d'une durée de {} minutes vient dêtre confirmée.
 L'équipe Sacado Académie.""".format(event.id, str(event.date.strftime("%A %d/%m")),str(event.start),str(event.duration)),DEFAULT_FROM_EMAIL,[event.user.email])  
                 
 
-
-
     return redirect('index')
+
+
+
+def choose_student(request):
+    students = request.user.parent.students.all
+    
+    context = {   'students' : students    }   
+    return render(request, "lesson/choose_student.html" , context )
+
 
 
 
@@ -453,8 +483,14 @@ def dashboard_parent(request):
 def detail_student_lesson(request,id):
  
     user = request.user
-    student = Student.objects.get(user_id=id)
-    lessons = student.user.these_events.order_by("-date")
+    if id == 0 :
+        lessons = set()
+        for student in request.user.parent.students.all() :
+            lessons.update( student.user.these_events.order_by("-date") )
+            student = None 
+    else :
+        student = Student.objects.get(user_id=id)
+        lessons = student.user.these_events.order_by("-date")
     
     context = { 'user' : user , 'student' : student , 'lessons' : lessons   }   
     return render(request, "lesson/list_lessons.html" , context )
@@ -467,6 +503,7 @@ def ask_lesson(request,id):
  
     user = request.user
     student = Student.objects.get(user_id=id)
+    request.session["student_id"] = student.user.id
     teachers = Teacher.objects.filter(user__school_id=50,is_lesson=1).order_by("user__last_name")
     try :
         event = user.events.order_by("date").last()
@@ -478,12 +515,48 @@ def ask_lesson(request,id):
 
 
 
+def buy_credit(request) :
+
+    user     = request.user
+    credits  = Credit.objects.filter(user =user)
+    form     = CreditForm(request.POST or None)
+    cd       = Credit.objects.filter(user =user).aggregate(Sum('amount'))
+    credit_dispo = cd["amount__sum"] 
+    if request.method == "POST" :
+        if form.is_valid():
+            chrono = create_chrono(Facture,"F")
+            #-----------creation d'une nouvelle facture
+            #body=json.loads(request.body)
+            #---------- Vérification du paiement auprès de paypal
+            orderID = "123456AZERT"#body['orderID'] 
+            new_fact=Facture()
+            new_fact.chrono=chrono
+            new_fact.user= user
+            new_fact.orderID=orderID
+            new_fact.is_lesson = 1 
+            new_fact.date= time_zone_user(user)
+            new_fact.save() #il faut sauver avant de pouvoir ajouter les adhesions 
+            
+            nf = form.save(commit = False)
+            nf.user = user
+            nf.chrono = chrono
+            nf.facture = ""
+            nf.date= time_zone_user(user)
+            nf.save()
+        return redirect('detail_student_lesson', 0)
+
+    context = { 'form' : form , 'credits' : credits ,  'credit_dispo' : credit_dispo  }   
+    return render(request, "lesson/buy_credit_form.html" , context )
+
+
 def display_calendar_teacher(request,idt) :
    
     teacher =  Teacher.objects.get(user_id = idt)
+    student_id  = request.session.get("student_id",None)
+    student = Student.objects.get(user_id=student_id)
     user =  request.user
     form = GetEventForm(request.POST or None)
-    context = { 'user' : user ,  'teacher' : teacher ,  'form' : form   }   
+    context = { 'user' : user ,  'teacher' : teacher ,  'form' : form , 'student' : student  }   
     return render(request, "lesson/display_calendar_teacher.html" , context )
 
 

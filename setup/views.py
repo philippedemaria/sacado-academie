@@ -174,6 +174,9 @@ def index(request):
             template, context = student_dashboard(request, 0)
 
         elif request.user.is_parent:  ## parent
+            if request.session.get('student_id',None) : # Sert pour la réservation de leçon
+                del request.session['student_id']
+
             parent = Parent.objects.get(user=request.user)
             students = parent.students.order_by("user__first_name")
             context = {'parent': parent, 'students': students, 'today' : today , 'index_tdb' : index_tdb, }
@@ -776,7 +779,7 @@ def details_of_adhesion(request) :
 def renewal_adhesion(request) :
 
     levels = Level.objects.order_by("ranking")
-    formules = Formule.objects.all()
+    formules = Formule.objects.filter(is_sale=1)
     context = {    'formules'  : formules,  'levels'  : levels }
     return render(request, 'setup/renewal_adhesion.html', context)   
 
@@ -962,77 +965,78 @@ def save_renewal_adhesion(request) :
 @csrf_exempt
 def accept_renewal_adhesion(request) :
    
-	body=json.loads(request.body)
-	#---------- Vérification du paiement auprès de paypal
-	orderID = body['orderID'] 
-	#print("https://api-m.sandbox.paypal.com/v2/checkout/orders/"+orderID)
-	#r = requests.post("https://api-m.sandbox.paypal.com/v2/checkout/orders/"+orderID )
-	#print(r.content)
-	#print(request.session.keys())
-	#print(request.session['paypal_payment'])
-	ok=True
-	if ok :
-		parent=request.user
-		adh=request.session['detail_adhesions']
-		
-		code = str(uuid.uuid4())[:8]
-		chrono = create_chrono(Facture,"F")
-		#-----------creation d'une nouvelle facture
-		new_fact=Facture()
-		new_fact.chrono=chrono
-		new_fact.user=parent
-		new_fact.orderID=orderID
-		new_fact.date=datetime.now()
-		new_fact.save() #il faut sauver avant de pouvoir ajouter les adhesions 
-		#-------- modification de la closure des students
-		for i,student_id in enumerate(adh['student_ids']) :
-			student_user = User.objects.get(pk = student_id)
-			eng = adh['engagements'][i].split("-")  # mois-prix 
-			duration = int(eng[0]) * 31
-			closure = student_user.closure
-		
-			if closure :    #il y a deja un abonnement en cours : le debut
-							#du nouvel abonnement commence le lendemain de la fin
-				debut = closure+timedelta(days=1)
-			else : 
-				debut = time_zone_user(request.user)
-				
-			new_closure = debut + timedelta(days = duration)
-			User.objects.filter(pk = student_id).update(closure=new_closure)
-		
-			#-----------creation d'une nouvelle adhésion
-			new_adh=Adhesion()
-			new_adh.amount=float(eng[1].replace(",","."))
-			#new_adh.formule_id = eng[0]
-			new_adh.start      = debut
-			new_adh.stop       = new_closure
-			new_adh.level      = Level.objects.filter(id=adh['level'][i])[0]
-			new_adh.student    = Student.objects.get(user_id=student_id)
-			new_adh.save()
-			new_fact.adhesions.add(new_adh)
-			#for pid in paypal_payment.getlist("user") :
-			#Adhesion.objects.filter(user_id = pid).update(date_end=new_closure)
-			#Adhesion.objects.filter(user_id = pid).update(file = creation_facture(user,data_posted,code))
-		new_fact.save()
-		new_fact.file=creation_facture(new_fact)
+    body=json.loads(request.body)
+    #---------- Vérification du paiement auprès de paypal
+    orderID = body['orderID'] 
+    #print("https://api-m.sandbox.paypal.com/v2/checkout/orders/"+orderID)
+    #r = requests.post("https://api-m.sandbox.paypal.com/v2/checkout/orders/"+orderID )
+    #print(r.content)
+    #print(request.session.keys())
+    #print(request.session['paypal_payment'])
+    ok=True
+    if ok :
+        parent=request.user
+        adh=request.session['detail_adhesions']
 
-		#     user = User.objects.get(pk = pid)
+        code = str(uuid.uuid4())[:8]
+        chrono = create_chrono(Facture,"F")
+        #-----------creation d'une nouvelle facture
+        new_fact=Facture()
+        new_fact.chrono=chrono
+        new_fact.user=parent
+        new_fact.orderID=orderID
+        new_fact.is_lesson = 0
+        new_fact.date=datetime.now()
+        new_fact.save() #il faut sauver avant de pouvoir ajouter les adhesions 
+        #-------- modification de la closure des students
+        for i,student_id in enumerate(adh['student_ids']) :
+            student_user = User.objects.get(pk = student_id)
+            eng = adh['engagements'][i].split("-")  # mois-prix 
+            duration = int(eng[0]) * 31
+            closure = student_user.closure
 
-		#     ##################################################################################################################
-		#     # Envoi du courriel
-		#     ##################################################################################################################
-		#     msg = "Bonjour "+ user.first_name +" "+ user.last_name +",\n\n vous venez de souscrire à un prolongement de l'abonnement à la SACADO Académie. \n"
-		#     msg += "votre référence d'adhésion est "+chrono+".\n\n"
-		#     msg += "Les identifiants de connexion n'ont pas changé.\n"
-		#     msg += "L'équipe de SACADO Académie vous remercie de votre confiance.\n\n"
-		#     send_mail("Inscription SACADO Académie", msg, settings.DEFAULT_FROM_EMAIL, [ user.email ]
-		# # Envoi à SACADO
-		# sacado_rcv = ["philippe.demaria83@gmail.com","brunoserres33@gmail.com","sacado.asso@gmail.com"]
-		# sacado_msg = "Renouvellement d'adhésion après période d'essai : user_id"+ user.id +" : "+ user.first_name +" "+ user.last_name 
-		# send_mail("Renouvellement d'adhésion après période d'essai", sacado_msg, settings.DEFAULT_FROM_EMAIL, sacado_rcv)
-		data={"ok":True} 
-		#return JsonResponse(data,safe=True)
-		return HttpResponse("ok")
+            if closure :    #il y a deja un abonnement en cours : le debut
+            				#du nouvel abonnement commence le lendemain de la fin
+            	debut = closure+timedelta(days=1)
+            else : 
+            	debut = time_zone_user(request.user)
+            	
+            new_closure = debut + timedelta(days = duration)
+            User.objects.filter(pk = student_id).update(closure=new_closure)
+
+            #-----------creation d'une nouvelle adhésion
+            new_adh=Adhesion()
+            new_adh.amount=float(eng[1].replace(",","."))
+            #new_adh.formule_id = eng[0]
+            new_adh.start      = debut
+            new_adh.stop       = new_closure
+            new_adh.level      = Level.objects.filter(id=adh['level'][i])[0]
+            new_adh.student    = Student.objects.get(user_id=student_id)
+            new_adh.save()
+            new_fact.adhesions.add(new_adh)
+            #for pid in paypal_payment.getlist("user") :
+            #Adhesion.objects.filter(user_id = pid).update(date_end=new_closure)
+            #Adhesion.objects.filter(user_id = pid).update(file = creation_facture(user,data_posted,code))
+        new_fact.save()
+        new_fact.file=creation_facture(new_fact)
+
+        #     user = User.objects.get(pk = pid)
+
+        #     ##################################################################################################################
+        #     # Envoi du courriel
+        #     ##################################################################################################################
+        #     msg = "Bonjour "+ user.first_name +" "+ user.last_name +",\n\n vous venez de souscrire à un prolongement de l'abonnement à la SACADO Académie. \n"
+        #     msg += "votre référence d'adhésion est "+chrono+".\n\n"
+        #     msg += "Les identifiants de connexion n'ont pas changé.\n"
+        #     msg += "L'équipe de SACADO Académie vous remercie de votre confiance.\n\n"
+        #     send_mail("Inscription SACADO Académie", msg, settings.DEFAULT_FROM_EMAIL, [ user.email ]
+        # # Envoi à SACADO
+        # sacado_rcv = ["philippe.demaria83@gmail.com","brunoserres33@gmail.com","sacado.asso@gmail.com"]
+        # sacado_msg = "Renouvellement d'adhésion après période d'essai : user_id"+ user.id +" : "+ user.first_name +" "+ user.last_name 
+        # send_mail("Renouvellement d'adhésion après période d'essai", sacado_msg, settings.DEFAULT_FROM_EMAIL, sacado_rcv)
+        data={"ok":True} 
+        #return JsonResponse(data,safe=True)
+        return HttpResponse("ok")
 
 
 def attribute_all_documents_to_student_by_level(level,student) :
@@ -1068,8 +1072,8 @@ def attribute_group_to_student_by_level(level,student,formule_id) :
 def add_adhesion(request) :
 
     form =  UserForm(request.POST or None)
-    formules = Formule.objects.all()
-    levels = Level.objects.order_by("ranking")
+    formules = Formule.objects.filter(is_sale=1)
+    levels = Level.objects.exclude(pk=13).order_by("ranking")
     today = time_zone_user(request.user)
 
     if request.method == "POST" :
@@ -1097,7 +1101,7 @@ def add_adhesion(request) :
             chrono = create_chrono(Facture,"F")
 
             adhesion = Adhesion.objects.create(start = today, stop = end, student = student , level_id = level_id  , amount = 0  , formule_id = formule_id ) 
-            facture = Facture.objects.create(chrono = chrono, file = "" , user = request.user , date = today     ) 
+            facture = Facture.objects.create(chrono = chrono, file = "" , user = request.user , date = today , is_lesson = 0    ) 
             facture.adhesions.add(adhesion)
             success = attribute_group_to_student_by_level(level,student,formule_id)
 
@@ -1132,6 +1136,8 @@ def add_adhesion(request) :
     return render(request, 'setup/add_adhesion.html', context)   
  
         
+
+
 
 
 
@@ -1251,7 +1257,7 @@ def save_adhesion(request) :
         parent,create = Parent.objects.update_or_create(user = user, defaults = { "task_post" : 1 })
 
         if i == 0 :
-            facture = Facture.objects.create(chrono = chrono , user = user, date = today ,    file = None )
+            facture = Facture.objects.create(chrono = chrono , user = user, date = today ,    file = None , is_lesson = 0  )
             new_facture = facture
         else :
             facture = new_facture
@@ -1360,13 +1366,98 @@ def save_adhesion(request) :
 
 
 
+
+
+def change_adhesion(request,ids):
+    """ liste des adhésions """
+    user     = request.user
+    formules = Formule.objects.filter(is_sale=1)
+    student  = Student.objects.get(user_id=ids)
+    adhesion  = student.adhesions.last()    
+    if request.method == "POST" :
+        amount     = request.POST.get("amount")
+        formule_id = request.POST.get("formule")
+        start      = request.POST.get("start")
+        stop       = request.POST.get("stop")
+        level_id   = request.POST.get("level_id")
+        student    = student
+        year       = request.POST.get("year")
+
+        if payement_is_ok :
+
+
+            adhesion = Adhesion.objects.create(amount = amount , formule_id =formule_id , start = start , stop = stop , level_id = level_id , student = student , year = year)
+            chrono   = create_chrono(Facture,"F")
+            facture  = Facture.objects.create(chrono = chrono , user =user , file = "" , date = start , orderID = "" , is_lesson = 0  ) #orderID = Numéro de paiement donné par la banque"
+            facture.adhesions.add(adhesion) 
+
+        return redirect("adhesions_academy")
+ 
+    context = {    "student" : student , "adhesion" : adhesion   , "formules" : formules   }
+
+    return render(request, 'setup/change_adhesion.html', context)
+
+
+
+def ajax_price_changement_formule(request) :
+
+    student_id = request.POST.get("student_id",None)
+    formule_id = request.POST.get("formule_id",None)
+    duration   = request.POST.get("duration",None)
+    data = {}
+    offset = 0
+    if formule_id and duration :
+        formule = Formule.objects.get(pk=formule_id)
+        if int(duration) == 12 : 
+            price   = formule.price * 10
+            offset = 5
+        else : 
+            price   = formule.price * int(duration)
+            
+    student = Student.objects.get(user_id=student_id) 
+    today = time_zone_user(student.user)
+    adhesion  = student.adhesions.last()
+    end_of_this_adhesion = today + timedelta(days=30*int(duration)+ offset)
+
+
+    if end_of_this_adhesion <  adhesion.stop :
+        data["no_end"] = True
+    else :
+        data["no_end"] = False
+        days_left = end_of_this_adhesion - adhesion.stop 
+
+        if formule_id and duration :
+            formule = Formule.objects.get(pk=formule_id)
+            price = days_left.days * formule.price/30
+
+            data["end_of_this_adhesion"] = str(end_of_this_adhesion.day) +"-" + str(end_of_this_adhesion.month) +"-" + str(end_of_this_adhesion.year)
+            data["amount"]   = price
+            data["start"]    = today
+            data["stop"]     = end_of_this_adhesion
+            data["year"]     = adhesion.year
+            data["level_id"] = adhesion.level.id
+
+
+    data["result"] = str(price) 
+
+    return JsonResponse(data)
+
+
+
+
+
+
+
+
+
+
 def adhesions_academy(request):
     """ liste des adhésions """
     user = request.user
 
     u_parents = all_from_parent_user(user)
 
-    factures =  Facture.objects.filter(user__in=u_parents) 
+    factures =  Facture.objects.filter(user__in=u_parents,is_lesson=0) 
 
 
     today = time_zone_user(request.user)
@@ -1374,6 +1465,8 @@ def adhesions_academy(request):
     context = { "factures" : factures,  "last_week" : last_week    }
 
     return render(request, 'setup/list_adhesions.html', context)
+
+
 
 
 

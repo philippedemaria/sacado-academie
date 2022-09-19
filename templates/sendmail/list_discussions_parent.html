@@ -1,0 +1,31 @@
+{% extends 'sendmail/list_discussions.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+
+{% block require %}
+ 
+    {% if message %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common3.js' %}"></script>
+    {% else %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common2.js' %}"></script>
+    {% endif %}
+ 
+
+{% endblock %}
+
+ 
+
+{% block page_title %}
+     <i class="bi bi-envelope"></i>  {{  student }}  <img src="{% static 'img/angle-right.png' %}"/> 
+    <small>       
+        Liste des discussions
+    </small>    
+{% endblock %}
+
+
+{% block page_menu_right %}
+<a href="javascript:history.back()"><input type="button" value="Retour" class="btn btn-default "/></a>
+{% endblock %}
+
+

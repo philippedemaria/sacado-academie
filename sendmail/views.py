@@ -15,16 +15,19 @@ from django.core.mail import send_mail
 from django.contrib import messages
 from sendmail.decorators import user_is_email_teacher, user_is_active
 from django.views.decorators.csrf import csrf_exempt
-
+from django.contrib.auth.decorators import  login_required
 from django.utils import timezone
 import re
 import html
 import pytz
 from general_fonctions import *
 from qcm.views import tracker_execute_exercise
+from account.decorators import user_can_read_discussion
+ 
 
 
 
+@login_required(login_url= 'index')
 def list_emails(request):
  
 	user = request.user
@@ -86,6 +89,7 @@ def list_emails(request):
 
 
 @user_is_active
+@login_required(login_url= 'index')
 def create_email(request):
  
 	form = EmailForm(request.POST or None,request.FILES or None)
@@ -127,6 +131,7 @@ def create_email(request):
 
 
 @user_is_email_teacher
+@login_required(login_url= 'index')
 def delete_email(request,id):
 
 	if Email.objects.filter(id=id).count() == 1 :
@@ -137,7 +142,7 @@ def delete_email(request,id):
 
 
 
-
+@login_required(login_url= 'index')
 def show_email(request):
 
 	email_id = int(request.POST.get("email_id"))
@@ -153,7 +158,7 @@ def show_email(request):
 	return JsonResponse(data)
 
 
-
+@login_required(login_url= 'index')
 def pending_notification(request):
 
 	teacher_id = int(request.POST.get("teacher_id"))
@@ -164,7 +169,7 @@ def pending_notification(request):
 
 
 
-
+@login_required(login_url= 'index')
 def list_communications(request):
 	communications = Communication.objects.all()
 	form = CommunicationForm(request.POST or  None)
@@ -174,6 +179,7 @@ def list_communications(request):
 
 
 @csrf_exempt
+@login_required(login_url= 'index')
 def create_communication(request):  
 	form = CommunicationForm(request.POST or  None)
 
@@ -195,7 +201,7 @@ def create_communication(request):
  
 	return redirect('communications')
 
-
+@login_required(login_url= 'index')
 def update_communication(request,id): # update
 
 	communication = Communication.objects.get(id= id)
@@ -225,7 +231,7 @@ def update_communication(request,id): # update
 	return render(request,'sendmail/form_update_communication.html', {'form':form,'communication':communication,   })
 
  
-
+@login_required(login_url= 'index')
 def delete_communication(request, id):
 
 
@@ -236,7 +242,7 @@ def delete_communication(request, id):
 
 
 
-
+@login_required(login_url= 'index')
 def show_communication(request):
 	communication_id = int(request.POST.get("communication_id"))
 	communication = Communication.objects.get(id=communication_id)
@@ -250,7 +256,7 @@ def show_communication(request):
 
 
 
-
+@login_required(login_url= 'index')
 def reader_communication(request):
 	
 	data = {} 
@@ -301,7 +307,7 @@ def ajax_notification_student(request):
 #######################################################################################################################################
 #######################################################################################################################################
 
-
+@login_required(login_url= 'index')
 def create_discussion(request):  
 	form   = DiscussionForm(request.POST or  None)
 	form_m = MessageForm(request.POST or  None)
@@ -333,8 +339,8 @@ def create_discussion(request):
 	return render(request,'sendmail/form_discussion.html', { 'form' : form , 'form_m': form_m, })
 
  
-
-
+@user_can_read_discussion
+@login_required(login_url= 'index')
 def show_discussion(request,idd):
 	discussion = Discussion.objects.get(id = idd)
 	msgs = Message.objects.filter(discussion = discussion)
@@ -375,7 +381,7 @@ def show_discussion(request,idd):
 
 
  
-
+@login_required(login_url= 'index')
 def delete_message(request,idd, id):
 	message = Message.objects.get(pk=id)
 
@@ -403,7 +409,7 @@ def delete_message(request,idd, id):
 #######################################################################################################################################
 #######################################################################################################################################
 
-
+@login_required(login_url= 'index')
 def list_discussion_lesson(request,idu):
 	user = User.objects.get(pk=idu)
 	form   = DiscussionForm(request.POST or  None)
@@ -411,8 +417,16 @@ def list_discussion_lesson(request,idu):
 	context = {'form': form,  'discussions': discussions, 'user' : user  } 
 	return render(request, 'sendmail/list_discussions.html', context)
 
+@login_required(login_url= 'index')
+def list_discussion_lesson_parent(request,idu):
 
+	student = Student.objects.get(user_id=idu)
+	form    = DiscussionForm(request.POST or  None)
+	discussions = student.user.user_discussion.order_by("-date_created")
+	context = {'form': form,  'discussions': discussions, 'student' : student  } 
+	return render(request, 'sendmail/list_discussions_parent.html', context)
 
+@login_required(login_url= 'index')
 def create_discussion_lesson(request):  
 	form   = DiscussionForm(request.POST or  None)
 	form_m = MessageForm(request.POST or  None)
@@ -448,7 +462,8 @@ def create_discussion_lesson(request):
 
  
 
-
+@login_required(login_url= 'index')
+@user_can_read_discussion
 def show_discussion_lesson(request,idd):
 	discussion = Discussion.objects.get(id = idd)
 	msgs = Message.objects.filter(discussion = discussion)
@@ -489,7 +504,7 @@ def show_discussion_lesson(request,idd):
 
 
  
-
+@login_required(login_url= 'index')
 def delete_message_lesson(request,idd, id):
 	message = Message.objects.get(pk=id)
 
@@ -506,8 +521,3 @@ def delete_message_lesson(request,idd, id):
 	else :
 		messages.error(request,"Vous ne pouvez pas supprimer un message dont vous n'êtes pas l'auteur.")
 		return redirect('show_discussion' , idd)
-
-
-
-
-

@@ -42,7 +42,7 @@
         <div class="col-sm-12 col-md-12">
             <h2 class="thin">Ajouter un enfant <small>(Si vous souhaitez ajouter plusieurs enfants, il faut faire cette manipulation plusieurs fois)</small></h2>
         </div>
-    </form>
+    </div>
 
 
     <div class="row">
@@ -67,7 +67,7 @@
                     <div class="form-group">
                         <label>Niveau souhaité :</label>
                         <select name="level" id="id_level" class="form-control select2">
-                            {% for l in levels|dictsort:"ranking" %}
+                            {% for l in levels %}
                                 <option value="{{ l.id }}">{{ l.name }}</option>
                             {% endfor %}
                         </select>

@@ -18,7 +18,10 @@ urlpatterns = [
     path('dashboard_parent', dashboard_parent, name='dashboard_parent'),   
     path('detail_student_lesson/<int:id>', detail_student_lesson, name='detail_student_lesson'),
     path('ask_lesson/<int:id>', ask_lesson, name='ask_lesson'),
+    path('buy_credit', buy_credit, name='buy_credit'),
+    path('choose_student', choose_student, name='choose_student'),
 
+    
     path('display_calendar_teacher/<int:idt>', display_calendar_teacher, name='display_calendar_teacher'),
 
     path('events_my_teacher/<int:idt>', events_my_teacher, name='events_my_teacher'),
