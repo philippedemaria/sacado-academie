@@ -1383,7 +1383,7 @@ def change_adhesion(request,ids):
         student    = student
         year       = request.POST.get("year")
 
-        if payement_is_ok :
+        if payment_is_ok :
 
 
             adhesion = Adhesion.objects.create(amount = amount , formule_id =formule_id , start = start , stop = stop , level_id = level_id , student = student , year = year)
@@ -1421,21 +1421,27 @@ def ajax_price_changement_formule(request) :
 
 
     if end_of_this_adhesion <  adhesion.stop :
-        data["no_end"] = True
+        data["no_end"] = False
+        days_left = adhesion.stop - end_of_this_adhesion
+        formule   = Formule.objects.get(pk=adhesion.formule_id)
+        old_price = days_left.days * formule.price/30
+        price = max( price - old_price , 0 )
+
     else :
         data["no_end"] = False
         days_left = end_of_this_adhesion - adhesion.stop 
 
         if formule_id and duration :
             formule = Formule.objects.get(pk=formule_id)
-            price = days_left.days * formule.price/30
+            price   = days_left.days * formule.price/30
 
-            data["end_of_this_adhesion"] = str(end_of_this_adhesion.day) +"-" + str(end_of_this_adhesion.month) +"-" + str(end_of_this_adhesion.year)
-            data["amount"]   = price
-            data["start"]    = today
-            data["stop"]     = end_of_this_adhesion
-            data["year"]     = adhesion.year
-            data["level_id"] = adhesion.level.id
+
+    data["end_of_this_adhesion"] = str(end_of_this_adhesion.day) +"-" + str(end_of_this_adhesion.month) +"-" + str(end_of_this_adhesion.year)
+    data["amount"]   = price
+    data["start"]    = today
+    data["stop"]     = end_of_this_adhesion
+    data["year"]     = adhesion.year
+    data["level_id"] = adhesion.level.id
 
 
     data["result"] = str(price) 
