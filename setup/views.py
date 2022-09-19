@@ -1421,7 +1421,7 @@ def ajax_price_changement_formule(request) :
 
 
 
-    if end_of_this_adhesion <  adhesion.stop and formule_id and  adhesion.formule_id < int(formule_id) :
+    if end_of_this_adhesion <  adhesion.stop and formule_id and  adhesion.formule_id >= int(formule_id) :
         data["no_end"] = True
 
     elif end_of_this_adhesion <  adhesion.stop :
