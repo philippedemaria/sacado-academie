@@ -662,15 +662,11 @@ class Student(ModelWithCode):
         return test
 
 
-
-
-
-
     def can_ask_lesson(self):
         Credit = apps.get_model('lesson', 'Credit')
         cd = Credit.objects.filter(user__in=self.students_parent.values_list("user_id",flat=True) ).aggregate(Sum("amount"))
         test = False
-        if cd["amount__sum"]>0:
+        if cd["amount__sum"] and cd["amount__sum"]>0:
             test = True
         return test
         # else :
@@ -679,6 +675,8 @@ class Student(ModelWithCode):
         #     if cd["amount__sum"]>0:
         #         test = True
         #     return test
+
+
 
 class Adhesion(models.Model):
     """docstring for Facture"""
