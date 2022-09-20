@@ -73,7 +73,9 @@ def events_json(request):
 
 def events_my_teacher(request,idt):
 
-    slots = Slot.objects.filter(user_id=idt,is_occupied=0)
+    today = time_zone_user(request.user)
+
+    slots = Slot.objects.filter(user_id=idt,is_occupied=0, datetime__gte=today)
  
     event_list = []
     for slot in slots:
@@ -528,8 +530,8 @@ def buy_credit(request) :
     user     = request.user
     credits  = Credit.objects.filter(user =user)
     form     = CreditForm(request.POST or None)
-    cd       = Credit.objects.filter(user =user).aggregate(Sum('amount'))
-    credit_dispo = cd["amount__sum"] 
+    cd       = Credit.objects.filter(user =user).aggregate(Sum('effective'))
+    credit_dispo = cd["effective__sum"] 
     if request.method == "POST" :
         if form.is_valid():
             chrono = create_chrono(Facture,"F")
@@ -548,6 +550,10 @@ def buy_credit(request) :
             nf = form.save(commit = False)
             nf.user = user
             nf.chrono = chrono
+            if nf.amount > 500 :
+                nf.effective = nf.amount * 1.1
+            else:
+                nf.effective = nf.amount
             nf.facture = ""
             nf.date= time_zone_user(user)
             nf.save()
@@ -559,12 +565,12 @@ def buy_credit(request) :
 
 def display_calendar_teacher(request,idt) :
    
-    teacher =  Teacher.objects.get(user_id = idt)
-    student_id  = request.session.get("student_id",None)
-    student = Student.objects.get(user_id=student_id)
-    user =  request.user
-    form = GetEventForm(request.POST or None)
-    context = { 'user' : user ,  'teacher' : teacher ,  'form' : form , 'student' : student  }   
+    teacher    =  Teacher.objects.get(user_id = idt)
+    student_id = request.session.get("student_id",None)
+    student    = Student.objects.get(user_id=student_id)
+    user       =  request.user
+    form       = GetEventForm(request.POST or None)
+    context    = { 'user' : user ,  'teacher' : teacher ,  'form' : form , 'student' : student  }   
     return render(request, "lesson/display_calendar_teacher.html" , context )
 
 
