@@ -222,13 +222,13 @@ def get_the_slot(request): # CREATION PAR LE PROF
     utc  = pytz.UTC
 
     if request.user.is_student and not request.user.student.can_ask_lesson() :
-        messages.error(request,"Vous ne pouvez pas réserver de leçons. Crédits épuisés ou date expirée.")
+        messages.error(request,"Vous ne pouvez pas réserver de leçons. Crédits insuffisants ou épuisés ou date expirée.")
         return redirect("detail_student_lesson",request.user.id)
 
     elif request.user.is_parent :
         student = Student.objects.get(user_id=request.session.get("student_id"))
         if not request.user.student.can_ask_lesson() :
-            messages.error(request,"Vous ne pouvez pas réserver de leçons. Crédits épuisés ou date expirée.")
+            messages.error(request,"Vous ne pouvez pas réserver de leçons. Crédits insuffisants ou épuisés ou date expirée.")
             return redirect("detail_student_lesson",request.user.is_student)
 
 
