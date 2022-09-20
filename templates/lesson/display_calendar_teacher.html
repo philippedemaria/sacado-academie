@@ -83,9 +83,9 @@
 
                     <form  action="{% url 'get_the_slot' %}" method="POST"> 
                         {% csrf_token %} 
-                        <div >{{ form.date }}{{ form.start }} 
-                            <input name="teacher_id"  id="teacher_id"  value="{{ teacher.user.id }}" />
-                            <input name="student_id"  id="student_id"  value="{{ student.user.id }}" />
+                        <div >{{ form.date|attr:"type:hidden" }}{{ form.start|attr:"type:hidden"  }} 
+                            <input name="teacher_id" type="hidden" id="teacher_id"  value="{{ teacher.user.id }}" />
+                            <input name="student_id" type="hidden" id="student_id"  value="{{ student.user.id }}" />
                         </div> 
                         <div class="row">              
                             <div class="col-sm-12 col-md-12">                        
