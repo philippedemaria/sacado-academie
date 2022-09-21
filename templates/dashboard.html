@@ -456,26 +456,6 @@
                 {% endfor %}
             </div>
         </div>
-        <hr>
-        {% if student.suiviparent %}
-            <div class="btn btn-default full_width" style="font-size:15px; margin-bottom: 5px">
-                <span data-toggle="collapse" data-parent="#accordion" href="#collapsered" >
-                    Paire avec le parent 
-                </span>
-                <div id="collapsered" class="collapse">
-                    <div class="panel-body"  style="padding:0px">
-                        <table class="table" style="margin-bottom: 0px;font-size:14px;">
-                            <tr>
-                                <td>
-                                    Code d'appariement à renseigner à l'inscription du parent : 
-                                    <b>{{ student.code }}</b> 
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
     {% elif request.user.is_parent and not request.user.is_in_academy %}
         <hr>      
         <div class="row">
