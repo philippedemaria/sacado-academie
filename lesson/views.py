@@ -41,9 +41,8 @@ def events_json(request):
     for event in events:
         # On récupère les dates dans le bon fuseau horaire
         event_date  = event.date
-        event_start = datetime.combine(event_date, event.start )
+        event_start = datetime.combine(event_date, event.start ).replace(tzinfo=utc) 
         event_end   = event_start + timedelta(minutes=event.duration)
-        event_end   = event_end.replace(tzinfo=utc) 
 
         event_list.append({
                     'id': event.id,
@@ -57,7 +56,7 @@ def events_json(request):
         # On récupère les dates dans le bon fuseau horaire
         slot_start = slot.datetime.replace(tzinfo=utc)
         slot_end   = slot_start + timedelta(minutes=15)
-        
+
         event_list.append({
                     'id': slot.id,
                     'start': slot_start.strftime('%Y-%m-%d %H:%M:%S'),
