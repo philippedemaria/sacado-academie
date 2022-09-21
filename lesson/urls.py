@@ -21,7 +21,8 @@ urlpatterns = [
     path('buy_credit', buy_credit, name='buy_credit'),
     path('choose_student', choose_student, name='choose_student'),
 
-    
+    path('validate_lesson/<int:idc>', validate_lesson, name='validate_lesson'),   
+
     path('display_calendar_teacher/<int:idt>', display_calendar_teacher, name='display_calendar_teacher'),
 
     path('events_my_teacher/<int:idt>', events_my_teacher, name='events_my_teacher'),

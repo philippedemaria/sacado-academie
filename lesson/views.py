@@ -494,15 +494,15 @@ def detail_student_lesson(request,id):
  
     user = request.user
     if id == 0 :
-        lessons = set()
+        connexions = set()
         for student in request.user.parent.students.all() :
-            lessons.update( student.user.these_events.order_by("-date") )
+            connexions.update( student.user.ConnexionEleves.order_by("-event__date") )
         student = None 
     else :
         student = Student.objects.get(user_id=id)
-        lessons = student.user.these_events.order_by("-date")
+        connexions = student.user.ConnexionEleves.order_by("-event__date")
     
-    context = { 'user' : user , 'student' : student , 'lessons' : lessons   }   
+    context = { 'user' : user , 'student' : student , 'connexions' : connexions   }   
     return render(request, "lesson/list_lessons.html" , context )
 
 
@@ -563,6 +563,30 @@ def buy_credit(request) :
     return render(request, "lesson/buy_credit_form.html" , context )
 
 
+
+def validate_lesson(request,idc) :
+
+    user = request.user
+    connexionEleve = ConnexionEleve.objects.get(pk=idc)
+    student = connexionEleve.user.student
+
+    if user.is_parent and student in user.parent.students.all()  :
+
+        ConnexionEleve.objects.filter(pk=idc).update(is_validate=1)
+        #---------------envoi du mail au prof.
+        send_mail("VALIDATION d'une leçon par visio","""
+        Bonjour,
+        La leçon #{} du {} à {} d'une durée de {} minutes vient dêtre validée par le parent. Vérifier votre agenda SACADO.
+        L'équipe Sacado Académie.""".format(connexionEleve.event.id, str(connexionEleve.event.date.strftime("%A %d/%m")),str(connexionEleve.event.start),str(connexionEleve.event.duration)),DEFAULT_FROM_EMAIL,[connexionEleve.event.user.email])        
+        return redirect( "detail_student_lesson"  , student.user.id )
+
+    elif user.is_teacher :
+        ConnexionEleve.objects.filter(pk=idc).update(is_validate=2)
+        messages.success(request,"Validation prise en compte. La leçon est inscrite dans votre agenda des leçons.")
+        return redirect("index" )
+
+
+
 def display_calendar_teacher(request,idt) :
    
     teacher    =  Teacher.objects.get(user_id = idt)
@@ -570,7 +594,8 @@ def display_calendar_teacher(request,idt) :
     student    = Student.objects.get(user_id=student_id)
     user       =  request.user
     form       = GetEventForm(request.POST or None)
-    context    = { 'user' : user ,  'teacher' : teacher ,  'form' : form , 'student' : student  }   
+    timezone   = time_zone_user(request.user) 
+    context    = { 'user' : user ,  'teacher' : teacher ,  'form' : form , 'student' : student , 'timezone' : timezone  }   
     return render(request, "lesson/display_calendar_teacher.html" , context )
 
 

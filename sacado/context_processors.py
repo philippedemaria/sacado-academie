@@ -47,7 +47,7 @@ def menu(request):
             #nbs = Studentanswer.objects.filter(parcours__teacher=teacher, date=today).count()
             nbe = Email.objects.values_list("id").distinct().filter(receivers=request.user, today=today).count()
             #nb_not = nbs + nbe
-            levels = Level.objects.all()
+            levels = Level.objects.exclude(pk=13).order_by("ranking")
             nb_demand = Demand.objects.filter(done=0).count()
 
             mytools = Tool.objects.filter(is_publish=1, teachers = teacher).order_by("title")

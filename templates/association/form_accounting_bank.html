@@ -1,0 +1,243 @@
+{% extends 'dashboard.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+
+{% block require %}
+ 
+    {% if accounting %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common4_withoutMathJax.js' %}"></script>
+    {% else %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common3.js' %}"></script>
+    <script>
+        require(['script/ajax-accounting_complement']);
+    </script> 
+    {% endif %}
+ 
+    <script>
+        require(['script/ajax-accounting']);
+    </script> 
+{% endblock %}
+
+
+{% block page_title %}  
+    <a href="{% url 'association_index' %}" ><i class="fa fa-cloud"></i> </a>  Opération de banque 
+{% endblock %}
+
+{% block page_menu_right %}
+{% include 'association/menubar.html' %}
+{% endblock %}
+ 
+
+{% block body %}     
+<div class="content_main">
+    <form action="" method="POST">
+        {% csrf_token %}
+
+        <div class="row">                
+        
+            <div class="col-sm-12">
+                <div class="alert alert-info">
+                    {% csrf_token %}
+                    <div class="row">              
+                        <div class="col-sm-12 col-md-12">
+                            <div class="form-group">
+                                {{ form.beneficiaire |add_class:"form-control"|attr:"placeholder: En faveur de"}} 
+                                {{ form.beneficiaire.errors }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row details_beneficiaire">
+                        <div class="col-sm-12 col-md-12">
+                            <div class="form-group">
+                                {{ form.address |add_class:"form-control"|attr:"placeholder: Adresse"}} 
+                                {{ form.address.errors }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row details_beneficiaire">
+                        <div class="col-sm-12 col-md-12">
+                            <div class="form-group">
+                                {{ form.complement |add_class:"form-control"|attr:"placeholder:Complément d'adresse"}} 
+                                {{ form.complement.errors }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row details_beneficiaire">
+                        <div class="col-sm-12 col-md-4">
+                            <div class="form-group">
+                                {{ form.contact |add_class:"form-control"|attr:"placeholder:Mail de l'administrateur"}}  
+                                {{ form.contact.errors }}
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-4">
+                            <div class="form-group">
+                                {{ form.town |add_class:"form-control"|attr:"placeholder:Ville"}}  
+                                {{ form.town.errors }}
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-4">
+                            <div class="form-group">
+                                {{ form.country |add_class:"form-control select2"|attr:"placeholder:Pays"}}  
+                                {{ form.country.errors }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-8">
+                <div class="alert alert-warning">
+                    <div class="form-group"> 
+                        {{ form.objet |add_class:"form-control"|attr:"placeholder:Libellé"|attr:"value:Achat"}}  
+                        {{ form.objet.errors }}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                                Compte 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        {% if tp > 0 or accounting %}
+                        <div class="col-sm-6 col-md-6 col-lg-8">
+                            <div class="form-group">
+                                {{ form.plan |add_class:"form-control select2"|attr:"placeholder:Forme"}}  
+                                {{ form.plan.errors }}
+                            </div>
+                        </div>
+                        {% endif %}            
+                    </div>
+ 
+
+                    {% if accounting %}  
+                    <div class="row">          
+                        <div class="col-sm-4 col-md-3 col-lg-3">
+                                {{ form.date_payment |add_class:"form-control datetimepicker"|attr:"placeholder:Date de paiement"|attr:"required"}}  
+                                {{ form.date_payment.errors }}
+                        </div>
+                        <div class="col-sm-6 col-md-4 col-lg-5">
+                                {{ form.mode |add_class:"form-control select2"}}  
+                                {{ form.mode.errors }}
+                        </div>  
+                    </div>
+                    {% endif %}
+                    <div class="row" style="margin: 10px 0px"> 
+                        <div class="col-sm-3 col-md-2">
+                            Compte cible
+                        </div>
+                        <div class="col-sm-3 col-md-3">
+                            {{ form.is_paypal|attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Paypal"|attr:"data-off:Crédit Agricole"}} 
+                            {{ form.is_paypal.errors }} 
+                        </div>
+
+ 
+                        <div class="col-sm-6 col-md-6">
+                            {{ form.is_credit|attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:danger"|attr:"data-on:Entrée"|attr:"data-off:Sortie"}} 
+                            {{ form.is_credit.errors }} 
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        {{ form_ds.management_form }} 
+        <script id="rowToClone" type="text/template">
+            <div id="duplicate">  
+                <div class="row" >
+                    <div class="col-sm-8 col-md-8 col-lg-9" > 
+                        <div class="form-group">
+                            {{ form_ds.empty_form.description|add_class:"form-control"|attr:"placeholder:Description" }} 
+                        </div> 
+                    </div>
+                    <div class="col-sm-2 col-md-2 col-lg-2" > 
+                        <div class="form-group">
+                            {{ form_ds.empty_form.amount|add_class:"form-control"|attr:"placeholder:€" }}
+                        </div> 
+                    </div>
+                    <div class="col-sm-2 col-md-2 col-lg-1">
+                        <div class="form-group" >
+                           <div class="delete_button"></div>
+                        </div> 
+                    </div>
+                </div>
+                <div class="row" id="cloningZone">                            
+
+                </div>
+            </div>
+        </script>    
+        <div class="row">
+            <div class="col-sm-12 col-md-6">
+                <div class="alert alert-warning"> 
+                    <div id="formsetZone">
+                            <div class="row">
+                                <div class="col-sm-6 col-md-6" >
+                                    Description et montant
+                                </div>  
+                                <div class="col-sm-6 col-md-6" >
+                                    <a href="#"  class="btn btn-info add_more" >Ajouter </a><br/><br/>
+                                </div>                            
+                            </div>
+
+
+                            {% for form in form_ds %}
+                            <div id="duplicate0">  
+                                <div class="row" >
+                                    <div class="col-sm-8 col-md-9" > 
+                                        <div class="form-group">
+                                            {{ form.description|add_class:"form-control"|attr:"placeholder:Description" }} 
+                                        </div> 
+                                    </div>
+                                    <div class="col-sm-2 col-md-2" > 
+                                        <div class="form-group">
+                                            {{ form.amount|add_class:"form-control" }}
+                                        </div> 
+                                    </div>
+                                    <div class="col-sm-2 col-md-1">
+                                        <div class="form-group" > <br/>
+                                           <div class="delete_button"></div>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% for hidden in form.hidden_fields %}
+                                {{ hidden }}
+                            {% endfor %}
+
+                            {% endfor %}   
+                    </div>
+
+
+                    <div class="form-group">
+                    {{ form.ticket.label_tag }} <br/>
+                    {{ form.ticket|add_class:"btn btn-default" }}
+                    {{ form.ticket.errors }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                {{ form.observation.label_tag }} <br/>
+                {{ form.observation }}
+                {{ form.observation.errors }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-8">
+                <div class="form-group">
+                    <input value="Enregistrer la transaction" type="submit" class="btn btn-primary"   />
+                    <a href="javascript:history.back()"><input type="button" value="Annuler"
+                                                               class="btn btn-default "/></a>
+                </div>
+            </div>    
+        </div>
+
+ 
+    </form>
+</div>  
+{% endblock %}

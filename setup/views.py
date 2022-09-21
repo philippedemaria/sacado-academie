@@ -38,6 +38,7 @@ from school.models import Stage , School
 from school.forms import  SchoolForm
 from school.gar import *
 from socle.models import Level, Subject
+from lesson.models import ConnexionEleve
 from tool.models import Quizz, Question, Choice
 from bibliotex.models import Exotex
 from datetime import date, datetime , timedelta
@@ -154,13 +155,15 @@ def index(request):
             parcourses = teacher_parcours.filter(is_evaluation=0, is_favorite =1, is_archive=0,  is_trash=0 ).order_by("-is_publish")
             communications = Communication.objects.values('id', 'subject', 'texte', 'today').filter(active=1).order_by("-id")
 
+            connexion_lessons = ConnexionEleve.objects.filter(event__user=this_user, is_done = 0)
+
             request.session["tdb"] = True
 
             webinaire = Webinaire.objects.filter(date_time__gte=today,is_publish=1).first()
  
             template = 'dashboard.html'
             context = {'this_user': this_user, 'teacher': teacher, 'groups': groups,  'parcours': None, 'today' : today , 'timer' : timer , 'nb_teacher_level' : nb_teacher_level , 
-                       'relationships': relationships, 'parcourses': parcourses, 'index_tdb' : index_tdb, 'folders_tab' : folders_tab , 
+                       'relationships': relationships, 'parcourses': parcourses, 'index_tdb' : index_tdb, 'folders_tab' : folders_tab , 'connexion_lessons' : connexion_lessons ,
                        'communications': communications, 'parcours_tab': parcours_tab, 'webinaire': webinaire,
                        }
         

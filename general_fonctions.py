@@ -23,9 +23,6 @@ def delete_session_key(request,key):
         del request.session[key]  
 
 
-
-
-
 def get_strong_username(request ,ln, fn):
     """
     retourne un username plus compliqué

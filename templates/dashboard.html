@@ -679,7 +679,7 @@
     {% endif %}
     <p class="thin">Création <a href="{% url 'admin_testeur' %}" class="pull-right">Reporting et tests</a> </p>
  
-    {% for level in levels|dictsort:"ranking" %}
+    {% for level in levels %}
         <div class="row" style="font-size: 12px">
             <div class="col-lg-3 col-xs-3">
                 <small>{{ level.shortname }} </small> 
