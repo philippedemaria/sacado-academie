@@ -44,17 +44,18 @@
                       </tr>
                   </thead>
                   <tbody>
-                        {% for lesson in lessons %}
+                        {% for connexion in connexions %}
                         <tr> 
                           <td   class="left">
-                             {{ lesson.date|date:"d m Y" }} à {{ lesson.start|date:"H:i" }} 
+                             {{ connexion.event.date|date:"d m Y" }} à {{ connexion.event.start|date:"H:i" }} 
                           </td>
                           <td >
-                             {{ lesson.title }} 
-                              {% if lesson.is_validate == 0 %}
-                                <i class="fa fa-times text-danger" title="Validation Parent en attente"></i> 
-                              {% elif lesson.is_validate == 1 %}
-                                <i class="fa fa-times text-warning" title="Validation Enseignant en attente"></i>
+                             {{ connexion.event.title }} 
+                              {% if connexion.is_validate == 0 %}
+                                  <i class="fa fa-clock text-danger" title="Validation Parent en attente"></i> 
+                                  {% if request.user.is_parent %}<a href="{% url 'validate_lesson' connexion.id  %}"><small>Valider</small></a> {% endif %}
+                              {% elif connexion.is_validate == 1 %}
+                                <i class="fa fa-clock text-warning" title="Validation Enseignant en attente"></i>
                               {% else %}
                                 <i class="fa fa-check text-success" title="Validation aceptée"></i>
                               {% endif %}
@@ -63,15 +64,15 @@
                              
                           </td>
                           <td >
-                               {% for u in lesson.users.all  %}   
+                               {% for u in connexion.event.users.all  %}   
                                   {{ u.first_name }} {{ u.last_name }}{% if not forloop.last %},{% endif %}
                               {% endfor %} 
                           </td>
                           <td>
-                             {{ lesson.user }}  
+                             {{ connexion.event.user }}  
                           </td>
                           <td   class="right">
-                             {{ lesson.comment|safe }}
+                             {{ connexion.event.comment|safe }}
                           </td>
                         </tr>
                         {% endfor %}

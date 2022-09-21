@@ -19,6 +19,16 @@ def no_iframe(arg):
     return string.strip()
 
 
+@register.filter
+def close_div(arg):
+    '''HTML entity decode'''
+    nb_div = arg.count('<div')
+    nb_cdiv = arg.count('</div>')
+    if nb_div > nb_cdiv :
+        loop = nb_div - nb_cdiv
+        for i in range(loop):
+            arg += "</div>"
+    return arg
 
 @register.filter
 def no_image(arg):

@@ -57,18 +57,17 @@
                     {% if get_access %}
                         {% if   course  %}
                         <li class="{% if forloop.first %}active{% endif %} menu_course">
-                            <a href="#" {% if sacado_asso %} class="course_viewer"  {% elif course.author_id == request.user_id %} class="course_viewer" {% else %} title="Version établissement requise"  {% endif  %} data-course_id="{{ course.id }}" data-parcours_id="{{ course.parcours.id }}" >  
 
-                                <i class="{% if course.is_publish %}fa fa-eye{% else %}fa fa-eye-slash{% endif %} show_hide"  id="show_hide{{ course.id }}"  data-course_id="{{ course.id }}" ></i>
-                                 {{ course.title }}   
-                                 {% if not sacado_asso and course.author_id != request.user.teacher_id %}
-                                    <i class="fa fa-times text-danger"></i>
-                                 {% endif  %}
 
-                                {% if course.relationships.count > 0 %} <sup title="Cours lié à une section"><i class="fa fa-paperclip" style="font-size:8px" ></i></sup> {% endif %}
+                            <a href="#" {% if sacado_asso %} class="course_viewer"  {% elif course.author_id == request.user_id %} class="course_viewer" {% else %} title="Version établissement requise"  {% endif  %} data-course_id="{{ course.id }}" data-parcours_id="{{ course.parcours.id }}" > 
+                            <i class="{% if course.is_publish %}fa fa-eye{% else %}fa fa-eye-slash{% endif %} show_hide"  id="show_hide{{ course.id }}"  data-course_id="{{ course.id }}" title="Gérer la publication élève : Actuellement {% if course.is_publish %}Publié{% else %}Non publié{% endif %}" ></i>
+                             
+                             {{ course.title }} 
 
-                                <img src="{% static 'img/order_handler_white.png' %}" class="pull-right"/>
-                            </a>
+                            {% if course.relationships.count > 0 %} <sup title="Cours lié à une section"><i class="fa fa-paperclip" style="font-size:8px" ></i></sup> {% endif %}
+
+                            <img src="{% static 'img/order_handler_white.png' %}" class="pull-right" style="cursor: move"/>
+                            </a>                      
                             <input type="hidden" value="{{ course.id }}" class="course_sort" /> 
                         </li>
                         {% endif %} 
@@ -79,25 +78,32 @@
             <hr/>
 
             {% if sacado_asso %}
-             <a href="{% url 'get_course_in_this_parcours'  parcours.id %}"  class="btn btn-default btn-fullwidth"><i class="fa fa-caret-right"></i> Cours mutualisés</a> 
+                {% if parcours.is_sequence %}
+                    <a href="{% url 'show_parcours' 0  parcours.id %}"  class="btn btn-default btn-fullwidth" ><i class="fa fa-caret-right"></i>  Vers la séquence</a>  
+                {% else %}
+                    <a href="{% url 'get_course_in_this_parcours'  parcours.id %}"  class="btn btn-default btn-fullwidth"><i class="fa fa-caret-right"></i> Cours mutualisés</a>                  
+                {% endif  %}
             {% else %}
-             <a href="#"  class="btn btn-default btn-fullwidth no_sacado_asso"  title="Version établissement requise"><i class="fa fa-caret-right"></i> Cours mutualisés</a> 
+                {% if parcours.is_sequence %}
+                    <a href="#"  class="btn btn-default btn-fullwidth no_sacado_asso"  title="Version établissement requise"><i class="fa fa-caret-right"></i> Vers la séquence</a> 
+                {% else %}
+                    <a href="#"  class="btn btn-default btn-fullwidth no_sacado_asso"  title="Version établissement requise"><i class="fa fa-caret-right"></i> Cours mutualisés</a>                  
+                {% endif  %}
             {% endif  %}
-
-
-
         </div>
         {% if   course  %}
             <div class="col-md-8 col-xs-12 col-lg-9" id="this_course_viewer">
                 <h1 class="thin">  <span id="this_course_title">{{ course.title }}</span>
  
-                         
-                   
-    
-           | <a href="{% url 'update_course' course.id parcours.id %}" style="font-size: 14px; margin-right:10px;" class="pull-right">Modifier</a> 
+                    {% if  teacher == course.author %}                   
+                    <a href="{% url 'update_course' course.id parcours.id %}" style="font-size: 14px; margin-right:10px;" class="pull-right">Modifier ce cours</a> 
+                    {% else  %}
+                    <a href="{% url 'delete_course' course.id  parcours.id %}"  style="font-size: 14px;" class="pull-right"  onclick="return TestDelete('ce cours')">Supprimer ce cours</a>
+                    {% endif  %}
+
 
                     <a href="#"  data-toggle='modal' data-target='#view_course'  data-course_id="{{ course.id }}" data-parcours_id="{{ parcours.id }}"   style="font-size: 14px; margin-right:10px;" class="pull-right course_viewer">Vidéoprojeter ce cours</a>
-                    <a href="#" data-toggle='modal' data-target='#built_diaporama'  data-course_id="{{ course.id }}"  class="pull-right built_diaporama helper_tip" style="font-size: 14px; margin-right:10px;color: #007EE2;">Diaporama 
+                    <a href="#" data-toggle='modal' data-target='#built_diaporama'  data-course_id="{{ course.id }}" data-parcours_id="{{ parcours.id }}" class="pull-right built_diaporama helper_tip" style="font-size: 14px; margin-right:10px;color: #007EE2;">Diaporama 
                          <i class="fa fa-question-circle fa-xs" ></i>
                              <div class="helper_tip_text" >Pour cette option, le cours doit contenir des sections projetables (encadré gris en pointillés) qu'il convient de créer dans son cours. </div>
                     
@@ -167,21 +173,9 @@
                 <div class="wrapper_slider">
                 <!-- Wrapper for slides -->
  
-                        <ul id="ul_slider">
-                            {% for c in courses %}
-                            <li class="my_slide">
-                                <div class="row consigne_diapo">  
-                                    <div class="col-sm-12 col-md-12">
-                                        <h1 style="font-size:3em" class="thin this_slider_title"> 
-                                            {{ c.title }}
-                                        </h1>
-                                        <hr>
-                                        <div>{{ c.annoncement|decode|safe }} </div>
-                                    </div>
-                                </div> 
-                            </li>
-                            {% endfor %}
-                        </ul>
+                    <ul id="ul_slider">
+
+                    </ul>
  
                 </div>
 

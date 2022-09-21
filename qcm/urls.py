@@ -55,7 +55,8 @@ urlpatterns = [
 
     path('ajax_charge_folders', ajax_charge_folders, name='ajax_charge_folders'),
     path('ajax_course_charge_parcours', ajax_course_charge_parcours, name='ajax_course_charge_parcours'),
-
+    path('ajax_built_diaporama', ajax_built_diaporama, name='ajax_built_diaporama'),
+    
     path('this_parcours_to_sequences/<int:idp>', this_parcours_to_sequences, name='this_parcours_to_sequences'),
 
 

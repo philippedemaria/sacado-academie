@@ -1520,6 +1520,18 @@ def ajax_charge_group_from_target(request):
     return JsonResponse(data)
  
 
+ 
+def ajax_built_diaporama(request):
+
+    data = {}
+    parcours_id = request.POST.get('parcours_id',None)
+    if parcours_id :
+        parcours = Parcours.objects.get(pk = parcours_id )
+        courses = parcours.course.filter(is_publish=1)
+        data['html'] = render_to_string('qcm/course/ajax_built_diaporama.html', {  'courses':courses,    })
+        
+    return JsonResponse(data)
+
 ############################################################################################################################################
 ############################################################################################################################################
 ##################     Listes dossiers parcours évaluation archives  #######################################################################

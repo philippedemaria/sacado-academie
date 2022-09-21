@@ -1,0 +1,19 @@
+{% load item_tags %}
+
+{% for c in courses %}
+<li class="my_slide">
+    <div class="row consigne_diapo">  
+        <div class="col-sm-12 col-md-12">
+            <h1 style="font-size:3em" class="thin this_slider_title"> 
+                {{ c.title }}
+            </h1>
+            <hr>
+            <div>{{ c.annoncement|decode|safe }} </div>
+        </div>
+    </div> 
+</li>
+{% endfor %}
+
+<script type="text/javascript">
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+</script>
