@@ -129,6 +129,7 @@ def create_event(request): # CREATION PAR LE PROF
 
     is_lesson = request.POST.get("is_lesson",None)
     duration  = request.POST.get("duration",None)
+    utc       = pytz.UTC
 
     #new_form.start = new_form.start + timedelta(hours=int(tabs[0]),minutes=int(tabs[1]))
     if is_lesson == "1" :
@@ -203,7 +204,11 @@ L'équipe Sacado Académie.""".format(user.civilite,user.last_name.capitalize(),
             tabs       = start_hour.split(":")
             start_hour = timedelta(hours=int(tabs[0]),minutes=int(tabs[1]))
             y,m,d      = request.POST.get("datetime").split("-")
-            datet      = datetime(int(y),int(m),int(d)) + start_hour
+            datet_nutc = datetime(int(y),int(m),int(d)) + start_hour
+            try :
+                datet      = make_aware(datet_nutc, timezone=pytz.timezone( request.user.timezone) )
+            except :
+                datet      = make_aware(datet_nutc, timezone=pytz.timezone("Europe/Paris") )
             for i in range(0,int(duration),15) :
                 dateti = datet + timedelta(hours=1,minutes=i)
                 Slot.objects.create(user = request.user , datetime = dateti , is_occupied = 0 )
