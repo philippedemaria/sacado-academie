@@ -5,6 +5,7 @@ import json
 from xml.etree import ElementTree # pour lire le xml de la reponse de BBB
 import subprocess
 from django.utils import timezone
+from django.utils.timezone import make_aware
 from django.shortcuts import render, redirect
 from django.db.models import Q , Sum 
 from lesson.models import Event, ConnexionEleve , Slot , Credit 
