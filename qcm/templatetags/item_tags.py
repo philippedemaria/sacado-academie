@@ -43,6 +43,20 @@ def no_image(arg):
 
 
 @register.filter
+def no_table(arg):
+    '''HTML entity decode'''
+    arg = arg.replace('<table','___#table#___')
+    arg = arg.replace('</table>','___#table#___')
+    tab_arg = arg.split('___#table#___')
+    string = ""
+    for i in range(0,len(tab_arg),2) :
+        string += tab_arg[i]
+    return string.strip()
+
+
+
+
+@register.filter
 def decode(arg):
     '''HTML entity decode'''
     string = html.unescape(arg)
