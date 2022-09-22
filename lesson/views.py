@@ -54,12 +54,14 @@ def events_json(request):
         # On récupère les dates en UTC
         slot_start = slot.datetime
         slot_end   = slot_start + timedelta(minutes=15)
+        if event.is_occupied == 1 : color = "#946AE6"
+        else :  color = "#e66a7e" 
         event_list.append({
                     'id': slot.id,
                     'start': slot_start.astimezone(tz).strftime('%Y-%m-%d %H:%M:%S'),
                     'end':   slot_end.astimezone(tz).strftime('%Y-%m-%d %H:%M:%S'),
                     'title': "",
-                    'color' : '#999',
+                    'color' : color,
                     })
 
     return http.HttpResponse(json.dumps(event_list), content_type='application/json')
@@ -72,20 +74,21 @@ def events_my_teacher(request,idt):
     else :
         tz=pytz.timezone("europe/paris")
     
-    #today = time_zone_user(request.user)
-    slots = Slot.objects.filter(user_id=idt,is_occupied=0, datetime__gte=datetime.now())
+    slots = Slot.objects.filter(user_id=idt,is_occupied__lt=2, datetime__gte=timezone.now())
  
     event_list = []
     for slot in slots:
         # On récupère les dates en UTC
         slot_start = slot.datetime
         slot_end   = slot_start + timedelta(minutes=15)
+        if slot.is_occupied == 1 : color = "#946AE6"
+        else :  color = "#e66a7e"
         event_list.append({
                     'id': slot.id,
                     'start': slot_start.astimezone(tz).strftime('%Y-%m-%d %H:%M:%S'),
                     'end': slot_end.astimezone(tz).strftime('%Y-%m-%d %H:%M:%S'),
                     'title': "",
-                    'color' : '#CCC',
+                    'color' : color ,
                     })
 
     return http.HttpResponse(json.dumps(event_list), content_type='application/json')
@@ -189,9 +192,9 @@ L'équipe Sacado Académie.""".format(user.civilite,user.last_name.capitalize(),
             y,m,d      = request.POST.get("datetime").split("-")
             datet_nutc = datetime(int(y),int(m),int(d)) + start_hour
             try :
-                datet      = make_aware(datet_nutc, timezone=pytz.timezone( request.user.time_zone) )
+                datet = make_aware(datet_nutc, timezone=pytz.timezone( request.user.time_zone) )
             except :
-                datet      = make_aware(datet_nutc, timezone=pytz.timezone("Europe/Paris") )
+                datet = make_aware(datet_nutc, timezone=pytz.timezone("Europe/Paris") )
             for i in range(0,int(duration),15) :
                 dateti = datet + timedelta(minutes=i)
                 Slot.objects.create(user = request.user , datetime = dateti , is_occupied = 0 )
@@ -231,11 +234,9 @@ def get_the_slot(request): # CREATION PAR LE PROF
             event.is_validate = user.user_type    
             event.save()
             duration = event.duration//15
-            teacher = Teacher.objects.get(user_id=idt)
-
-            som     = teacher.tarif * duration/60
-            ########## ??????????????????? duration est en quarts d'heure non ?         
-
+            teacher  = Teacher.objects.get(user_id=idt)
+            som      = teacher.tarif * event.duration/60
+      
             for i in range(duration) :
                 event_date = datetime.combine(event.date, event.start ) + timedelta(minutes=i*15)
                 datetmi    = event_date - timedelta(minutes=1)

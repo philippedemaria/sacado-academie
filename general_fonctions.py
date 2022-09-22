@@ -221,8 +221,8 @@ def sending_mail(ob , m , a ,r) :
 def time_zone_user(user):
     try :
         if user.time_zone :
-            time_zome = user.time_zone
-            timezone.activate(pytz.timezone(time_zome))
+            time_zone = user.time_zone
+            timezone.activate(pytz.timezone(time_zone))
             today = timezone.localtime(timezone.now())
         else:
             today = timezone.now()
