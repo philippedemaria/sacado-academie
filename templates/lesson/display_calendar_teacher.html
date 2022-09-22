@@ -121,6 +121,15 @@
                         <div class="row">                    
                             <div class="col-sm-12 col-md-12">
                                  <div class="form-group">
+                                    <div class="form-group"><label>Leçon privée ? <small>(Privée par défaut)</small></label>
+                                        {{ form.is_private |attr:"data-toggle:toggle" |attr:"data-onstyle:success"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div> 
+                        <div class="row">                    
+                            <div class="col-sm-12 col-md-12">
+                                 <div class="form-group">
                                     <div class="form-group"><label>Commentaire <small>optionnel</small></label>
                                         {{ form.comment |add_class:"form-control"|attr:"rows:3"  }}
                                     </div>

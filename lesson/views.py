@@ -30,6 +30,14 @@ import pytz
 from general_fonctions import *
 from payment_fonctions import *
 
+
+def cryptage(ide):
+    return 1331371257987*ide-43526754
+
+def decryptage(code):
+    return (code+43526754)//1331371257987
+
+
 def events_json(request):
     user =  request.user 
     if user.time_zone :
@@ -214,14 +222,15 @@ def get_the_slot(request): # CREATION PAR LE PROF
     utc  = pytz.UTC
 
     if request.user.is_student and not request.user.student.can_ask_lesson() :
+        student = request.user.student
         messages.error(request,"Vous ne pouvez pas réserver de leçons. Crédits insuffisants ou épuisés ou date expirée.")
         return redirect("detail_student_lesson",request.user.id)
 
     elif request.user.is_parent :
         student = Student.objects.get(user_id=request.session.get("student_id"))
-        if not request.user.student.can_ask_lesson() :
+        if not student.can_ask_lesson() :
             messages.error(request,"Vous ne pouvez pas réserver de leçons. Crédits insuffisants ou épuisés ou date expirée.")
-            return redirect("detail_student_lesson",request.user.is_student)
+            return redirect("detail_student_lesson",student.user.id)
 
 
     if request.method == "POST" :
@@ -230,12 +239,21 @@ def get_the_slot(request): # CREATION PAR LE PROF
             event             = form.save(commit=False)
             event.user_id     = idt
             event.title       = "Demande de leçon par visio"
-            event.is_validate = user.user_type    
-            event.save()
+
+
             duration = event.duration//15
             teacher  = Teacher.objects.get(user_id=idt)
             som      = teacher.tarif * event.duration/60
-      
+            event.save()  
+
+            is_occupied = 1
+            if event.is_private :
+                is_occupied = 2
+            else :
+                if event.no_intersection(event.date, event.start, event.user) :
+                    ConnexionEleve.objects.create( event=event, user=student.user, is_validate = request.user.user_type )
+
+
             for i in range(duration) :
                 event_date = datetime.combine(event.date, event.start ) + timedelta(minutes=i*15)
                 datetmi    = event_date - timedelta(minutes=1)
@@ -244,7 +262,9 @@ def get_the_slot(request): # CREATION PAR LE PROF
                 datetmin = datetmi.replace(tzinfo=utc) # transforme le temps naive en utc
                 datetmax = datetma.replace(tzinfo=utc) 
                 slots    = Slot.objects.filter(user_id=idt,datetime__gte=datetmin,datetime__lte=datetmax)
-                slots.update(is_occupied = 1)
+                slots.update(is_occupied = is_occupied)
+
+
 
             if user.user_type  == 0 :
 
@@ -265,7 +285,7 @@ def get_the_slot(request): # CREATION PAR LE PROF
                     send_mail("Création d'une leçon",CorpsMessage,DEFAULT_FROM_EMAIL,[request.user.email])
 
                 #---------------envoi du mail aux parents d'élèves et eventuellement aux eleves.
-                code = 1331371257987*event.id-43526754
+                code = cryptage(event.id)
                 dest=[]
                 for p in request.user.student.students_parent.all() :
                     dest.append(p.user.email)
@@ -314,7 +334,7 @@ def get_the_slot(request): # CREATION PAR LE PROF
                 L'équipe Sacado Académie.""".format(request.user.first_name.capitalize(),request.user.last_name.capitalize(), 
                            str(event.date.strftime("%A %d/%m")),str(event.start),str(event.duration)),DEFAULT_FROM_EMAIL,[event.user.email])  
                 # le user est le parent
-                Credit.objects.create(amount=-som, effective = -som, user = user , observation ="Demande de leçon à valider" )
+                Transaction.objects.create(amount=-som, user = user , observation ="Demande de leçon à valider" )
                 # le user devient l'élève pour l'envoyer dans le redirect
                 user = student.user
 
@@ -334,10 +354,9 @@ def get_the_slot(request): # CREATION PAR LE PROF
 
 def confirmation(request,code):
 
-    etape             = code + 43526754
-    event_id          = etape//1331371257987
+    event_id          = decryptage(code)
     event             = Event.objects.get(pk=event_id)
-    event.is_validate = 1
+
     event.save()
 
     #---------------envoi du mail au prof.
@@ -556,11 +575,16 @@ def validate_lesson(request,idc) :
     if user.is_parent and student in user.parent.students.all()  :
 
         ConnexionEleve.objects.filter(pk=idc).update(is_validate=1)
+
+        code = cryptage(event.id)
         #---------------envoi du mail au prof.
         send_mail("VALIDATION d'une leçon par visio","""
         Bonjour,
         La leçon #{} du {} à {} d'une durée de {} minutes concernant {} vient dêtre validée par son parent : {} [{}] . Vérifier votre agenda SACADO.
-        L'équipe Sacado Académie.""".format(connexionEleve.event.id, str(connexionEleve.event.date.strftime("%A %d/%m")),str(connexionEleve.event.start),str(connexionEleve.event.duration),str(connexionEleve.user),str(user),user.email),DEFAULT_FROM_EMAIL,[connexionEleve.event.user.email])        
+
+        POur valider et confirmer cete leçon, cliquez ici : https://sacado-academie.fr/confirmation/{}
+
+        L'équipe Sacado Académie.""".format(connexionEleve.event.id, str(connexionEleve.event.date.strftime("%A %d/%m")),str(connexionEleve.event.start),str(connexionEleve.event.duration),str(connexionEleve.user),str(user),user.email,code),DEFAULT_FROM_EMAIL,[connexionEleve.event.user.email])        
         return redirect( "detail_student_lesson"  , student.user.id )
 
     elif user.is_teacher :

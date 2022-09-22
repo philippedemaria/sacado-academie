@@ -4196,6 +4196,12 @@ table.table-bordered.dataTable {
     border-radius: 0px 30px 0px 0px ;
 }
 
+.is_document_sequence{
+  background-color:#946AE6;
+  border-radius: 0px 30px 0px 0px;
+}
+
+
 
 /********************************************* bleu :  #005e74 ************************************/
 /********************************************* violet hover :  #5d4391 ************************************/

@@ -14,12 +14,13 @@ class Event(models.Model):
     duration     = models.PositiveIntegerField(default =   60 , verbose_name=_('duration'))
     notification = models.BooleanField(_('Notification?'), default=False, blank=True) 
     comment      = models.TextField( null=True, blank=True, verbose_name="Commentaire")      
-    display      = models.BooleanField(default=0, verbose_name='Publication' ) 
+    is_private   = models.BooleanField(default=1, verbose_name='Privée ?' ) 
     users        = models.ManyToManyField(User, default='',  blank=True, related_name='these_events', related_query_name="these_events",   verbose_name="Partagée avec", through="ConnexionEleve")
     color        = models.CharField(_('color'), default='#5d4391', max_length=50)
     urlCreate    = models.CharField(_('urlCreate'), null=True,  blank=True,  max_length=1000)
     urlJoinProf  = models.CharField(_('urlJoinProg'), null=True,  blank=True,  max_length=250)
     urlIsMeetingRunning = models.CharField(_('urlRunning?'), null=True,  blank=True,  max_length=250)
+
 
 
     def __str__(self):
@@ -29,11 +30,35 @@ class Event(models.Model):
         verbose_name = _('event')
 
 
+    def no_intersection(self,date, start,user):
+
+        test = True
+        events = Event.objects.filter(user=user, date=date ,start__lte=start)
+        for e in events :
+            event_start  = datetime.combine(e.date, e.start )
+            event_sstart = datetime.combine(e.date, start )
+            event_end    = event_start + timedelta(minutes=e.duration)
+
+            if event_end >= event_sstart :
+                test = False
+                break
+        # verification : pas de conflit avec une autre visio du prof
+        event_s = Event.objects.filter(user=user, date=date , start__gte=start)
+        for e in event_s :
+            event_start  = datetime.combine(e.date, e.start )
+            event_sstart = datetime.combine(e.date, start )
+            event_end    = event_start + timedelta(minutes=e.duration)
+            if event_sstart  <= event_end :
+                test = False
+                break
+        return test
+
+
 
 class ConnexionEleve(models.Model):
-    event       = models.ForeignKey(Event, related_name='ConnexionEleves' ,on_delete=models.CASCADE)
-    user        = models.ForeignKey(User, related_name='ConnexionEleves' , on_delete=models.CASCADE)
-    urlJoinEleve= models.CharField(_('url'), null=True,  blank=True,  max_length=250)
+    event        = models.ForeignKey(Event, related_name='ConnexionEleves' ,on_delete=models.CASCADE)
+    user         = models.ForeignKey(User, related_name='ConnexionEleves' , on_delete=models.CASCADE)
+    urlJoinEleve = models.CharField(_('url'), null=True,  blank=True,  max_length=250)
     is_validate  = models.PositiveIntegerField(_('Validation?'), default=0 , editable=False) # 0 : demande élève , 1 : validation parent, 2 validation prof
     is_done      = models.BooleanField(_('Réalisée ?'), default=False ) 
 
