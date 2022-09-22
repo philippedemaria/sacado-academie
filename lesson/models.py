@@ -66,3 +66,16 @@ class Credit(models.Model):
 
     def __str__(self):
         return self.user
+
+
+ 
+class Transaction(models.Model):
+    """ Accounting   """
+
+    amount      = models.DecimalField(default=0, blank=True , max_digits=10, decimal_places=2)# montant payé
+    observation = models.TextField( blank=True, default="", null=True, verbose_name="Observation")
+    date        = models.DateTimeField(auto_now_add=True) # date de création de la facture
+    user        = models.ForeignKey(User, related_name="transactions", null=True, blank=True,  on_delete=models.CASCADE, editable=False)
+
+    def __str__(self):
+        return self.user

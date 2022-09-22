@@ -271,7 +271,7 @@ def get_the_slot(request): # CREATION PAR LE PROF
                     dest.append(p.user.email)
                     cd = Credit.objects.filter(user=p.user).aggregate(Sum("amount"))
                     if cd["amount__sum"] > 0 :
-                        Credit.objects.create(amount=-som , user=p.user,observation="Demande de réservation de leçon")
+                        Transaction.objects.create(amount=-som , user=p.user,observation="Demande de réservation de leçon")
 
 
                 send_mail("Programmation d'une leçon par visio","""
@@ -539,6 +539,7 @@ def buy_credit(request) :
             nf.facture = ""
             nf.date= time_zone_user(user)
             nf.save()
+            Transaction.objects.create(amount=nf.effective , user=user,observation="Achat de crédit")
         return redirect('detail_student_lesson', 0)
 
     context = { 'form' : form , 'credits' : credits ,  'credit_dispo' : credit_dispo  }   
