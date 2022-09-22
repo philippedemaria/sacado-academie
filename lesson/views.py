@@ -252,10 +252,11 @@ def get_the_slot(request): # CREATION PAR LE PROF
     idt  = request.POST.get("teacher_id")
     utc  = pytz.UTC
 
-    if request.user.is_student and not request.user.student.can_ask_lesson() :
+    if request.user.is_student :
         student = request.user.student
-        messages.error(request,"Vous ne pouvez pas réserver de leçons. Crédits insuffisants ou épuisés ou date expirée.")
-        return redirect("detail_student_lesson",request.user.id)
+        if not request.user.student.can_ask_lesson() :
+            messages.error(request,"Vous ne pouvez pas réserver de leçons. Crédits insuffisants ou épuisés ou date expirée.")
+            return redirect("detail_student_lesson",request.user.id)
 
     elif request.user.is_parent :
         student = Student.objects.get(user_id=request.session.get("student_id"))
@@ -429,7 +430,7 @@ def confirmation(request,code) :
 
     user           = request.user
     idc            = decryptage(code)
-    
+
     connexionEleve = ConnexionEleve.objects.get(pk=idc)
     connexionEleve.is_validate=2
     connexionEleve.urlJoinEleve = bbb_urlJoin(connexionEleve.event,"VIEWER",connexionEleve.user.last_name+" "+connexionEleve.user.first_name)
