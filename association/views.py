@@ -7,7 +7,6 @@ from django.contrib import messages
 from django.core.mail import send_mail
 from django.contrib.auth.hashers import make_password
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import user_passes_test
 from account.decorators import user_is_board
 from school.models import Stage , School, Country 
 from school.forms import  SchoolForm

@@ -30,32 +30,27 @@ class EventForm(forms.ModelForm):
 	def clean(self):
 		cleaned_data=super().clean()
 		user      = cleaned_data.get("user") 
-		sdate     = cleaned_data.get("date")#start de self
-		sstart    = cleaned_data.get("start")  #start de self
-		sduration = cleaned_data.get('duration')  # end de self
-		sstart    = datetime.strptime( sstart  , "%H:%M:%S").time()
+		date     = cleaned_data.get("date")#start de self
+		start    = cleaned_data.get("start")  #start de self
+		duration = cleaned_data.get('duration')  # end de self
 		# verification : pas de conflit avec une autre visio du prof
-		events = Event.objects.filter(user=user, date=sdate ,start__lte=sstart)
-		for e in events :
-			event_date   = e.date
-			event_start  = datetime.combine(event_date, e.start )
-			event_sstart = datetime.combine(event_date, sstart )
-			event_end    = event_start + timedelta(minutes=e.duration)
 
-			if event_end >= event_sstart :
-				raise ValidationError("Cette visio est en conflit avec la visio "+str(e), code="conflitVisios")
-         
-		# verification : pas de conflit avec une autre visio du prof
-		event_s = Event.objects.filter(user=user, date=sdate ,start__gte=sstart)
-		for e in event_s :
-			event_date   = e.date
-			event_start  = datetime.combine(event_date, e.start )
-			event_sstart = datetime.combine(event_date, sstart )
-			event_end    = event_start + timedelta(minutes=e.duration)
-			if event_sstart  <= event_end :
+        this_event_start = datetime.combine(date, start )
+        this_event_end   = this_event_start + timedelta(minutes=duration)
+
+        events = Event.objects.filter(user=user, date=date ,start__lte=start )
+        for e in events :
+            e_start  = datetime.combine(date, e.start ) # datetime de e
+            e_end    = e_start + timedelta(minutes=e.duration)
+            if e_end >= this_event_start :
 				raise ValidationError("Cette visio est en conflit avec la visio "+str(e), code="conflitVisios")
 
-
+        # verification : pas de conflit avec une autre visio du prof
+        event_s = Event.objects.filter(user=user, date=date , start__gte=start)
+        for e in event_s :
+            e_start     = datetime.combine(date, e.start )
+            if this_event_end  >= e_start :
+				raise ValidationError("Cette visio est en conflit avec la visio "+str(e), code="conflitVisios")
  
 
 

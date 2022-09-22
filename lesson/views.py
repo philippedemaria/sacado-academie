@@ -212,7 +212,38 @@ L'équipe Sacado Académie.""".format(user.civilite,user.last_name.capitalize(),
     return redirect('calendar_show' , 0)
 
 
- 
+
+def no_intersection(date, start, user, duration):
+
+        test = True
+        this_event_start = datetime.combine(date, start )
+        this_event_end   = this_event_start + timedelta(minutes=duration)
+
+        events = Event.objects.filter(user=user, date=date ,start__lte=start )
+        for e in events :
+            e_start  = datetime.combine(date, e.start ) # datetime de e
+            e_end    = e_start + timedelta(minutes=e.duration)
+            if e_end >= this_event_start :
+                test = False
+                break
+
+        # verification : pas de conflit avec une autre visio du prof
+        event_s = Event.objects.filter(user=user, date=date , start__gte=start)
+        for e in event_s :
+            e_start     = datetime.combine(date, e.start )
+            if this_event_end  >= e_start :
+                test = False
+                break
+
+        if test : return 0
+
+        events = Event.objects.filter(user=user, date=date , start=start , duration=duration)
+        if events.count() == 1 :
+            e = events.last()
+            return e.id
+        else :
+            return -1
+
 
 def get_the_slot(request): # CREATION PAR LE PROF
 
@@ -241,18 +272,24 @@ def get_the_slot(request): # CREATION PAR LE PROF
             event.title       = "Demande de leçon par visio"
 
 
-            duration = event.duration//15
-            teacher  = Teacher.objects.get(user_id=idt)
-            som      = teacher.tarif * event.duration/60
-            event.save()  
-
             is_occupied = 1
             if event.is_private :
-                is_occupied = 2
-            else :
-                if event.no_intersection(event.date, event.start, event.user) :
-                    ConnexionEleve.objects.create( event=event, user=student.user, is_validate = request.user.user_type )
+                event.is_occupied = 2
+            res = no_intersection(event.date, event.start, user, event.duration) 
 
+            if res >= 0 : 
+                duration = event.duration//15
+                teacher  = Teacher.objects.get(user_id=idt)
+                som      = teacher.tarif * event.duration/60  
+                msg = "Votre demande est prise en compte."               
+                if res > 0 : 
+                    msg = msg[:-1] + " pour une leçon collective."
+                messages.success(request, msg )
+                event.save()
+                connexionEleve = ConnexionEleve.objects.create(event=event, user=student.user,is_validate=0,is_done=0)
+            else :
+                messages.error(request,"Votre demande ne peut être prise en compte. Une leçon est déjà réservée sur ces créneaux. Vous pouvez au choix réserver un créneau disjoint ou exactement le même créneau.")
+                return redirect("get_the_slot")
 
             for i in range(duration) :
                 event_date = datetime.combine(event.date, event.start ) + timedelta(minutes=i*15)
@@ -264,28 +301,25 @@ def get_the_slot(request): # CREATION PAR LE PROF
                 slots    = Slot.objects.filter(user_id=idt,datetime__gte=datetmin,datetime__lte=datetmax)
                 slots.update(is_occupied = is_occupied)
 
-
-
-            if user.user_type  == 0 :
-
-                event.users.add(user)
-                #-------------- envoi du mail au prof
+            if user.user_type  == 0 : # demande par un élève 
+                #-------------- envoi du mail à l'élève
                 CorpsMessage="""Bonjour, 
-                Vous venez de demander une nouvelle leçon intitulée : {}.
-                Date    : {} 
-                Horaire : {}
-                Durée   : {}
-                En attente de validation par votre(vos) parent(s).
-                Ceci est un mail automatique, ne pas répondre.
-                Merci.
-                """.format(str(event.title) ,str(event.date.strftime("%A %d/%m")),str(event.start),str(event.duration))
+
+Vous venez de demander une nouvelle leçon intitulée : {}.
+
+Date    : {} 
+Horaire : {}
+Durée   : {}
+
+En attente de validation par votre(vos) parent(s).
+Ceci est un mail automatique, ne pas répondre.
+Merci.""".format(str(event.title) ,str(event.date.strftime("%A %d/%m")),str(event.start),str(event.duration))
 
                 CorpsMessage+="Cordialement,\nL'équipe de Sacado Académie" 
                 if request.user.email :
                     send_mail("Création d'une leçon",CorpsMessage,DEFAULT_FROM_EMAIL,[request.user.email])
 
                 #---------------envoi du mail aux parents d'élèves et eventuellement aux eleves.
-                code = cryptage(event.id)
                 dest=[]
                 for p in request.user.student.students_parent.all() :
                     dest.append(p.user.email)
@@ -295,43 +329,60 @@ def get_the_slot(request): # CREATION PAR LE PROF
 
 
                 send_mail("Programmation d'une leçon par visio","""
-                Bonjour,
-                Une leçon a été demandée par votre enfant {} {}.
-                Elle aura lieu le {} à {} et durera {} minutes.
-                 
-                Vous devez confirmer cette demande pour votre enfant en cliquant sur le lien : https://sacado-academie.fr/lesson/confirmation/{} 
+Bonjour,
 
-                Merci de bien vouloir contacter l'enseignant à l'adresse {} en cas d'indisponibilité.
+Une leçon a été demandée par votre enfant {} {}.
+Elle aura lieu le {} à {} et durera {} minutes.
+En attente de validation par l'enseignant {}.
+Très cordialement,
 
-                Très cordialement,
+L'équipe Sacado Académie.""".format(request.user.first_name.capitalize(),request.user.last_name.capitalize(), 
+                               str(event.date.strftime("%A %d/%m")),str(event.start),str(event.duration),  str(event.user) ),DEFAULT_FROM_EMAIL,dest)  
 
-                L'équipe Sacado Académie.""".format(request.user.first_name.capitalize(),request.user.last_name.capitalize(), 
-                               str(event.date.strftime("%A %d/%m")),str(event.start),str(event.duration),str(code) , event.user.email),DEFAULT_FROM_EMAIL,dest)  
+                code = cryptage(connexionEleve.id)
+                #---------------envoi du mail au prof.
+                send_mail("DEMANDE d'une leçon par visio","""
+Bonjour,
 
-            elif user.user_type  == 1 :
-                student = Student.objects.get(user_id=request.session.get("student_id"))
-                event.users.add(student.user)
-                
+L'élève {} vient de demander une nouvelle leçon.
+
+Date    : {} 
+Horaire : {}
+Durée   : {} min
+
+Confimer la leçon en cliquant sur ce lien : https://sacado-academie.fr/lesson/confirmation/{}
+
+Ceci est un mail automatique, ne pas répondre. Merci.
+L'équipe Sacado Académie.""".format(str(request.user).capitalize() ,str(event.date.strftime("%A %d/%m")),str(event.start),str(event.duration), code ),DEFAULT_FROM_EMAIL,[event.user.email])
+
+
+            elif user.user_type  == 1 : # demande par un élève 
                 #---------------envoi du mail aux parents d'élèves et eventuellement aux eleves.
                 dest=[request.user.email ]
                 send_mail("Programmation d'une leçon par visio","""
-                Bonjour,
-                Une leçon par visio a été demandée par {} {}.
-                Elle aura lieu le {} à {} et durera {} minutes.
-                 
-                Merci de bien vouloir contacter l'enseignant à l'adresse {} en cas d'indisponibilité.
+Bonjour,
 
-                Très cordialement,
+Vous avez demandé une leçon par visio pour votre enfant {}.
+Elle aura lieu le {} à {} et durera {} minutes.
+ 
+Merci de bien vouloir contacter l'enseignant à l'adresse {} en cas d'indisponibilité.
 
-                L'équipe Sacado Académie.""".format(request.user.first_name.capitalize(),request.user.last_name.capitalize(), 
+Très cordialement,
+
+L'équipe Sacado Académie.""".format(str(student.user).capitalize(), 
                            str(event.date.strftime("%A %d/%m")),str(event.start),str(event.duration),event.user.email),DEFAULT_FROM_EMAIL,dest)  
 
                 #---------------envoi du mail au prof.
                 send_mail("DEMANDE d'une leçon par visio","""
-                Bonjour,
-                Une leçon par visio a été demandée par {} {}.
-                Elle aura lieu le {} à {} et durera {} minutes.
-                L'équipe Sacado Académie.""".format(request.user.first_name.capitalize(),request.user.last_name.capitalize(), 
+Bonjour,
+
+Une leçon par visio a été demandée par {}.
+
+Elle aura lieu le {} à {} et durera {} minutes.
+
+Vous devez valider cette demande en cliquant sur le lien : https://sacado-academie.fr/lesson/validation/{} 
+
+L'équipe Sacado Académie.""".format(str(request.user).capitalize(), 
                            str(event.date.strftime("%A %d/%m")),str(event.start),str(event.duration)),DEFAULT_FROM_EMAIL,[event.user.email])  
                 # le user est le parent
                 Transaction.objects.create(amount=-som, user = user , observation ="Demande de leçon à valider" )
@@ -352,23 +403,67 @@ def get_the_slot(request): # CREATION PAR LE PROF
 
  
 
-def confirmation(request,code):
+def validate(request,code): # toujours par le prof
 
-    event_id          = decryptage(code)
-    event             = Event.objects.get(pk=event_id)
+    connexionEleve_id = decryptage(code)
+    connexionEleve    = ConnexionEleve.objects.get(pk=connexionEleve_id)
+    connexionEleve.is_validate =1 
+    connexionEleve.save()
 
-    event.save()
-
-    #---------------envoi du mail au prof.
+    dest=[p.user.email for p in connexionEleve.user.student.students_parent.all() if p.user.email ]
+    if connexionEleve.user.email :
+        dest.append(connexionEleve.user.email)
+    #---------------envoi du mail au parent.
     send_mail("DEMANDE d'une leçon par visio","""
 Bonjour,
 
-La leçon #{} du {} à {} d'une durée de {} minutes vient dêtre confirmée.
+La leçon #{} du {} à {} d'une durée de {} minutes vient dêtre validée pour {} par {}.
 
-L'équipe Sacado Académie.""".format(event.id, str(event.date.strftime("%A %d/%m")),str(event.start),str(event.duration)),DEFAULT_FROM_EMAIL,[event.user.email])  
-                
+L'équipe Sacado Académie.""".format(connexionEleve.event.id, str(connexionEleve.event.date.strftime("%A %d/%m")),str(connexionEleve.event.start),str(connexionEleve.event.duration), str(connexionEleve.user).capitalize(), str(connexionEleve.event.user).capitalize()),DEFAULT_FROM_EMAIL,dest)        
 
     return redirect('index')
+
+
+
+def confirmation(request,code) :
+
+    user           = request.user
+    idc            = decryptage(code)
+    
+    connexionEleve = ConnexionEleve.objects.get(pk=idc)
+    connexionEleve.is_validate=2
+    connexionEleve.urlJoinEleve = bbb_urlJoin(connexionEleve.event,"VIEWER",connexionEleve.user.last_name+" "+connexionEleve.user.first_name)
+    connexionEleve.save()
+
+    event             = connexionEleve.event
+    event.urlCreate   = bbb_urlCreate(event)
+    event.urlJoinProf = bbb_urlJoin(event,"MODERATOR",user.last_name+" "+user.first_name)
+    event.save()
+
+    student        = connexionEleve.user.student    
+
+    if user.is_parent and student in user.parent.students.all()  :
+        #---------------envoi du mail au prof.
+        send_mail("VALIDATION d'une leçon par visio","""Bonjour,
+La leçon #{} du {} à {} d'une durée de {} minutes concernant {} vient dêtre validée par son parent : {} [{}]. 
+
+Bonne leçon.
+
+L'équipe Sacado Académie.""".format(connexionEleve.event.id, str(connexionEleve.event.date.strftime("%A %d/%m")),str(connexionEleve.event.start),str(connexionEleve.event.duration),str(connexionEleve.user).capitalize(),str(user).capitalize(),user.email,code),DEFAULT_FROM_EMAIL,[connexionEleve.event.user.email])        
+        return redirect( "detail_student_lesson"  , student.user.id )
+
+    elif user.is_teacher :
+        destinataires = [p.user.email for p in connexionEleve.user.student.students_parent.all()]
+        if connexionEleve.user.email:
+            destinataires.append(connexionEleve.user.email)
+        
+        send_mail("VALIDATION d'une leçon par l'enseignant","""
+        Bonjour,
+        La leçon #{} du {} à {} d'une durée de {} minutes vient dêtre confirmée par l'enseignant. 
+        L'équipe Sacado Académie.""".format(connexionEleve.event.id, str(connexionEleve.event.date.strftime("%A %d/%m")),str(connexionEleve.event.start),str(connexionEleve.event.duration)),DEFAULT_FROM_EMAIL,destinataires)        
+        messages.success(request,"Validation prise en compte. La leçon est inscrite dans votre agenda des leçons.")
+        return redirect("index" )
+
 
 
 
@@ -564,48 +659,6 @@ def buy_credit(request) :
     context = { 'form' : form , 'credits' : credits ,  'credit_dispo' : credit_dispo  }   
     return render(request, "lesson/buy_credit_form.html" , context )
 
-
-
-def validate_lesson(request,idc) :
-
-    user           = request.user
-    connexionEleve = ConnexionEleve.objects.get(pk=idc)
-    student        = connexionEleve.user.student
-
-    if user.is_parent and student in user.parent.students.all()  :
-
-        ConnexionEleve.objects.filter(pk=idc).update(is_validate=1)
-
-        code = cryptage(event.id)
-        #---------------envoi du mail au prof.
-        send_mail("VALIDATION d'une leçon par visio","""
-        Bonjour,
-        La leçon #{} du {} à {} d'une durée de {} minutes concernant {} vient dêtre validée par son parent : {} [{}] . Vérifier votre agenda SACADO.
-
-        POur valider et confirmer cete leçon, cliquez ici : https://sacado-academie.fr/confirmation/{}
-
-        L'équipe Sacado Académie.""".format(connexionEleve.event.id, str(connexionEleve.event.date.strftime("%A %d/%m")),str(connexionEleve.event.start),str(connexionEleve.event.duration),str(connexionEleve.user),str(user),user.email,code),DEFAULT_FROM_EMAIL,[connexionEleve.event.user.email])        
-        return redirect( "detail_student_lesson"  , student.user.id )
-
-    elif user.is_teacher :
-        ConnexionEleve.objects.filter(pk=idc).update(is_validate=2)
-
-        connexionEleve    = ConnexionEleve.objects.get(pk=idc)
-        event             = connexionEleve.event
-        event.urlCreate   = bbb_urlCreate(event)
-        event.urlJoinProf = bbb_urlJoin(event,"MODERATOR",user.last_name+" "+user.first_name)
-        event.save()
-
-        destinataires = [p.user.email for p in connexionEleve.user.student.students_parent.all()]
-        if connexionEleve.user.email:
-            destinataires.append(connexionEleve.user.email)
-        
-        send_mail("VALIDATION d'une leçon par l'enseignant","""
-        Bonjour,
-        La leçon #{} du {} à {} d'une durée de {} minutes vient dêtre confirmée par l'enseignant. 
-        L'équipe Sacado Académie.""".format(connexionEleve.event.id, str(connexionEleve.event.date.strftime("%A %d/%m")),str(connexionEleve.event.start),str(connexionEleve.event.duration)),DEFAULT_FROM_EMAIL,destinataires)        
-        messages.success(request,"Validation prise en compte. La leçon est inscrite dans votre agenda des leçons.")
-        return redirect("index" )
 
 
 

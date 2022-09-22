@@ -339,6 +339,38 @@ class Quizz(ModelWithCode):
 
 
 
+class Positionnement(ModelWithCode):
+    """
+    Modèle représentant un associé.
+    """
+    title         = models.CharField( max_length=255, verbose_name="Titre du test de positionnement") 
+    teacher       = models.ForeignKey(Teacher, related_name="teacher_quizz", blank=True, on_delete=models.CASCADE, editable=False ) 
+    date_modified = models.DateTimeField(auto_now=True)
+    
+    level     = models.ForeignKey(Level, related_name="positionnements", blank=True, null = True, on_delete=models.CASCADE)
+    subject   = models.ForeignKey(Subject, related_name="positionnements", blank=True, null = True, on_delete=models.CASCADE)
+    vignette   = models.ImageField(upload_to=quizz_directory_path, verbose_name="Vignette d'accueil", blank=True, null = True , default ="")
+    is_publish = models.BooleanField(default=0, verbose_name="Publié ?")
+    is_back      = models.BooleanField(default=0, verbose_name="Retour arrière ?")  
+    is_ranking   = models.BooleanField(default=0, verbose_name="Ordre aléatoire des questions ?")  
+    is_shuffle   = models.BooleanField(default=0, verbose_name="Ordre aléatoire des réponses ?") 
+
+    questions    = models.ManyToManyField(Question, blank=True, related_name="positionnements" , editable=False)  
+    users        = models.ManyToManyField(User, blank=True,  related_name="positionnements",   editable=False)
+
+    def __str__(self):
+        return self.title 
+
+
+    def duration(self):
+        d = 0
+        for q in self.questions.filter(is_publish=1) :
+            d += q.duration 
+        return d
+
+
+
+
 def time_zone_user(user):
     try :
         if user.time_zone :

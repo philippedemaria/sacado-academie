@@ -30,28 +30,6 @@ class Event(models.Model):
         verbose_name = _('event')
 
 
-    def no_intersection(self,date, start,user):
-
-        test = True
-        events = Event.objects.filter(user=user, date=date ,start__lte=start)
-        for e in events :
-            event_start  = datetime.combine(e.date, e.start )
-            event_sstart = datetime.combine(e.date, start )
-            event_end    = event_start + timedelta(minutes=e.duration)
-
-            if event_end >= event_sstart :
-                test = False
-                break
-        # verification : pas de conflit avec une autre visio du prof
-        event_s = Event.objects.filter(user=user, date=date , start__gte=start)
-        for e in event_s :
-            event_start  = datetime.combine(e.date, e.start )
-            event_sstart = datetime.combine(e.date, start )
-            event_end    = event_start + timedelta(minutes=e.duration)
-            if event_sstart  <= event_end :
-                test = False
-                break
-        return test
 
 
 

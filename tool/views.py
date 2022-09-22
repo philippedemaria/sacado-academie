@@ -15,8 +15,8 @@ from account.decorators import  user_is_testeur
 from sacado.settings import MEDIA_ROOT
  
 from qcm.views import  get_teacher_id_by_subject_id
+from django.contrib.auth.decorators import  permission_required,user_passes_test, login_required
 
-import uuid
 from django.contrib.auth.hashers import make_password
 from django.views.decorators.csrf import csrf_exempt
 from django.forms import inlineformset_factory
@@ -49,7 +49,7 @@ from datetime import datetime , timedelta
 from general_fonctions import *
 from qcm.views import tracker_execute_exercise
 import subprocess
-
+import uuid
 #################################################################################
 #   Fonctions
 #################################################################################
@@ -1116,6 +1116,149 @@ def create_quizz_code(request,id,idg):
     quizz = Quizz.objects.get(pk = id)
 
     return redirect("show_quizz_group", id , idg ) 
+
+
+
+
+
+
+
+############################################################################################################
+############################################################################################################
+########## Positionnement
+############################################################################################################
+############################################################################################################
+
+
+
+
+
+@login_required(login_url= 'index')
+def list_positionnement(request):
+
+    teacher = request.user.teacher 
+    positionnements = Positionnement.objects.order_by("level__ranking")
+    return render(request, 'tool/list_positionnement.html', { 'positionnements': positionnements ,   })
+
+
+@login_required(login_url= 'index')
+def create_positionnement(request):
+    
+    teacher = request.user.teacher
+    form = PositionnementForm(request.POST or None, request.FILES or None )
+    request.session["tdb"] = False # permet l'activation du surlignage de l'icone dans le menu gauche
+
+    if form.is_valid():
+        nf = form.save(commit = False)
+        nf.teacher = teacher
+        nf.save()
+        form.save_m2m()
+
+        return redirect('create_question' , nf.pk , 0 )
+    else:
+        print(form.errors)
+
+    context = {'form': form, 'teacher': teacher, }
+
+    return render(request, 'tool/form_positionnement.html', context)
+
+ 
+@login_required(login_url= 'index')
+def update_quizz(request,id):    
+    
+    teacher = request.user.teacher 
+    positionnement = Positionnement.objects.get(pk= id)
+    form = PositionnementForm(request.POST or None, request.FILES or None , instance = positionnement  )
+    request.session["tdb"] = False # permet l'activation du surlignage de l'icone dans le menu gauche
+    if form.is_valid():
+        nf = form.save(commit = False)
+        nf.teacher = teacher
+        nf.save()
+        form.save_m2m()
+
+        return redirect('list_positionnement' )
+    else:
+        print(form.errors)
+
+    context = {'form': form, 'quizz': quizz, 'teacher': teacher, }
+
+    return render(request, 'tool/form_positionnement.html', context)
+
+
+@login_required(login_url= 'index')
+def delete_quizz(request,id):
+
+    request.session["tdb"] = False # permet l'activation du surlignage de l'icone dans le menu gauche 
+    positionnement = Positionnement.objects.get(pk= id)
+    if quizz.teacher == request.user.teacher :
+        quizz.delete() 
+
+    return redirect('list_positionnement')
+
+
+ 
+def show_positionnement(request,id):
+    """ permet à un prof de voir son positionnement """
+    
+    request.session["tdb"] = False # permet l'activation du surlignage de l'icone dans le menu gauche 
+    positionnement = Positionnement.objects.get(pk= id)
+    questions = positionnement.questions.filter(is_publish=1).order_by("ranking")
+    context = {  "positionnement" : positionnement , "questions" : questions }
+
+    return render(request, 'tool/show_positionnement.html', context)
+
+ 
+ 
+
+
+def print_answer_positionnement_to_pdf(request,id):
+    
+    positionnement = Positionnement.objects.get(pk= id)
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="fiche_reponse_'+str(positionnement.id)+'.pdf"'
+    p = canvas.Canvas(response)
+
+    img_file = 'https://sacado.xyz/static/img/sacado-icon-couleur.jpg'
+    x_start , y_start = 20 , 760
+    p.drawImage(img_file, x_start, y_start, width=50, preserveAspectRatio=True )
+    x_starting , y_starting = 540 , 760
+    p.drawImage(img_file, x_starting, y_starting, width=50, preserveAspectRatio=True )
+
+    p.setFont("Helvetica", 8)
+    p.drawString(24, 750, "SACADO"  )
+
+
+    p.setFont("Helvetica", 8)
+    p.drawString(24, 725-30*(i+2), "SACADO"  )
+
+
+
+
+    p.setFont("Helvetica", 16)
+    p.drawString(75, 740-30*(i+2), quizz.title +"                               "+quizz.title )    
+
+    p.setFont("Helvetica", 12)
+    p.drawString(75, 740-30*(i+3), "Classe  : ________________________           Classe  : _______________________ " )  
+    p.drawString(75, 740-30*(i+4), "Nom :  _________________________            Nom :  _________________________" )  
+
+
+
+    for j in range(1,quizz.questions.count()+1) :
+        p.setFont("Helvetica", 12)  
+        string0 = str(j)+". _____________________________          " + str(j)+". _____________________________" 
+        p.drawString(75, 740-30*(i+4)-30*j, string0)
+
+
+    p.line(75, 740-30*(i+5)-30*j ,550,740-30*(i+5)-30*j )
+
+ 
+    p.showPage()
+    p.save()
+    return response 
+
+ 
+   
+
 
 
 

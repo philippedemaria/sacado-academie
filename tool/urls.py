@@ -18,6 +18,15 @@ urlpatterns = [
     path('show_quizz/<int:id>', show_quizz, name='show_quizz'), 
  
     
+    path('list', list_quizzes, name='list_quizzes'),
+    path('create_quizz/new', create_quizz, name='create_quizz'),
+    path('update_quizz/<int:id>', update_quizz, name='update_quizz'),
+    path('delete_quizz/<int:id>', delete_quizz, name='delete_quizz'),
+    path('show_quizz/<int:id>', show_quizz, name='show_quizz'), 
+    path('print_answer_positionnement_to_pdf', print_answer_positionnement_to_pdf, name='print_answer_positionnement_to_pdf'),
+
+
+
     path('create_quizz_folder/<int:idf>', create_quizz_folder, name='create_quizz_folder'),
     path('create_quizz_parcours/<int:idp>', create_quizz_parcours, name='create_quizz_parcours'),
 
