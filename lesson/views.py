@@ -1,4 +1,34 @@
 
+Suggestion inséréeConversation ouverte. 1 message lu.
+
+Aller au contenu
+Utiliser Gmail avec un lecteur d'écran
+13 sur 14 103
+lesson/views.py
+Boîte de réception
+
+stephan ceroi
+Pièces jointes
+mer. 21 sept. 23:12 (il y a 8 heures)
+À moi
+
+Salut,
+
+ca a pris du temps mais j'ai corrigé un bug (un "hours=1" dans un time
+delta, ca rajoutait 1h partout...)
+normalement ca devrait aller cote prof pour reserver les lecons et creneaux.
+
+Il reste des trucs que je ne comprends pas, on en parle demain... enfin
+aujourd'hui plutot.
+
+Bise,
+
+
+S.
+
+
+Zone contenant les pièces jointes
+Ok, merci !Merci.Je suis en ligne.
 from django import http
 from sacado.settings import BBB_SERVEUR, BBB_SECRET, DEFAULT_FROM_EMAIL
 import json
@@ -23,7 +53,7 @@ from general_fonctions import time_zone_user
 
 
 import urllib.parse
-import requests # debuggage, à enlever en developpement
+#import requests # debuggage, à enlever en developpement
 from hashlib import sha1  # pour l'API de bbb
 from lesson.models import *
 from datetime import datetime, timedelta , time as temps
@@ -32,87 +62,70 @@ from general_fonctions import *
 from payment_fonctions import *
 
 def events_json(request):
-
     user =  request.user 
-    events = user.events.all()
-    slots = user.slots.all()
+    if user.time_zone :
+        tz=pytz.timezone(user.time_zone)
+    else :
+        tz=pytz.timezone("europe/paris")
 
     event_list = []
-    for event in events:
-        # On récupère les dates dans le bon fuseau horaire
-        event_date  = event.date
-        event_start = datetime.combine(event_date, event.start )
+    for event in user.events.all():
+        # On récupère les dates en UTC
+        event_start = datetime.combine(event.date, event.start )
         event_end   = event_start + timedelta(minutes=event.duration)
-
+        # creation de la liste des evenements avec les dates dans le fuseau du user
         event_list.append({
                     'id': event.id,
-                    'start': event_start.strftime('%Y-%m-%d %H:%M:%S'),
-                    'end': event_end.strftime('%Y-%m-%d %H:%M:%S'),
+                    'start': event_start.astimezone(tz).strftime('%Y-%m-%d %H:%M:%S'),
+                    'end': event_end.astimezone(tz).strftime('%Y-%m-%d %H:%M:%S'),
                     'title': event.title ,
                     'color' : event.color,
                     })
-
-    for slot in slots:
-        # On récupère les dates dans le bon fuseau horaire
+    for slot in user.slots.all():
+        # On récupère les dates en UTC
         slot_start = slot.datetime
         slot_end   = slot_start + timedelta(minutes=15)
-
         event_list.append({
                     'id': slot.id,
-                    'start': slot_start.strftime('%Y-%m-%d %H:%M:%S'),
-                    'end': slot_end.strftime('%Y-%m-%d %H:%M:%S'),
+                    'start': slot_start.astimezone(tz).strftime('%Y-%m-%d %H:%M:%S'),
+                    'end':   slot_end.astimezone(tz).strftime('%Y-%m-%d %H:%M:%S'),
                     'title': "",
-                    'color' : '#CCC',
+                    'color' : '#999',
                     })
 
-    if len(event_list) == -1: 
-        raise http.Http404
-    else:
-        return http.HttpResponse(json.dumps(event_list), content_type='application/json')
+    return http.HttpResponse(json.dumps(event_list), content_type='application/json')
  
 
 
 def events_my_teacher(request,idt):
-
-    today = time_zone_user(request.user)
-
-    slots = Slot.objects.filter(user_id=idt,is_occupied=0, datetime__gte=today)
+    if request.user.time_zone :
+        tz=pytz.timezone(request.user.time_zone)
+    else :
+        tz=pytz.timezone("europe/paris")
+    
+    #today = time_zone_user(request.user)
+    slots = Slot.objects.filter(user_id=idt,is_occupied=0, datetime__gte=datetime.now())
  
     event_list = []
     for slot in slots:
-        # On récupère les dates dans le bon fuseau horaire
+        # On récupère les dates en UTC
         slot_start = slot.datetime
         slot_end   = slot_start + timedelta(minutes=15)
         event_list.append({
                     'id': slot.id,
-                    'start': slot_start.strftime('%Y-%m-%d %H:%M:%S'),
-                    'end': slot_end.strftime('%Y-%m-%d %H:%M:%S'),
+                    'start': slot_start.astimezone(tz).strftime('%Y-%m-%d %H:%M:%S'),
+                    'end': slot_end.astimezone(tz).strftime('%Y-%m-%d %H:%M:%S'),
                     'title': "",
                     'color' : '#CCC',
                     })
 
-    if len(event_list) == -1: 
-        raise http.Http404
-    else:
-        return http.HttpResponse(json.dumps(event_list), content_type='application/json')
+    return http.HttpResponse(json.dumps(event_list), content_type='application/json')
  
 
 
 
 def calendar_show(request,id=0):
-
-    hours = []
-    hour, minute = 8,0
-    for i in range(12) :
-        for j in range(4) :
-            minute = 15*j
-            if minute == 0:
-                minute = "00"
-            time = str(hour)+":"+str(minute)
-            hours.append(time)
-        hour=hour+1
-
-
+    hours=[ "{:02d}:{:02d}".format(m//60,m%60) for m in range(8*60,20*60,15)]
     user      = request.user
     form      = EventForm(user, request.POST or None)
     form_slot = SlotForm(user, request.POST or None)
@@ -172,10 +185,10 @@ En cas de problème, ou pour la créer à la main, voici le lien :
                 .format(students[0].user.first_name.capitalize(), students[0].user.last_name.capitalize(),ListeUrls[0])
             else :
                 CorpsMessage+="Voici la liste des élèves inscrits à cette leçon, et leurs liens d'accès respectifs : \n"
-    			
+                
                 for i,student in enumerate(students):
                     CorpsMessage+=" - {} {} \n   {}\n".format(student.user.first_name.capitalize(),student.user.last_name.capitalize(),ListeUrls[i])
-            CorpsMessage+="Cordialement,\nL'équipe de Sacado Académie"	  
+            CorpsMessage+="Cordialement,\nL'équipe de Sacado Académie"    
             send_mail("Création d'une leçon",CorpsMessage,DEFAULT_FROM_EMAIL,[user.email])
             #---------------envoi du mail aux parents d'élèves et eventuellement aux eleves.
             for i,student in enumerate(students):
@@ -207,11 +220,11 @@ L'équipe Sacado Académie.""".format(user.civilite,user.last_name.capitalize(),
             y,m,d      = request.POST.get("datetime").split("-")
             datet_nutc = datetime(int(y),int(m),int(d)) + start_hour
             try :
-                datet      = make_aware(datet_nutc, timezone=pytz.timezone( request.user.timezone) )
+                datet      = make_aware(datet_nutc, timezone=pytz.timezone( request.user.time_zone) )
             except :
                 datet      = make_aware(datet_nutc, timezone=pytz.timezone("Europe/Paris") )
             for i in range(0,int(duration),15) :
-                dateti = datet + timedelta(hours=1,minutes=i)
+                dateti = datet + timedelta(minutes=i)
                 Slot.objects.create(user = request.user , datetime = dateti , is_occupied = 0 )
 
         else :  
@@ -252,7 +265,7 @@ def get_the_slot(request): # CREATION PAR LE PROF
             teacher = Teacher.objects.get(user_id=idt)
 
             som     = teacher.tarif * duration/60
-            
+            ########## ??????????????????? duration est en quarts d'heure non ?         
 
             for i in range(duration) :
                 event_date = datetime.combine(event.date, event.start ) + timedelta(minutes=i*15)
@@ -644,9 +657,8 @@ def bbb_urlJoin(event,role,fullName):
     return request
 
 def bbb_urlIsMeetingRunning(event):
-	meetingID=CalcMeetingID(event)
-	request="meetingID="+meetingID
-	hash=sha1(("isMeetingRunning"+request+BBB_SECRET).encode()).hexdigest()
-	request="https://"+BBB_SERVEUR+"/bigbluebutton/api/isMeetingRunning?"+request+"&checksum="+hash
-	return request
- 
+    meetingID=CalcMeetingID(event)
+    request="meetingID="+meetingID
+    hash=sha1(("isMeetingRunning"+request+BBB_SECRET).encode()).hexdigest()
+    request="https://"+BBB_SERVEUR+"/bigbluebutton/api/isMeetingRunning?"+request+"&checksum="+hash
+    return request
