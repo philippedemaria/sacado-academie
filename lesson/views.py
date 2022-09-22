@@ -54,7 +54,7 @@ def events_json(request):
         # On récupère les dates en UTC
         slot_start = slot.datetime
         slot_end   = slot_start + timedelta(minutes=15)
-        if event.is_occupied == 1 : color = "#946AE6"
+        if slot.is_occupied == 1 : color = "#946AE6"
         else :  color = "#e66a7e" 
         event_list.append({
                     'id': slot.id,
