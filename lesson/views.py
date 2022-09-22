@@ -351,7 +351,7 @@ Date    : {}
 Horaire : {}
 Durée   : {} min
 
-Confimer la leçon en cliquant sur ce lien : https://sacado-academie.fr/lesson/confirmation/{}
+Confimer la leçon en cliquant sur ce lien : https://sacado-academie.fr/lesson/validation/{}
 
 Ceci est un mail automatique, ne pas répondre. Merci.
 L'équipe Sacado Académie.""".format(str(request.user).capitalize() ,str(event.date.strftime("%A %d/%m")),str(event.start),str(event.duration), code ),DEFAULT_FROM_EMAIL,[event.user.email])
@@ -419,6 +419,8 @@ def validation(request,code): # toujours par le prof
 Bonjour,
 
 La leçon #{} du {} à {} d'une durée de {} minutes vient dêtre validée pour {} par {}.
+
+Vous devez confirmer cette demande en cliquant sur le lien : https://sacado-academie.fr/lesson/confirmation/{} 
 
 L'équipe Sacado Académie.""".format(connexionEleve.event.id, str(connexionEleve.event.date.strftime("%A %d/%m")),str(connexionEleve.event.start),str(connexionEleve.event.duration), str(connexionEleve.user).capitalize(), str(connexionEleve.event.user).capitalize()),DEFAULT_FROM_EMAIL,dest)        
 
