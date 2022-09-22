@@ -484,8 +484,8 @@
 {% with  rc.type_of_document as course %}
 <div  class="card_freeze is_document_sequence"  style="border: 3px solid {{ parcours.color}}">
 
-        <h1 style="color: #5d4391;margin-left:10px"> {{ course.forme }}</h1>
-        <h3 style="color: #5d4391;margin-left:10px;">      {% if course.title|length > 40 %}
+        <h1 class="is_document_sequence_color"> {{ course.forme }}</h1>
+        <h3 class="is_document_sequence_color">      {% if course.title|length > 40 %}
                       {{ course.title|truncatechars:"40" }}
                     {% else %}
                         {{ course.title}}
@@ -562,8 +562,8 @@
 {% with  rc.type_of_document as flashpack %}
 <div  class="card_freeze is_document_sequence"  style="border: 3px solid {{ parcours.color}}">
  
-        <h1 style="color: #5d4391;margin-left:10px">FLASHPACK</h1>
-        <h3 style="color: #5d4391;margin-left:10px">  
+        <h1 class="is_document_sequence_color">FLASHPACK</h1>
+        <h3 class="is_document_sequence_color">  
                     {% if flashpack.title|length > 30 %}
                     <span class="helper_tip" style="color:{{ flashpack.color|contrast_color }};font-size:18px;">{{ flashpack.title|truncatechars:"30" }}
                         <div class="helper_tip_text_right" style="font-size:18px;">{{ flashpack.title }}</div>
@@ -605,8 +605,8 @@
 {% with  rc.type_of_document as bibliotex %}
 <div  class="card_freeze is_document_sequence"  style="border: 3px solid {{ parcours.color}}">
 
-        <h1 style="color: #5d4391;margin-left:10px">BIBLIOTEX</h1>
-        <h3 style="color: #5d4391;margin-left:10px">     
+        <h1 class="is_document_sequence_color">BIBLIOTEX</h1>
+        <h3 style="is_document_sequence_color">     
             {% if bibliotex.title|length > 40 %}
               {{ bibliotex.title|truncatechars:"40" }}
             {% else %}
