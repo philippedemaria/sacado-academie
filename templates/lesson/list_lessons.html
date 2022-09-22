@@ -52,12 +52,12 @@
                           <td >
                              {{ connexion.event.title }} 
                               {% if connexion.is_validate == 0 %}
-                                  <i class="fa fa-clock text-danger" title="Validation Parent en attente"></i> 
-                                  {% if request.user.is_parent %}<a href="{% url 'validate_lesson' connexion.id  %}"><small>Valider</small></a> {% endif %}
+                                  <i class="fa fa-clock text-danger" title="confirmation Enseignant en attente"></i> 
                               {% elif connexion.is_validate == 1 %}
-                                <i class="fa fa-clock text-warning" title="Validation Enseignant en attente"></i>
+                                  <i class="fa fa-clock text-warning" title="Validation Parent en attente"></i>                                  
+                                  {% if request.user.is_parent %}<a href="{% url 'validation' connexion.code  %}"><small>Valider</small></a> {% endif %}
                               {% else %}
-                                <i class="fa fa-check text-success" title="Validation aceptée"></i>
+                                <i class="fa fa-check text-success" title="Validation acceptée"></i>
                               {% endif %}
                           </td>
                           <td >
