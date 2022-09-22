@@ -54,8 +54,8 @@ def events_json(request):
         # On récupère les dates en UTC
         slot_start = slot.datetime
         slot_end   = slot_start + timedelta(minutes=15)
-        if slot.is_occupied == 1 : color = "#946AE6"
-        else :  color = "#e66a7e" 
+        if slot.is_occupied == 1 : color = "#e66a7e"  
+        else :  color = "#946AE6"
         event_list.append({
                     'id': slot.id,
                     'start': slot_start.astimezone(tz).strftime('%Y-%m-%d %H:%M:%S'),
@@ -196,7 +196,7 @@ L'équipe Sacado Académie.""".format(user.civilite,user.last_name.capitalize(),
                 datet = make_aware(datet_nutc, timezone=pytz.timezone("Europe/Paris") )
             for i in range(0,int(duration),15) :
                 dateti = datet + timedelta(minutes=i)
-                Slot.objects.create(user = request.user , datetime = dateti , is_occupied = 0 )
+                Slot.objects.get_or_create(user = request.user , datetime = dateti , defaults = {'is_occupied' : 0 } )
 
         else :  
             print(form_s.errors)

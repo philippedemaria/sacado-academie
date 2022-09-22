@@ -109,8 +109,6 @@ class SlotForm(forms.ModelForm):
 		super(SlotForm, self).__init__(*args, **kwargs)
 
 
- 
-
 
 class CreditForm(forms.ModelForm):
 
