@@ -81,8 +81,8 @@ def events_my_teacher(request,idt):
         # On récupère les dates en UTC
         slot_start = slot.datetime
         slot_end   = slot_start + timedelta(minutes=15)
-        if slot.is_occupied == 1 : color = "#946AE6"
-        else :  color = "#e66a7e"
+        if slot.is_occupied == 1 : color = "#e66a7e"
+        else :  color = "#946AE6"
         event_list.append({
                     'id': slot.id,
                     'start': slot_start.astimezone(tz).strftime('%Y-%m-%d %H:%M:%S'),
