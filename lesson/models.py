@@ -40,6 +40,10 @@ class ConnexionEleve(models.Model):
     is_validate  = models.PositiveIntegerField(_('Validation?'), default=0 , editable=False) # 0 : demande élève , 1 : validation parent, 2 validation prof
     is_done      = models.BooleanField(_('Réalisée ?'), default=False ) 
 
+
+    def code(self):
+        return 1331371257987*self.pk-43526754 
+
 class Slot(models.Model): # disponibilité des profs
 
     user        = models.ForeignKey(User, null=True, blank = True, related_name='slots' , on_delete=models.CASCADE )    

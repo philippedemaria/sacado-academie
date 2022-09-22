@@ -14,7 +14,7 @@
     <div class="col-xs-12 col-md-12 col-lg-12" style="margin-top:0px">
         <div class="alert alert-white">
             {% for c in connexion_lessons %}
-                <li class="sanspuce">Le {{ c.event.date|date:"d m Y" }} à {{ c.event.start|date:"H:i" }} {{ c.user }} <a href="{% url 'validate_lesson' c.pk %}" class="btn btn-xs btn-mastering">Valider</a></li>
+                <li class="sanspuce">Le {{ c.event.date|date:"d m Y" }} à {{ c.event.start|date:"H:i" }} {{ c.user }} <a href="{% url 'validation' c.code %}" class="btn btn-xs btn-mastering">Valider</a></li>
             {% endfor %}
         </div>
     </div>
