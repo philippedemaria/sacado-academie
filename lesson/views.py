@@ -1,34 +1,3 @@
-
-Suggestion inséréeConversation ouverte. 1 message lu.
-
-Aller au contenu
-Utiliser Gmail avec un lecteur d'écran
-13 sur 14 103
-lesson/views.py
-Boîte de réception
-
-stephan ceroi
-Pièces jointes
-mer. 21 sept. 23:12 (il y a 8 heures)
-À moi
-
-Salut,
-
-ca a pris du temps mais j'ai corrigé un bug (un "hours=1" dans un time
-delta, ca rajoutait 1h partout...)
-normalement ca devrait aller cote prof pour reserver les lecons et creneaux.
-
-Il reste des trucs que je ne comprends pas, on en parle demain... enfin
-aujourd'hui plutot.
-
-Bise,
-
-
-S.
-
-
-Zone contenant les pièces jointes
-Ok, merci !Merci.Je suis en ligne.
 from django import http
 from sacado.settings import BBB_SERVEUR, BBB_SECRET, DEFAULT_FROM_EMAIL
 import json
