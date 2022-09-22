@@ -133,7 +133,6 @@ def create_event(request): # CREATION PAR LE PROF
             for student in students :
                 event.users.add(student.user)
                 conn=ConnexionEleve.objects.get(event=event,user=student.user)
-                # conn.urlJoinEleve=bbb_urlJoin(event,"VIEWER",student.user.first_name+" "+student.user.last_name)
                 ListeUrls.append(conn.urlJoinEleve)
                 conn.save()
                 if student.user.email!=None : 
@@ -250,12 +249,6 @@ def get_the_slot(request): # CREATION PAR LE PROF
             if user.user_type  == 0 :
 
                 event.users.add(user)
-
-                #conn=ConnexionEleve.objects.get(event=event,user=request.user.)
-                # conn.urlJoinEleve=bbb_urlJoin(event,"VIEWER",student.user.first_name+" "+student.user.last_name)
-                #ListeUrls.append(conn.urlJoinEleve)
-                #conn.save()
-
                 #-------------- envoi du mail au prof
                 CorpsMessage="""Bonjour, 
                 Vous venez de demander une nouvelle leçon intitulée : {}.
@@ -555,9 +548,9 @@ def buy_credit(request) :
 
 def validate_lesson(request,idc) :
 
-    user = request.user
+    user           = request.user
     connexionEleve = ConnexionEleve.objects.get(pk=idc)
-    student = connexionEleve.user.student
+    student        = connexionEleve.user.student
 
     if user.is_parent and student in user.parent.students.all()  :
 
@@ -571,6 +564,21 @@ def validate_lesson(request,idc) :
 
     elif user.is_teacher :
         ConnexionEleve.objects.filter(pk=idc).update(is_validate=2)
+
+        connexionEleve    = ConnexionEleve.objects.get(pk=idc)
+        event             = connexionEleve.event
+        event.urlCreate   = bbb_urlCreate(event)
+        event.urlJoinProf = bbb_urlJoin(event,"MODERATOR",user.last_name+" "+user.first_name)
+        event.save()
+
+        destinataires = [p.user.email for p in connexionEleve.user.student.students_parent.all()]
+        if connexionEleve.user.email:
+            destinataires.append(connexionEleve.user.email)
+        
+        send_mail("VALIDATION d'une leçon par l'enseignant","""
+        Bonjour,
+        La leçon #{} du {} à {} d'une durée de {} minutes vient dêtre confirmée par l'enseignant. 
+        L'équipe Sacado Académie.""".format(connexionEleve.event.id, str(connexionEleve.event.date.strftime("%A %d/%m")),str(connexionEleve.event.start),str(connexionEleve.event.duration)),DEFAULT_FROM_EMAIL,destinataires)        
         messages.success(request,"Validation prise en compte. La leçon est inscrite dans votre agenda des leçons.")
         return redirect("index" )
 
