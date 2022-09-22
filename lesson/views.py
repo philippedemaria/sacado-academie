@@ -559,8 +559,8 @@ def validate_lesson(request,idc) :
         #---------------envoi du mail au prof.
         send_mail("VALIDATION d'une leçon par visio","""
         Bonjour,
-        La leçon #{} du {} à {} d'une durée de {} minutes vient dêtre validée par le parent. Vérifier votre agenda SACADO.
-        L'équipe Sacado Académie.""".format(connexionEleve.event.id, str(connexionEleve.event.date.strftime("%A %d/%m")),str(connexionEleve.event.start),str(connexionEleve.event.duration)),DEFAULT_FROM_EMAIL,[connexionEleve.event.user.email])        
+        La leçon #{} du {} à {} d'une durée de {} minutes concernant {} vient dêtre validée par son parent : {} [{}] . Vérifier votre agenda SACADO.
+        L'équipe Sacado Académie.""".format(connexionEleve.event.id, str(connexionEleve.event.date.strftime("%A %d/%m")),str(connexionEleve.event.start),str(connexionEleve.event.duration),str(connexionEleve.user),str(user),user.email),DEFAULT_FROM_EMAIL,[connexionEleve.event.user.email])        
         return redirect( "detail_student_lesson"  , student.user.id )
 
     elif user.is_teacher :
