@@ -403,7 +403,7 @@ L'équipe Sacado Académie.""".format(str(request.user).capitalize(),
 
  
 
-def validate(request,code): # toujours par le prof
+def validation(request,code): # toujours par le prof
 
     connexionEleve_id = decryptage(code)
     connexionEleve    = ConnexionEleve.objects.get(pk=connexionEleve_id)
