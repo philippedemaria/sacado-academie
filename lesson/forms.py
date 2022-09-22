@@ -35,23 +35,23 @@ class EventForm(forms.ModelForm):
 		duration = cleaned_data.get('duration')  # end de self
 		# verification : pas de conflit avec une autre visio du prof
 
-        this_event_start = datetime.combine(date, start )
-        this_event_end   = this_event_start + timedelta(minutes=duration)
+		this_event_start = datetime.combine(date, start )
+		this_event_end   = this_event_start + timedelta(minutes=duration)
 
-        events = Event.objects.filter(user=user, date=date ,start__lte=start )
-        for e in events :
-            e_start  = datetime.combine(date, e.start ) # datetime de e
-            e_end    = e_start + timedelta(minutes=e.duration)
-            if e_end >= this_event_start :
+		events = Event.objects.filter(user=user, date=date ,start__lte=start )
+		for e in events :
+			e_start  = datetime.combine(date, e.start ) # datetime de e
+			e_end    = e_start + timedelta(minutes=e.duration)
+			if e_end >= this_event_start :
 				raise ValidationError("Cette visio est en conflit avec la visio "+str(e), code="conflitVisios")
 
-        # verification : pas de conflit avec une autre visio du prof
-        event_s = Event.objects.filter(user=user, date=date , start__gte=start)
-        for e in event_s :
-            e_start     = datetime.combine(date, e.start )
-            if this_event_end  >= e_start :
+		# verification : pas de conflit avec une autre visio du prof
+		event_s = Event.objects.filter(user=user, date=date , start__gte=start)
+		for e in event_s :
+			e_start     = datetime.combine(date, e.start )
+			if this_event_end  >= e_start :
 				raise ValidationError("Cette visio est en conflit avec la visio "+str(e), code="conflitVisios")
- 
+
 
 
 class GetEventForm(forms.ModelForm):
