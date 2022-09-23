@@ -344,7 +344,7 @@ class Positionnement(ModelWithCode):
     Modèle représentant un associé.
     """
     title         = models.CharField( max_length=255, verbose_name="Titre du test de positionnement") 
-    teacher       = models.ForeignKey(Teacher, related_name="teacher_quizz", blank=True, on_delete=models.CASCADE, editable=False ) 
+    teacher       = models.ForeignKey(Teacher, related_name="positionnements", blank=True, on_delete=models.CASCADE, editable=False ) 
     date_modified = models.DateTimeField(auto_now=True)
     
     level     = models.ForeignKey(Level, related_name="positionnements", blank=True, null = True, on_delete=models.CASCADE)
