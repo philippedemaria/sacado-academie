@@ -601,7 +601,8 @@ def academy_list_parents(request):
 def academy_delete_parent(request,user_id):
 
     parent = Parent.objects.get(user_id = user_id) 
-    parent.students.delete()
+    for s in parent.students.all():
+        s.delete()
     parent.delete()
     return redirect("academy_list_parents")
 
