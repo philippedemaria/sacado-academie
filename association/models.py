@@ -42,7 +42,6 @@ class Activeyear(models.Model):
     balance   = models.FileField(upload_to=compta_directory_path, verbose_name="Balance",blank=True, default="" )
     book      = models.FileField(upload_to=compta_directory_path, verbose_name="Grand livre",blank=True, default="" )
     bilan     = models.FileField(upload_to=compta_directory_path, verbose_name="Bilan",blank=True, default="" )
-    istest = models.BooleanField(default=0,  verbose_name="Année active")
 
     def __str__(self):
         nexty = self.year + 1 
