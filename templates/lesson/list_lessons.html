@@ -61,7 +61,7 @@
                               {% endif %}
                           </td>
                           <td >
-                             {{ connexion.urlJoinEleve }} 
+                              <a href="{{ connexion.urlJoinEleve }}">Cliquer ici 2 min avant la visio</a> 
                           </td>
                           <td >
                                {% for u in connexion.event.users.all  %}   
@@ -69,7 +69,7 @@
                               {% endfor %} 
                           </td>
                           <td>
-                             <a href="{{ connexion.urlJoinEleve }}">Cliquer ici 2 min avant la visio</a>  
+                             {{ connexion.event.user }}  
                           </td>
                           <td   class="right">
                              {{ connexion.event.comment|safe }}
