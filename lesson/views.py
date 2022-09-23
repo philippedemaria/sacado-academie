@@ -448,14 +448,14 @@ def confirmation(request,code) :
     send_mail("CONFIRMATION d'une leçon par l'enseignant","""
 Bonjour,
 
-La leçon #{} du {} à {} d'une durée de {} minutes vient dêtre confirmée par l'enseignant. 
+La leçon du {} à {} d'une durée de {} minutes vient dêtre confirmée par l'enseignant. 
 
 L'équipe Sacado Académie.""".format(connexionEleve.event.id, str(connexionEleve.event.date.strftime("%A %d/%m")),str(connexionEleve.event.start),str(connexionEleve.event.duration)),DEFAULT_FROM_EMAIL,destinataires)        
 
     #---------------envoi du mail au prof.
     send_mail("CONFIRMATION d'une leçon par visio","""Bonjour,
 
-La leçon #{} du {} à {} d'une durée de {} minutes concernant {} vient d'être confirmée par son parent : {}. 
+La leçon du {} à {} d'une durée de {} minutes concernant {} vient d'être confirmée par son parent : {}. 
 
 Bonne leçon.
 
