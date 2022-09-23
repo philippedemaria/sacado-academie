@@ -437,11 +437,11 @@ def confirmation(request,code) :
 
     event             = connexionEleve.event
     event.urlCreate   = bbb_urlCreate(event)
-    event.urlJoinProf = bbb_urlJoin(event,"MODERATOR",ConnexionEleve.event.user.last_name+" "+ConnexionEleve.event.user.first_name)
+    event.urlJoinProf = bbb_urlJoin(event,"MODERATOR", event.user.last_name+" "+ event.user.first_name)
     event.save()
    
     student = connexionEleve.user.student
-    destinataires = [p.user.email for p in connexionEleve.user.student.students_parent.all() if p.user.email ]
+    destinataires = [p.user.email for p in student.students_parent.all() if p.user.email ]
     if connexionEleve.user.email:
         destinataires.append(connexionEleve.user.email)
     #---------------envoi du mail au parent. 
