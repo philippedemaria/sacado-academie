@@ -445,7 +445,7 @@ def confirmation(request,code) :
     if connexionEleve.user.email:
         destinataires.append(connexionEleve.user.email)
     #---------------envoi du mail au parent. 
-    send_mail("VALIDATION d'une leçon par l'enseignant","""
+    send_mail("CONFIRMATION d'une leçon par l'enseignant","""
 Bonjour,
 
 La leçon #{} du {} à {} d'une durée de {} minutes vient dêtre confirmée par l'enseignant. 
@@ -453,13 +453,13 @@ La leçon #{} du {} à {} d'une durée de {} minutes vient dêtre confirmée par
 L'équipe Sacado Académie.""".format(connexionEleve.event.id, str(connexionEleve.event.date.strftime("%A %d/%m")),str(connexionEleve.event.start),str(connexionEleve.event.duration)),DEFAULT_FROM_EMAIL,destinataires)        
 
     #---------------envoi du mail au prof.
-    send_mail("VALIDATION d'une leçon par visio","""Bonjour,
+    send_mail("CONFIRMATION d'une leçon par visio","""Bonjour,
 
-La leçon #{} du {} à {} d'une durée de {} minutes concernant {} vient dêtre validée par son parent : {} [{}]. 
+La leçon #{} du {} à {} d'une durée de {} minutes concernant {} vient dêtre validée par son parent : {}. 
 
 Bonne leçon.
 
-L'équipe Sacado Académie.""".format(connexionEleve.event.id, str(connexionEleve.event.date.strftime("%A %d/%m")),str(connexionEleve.event.start),str(connexionEleve.event.duration),str(connexionEleve.user).capitalize(),str(user).capitalize(),user.email,code),DEFAULT_FROM_EMAIL,[connexionEleve.event.user.email])        
+L'équipe Sacado Académie.""".format(connexionEleve.event.id, str(connexionEleve.event.date.strftime("%A %d/%m")),str(connexionEleve.event.start),str(connexionEleve.event.duration),str(connexionEleve.user).capitalize(),destinataires[0].capitalize()),DEFAULT_FROM_EMAIL,[event.user.email])        
     messages.success(request,"Validation prise en compte. La leçon est inscrite dans votre agenda des leçons.") 
 
     if request.user.is_authenticated and request.user.user_type < 2:
