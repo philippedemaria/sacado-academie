@@ -455,7 +455,7 @@ L'équipe Sacado Académie.""".format(connexionEleve.event.id, str(connexionElev
     #---------------envoi du mail au prof.
     send_mail("CONFIRMATION d'une leçon par visio","""Bonjour,
 
-La leçon #{} du {} à {} d'une durée de {} minutes concernant {} vient dêtre validée par son parent : {}. 
+La leçon #{} du {} à {} d'une durée de {} minutes concernant {} vient dêtre confirmée par son parent : {}. 
 
 Bonne leçon.
 
