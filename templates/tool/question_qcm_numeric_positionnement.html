@@ -1,0 +1,130 @@
+{% extends 'tool/form_question_positionnement.html' %} 
+
+{% load static %}
+{% load widget_tweaks %}
+{% load item_tags %}
+
+
+
+{% block title_type_of_question %} 
+    {{ title_type_of_question }} 
+{% endblock %} 
+
+{% block require %}
+    {% if question %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common5.js' %}"></script>
+    <script>
+        require(['script/ajax-quizz-update']);
+    </script> 
+    {% else %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common4.js' %}"></script>
+    <script>
+        require(['script/ajax-quizz-complement']);
+    </script> 
+    {% endif %}
+
+    <script>
+        require(['script/ajax-quizz_numeric']);
+        require(['script/ajax-finder']);
+    </script> 
+{% endblock %}
+ 
+
+
+
+
+
+
+
+{% block type_of_choices %} 
+                
+<script id="rowToClone" type="text/template">
+    <div id="duplicate"> 
+        <div class="row quizz_line_answer quizz_box_answer quizz_box_answer_left" >  
+            <div class="col-sm-11">
+                <div class="row ">
+                    <div class="col-sm-2 col-md-1 get_image"  align="center" id="imager"> 
+                        <i class="fa fa-file-image-o answer_margin10 fa-2x" id="file-image"></i>
+                        {{ form_ans.empty_form.imageanswer|add_class:"choose_imageanswer" }}
+                        <img src="{% if form.imageanswer.url %}{{ form.imageanswer.url }}{% endif %}" height="90px" 
+                             class="choose_imageanswer preview" id="preview"> 
+                    </div>
+                    <div class="col-sm-9 col-md-10" > 
+                        {{ form_ans.empty_form.answer|attr:"placeholder:Ecrire votre réponse ici"|add_class:"quizz_font30 quizz_answer"  }}
+                    </div>
+                    <div class="col-sm-1 col-md-1" align="center"><label>Réponse correcte ?</label><br/> 
+                        {{ form_ans.empty_form.is_correct|add_class:"checker" }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12" >
+                        <a href="javascript:void()" class="automatic_insertion"   id="feed_back"><i class="bi bi-arrow-return-right"></i> Afficher un feedback si cette réponse est choisie. </a>
+                        <div id="div_feed_back{{ forloop.counter0 }}" class="checkbox_no_display">
+                        {{ form_ans.empty_form.retroaction|add_class:"form-control"|attr:"rows:3"|attr:"placeholder:Ecrire le feedback" }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-1">
+                <span class="input-group-addon input-group-addon-right remove_more"><i class="bi bi-trash"></i></span>
+            </div>
+        </div>
+        <div class="row" id="cloningZone">                            
+
+        </div>
+    </div>
+</script> 
+ 
+ <h3 class="thin margin40">Réponses proposées </h3>
+    {{ form_ans.management_form }}
+    <div id="formsetZone">
+    <input id="qtype" value="{{ qtype }}" name="qtype" type="hidden" />
+    {% for form in form_ans %} 
+        {{ form.id }}
+        <div class="row quizz_line_answer quizz_box_answer quizz_box_answer_left" >  
+            <div class="col-sm-12">
+                <div class="row ">
+                    <div class="col-sm-2 col-md-1 get_image"  align="center" id="imager{{ forloop.counter0 }}"> 
+                        <i class="fa fa-file-image-o answer_margin10 fa-2x" id="file-image{{ forloop.counter0 }}"></i>
+                        {{ form.imageanswer|add_class:"choose_imageanswer" }}
+                        <img src="{% if form.imageanswer.url %}{{ form.imageanswer.url }}{% endif %}" height="90px" 
+                             class="choose_imageanswer preview" id="preview{{ forloop.counter0 }}"> 
+                    </div>
+                    <div class="col-sm-9 col-md-10" > 
+                        {{ form.answer|attr:"placeholder:Ecrire votre réponse ici"|add_class:"quizz_font30 quizz_answer"  }}
+                    </div>
+                    <div class="col-sm-1 col-md-1" align="center"><label>Réponse correcte ?</label><br/> 
+                        {{ form.is_correct|add_class:"checker" }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12" >
+                        <a href="javascript:void()" class="automatic_insertion"   id="feed_back{{ forloop.counter0 }}"><i class="bi bi-arrow-return-right"></i> Afficher un feedback si cette réponse est choisie. </a>
+                        <div id="div_feed_back{{ forloop.counter0 }}" {% if not form.retroaction.value   %} class="checkbox_no_display"{% endif %}>
+                        {{ form.retroaction|add_class:"form-control"|attr:"rows:3"|attr:"placeholder:Ecrire le feedback" }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+
+{% endblock %}
+
+
+
+
+{% block add_more %} 
+    <div class="row">
+        <div class="col-sm-12 col-md-12" >
+            <a href="javascript:void();"  class="add_more edit" ><i class="bi bi-plus-circle"></i> Ajouter une réponse </a><br/><br/>
+        </div>                            
+    </div>
+{% endblock %}                                                         
+
+
+
+{% block details %} 
+ 
+{% endblock %} 

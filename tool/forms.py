@@ -1,6 +1,6 @@
 import datetime
 from django import forms
-from .models import Tool , Question  , Choice  , Quizz , Diaporama , Slide , Qrandom ,Variable , Answerplayer, Videocopy
+from .models import Tool , Question  , Choice  , Quizz , Diaporama , Slide , Qrandom ,Variable , Answerplayer, Videocopy, Positionnement
 from account.models import Student , Teacher
 from socle.models import Knowledge, Skill , Level
 from group.models import Group
@@ -74,6 +74,32 @@ class QuestionForm(forms.ModelForm):
 
 
 
+class QuestionPositionnementForm(forms.ModelForm):
+
+	class Meta:
+		model = Question
+		fields = '__all__'
+		widgets = {
+            'is_correct' : CheckboxInput(),  
+        }
+ 
+	def __init__(self, *args, **kwargs):
+		positionement = kwargs.pop('positionnement')
+		super(QuestionPositionnementForm, self).__init__(*args, **kwargs)
+
+		level = positionement.level
+		subject = positionement.subject
+		knowledges = []
+			
+		if subject and level :
+			knowledges = Knowledge.objects.filter(theme__subject = subject ,level = level)
+			self.fields['knowledge'] = forms.ModelChoiceField(queryset=knowledges, required=False)
+
+
+
+
+
+
 class QuizzForm(forms.ModelForm):
  
 	class Meta:
@@ -113,6 +139,18 @@ class QuizzForm(forms.ModelForm):
 		content = self.cleaned_data['imagefile']
 		validation_file(content) 
 
+
+
+
+
+class PositionnementForm(forms.ModelForm):
+ 
+	class Meta:
+		model = Positionnement
+		fields = '__all__'
+	def __init__(self, *args, **kwargs):
+		super(PositionnementForm, self).__init__(*args, **kwargs)
+		self.fields['level']   = forms.ModelChoiceField( queryset=Level.objects.exclude(pk=13).order_by("ranking") , required=False)
 
 
 

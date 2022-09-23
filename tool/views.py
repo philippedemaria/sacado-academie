@@ -6,8 +6,8 @@ from django.template.loader import render_to_string
 from django.contrib import messages
 from django.core.mail import send_mail
  
-from tool.models import Tool , Question  , Choice  , Quizz , Diaporama  , Slide ,Qrandom ,Variable , VariableImage , Answerplayer , Display_question ,  Videocopy #, Generate_quizz , Generate_qr
-from tool.forms import ToolForm ,  QuestionForm ,  ChoiceForm , QuizzForm,  DiaporamaForm , SlideForm, QrandomForm, VariableForm , AnswerplayerForm,  VideocopyForm
+from tool.models import Tool , Question  , Choice  , Quizz , Diaporama  , Slide ,Qrandom ,Variable , VariableImage , Answerplayer , Display_question ,  Videocopy , Positionnement #, Generate_quizz , Generate_qr
+from tool.forms import ToolForm ,  QuestionForm ,  ChoiceForm , QuizzForm,  DiaporamaForm , SlideForm, QrandomForm, VariableForm , AnswerplayerForm,  VideocopyForm , PositionnementForm , QuestionPositionnementForm
 from group.models import Group 
 from socle.models import Level, Waiting , Theme , Knowledge
 from qcm.models import  Parcours, Exercise , Folder , Relationship
@@ -1134,11 +1134,11 @@ def create_quizz_code(request,id,idg):
 
 
 @login_required(login_url= 'index')
-def list_positionnement(request):
+def list_positionnements(request):
 
     teacher = request.user.teacher 
     positionnements = Positionnement.objects.order_by("level__ranking")
-    return render(request, 'tool/list_positionnement.html', { 'positionnements': positionnements ,   })
+    return render(request, 'tool/list_positionnements.html', { 'positionnements': positionnements ,   })
 
 
 @login_required(login_url= 'index')
@@ -1154,7 +1154,7 @@ def create_positionnement(request):
         nf.save()
         form.save_m2m()
 
-        return redirect('create_question' , nf.pk , 0 )
+        return redirect('create_question_positionnement' , nf.pk , 0 )
     else:
         print(form.errors)
 
@@ -1164,7 +1164,7 @@ def create_positionnement(request):
 
  
 @login_required(login_url= 'index')
-def update_quizz(request,id):    
+def update_positionnement(request,id):    
     
     teacher = request.user.teacher 
     positionnement = Positionnement.objects.get(pk= id)
@@ -1176,22 +1176,22 @@ def update_quizz(request,id):
         nf.save()
         form.save_m2m()
 
-        return redirect('list_positionnement' )
+        return redirect('list_positionnements' )
     else:
         print(form.errors)
 
-    context = {'form': form, 'quizz': quizz, 'teacher': teacher, }
+    context = {'form': form, 'positionnement': positionnement, 'teacher': teacher, }
 
     return render(request, 'tool/form_positionnement.html', context)
 
 
 @login_required(login_url= 'index')
-def delete_quizz(request,id):
+def delete_positionnement(request,id):
 
     request.session["tdb"] = False # permet l'activation du surlignage de l'icone dans le menu gauche 
     positionnement = Positionnement.objects.get(pk= id)
-    if quizz.teacher == request.user.teacher :
-        quizz.delete() 
+    if positionnement.teacher == request.user.teacher :
+        positionnement.delete() 
 
     return redirect('list_positionnement')
 
@@ -1258,7 +1258,284 @@ def print_answer_positionnement_to_pdf(request,id):
 
  
    
+ 
+def create_question_positionnement(request,idp,qtype):
+    
+    request.session["tdb"] = False # permet l'activation du surlignage de l'icone dans le menu gauche 
+    positionnement = Positionnement.objects.get(pk = idp)
+    questions = positionnement.questions.order_by("ranking")
 
+    form = QuestionPositionnementForm(request.POST or None, request.FILES or None, positionnement = positionnement)
+    all_questions = Question.objects.filter(is_publish=1)
+
+    formSet = inlineformset_factory( Question , Choice , fields=('answer','imageanswer','is_correct','retroaction') , extra=2)
+    form_ans = formSet(request.POST or None,  request.FILES or None)
+    if request.method == "POST"  :
+        if form.is_valid():
+            nf         = form.save(commit=False) 
+            nf.teacher = request.user.teacher
+            nf.qtype   = qtype
+            nf.save()
+            form.save_m2m() 
+            positionnement.questions.add(nf)
+            if qtype > 2 :
+                form_ans = formSet(request.POST or None,  request.FILES or None, instance = nf)
+                for form_answer in form_ans :
+                    if form_answer.is_valid():
+                        form_answer.save()
+
+            return redirect('create_question_positionnement' , idp,0)
+
+ 
+    bgcolors = ["bgcolorRed", "bgcolorBlue","bgcolorOrange", "bgcolorGreen"] 
+    context = { 'positionnement': positionnement, 'questions': questions,  'form' : form, 'qtype' : qtype , 'all_questions' : all_questions , "positionnement_id" : positionnement.id , "question" : None     }
+
+ 
+ 
+    #Choix des questions
+    if qtype == 0 :
+        context.update( {  'title_type_of_question' : "Choisir un type de question"   })
+        template = 'tool/choice_type_of_question_positionnement.html'
+
+    #Vrai/Faux
+    elif qtype == 1 :
+        context.update( {   'title_type_of_question' : "Vrai / faux"   })
+        template = 'tool/question_vf_positionnement.html'
+
+    #Réponse rédigée
+    elif qtype == 2 :
+        context.update( {    'title_type_of_question' : "Réponse rédigée"   })
+        template = 'tool/form_question_positionnement.html'
+
+    #QCM ou QCS
+    elif qtype == 3 or qtype == 4  :
+ 
+        context.update( {  'bgcolors' : bgcolors  ,  'title_type_of_question' : "QCM" , 'form_ans' : form_ans   })
+        template = 'tool/question_qcm_numeric_positionnement.html'
+
+    return render(request, template , context)
+
+
+
+
+def update_question_positionnement(request,id,idp,qtype):
+    
+    request.session["tdb"] = False # permet l'activation du surlignage de l'icone dans le menu gauche 
+    positionnement = Positionnement.objects.get(pk = idp)
+    questions = positionnement.questions.order_by("ranking")
+
+    question = Question.objects.get(pk = id)
+    form     = QuestionPositionnementForm(request.POST or None, request.FILES or None, instance = question, positionnement = positionnement)
+ 
+
+    if qtype > 2 :
+        formSet = inlineformset_factory( Question , Choice , fields=('answer','imageanswer','is_correct','retroaction') , extra=0)
+        form_ans = formSet(request.POST or None,  request.FILES or None, instance = question)
+
+    if request.method == "POST"  :  
+        if form.is_valid():
+            nf         = form.save(commit=False) 
+            nf.teacher = request.user.teacher
+            nf.qtype   = qtype
+            nf.save()
+            form.save_m2m() 
+            if qtype > 2 :
+                for form_answer in form_ans :
+                    if form_answer.is_valid():
+                        form_answer.save()
+
+            return redirect('create_question' , idq,0)
+
+ 
+    bgcolors = ["bgcolorRed","bgcolorBlue","bgcolorOrange","bgcolorGreen"] 
+    context = { 'positionnement': positionnement, 'questions': questions,  'form' : form, 'qtype' : qtype , "question" : question   }
+
+    #Choix des questions
+    if qtype == 1 :
+        context.update( {   'title_type_of_question' : "Vrai / faux"   })
+        template = 'tool/question_vf.html'
+
+    #Réponse rédigée
+    elif qtype == 2 :
+        context.update( {    'title_type_of_question' : "Réponse rédigée"   })
+        template = 'tool/form_question.html'
+
+    #QCM ou QCS
+    elif qtype == 3 or qtype == 4  :
+ 
+        context.update( {  'bgcolors' : bgcolors  ,  'title_type_of_question' : "QCM" , 'form_ans' : form_ans   })
+        template = 'tool/question_qcm_numeric.html'
+
+    return render(request, template , context)
+
+
+
+
+ 
+def delete_question_positionnement(request,id,idp):
+    
+    request.session["tdb"] = False # permet l'activation du surlignage de l'icone dans le menu gauche 
+    question = Question.objects.get(pk= id)
+    if question.positionnement.count() == 0 :
+        question.delete()
+    else :
+        messages.error(request, "  !!!  Cette question est utiolisée dans un quizz  !!! Suppression interdite.")
+    return redirect ('create_question', idp, 0)
+
+ 
+
+
+def goto_positionnement_numeric(request,id):
+    """ participation à un quizz sur poste"""
+
+ 
+    request.session["tdb"] = False # permet l'activation du surlignage de l'icone dans le menu gauche 
+    positionnement = Positionnement.objects.get(pk= id)
+
+    #Génération des questions
+    question_ids = list(positionnement.questions.values_list("id",flat=True).order_by("ranking"))
+    positionnement_id     = request.session.get("positionnement_id",None) 
+    if not positionnement_id :
+        positionnement_id                    = positionnement.id
+        request.session["positionnement_id"] = positionnement_id
+
+        if positionnement.is_ranking :
+            random.shuffle(question_ids)
+        
+        request.session["question_ids"] = question_ids
+    else :
+        positionnement_id = request.session.get("positionnement_id")
+        question_ids      = request.session.get("question_ids")
+
+    #Génération des réponses 
+    is_shuffle = False
+    if positionnement.is_shuffle :
+        is_shuffle = True
+
+    #Retour arrière
+    is_back = False
+    if positionnement.is_back :
+        is_back = True
+
+
+    #####################################################################################
+    ######## Navigation dans le quizz
+    #####################################################################################
+    #####################################################################################
+    quizz_nav      = int(request.POST.get("quizz_nav",-1))
+    quizz_nav_prev = int(request.POST.get("quizz_nav_prev",0))
+    end_of_quizz   = False
+
+    solutions  = request.POST.getlist("solution", None)
+ 
+    stop_time  = time.time()
+    if solutions and len(solutions) > 0 :
+        q_id    = request.POST.get("question_id")
+        start_time_tab = request.POST.get("start_time").split(",")
+        start_time =  int(start_time_tab[0])
+        timer =  stop_time - start_time
+        today = time_zone_user(positionnement.teacher.user)
+
+    if quizz_nav == len(question_ids) :
+        end_of_quizz = True
+        question = None
+ 
+
+    elif quizz_nav > -1 : 
+        question_id = question_ids[quizz_nav]
+        question = Question.objects.get(pk = question_id)
+
+    else :
+        question = None
+
+
+    quizz_nav += 1
+    quizz_nav_prev = quizz_nav - 1
+
+
+    context = {  "positionnement" : positionnement , "question" : question ,  "quizz_nav" : quizz_nav, "quizz_nav_prev" : quizz_nav_prev ,"end_of_quizz" : end_of_quizz ,"stop_time" : stop_time  }
+
+    return render(request, 'tool/goto_positionnement_numeric.html', context)
+
+
+
+def goto_positionnement_student(request,id):
+    """ participation à un quizz sur poste"""
+    student = request.user.student
+    request.session["tdb"] = False # permet l'activation du surlignage de l'icone dans le menu gauche 
+    quizz = Quizz.objects.get(pk= id)
+
+    #Génération des questions
+    question_ids = list(quizz.questions.values_list("id",flat=True).order_by("ranking"))
+    quizz_id     = request.session.get("quizz_id",None) 
+
+    if not quizz_id :
+        quizz_id                    = quizz.id
+        request.session["quizz_id"] = quizz_id
+
+        if quizz.is_ranking :
+            random.shuffle(question_ids)
+        
+        request.session["question_ids"] = question_ids
+    else :
+        quizz_id     = request.session.get("quizz_id")
+        question_ids = request.session.get("question_ids")
+
+    #Génération des réponses 
+    is_shuffle = False
+    if quizz.is_shuffle :
+        is_shuffle = True
+
+    #Retour arrière
+    is_back = False
+    if quizz.is_back :
+        is_back = True
+
+
+    #####################################################################################
+    ######## Navigation dans le quizz
+    #####################################################################################
+    #####################################################################################
+    quizz_nav      = int(request.POST.get("quizz_nav",-1))
+    quizz_nav_prev = int(request.POST.get("quizz_nav_prev",0))
+    end_of_quizz   = False
+
+    solutions  = request.POST.getlist("solution", None)
+ 
+    stop_time  = time.time()
+    if solutions and len(solutions) > 0 :
+        q_id    = request.POST.get("question_id")
+        start_time_tab = request.POST.get("start_time").split(",")
+        start_time =  int(start_time_tab[0])
+        timer =  stop_time - start_time
+        today = time_zone_user(quizz.teacher.user)
+
+        if quizz.stop and quizz.start :
+            if quizz.stop > today and quizz.start < today :
+                store_quizz_solution(quizz_id,student,q_id, solutions,timer)
+        elif quizz.stop :
+            if quizz.stop > today  :
+                store_quizz_solution(quizz_id,student,q_id, solutions,timer)
+        else :
+            store_quizz_solution(quizz_id,student,q_id, solutions,timer)
+
+
+    if quizz_nav == len(question_ids) :
+        end_of_quizz = True
+        question = None
+
+    elif quizz_nav > -1 :
+        question_id = question_ids[quizz_nav]
+        question = Question.objects.get(pk = question_id)
+    else :
+        question = None
+
+    quizz_nav += 1
+    quizz_nav_prev = quizz_nav - 1
+
+    context = {  "positionnement" : positionnement , "question" : question , "quizz_nav" : quizz_nav, "quizz_nav_prev" : quizz_nav_prev ,"end_of_quizz" : end_of_quizz ,"stop_time" : stop_time , 'student' : student  }
+
+    return render(request, 'tool/pass_positionnement_student.html', context)
 
 
 
@@ -2219,7 +2496,23 @@ def clone_question(request,id,idq,qtype):
     return redirect("update_question", id = question.id , idq=quizz.id , qtype=qtype)
 
 
+def clone_question_positionnement(request,id,idp,qtype):
+    
+    request.session["tdb"] = False # permet l'activation du surlignage de l'icone dans le menu gauche 
+    positionnement = Positionnement.objects.get(pk = idq)
+    question = Question.objects.get(pk = id)
+    answer_choices = question.choices.all()
+    question.pk = None
+    question.save()
+    positionnement.questions.add(question)
 
+    if qtype > 2 :
+        for a in answer_choices :
+            a.pk = None
+            a.question = question
+            a.save()
+ 
+    return redirect("update_question_positionnement", id = question.id , idp=positionnement.id , qtype=qtype)
 
 #######################################################################################################################
 ############################ Ajax  ####################################################################################

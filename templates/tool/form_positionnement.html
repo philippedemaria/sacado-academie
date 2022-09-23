@@ -1,0 +1,151 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% load item_tags %}
+
+
+
+{% block require %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common3.js' %}"></script>
+    <script>
+        require(['script/ajax-quizz-create']);
+    </script>  
+    {% if not quizz %}
+        <script>
+            require(['script/ajax-quizz-complement']);
+        </script> 
+    {% elif  quizz.is_numeric %}
+        <script>
+            require(['script/ajax-quizz-complement_is_numeric']);
+        </script>
+    {% else %}
+        <script>
+            require(['script/ajax-quizz-complement']);
+        </script> 
+    {% endif %}
+{% endblock %}
+
+ 
+
+{% block page_title %}
+    <span class="sacado_color_text"><i class="bi bi-aspect-ratio"></i></span> Test de positionnement
+    {% include 'qcm/breadcrumb.html' %}
+
+{% endblock %}
+
+
+{% block page_menu_right %}
+ 
+
+            <a href="{% url 'list_positionnements' %}" class="btn btn-new pull-right">Liste des tests de positionnement</a>  
+ 
+{% endblock %}
+
+ 
+
+{% block css_files %}
+{% endblock %}
+
+
+{% block body %}
+<section class="content_main"> 
+    <form action="#" method="POST"  enctype='multipart/form-data'>
+    	{% csrf_token %}
+        <div class="row">
+            <div class="col-sm-12 col-md-7">
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12">
+
+                                <div class="form-group">
+        				            {{ form.title.label_tag }}
+        				            {{ form.title|add_class:"form-control" }}
+                                    {{ form.title.errors }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Pour une entrée en  </label>
+                            {{ form.level|add_class:"form-control select2" }}
+                            {{ form.level.errors }}
+                        </div>
+                        <div class="form-group">
+				            <label>Enseignement</label>
+				            {{ form.subject|add_class:"form-control select2" }}
+                            {{ form.subject.errors }}
+                        </div>
+
+
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+				            <div class="form-group"> 
+				                {{ form.vignette.label_tag }} <label><small>(Facultatif, l*h :300px*200px - 50Ko )</small></label>
+				                {{ form.vignette|add_class:"btn btn-default" }}
+				            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-5 setup_ggb">
+                <h4 class="thin"><i class="fa fa-cog"></i> Configuration </h4><hr/>
+                     <table class="table borderless">
+                            <tr>
+                                <td>{{ form.is_publish.label_tag }} <span class="helper_tip"> <i class="fa fa-question-circle"></i>
+                                        <div class="helper_tip_text" >Visible par les élèves.</div>
+                                    </span></td>
+                                <td>{{ form.is_publish |attr:"data-toggle:toggle" |attr:"data-onstyle:success"|attr:"data-offstyle:danger"|attr:"data-on:Oui"|attr:"data-off:Non"}}</td>
+                                <td>{{ form.is_publish.errors }}</td>
+                            </tr>
+			                <tr>
+			                    <td class="no_border">{{ form.is_shuffle.label_tag }}  <span class="helper_tip"> <i class="fa fa-question-circle"></i>  
+			                                    <div class="helper_tip_text" >Génération de questions aléatoires selon la matière, le niveaux et les thèmes renseignés.</div>
+			                                </span>  
+			                    </td>
+			                    <td>{{ form.is_shuffle|attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non" }}
+			                    </td>
+			                </tr>
+			                <tr>
+			                    <td class="no_border">{{ form.is_ranking.label_tag }} </td>
+			                    <td>{{ form.is_ranking|attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non" }}  </td>
+			                </tr>
+                            <tr>
+			                    <td class="no_border">{{ form.is_back.label_tag }} 
+                                    <span class="helper_tip"> <i class="fa fa-question-circle"></i>  
+			                         <div class="helper_tip_text" >Permet de revenir sur les questions en arrière dans le quizz.</div>
+			                        </span> 
+                                </td>
+			                    <td>{{ form.is_back|attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non" }}  </td>
+			                </tr>
+                    </table>
+            </div>
+        </div>
+	    <div class="row">
+
+	        <div class="col-sm-6 col-md-6"> 
+	            <div class="form-group">
+	                <input value="Enregistrer" type="submit" class="btn btn-primary"/>
+	                <a href="javascript:history.back()"><input type="button" value="Annuler" class="btn btn-default "/></a>
+	            </div>
+	        </div> 
+            <div class="col-sm-6 col-md-6"> 
+            {% if positionnement %}
+                
+ 
+                <a href="{% url 'delete_positionnement' positionnement.id %}" class="btn btn-danger"  onclick="return TestDelete('ce test de positionnement')"> 
+                    <i class="fa fa-trash"> </i>   Supprimer
+                </a>
+    
+            {% endif %}  
+            </div> 
+
+
+
+
+	    </div>
+ 
+    </form>  
+</section>
+{% endblock %} 

@@ -1,0 +1,88 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+{% load item_tags %}
+{% load widget_tweaks %}
+ 
+{% block require %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common2.js' %}"></script>
+
+    <script>
+        require(['script/ajax-quizz-list']);
+    </script> 
+
+{% endblock %}
+
+
+
+{% block page_title %}
+    {% include 'tool/logo.html' %}  Les tests de positionnement
+{% endblock %}
+
+
+
+
+
+{% block page_menu_right %}
+            <li>
+            <a href="{% url 'create_positionnement' %}"  class="btn btn-sacado" >
+                Nouveau test de positionnement
+            </a> 
+        </li> 
+{% endblock %}
+
+
+
+
+{% block body %}
+ 
+<section class="content_main"> 
+
+    <div class="row"> 
+        <div class="col-sm-12 col-md-12">
+            <table class="table table-bordered table-hover standard_tab_sort2000" style="width:100%">
+                  <thead>
+                      <tr>
+                        <th>Titre</th>                       
+                        <th>Enseignement</th>                  
+                        <th>Publié</th> 
+                        <th>Questions</th>
+                        <th>Passation</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                        {% for positionnement in positionnements %}
+                        <tr> 
+                          <td>
+                             <a href="{% url 'update_positionnement' positionnement.id %}">{{ positionnement.title }} de {{ positionnement.level.name }}</a> 
+                              <a href="{% url 'delete_positionnement' positionnement.id %}"  onclick="return TestDelete('ce test de positionnement')"><i class='fa fa-trash pull-right'></i></a>
+                          </td>
+                          <td >
+                             {{ positionnement.subject.name }}
+                          </td>
+                          <td >
+                             {% if positionnement.is_publish %}<span class="text-success">Publié</span>{% else %}<span class="text-danger">Non publié</span>{% endif %}
+                          </td>
+                          <td >
+                             {{ positionnement.questions.count }} <a href="{% url 'create_question_positionnement' positionnement.id 0 %}">Détails des questions </a> 
+                          </td>
+                          <td>
+                              
+                          </td>
+                        </tr>
+                        {% endfor %}
+                  </tbody>
+            </table>
+        </div>
+    </div>
+
+</section>
+
+
+
+
+
+
+{% endblock %}
+
+ 
+ 

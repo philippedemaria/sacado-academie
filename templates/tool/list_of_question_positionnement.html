@@ -1,0 +1,39 @@
+{% load static %}
+
+
+
+
+
+
+<li class="sorted_list{% if question %}{% if not question.is_publish %} no_published{% endif %}{% endif %}">
+	<input type="hidden" value="{{ question.id }}" class="sorted_question_id"   />
+    <div class="row"> 
+        <div class="col-xs-12 col-md-12">
+            <label>{% if from_ajax %}{{ nbq }}{% else %}{{ forloop.counter }}{% endif %}. {{ question.title|truncatechars:"20"}} {% if question %}{% if not question.is_publish %} <i class="fa fa-eye-slash"></i> {% endif %}{% endif %}</label>
+        </div>
+    </div>
+    <div class="row"> 
+        <div class="col-xs-2 col-md-2" class="delete_question_div"> 
+            <a href="{% url 'update_question' question.id positionnement.id question.qtype %}" class="edit" title="Modifier" ><i class="fa fa-edit"></i></a> <br/><br/>
+
+            <a href="{% url 'clone_question' question.id positionnement.id question.qtype %}" class="edit" title="Dupliquer"><i class="fa fa-copy"></i></a> <br/><br/>
+
+            <a href="{% url 'remove_question' question.id positionnement.id %}"  class="delete_question" onclick="return TestDelete('cette question')" title="Supprimer"> <i class="fa fa-trash"></i></a>
+
+        </div>
+        <div class="col-xs-10 col-md-10">
+            {% if question.qtype == 1 %}
+                <img src="{% static 'img/quizz_vf.png' %}" width="90%" />
+            {% elif question.qtype == 2 %}
+                <img src="{% static 'img/quizz_typing.png' %}" width="90%" />
+            {% elif question.qtype == 3 %}
+                <img src="{% static 'img/quizz_qcm.png' %}" width="90%" />
+            {% elif question.qtype == 4 %} 
+                <img src="{% static 'img/quizz_qcs.png' %}" width="90%" />
+            {% endif   %}  
+        </div>
+    </div>
+</li>
+
+
+ 

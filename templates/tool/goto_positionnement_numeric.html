@@ -1,0 +1,193 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% load item_tags %}
+
+
+{% block require %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common3.js' %}"></script>
+{% endblock %}
+
+
+
+{% block page_title %}
+   <a href="{% url 'list_positionnements' %}" ><i class="bi bi-aspect-ratio"></i> </a>  Test de positionnement  <img width="25px" src="{% static 'img/angle-right.png' %}"/> {{ positionnement.title }} <small> {{ positionnement.code }}</small>
+ 
+{% endblock %}
+
+
+{% block page_menu_right %} 
+ 
+    {% for question in questions %}
+        <button id="question_{{ question.id }}" class="btn btn-default thisquestion"> Q{{ forloop.counter }} </button> 
+    {% endfor %}
+ 
+{% endblock %}
+
+
+
+
+
+
+{% block body %}
+ 
+<section class="content_main"> 
+<form action="{% url 'goto_positionnement_numeric' positionnement.id %}" method="POST">
+{% csrf_token %}
+<input type="hidden" name="quizz_nav"  value="{{ quizz_nav }}" />   
+<input type="hidden" name="start_time"  value="{{ stop_time }}" />   
+<input type="hidden"   name="question_id"  value="{{ question.id }}"  >
+{% if  quizz_nav == 0 %}
+    <div class="row consigne_diapo"  align="center">  
+        <div class="col-sm-12 col-md-12">
+ 
+            {% if positionnement.vignette %}<img src="{{ positionnement.vignette.url }}" width="300px"  />{% endif %}
+        </div>
+    </div>
+    <div class="row" >  
+        <div class="col-sm-12 col-md-12">
+            <h1 style="line-height: 80px;" > Consignes.</h1>
+            <span style="font-size:1.2em; text-align: left;" >    
+                Nombre de questions : <b>{{ positionnement.questions.count}}</b><br/>
+                Vous devez répondre à chaque question.<br/> Le type de question est indiqué en haut de page.<br/>
+                 
+                {% if positionnement.is_back %}
+                    A tout moment, Vous pouvez revenir à une question en arrière lorsque vous avancez dans le test. 
+                {% else %}
+                    <span class="text-danger">Attention, vous ne pouvez pas revenir en arrière lorsque vous avancez dans le test.</span> 
+                {% endif %}
+            </span>
+        </div>
+    </div> 
+    <div style="height:40px"></div>                   
+    <div class="row" align="right" > 
+        <div class="col-sm-12 col-md-12" >
+            <button type="submit" class="btn btn-primary"><i class="fa fa-caret-right"></i> Démarrer le test de positionnement</button>
+            <input type="button" value="Retour à la page précédente" class="btn btn-default" onclick="javascript:history.back()"/>
+        </div>
+    </div> 
+{% elif not end_of_quizz %}
+
+    <div class="row">  
+        <div class="col-sm-2 col-md-2" align="left">
+            <img src="{% if question.calculator %}{% static 'img/calculator.png' %}{% else %}{% static 'img/no_calculator.png' %}{% endif %}" height="50px" />
+        </div>
+        <div class="col-sm-8 col-md-8" align="center">
+                {% if question.qtype == 1 %}
+                    <b>Vrai  ou  Faux ?</b>
+                {% elif question.qtype == 2 %}
+                    <b>Ecrire la bonne réponse</b>.
+                {% elif question.qtype == 3 %}
+                    <b> Choisir  la ou les bonnes réponses</b>. 
+                {% else %}
+                    <b> Choisir la seule bonne réponse</b>. 
+                {% endif %}
+        </div>
+    </div> 
+    <div class="row" align="center"  style="width:80%;padding:10px ; margin-right: auto; margin-left:auto; background-color: #f1eef7 ;">  
+        <div class="col-sm-12 col-md-12"align="center">
+            <h1 style="font-size:2.5em"  >  {{ question.title }}  </h1>
+        </div>
+    </div>
+    {% if question.imagefile %}
+    <div class="row">  
+        <div class="col-sm-12 col-md-12"align="center">
+             <img src="{{ question.imagefile.url }}" height="{% if question.qtype == 2 %}550{% else %}350{% endif %}px" />
+        </div>
+    </div>
+    {% endif %}
+    <hr/> 
+    {% if question.tool  %}  
+        <div class="row" style="margin-bottom:  20px; margin-top: 20px;"> 
+            <div class="col-sm-12 col-md-12" align="center">
+                <button class="btn btn-default" id="sqrt_tool">$\sqrt{x}$</button> 
+                <button class="btn btn-default" id="pow_tool">$x^{n}$</button> 
+            </div> 
+        </div> 
+    {% endif %}
+
+    
+    {% if question.qtype == 1 %} 
+ 
+        <div class="row"> 
+            <div class="col-sm-12 col-md-6 bgcolorBlue white"  align="center" style="border-radius : 10px ">
+                <label style="font-size:3.5em" class="thin">
+                    VRAI <input type="radio" name="solution" value="1" {% if 1 in this_answer.answer  %}checked{% endif %}    class="answer_quizz_vf">
+                </label>  
+            </div> 
+
+            <div class="col-sm-12 col-md-6 bgcolorRed white"  align="center" style="border-radius : 10px ">
+                <label style="font-size:3.5em" class="thin">FAUX <input type="radio" name="solution" value="0"  {% if 0 in this_answer.answer    %}checked{% endif %}  class="answer_quizz_vf"></label>  
+            </div> 
+        </div> 
+    {% elif question.qtype == 2 %}
+ 
+        <div class="row"> 
+            <div class="col-sm-12 col-md-12"  align="center" style="border-radius : 10px ">
+                <input type="text" name="solution" id="solution" required class="quizz_box_answer quizz_font40"  value="{{ this_answer.answer }}" >
+            </div> 
+        </div> 
+    {% elif question.qtype > 2 %}   
+        {% for choice in question.choices.all %}
+ 
+            {% cycle 'A' 'B' 'C' 'D'  as choice_letter silent %}
+            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-6" style="margin-bottom: 5px ; font-size:1.2em; border-radius : 10px;background-color: #f1eef7 ;">
+                <div class="row" >
+
+                    <div class="col-sm-12 col-md-12  col-lg-12 col-xl-6 {{ rowcolor }}"  
+                         style="color:#5d4391;  padding: 5px; font-size : 1.5em">  
+                         <input type="{% if question.qtype == 3 %}checkbox{% else %}radio{% endif %}" name="solution" value="{{ choice.id }}"  class="answer_quizz"> 
+                         {{ choice.answer }}
+                        
+                         {% if choice.imageanswer %}
+                         <img src="{{ choice.imageanswer.url }}" height="200px" />
+                         {% endif %}
+
+                    </div>
+                </div>  
+            </div> 
+        {% endfor %}
+        {% resetcycle %}
+ 
+    {% endif %}
+
+<div style="height:40px"></div>
+
+<div class="row" align="center" > 
+    <div class="col-sm-6 col-md-9" align="center"  ></div>
+    <div class="col-sm-6 col-md-3" align="center"  >
+        {% if positionnement.is_back and positionnement_nav_prev > 0 %}
+            <a href="{% url 'goto_positionnement_numeric' positionnement.id %}" class="btn btn-default"><i class="fa fa-caret-left"></i> Précedent</a>
+        {% endif %}  
+    </div>
+</div> 
+<div class="row" > 
+    <div class="col-sm-12 col-md-12" >
+        <button type="submit" class="btn btn-primary"><i class="fa fa-caret-right"></i> Enregistrement de la réponse</button>
+    </div>
+</div> 
+{% else %}
+
+    <div class="row consigne_diapo"  align="center">  
+        <div class="col-sm-12 col-md-12">
+            <h1 style="font-size:4em" class="thin">
+                <br/><br/>
+                <b> -- FIN -- </b>
+                <br/><br/>
+            </h1>
+
+            <a href="{% url 'list_positionnements' %}" class="btn btn-default">Retour vers les tests</a>
+
+        </div>
+    </div> 
+
+
+{% endif %}
+
+
+
+ 
+</form>  
+</section>
+ 
+{% endblock %} 

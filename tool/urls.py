@@ -18,11 +18,11 @@ urlpatterns = [
     path('show_quizz/<int:id>', show_quizz, name='show_quizz'), 
  
     
-    path('list', list_quizzes, name='list_quizzes'),
-    path('create_quizz/new', create_quizz, name='create_quizz'),
-    path('update_quizz/<int:id>', update_quizz, name='update_quizz'),
-    path('delete_quizz/<int:id>', delete_quizz, name='delete_quizz'),
-    path('show_quizz/<int:id>', show_quizz, name='show_quizz'), 
+    path('list_positionnements', list_positionnements, name='list_positionnements'),
+    path('create_positionnement/new', create_positionnement, name='create_positionnement'),
+    path('update_positionnement/<int:id>', update_positionnement, name='update_positionnement'),
+    path('delete_positionnement/<int:id>', delete_positionnement, name='delete_positionnement'),
+    path('show_positionnement/<int:id>', show_positionnement, name='show_positionnement'), 
     path('print_answer_positionnement_to_pdf', print_answer_positionnement_to_pdf, name='print_answer_positionnement_to_pdf'),
 
 
@@ -59,6 +59,15 @@ urlpatterns = [
     path('update_question/<int:id>/<int:idq>', update_question, name='update_question'),   
     path('delete_question/<int:id>/<int:idq>', delete_question  , name='delete_question'),
     path('clone_question/<int:id>/<int:idq>/<int:qtype>', clone_question  , name='clone_question'),
+
+
+    path('create_question_positionnement/<int:idp>/<int:qtype>', create_question_positionnement, name='create_question_positionnement'),
+    path('update_question_positionnement/<int:id>/<int:idp>', update_question_positionnement, name='update_question_positionnement'),   
+    path('delete_question_positionnement/<int:id>/<int:idp>', delete_question_positionnement  , name='delete_question_positionnement'),
+    path('clone_question_positionnement/<int:id>/<int:idp>/<int:qtype>', clone_question_positionnement  , name='clone_question_positionnement'),
+
+    path('goto_positionnement_numeric/<int:id>', goto_positionnement_numeric, name='goto_positionnement_numeric'),
+    path('goto_positionnement_student/<int:id>', goto_positionnement_student, name='goto_positionnement_student'),
 
     path('quizz_actioner', quizz_actioner  , name='quizz_actioner'),
     path('quizz_archived', all_quizzes_archived  , name='all_quizzes_archived'),

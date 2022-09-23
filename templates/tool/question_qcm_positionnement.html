@@ -1,0 +1,75 @@
+{% extends 'tool/form_question_positionnement.html' %} 
+
+{% load static %}
+{% load widget_tweaks %}
+{% load item_tags %}
+
+
+{% block require %}
+    {% if question %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common5.js' %}"></script>
+    <script>
+        require(['script/ajax-quizz-update']);
+    </script> 
+    {% else %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common4.js' %}"></script>
+    <script>
+        require(['script/ajax-quizz-complement']);
+    </script>
+    {% endif %}
+    <script>
+        require(['script/ajax-quizz']);
+    </script>  
+{% endblock %}
+
+
+
+{% block title_type_of_question %} 
+    {{ title_type_of_question }} 
+{% endblock %} 
+
+
+
+{% block type_of_choices %} 
+                {{ form_ans.management_form }}
+
+                <input id="qtype" value="{{ qtype }}" name="qtype" type="hidden" />
+                {% for form in form_ans %} 
+                    {{ form.id }}
+                <div class="col-sm-6 col-md-6 quizz_line_answer">  
+                    <div class="row quizz_box_answer"  id="answer{{ forloop.counter0 }}_div">
+                        <div class="col-sm-2 col-md-1 {{  bgcolors|index:forloop.counter0 }} get_image"> 
+              
+                            <i class="fa fa-file-image-o white answer_margin20"></i>
+                           
+
+                            {{ form.imageanswer }}
+ 
+                        </div>
+                        <div class="col-sm-8 col-md-9" > 
+ 
+                            {% if form.answer or form.imageanswer %}  
+                                {{ form.answer|add_class:"quizz_font30 quizz_answer white"  }}
+                            {% else %}
+                                {{ form.answer|attr:"placeholder:Ecrire votre réponse ici"|add_class:"quizz_font30 quizz_answer"  }}
+                            {% endif %}
+                             <img src="{% if form.imageanswer.url %}{{ form.imageanswer.url }}{% endif %}" height="90px" class="preview" id="preview{{ forloop.counter0 }}" > 
+
+                             <a href="#" id="delete_img{{ forloop.counter0 }}" class="preview pull-right white"><i class="fa fa-times white answer_margin20"></i></a>
+
+                        </div>
+
+                        <div class="col-sm-2 col-md-2 checking_zone" id="checking_zone{{ forloop.counter0 }}"> 
+                            <span class="noCheck" id="noCheck{{ forloop.counter0 }}">
+                                <i class="fa fa-circle fa-3x white"></i>
+                            </span>
+                            {{ form.is_correct|add_class:"checkbox_no_display"}}
+                            <span class="check" id="check{{ forloop.counter0 }}" ><i class="fa fa-check-circle fa-3x white"></i></span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+
+{% endblock %}                                                         
+

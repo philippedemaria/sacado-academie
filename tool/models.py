@@ -241,7 +241,6 @@ class Question(models.Model):
         return percent
 
 
-
 class Choice(models.Model):
     """
     Modèle représentant un associé.
@@ -343,7 +342,7 @@ class Positionnement(ModelWithCode):
     """
     Modèle représentant un associé.
     """
-    title         = models.CharField( max_length=255, verbose_name="Titre du test de positionnement") 
+    title         = models.CharField( max_length=255, default="Test de positionnement" , verbose_name="Titre du test de positionnement") 
     teacher       = models.ForeignKey(Teacher, related_name="positionnements", blank=True, on_delete=models.CASCADE, editable=False ) 
     date_modified = models.DateTimeField(auto_now=True)
     
@@ -367,6 +366,10 @@ class Positionnement(ModelWithCode):
         for q in self.questions.filter(is_publish=1) :
             d += q.duration 
         return d
+
+
+
+
 
 
 
