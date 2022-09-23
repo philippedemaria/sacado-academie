@@ -2152,6 +2152,7 @@ a.no_visual_link{
     border: 1px solid #e6e2dd;
     height : 200px;
     margin-top: 60px;
+    background-color: white;
 }
 .quizz_card:hover {
     background: #f1eef7;
