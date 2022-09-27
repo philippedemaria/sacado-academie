@@ -80,7 +80,7 @@ def transfert_asso_acad(request,idl,start):
                     old_file = ressources+'ggbfilesTMP/' + str(idl)+"/"+str(file) 
                     new_file = ressources+'ggbfiles/' + str(idl)+"/"+str(file)
                     messagers.append( str(i)+". Changement : <b>"+ str(supportfile.ggbfile) +"</b> en <b> ggbfiles/" + str(idl)+"/"+str(file)  +"</b><br/> -> Déplacement de : <b>"+ str(old_file) +"</b> vers <b>"+ str(new_file) +"</b>")               
-                    supportfile.ggbfile = file
+                    supportfile.ggbfile = 'ggbfiles/' + str(idl)+"/"+str(file)
                     i+=1
 
                     if start == 1 :
