@@ -65,7 +65,7 @@ def transfert_asso_acad(request,idl):
         supportfiles = Supportfile.objects.values_list('ggbfile',flat=True)
 
         ressources   = '/var/www/sacado-academie/ressources/' 
-        dirname      = ressources + 'ggbfilesTMP/' + str(idl)
+        dirname      = ressources + 'ggbfilesTMP/' + str(idl)+"/"
         #back_up_root = ressources + 'ggbfiles_backup/' + str(idl)+"/" 
 
         files = os.listdir(dirname)
