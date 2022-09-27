@@ -99,7 +99,7 @@ def transfert_asso_acad(request,idl,start):
 
 
 @user_passes_test(user_is_board)
-def to_clean_database(request,idl):
+def to_clean_database(request,idl,start):
 
     levels = Level.objects.exclude(pk=13).order_by('ranking')
     list_to_remove , list_to_keep = [] , []
@@ -108,7 +108,7 @@ def to_clean_database(request,idl):
         level = Level.objects.get(pk=idl)
         supportfiles = Supportfile.objects.values_list('ggbfile',flat=True)
 
-        ressources   = '/var/www/sacado/ressources/' 
+        ressources   = '/var/www/sacado-academie/ressources/' 
         dirname      = ressources + 'ggbfiles/' + str(idl)
         back_up_root = ressources + 'ggbfiles_backup/' + str(idl)+"/" 
 
@@ -120,10 +120,11 @@ def to_clean_database(request,idl):
             data_file = 'ggbfiles/'+ str(idl)+"/"+file
             if data_file not in supportfiles :
                 list_to_remove.append(data_file)
-                os.rename( ressources + data_file , back_up_root + file )
+                if start == 1 :
+                    os.rename( ressources + data_file , back_up_root + file )
             else :
                 list_to_keep.append(file)
-                os.scp( ressources + data_file , back_up_root + file )
+
 
 
         list_to_remove.sort()

@@ -85,6 +85,6 @@ urlpatterns = [
     path('delete_selected_schools', delete_selected_schools, name='delete_selected_schools'),
 
     path('transfert_asso_acad/<int:idl>/<int:start>', transfert_asso_acad, name='transfert_asso_acad'),
-    path('to_clean_database/<int:idl>', to_clean_database, name='to_clean_database'),
+    path('to_clean_database/<int:idl>/<int:start>', to_clean_database, name='to_clean_database'),
 ]
  

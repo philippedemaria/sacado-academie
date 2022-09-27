@@ -28,7 +28,7 @@
         <div class="col-sm-3 col-md-2">
             Niveaux<hr/>
             {% for level in levels %}
-                <li class="sanspuce"><a href="{% url 'to_clean_database' level.id %}">{{ level }}</a></li>
+                <li class="sanspuce"><a href="{% url 'to_clean_database' level.id 0 %}">{{ level }}</a></li>
             {% endfor %}
         </div>
         <div class="col-sm-5 col-md-5">
@@ -42,6 +42,7 @@
             {% for file in list_to_remove %}
                 <li class="sanspuce">{{ file }}</li>
             {% endfor %}
+            <a href="{% url 'to_clean_database' level.id  1 %}" class="no_button white">Nettoyage de la base</a>
         </div>
     </div>
 
