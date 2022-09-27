@@ -73,8 +73,10 @@ def transfert_asso_acad(request,idl):
         message = ""
         i=1
         for file in files :
-            name_to_get = file[:8]
+            name_to_get = 'ggbfiles/' + str(idl)+"/"file[:8]
             name_to_gets.append(name_to_get)
+
+
             supportfiles = Supportfile.objects.filter(ggbfile__startswith=name_to_get)
             for supportfile in supportfiles :
                 message += str(i)+". Changement : "+ supportfile.ggbfile +" en "+ file +"\n"                
