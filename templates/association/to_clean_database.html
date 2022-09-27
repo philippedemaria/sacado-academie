@@ -1,0 +1,62 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+
+
+ 
+{% block require %}
+ 
+
+{% endblock %}
+
+
+
+{% block page_title %}
+        Supprime les supportfile inutilisés de la base > {{ level }}
+{% endblock %}
+
+{% block page_menu_right %}
+
+{% endblock %}
+
+ 
+
+{% block body %}
+<section class="content_main"> 
+
+ 
+    <div class="row">
+        <div class="col-sm-3 col-md-2">
+            Niveaux<hr/>
+            {% for level in levels %}
+                <li class="sanspuce"><a href="{% url 'to_clean_database' level.id %}">{{ level }}</a></li>
+            {% endfor %}
+        </div>
+        <div class="col-sm-5 col-md-5">
+            Tous les fichiers<hr/>
+            {% for name in list_to_keep %}
+                <li class="sanspuce">{{ name }}</li>
+            {% endfor %}
+        </div>
+        <div class="col-sm-5 col-md-5">
+            A supprimer<hr/>
+            {% for file in list_to_remove %}
+                <li class="sanspuce">{{ file }}</li>
+            {% endfor %}
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-sm-12 col-md-12">     
+                <a href="javascript:history.back()"  class="btn btn-default " >Retour </a>
+        </div>
+    </div>
+</section>
+ 
+
+
+
+
+
+
+{% endblock %}
