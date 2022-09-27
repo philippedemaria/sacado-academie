@@ -28,7 +28,7 @@
         <div class="col-sm-3 col-md-2">
             Niveaux<hr/>
             {% for level in levels %}
-                <li class="sanspuce"><a href="{% url 'to_clean_database' level.id %}">{{ level }}</a></li>
+                <li class="sanspuce"><a href="{% url 'transfert_asso_acad' level.id %}">{{ level }}</a></li>
             {% endfor %}
         </div>
     </div>
