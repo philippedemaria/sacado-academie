@@ -43,7 +43,7 @@
                 <li class="sanspuce">{{ file }}</li>
             {% endfor %}
             {% if level %}
-                <a href="{% url 'to_clean_database' level.id  1 %}" class="no_button white">Nettoyage de la base</a>
+                <a href="{% url 'to_clean_database' level.id  1 %}" class="btn btn-danger">Nettoyage de la base</a>
             {% endif %}
         </div>
     </div>
