@@ -48,6 +48,53 @@ import uuid
 import json 
  
 
+
+
+#################################################################
+# Suppression des fichiers non utilisés
+#################################################################
+@user_passes_test(user_is_board)
+def to_clean_database(request,idl):
+
+    levels = Level.objects.exclude(pk=13).order_by('ranking')
+    level = Level.objects.get(pk=idl)
+    names = []
+    if idl :
+        supportfiles = Supportfile.objects.values_list('ggbfile',flat=True)
+
+        ressources   = '/var/www/sacado-academie/ressources/' 
+        dirname      = ressources + 'ggbfilesTMP/' + str(idl)
+        #back_up_root = ressources + 'ggbfiles_backup/' + str(idl)+"/" 
+
+        files = os.listdir(dirname)
+
+        message = ""
+        i=1
+        for file in files :
+            name_to_get = file[:8]
+            supportfiles = Supportfile.objects.filter(ggbfile__startwith=name_to_get)
+            for supportfile in supportfiles :
+                message += str(i)+". Changement : "+ supportfile.ggbfile +" en "+ file +"\n"                
+                supportfile.ggbfile = file
+                i+=1
+                #supportfile.save()
+
+
+
+
+
+    context = { 'levels' : levels, 'level' : level }        
+    return render(request, 'association/transfert_asso_acad.html', context )
+
+
+
+
+#################################################################
+# Suppression des fichiers non utilisés
+#################################################################
+
+
+
 def get_active_year():
     """ renvoi d'un tuple sous forme 2021-2022  et d'un entier 2021 """
     active_year = Activeyear.objects.get(is_active=1)

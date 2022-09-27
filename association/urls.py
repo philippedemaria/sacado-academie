@@ -84,7 +84,7 @@ urlpatterns = [
     path('update_school_admin/<int:id>/', update_school_admin, name='update_school_admin'),
     path('delete_selected_schools', delete_selected_schools, name='delete_selected_schools'),
 
-
+    path('transfert_asso_acad', transfert_asso_acad, name='transfert_asso_acad'),
 
 ]
  
