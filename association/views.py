@@ -22,6 +22,7 @@ from school.models import School
 from school.forms import SchoolForm
 from setup.models import Formule
 from setup.forms import FormuleForm
+from socle.models import Level
 #################################################################################
 import os
 from django.utils import formats, timezone
