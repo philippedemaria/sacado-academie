@@ -58,9 +58,10 @@ import json
 def transfert_asso_acad(request,idl):
 
     levels = Level.objects.exclude(pk=13).order_by('ranking')
-    level = Level.objects.get(pk=idl)
+    
     names = []
     if idl :
+        level = Level.objects.get(pk=idl)
         supportfiles = Supportfile.objects.values_list('ggbfile',flat=True)
 
         ressources   = '/var/www/sacado-academie/ressources/' 
