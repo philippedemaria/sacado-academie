@@ -88,7 +88,7 @@ def transfert_asso_acad(request,idl):
 
 
     context = { 'levels' : levels, 'level' : level }        
-    return render(request, 'association/transfert_asso_acad.html', context )
+    return render(request, 'association/transfert_to_acad.html', context )
 
 
 
