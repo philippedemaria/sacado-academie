@@ -82,6 +82,8 @@ def transfert_asso_acad(request,idl):
                 #supportfile.save()
 
 
+    else :
+        level = None
 
 
 
