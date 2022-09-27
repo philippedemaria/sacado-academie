@@ -62,8 +62,6 @@ def transfert_asso_acad(request,idl):
     name_to_gets = []
     if idl :
         level = Level.objects.get(pk=idl)
-        supportfiles = Supportfile.objects.values_list('ggbfile',flat=True)
-
         ressources   = '/var/www/sacado-academie/ressources/' 
         dirname      = ressources + 'ggbfilesTMP/' + str(idl)+"/"
         #back_up_root = ressources + 'ggbfiles_backup/' + str(idl)+"/" 
@@ -75,7 +73,6 @@ def transfert_asso_acad(request,idl):
         for file in files :
             name_to_get = 'ggbfiles/' + str(idl)+"/"+file[:8]
             name_to_gets.append(name_to_get)
-
 
             supportfiles = Supportfile.objects.filter(ggbfile__startswith=name_to_get)
             for supportfile in supportfiles :
