@@ -76,10 +76,11 @@ def transfert_asso_acad(request,idl):
 
             supportfiles = Supportfile.objects.filter(ggbfile__startswith=name_to_get)
             for supportfile in supportfiles :
-                message += str(i)+". Changement : "+ str(supportfile.ggbfile) +" en "+ str(file) +"\n"                
-                supportfile.ggbfile = file
-                i+=1
-                #supportfile.save()
+                if str(file) != str(supportfile.ggbfile) :
+                    message += str(i)+". Changement : "+ str(supportfile.ggbfile) +" en "+ str(file) +"<br/>"                
+                    supportfile.ggbfile = file
+                    i+=1
+                    #supportfile.save()
 
 
     else :
@@ -87,7 +88,7 @@ def transfert_asso_acad(request,idl):
 
 
 
-    context = { 'levels' : levels, 'level' : level , 'message' : message , 'files' : files , 'supportfiles' : supportfiles ,'name_to_gets' : name_to_gets  }        
+    context = { 'levels' : levels, 'level' : level , 'message' : message  }        
     return render(request, 'association/transfert_to_acad.html', context )
 
 
