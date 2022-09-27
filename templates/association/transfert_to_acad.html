@@ -27,13 +27,16 @@
         <div class="col-sm-3 col-md-2">
             Niveaux<hr/>
             {% for level in levels %}
-                <li class="sanspuce"><a href="{% url 'transfert_asso_acad' level.id %}">{{ level }}</a></li>
+                <li class="sanspuce"><a href="{% url 'transfert_asso_acad' level.id 0 %}">{{ level }}</a></li>
             {% endfor %}
         </div>
         <div class="col-sm-9 col-md-10">     
             {% for m in messagers %}
                 <li class="sanspuce">{{ m|safe }}</li>
             {% endfor %}
+
+            <a href="{% url 'transfert_asso_acad' level.id 1 %}" class="btn btn-primary">Transfert</a></li>
+
         </div>
     </div>
     <div class="row">

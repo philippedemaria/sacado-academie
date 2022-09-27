@@ -55,7 +55,7 @@ import json
 # Suppression des fichiers non utilisés
 #################################################################
 @user_passes_test(user_is_board)
-def transfert_asso_acad(request,idl):
+def transfert_asso_acad(request,idl,start):
 
     levels = Level.objects.exclude(pk=13).order_by('ranking')
     
@@ -77,11 +77,15 @@ def transfert_asso_acad(request,idl):
             supportfiles = Supportfile.objects.filter(ggbfile__startswith=name_to_get)
             for supportfile in supportfiles :
                 if 'ex' in file and  'ggbfiles/' + str(idl)+"/"+str(file) != str(supportfile.ggbfile) :
-                    messagers.append( str(i)+". Changement : <b>"+ str(supportfile.ggbfile) +"</b> en <b>"+ str(file)  +"</b><br/> -> Remplacement de : <b>"+  ressources+'ggbfiles/' + str(idl)+"/"+str(file) +"</b> par <b>"+ dirname+str(file)  +"</b>")               
+                    old_file = ressources+'ggbfiles/' + str(idl)+"/"+str(file)
+                    new_file = dirname+str(file) 
+                    messagers.append( str(i)+". Changement : <b>"+ str(supportfile.ggbfile) +"</b> en <b> ggbfiles/" + str(idl)+"/"+str(file)  +"</b><br/> -> Remplacement de : <b>"+ old_file +"</b> par <b>"+ new_file +"</b>")               
                     supportfile.ggbfile = file
                     i+=1
-                    #os.rename(  ressources+'ggbfiles/' + str(idl)+"/"+str(file)  , dirname+str(file) )
-                    #supportfile.save()
+
+                    if start == 1 :
+                        os.rename(  old_file  , new_file )
+                        supportfile.save()
 
 
     else :
