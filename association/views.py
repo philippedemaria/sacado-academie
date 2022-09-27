@@ -90,6 +90,7 @@ def transfert_asso_acad(request,idl,start):
 
     else :
         level = None
+        messagers = []
 
 
 
