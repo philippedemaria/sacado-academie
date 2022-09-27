@@ -59,7 +59,7 @@ def transfert_asso_acad(request,idl):
 
     levels = Level.objects.exclude(pk=13).order_by('ranking')
     
-    names = []
+    name_to_gets = []
     if idl :
         level = Level.objects.get(pk=idl)
         supportfiles = Supportfile.objects.values_list('ggbfile',flat=True)
@@ -74,6 +74,7 @@ def transfert_asso_acad(request,idl):
         i=1
         for file in files :
             name_to_get = file[:8]
+            name_to_gets.append(name_to_get)
             supportfiles = Supportfile.objects.filter(ggbfile__startswith=name_to_get)
             for supportfile in supportfiles :
                 message += str(i)+". Changement : "+ supportfile.ggbfile +" en "+ file +"\n"                
@@ -87,7 +88,7 @@ def transfert_asso_acad(request,idl):
 
 
 
-    context = { 'levels' : levels, 'level' : level , 'message' : message , 'files' : files , 'supportfiles' : supportfiles   }        
+    context = { 'levels' : levels, 'level' : level , 'message' : message , 'files' : files , 'supportfiles' : supportfiles ,'name_to_gets' : name_to_gets  }        
     return render(request, 'association/transfert_to_acad.html', context )
 
 
