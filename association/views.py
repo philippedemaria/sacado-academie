@@ -68,7 +68,7 @@ def transfert_asso_acad(request,idl):
 
         files = os.listdir(dirname)
 
-        message = ""
+        messages = []
         i=1
         for file in files :
             name_to_get = 'ggbfiles/' + str(idl)+"/"+file[:8]
@@ -77,9 +77,10 @@ def transfert_asso_acad(request,idl):
             supportfiles = Supportfile.objects.filter(ggbfile__startswith=name_to_get)
             for supportfile in supportfiles :
                 if str(file) != str(supportfile.ggbfile) :
-                    message += str(i)+". Changement : "+ str(supportfile.ggbfile) +" en "+ str(file) +"\n\n"                
+                    messages.append( str(i)+". Changement : "+ str(supportfile.ggbfile) +" en "+ str(file)  +" -> Remplacement de : "+ str(dirname+file) +" en "+ str(ressources+'ggbfiles/' + str(idl)+"/"+file)  )               
                     supportfile.ggbfile = file
                     i+=1
+                    #os.rename(dirname+file, ressources+'ggbfiles/' + str(idl)+"/"+file)
                     #supportfile.save()
 
 
@@ -88,7 +89,7 @@ def transfert_asso_acad(request,idl):
 
 
 
-    context = { 'levels' : levels, 'level' : level , 'message' : message  }        
+    context = { 'levels' : levels, 'level' : level , 'messages' : messages  }        
     return render(request, 'association/transfert_to_acad.html', context )
 
 

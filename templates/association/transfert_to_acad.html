@@ -31,7 +31,9 @@
             {% endfor %}
         </div>
         <div class="col-sm-9 col-md-10">     
-            {{ message }}
+            {% for m in messages %}
+                <li class="sanspuce">{{ m }}</li>
+            {% endfor %}
         </div>
     </div>
     <div class="row">
