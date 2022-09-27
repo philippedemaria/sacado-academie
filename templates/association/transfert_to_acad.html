@@ -34,9 +34,9 @@
             {% for m in messagers %}
                 <li class="sanspuce">{{ m|safe }}</li>
             {% endfor %}
-
+            {% if level %}
             <a href="{% url 'transfert_asso_acad' level.id 1 %}" class="btn btn-primary">Transfert</a></li>
-
+            {% endif %}
         </div>
     </div>
     <div class="row">
