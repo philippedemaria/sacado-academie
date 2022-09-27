@@ -614,12 +614,11 @@ table.table-bordered.dataTable {
 }
 
 .bandeau_accueil_no_text{
-    font-family: 'Roboto', cursive;
-    background-image: url('/static/img/image_accueil00_no_text.jpg');
-    background-size: cover;
-    color:white; 
-    height:90vh;
-    position: relative;
+  font-family: 'Roboto', cursive;
+  /*background-image: url('/static/img/image_accueil00.jpg');*/
+  color:white; 
+  height:90vh;
+  position: relative;
   }
 
 
@@ -646,10 +645,9 @@ table.table-bordered.dataTable {
 
 .bandeau_accueil{
   font-family: 'Roboto', cursive;
-  background-image: url('/static/img/image_accueil00_portable.jpg');
-  background-size: cover;
+  /*background-image: url('/static/img/image_accueil00.jpg');*/
   color:white; 
-  height:98vh;
+  height:90vh;
   position: relative;
   }
 
@@ -662,12 +660,11 @@ table.table-bordered.dataTable {
 @media (max-width: 500px) {
 
   .bandeau_accueil{
-    font-family: 'Roboto', cursive;
-    background-image: url('/static/img/image_accueil00_mini.jpg');
-    background-size: cover;
-    color:white; 
-    height:98vh;
-    position: relative;
+  font-family: 'Roboto', cursive;
+  /*background-image: url('/static/img/image_accueil00.jpg');*/
+  color:white; 
+  height:90vh;
+  position: relative;
   }
 
 
