@@ -54,7 +54,7 @@ import json
 # Suppression des fichiers non utilisés
 #################################################################
 @user_passes_test(user_is_board)
-def to_clean_database(request,idl):
+def transfert_asso_acad(request,idl):
 
     levels = Level.objects.exclude(pk=13).order_by('ranking')
     level = Level.objects.get(pk=idl)

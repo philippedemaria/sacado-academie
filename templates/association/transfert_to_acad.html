@@ -31,18 +31,6 @@
                 <li class="sanspuce"><a href="{% url 'to_clean_database' level.id %}">{{ level }}</a></li>
             {% endfor %}
         </div>
-        <div class="col-sm-5 col-md-5">
-            Tous les fichiers<hr/>
-            {% for name in list_to_keep %}
-                <li class="sanspuce">{{ name }}</li>
-            {% endfor %}
-        </div>
-        <div class="col-sm-5 col-md-5">
-            A supprimer<hr/>
-            {% for file in list_to_remove %}
-                <li class="sanspuce">{{ file }}</li>
-            {% endfor %}
-        </div>
     </div>
 
 
