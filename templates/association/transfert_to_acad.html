@@ -22,7 +22,11 @@
 
 {% block body %}
 <section class="content_main"> 
-
+    <div class="row">
+        <div class="col-sm-12 col-md-12">     
+            {{ dirname }}
+        </div>
+    </div>
  
     <div class="row">
         <div class="col-sm-3 col-md-2">
@@ -31,9 +35,10 @@
                 <li class="sanspuce"><a href="{% url 'transfert_asso_acad' level.id %}">{{ level }}</a></li>
             {% endfor %}
         </div>
+        <div class="col-sm-12 col-md-12">     
+            {{ message }}
+        </div>
     </div>
-
-
     <div class="row">
         <div class="col-sm-12 col-md-12">     
                 <a href="javascript:history.back()"  class="btn btn-default " >Retour </a>
