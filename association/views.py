@@ -17,7 +17,7 @@ from django.contrib.auth.decorators import  permission_required,user_passes_test
 from association.models import Accounting,Associate , Voting , Document, Section , Detail , Rate  , Holidaybook, Abonnement , Activeyear, Plancomptable , Accountancy  
 from association.forms import AccountingForm,AssociateForm,VotingForm, DocumentForm , SectionForm, DetailForm , RateForm , AbonnementForm , HolidaybookForm ,  ActiveyearForm, AccountancyForm
 from account.models import User, Student, Teacher, Parent ,  Response
-from qcm.models import Exercise, Studentanswer , Customanswerbystudent , Writtenanswerbystudent
+from qcm.models import Exercise, Studentanswer , Customanswerbystudent , Writtenanswerbystudent , Supportfile
 from school.models import School
 from school.forms import SchoolForm
 from setup.models import Formule
