@@ -77,7 +77,7 @@ def transfert_asso_acad(request,idl):
             supportfiles = Supportfile.objects.filter(ggbfile__startswith=name_to_get)
             for supportfile in supportfiles :
                 if str(file) != str(supportfile.ggbfile) :
-                    messages.append( str(i)+". Changement : "+ str(supportfile.ggbfile) +" en "+ str(file)  +" -> Remplacement de : "+ str(dirname+file) +" en "+ str(ressources+'ggbfiles/' + str(idl)+"/"+file)  )               
+                    messages.append( str(i)+". Changement : <b>"+ str(supportfile.ggbfile) +"</b> en <b>"+ str(file)  +"</b><br/> -> Remplacement de : <b>"+ str(dirname+file) +"</b> en <b>"+ str(ressources+'ggbfiles/' + str(idl)+"/"+file+"</b>")  )               
                     supportfile.ggbfile = file
                     i+=1
                     #os.rename(dirname+file, ressources+'ggbfiles/' + str(idl)+"/"+file)
