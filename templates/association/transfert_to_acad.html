@@ -32,7 +32,7 @@
         </div>
         <div class="col-sm-9 col-md-10">     
             {% for m in messages %}
-                <li class="sanspuce">{{ m }}</li>
+                <li class="sanspuce">{{ m|safe }}</li>
             {% endfor %}
         </div>
     </div>
