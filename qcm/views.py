@@ -4155,6 +4155,8 @@ def ajax_sort_sequence(request):
 
         for i in range(len(exercise_tab)-1):
             Relationship.objects.filter(pk = exercise_tab[i]).update(ranking = i)
+
+            print(exercise_tab[i] , i )
     except :
         pass
     data = {}

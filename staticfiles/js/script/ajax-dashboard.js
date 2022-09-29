@@ -1043,6 +1043,8 @@ define(['jquery', 'bootstrap', 'ui', 'ui_sortable'], function ($) {
                             valeurs = valeurs + div_exercise_id +"-";
                         });
 
+                        console.log(valeurs) ;
+
                         $(ui.item).css("box-shadow", "0px 0px 0px transparent");  
 
                         $.ajax({
