@@ -4138,6 +4138,7 @@ def ajax_sort_exercise(request):
                 Customexercise.objects.filter(pk = exercise_tab[i]).update(ranking = i)
             else :
                 Relationship.objects.filter(parcours = parcours , exercise_id = exercise_tab[i]).update(ranking = i)
+
     except :
         pass
     data = {}
@@ -4155,8 +4156,6 @@ def ajax_sort_sequence(request):
 
         for i in range(len(exercise_tab)-1):
             Relationship.objects.filter(pk = exercise_tab[i]).update(ranking = i)
-
-            print(exercise_tab[i] , i )
     except :
         pass
     data = {}
