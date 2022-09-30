@@ -605,15 +605,12 @@ table.table-bordered.dataTable {
  
 .bandeau_accueil{
   font-family: 'Roboto', cursive;
-  background-image: url('/static/img/fond_accueil.jpg');*/
-  height:90vh;
+  background-image: url('/static/img/fond_accueil.jpg'); 
   background-repeat: no-repeat;
 }
 
 .bandeau_accueil_no_text{
   font-family: 'Roboto', cursive;
-  /*background-image: url('/static/img/image_accueil00.jpg');*/
-  height:90vh;
   }
 
 
@@ -621,14 +618,14 @@ table.table-bordered.dataTable {
   font-family: 'Roboto', cursive;
   font-variant: small-caps ;
   font-size:60px;
-  padding:140px 150px 50px 210px;
+  padding:140px 0px 50px 290px;
   color:#222;
 }  
 
 .bandeau_accueil_subtitle{
   font-family: 'Roboto', cursive;
   font-size:20px;
-  padding:50px 100px 50px 210px;
+  padding:40px 0px 50px 290px;
   color:#222;
 }
 
@@ -636,63 +633,8 @@ table.table-bordered.dataTable {
   background-color: #f1eef7 ;
 }
 
-@media (max-width: 800px) {
-
- 
-.no_display_index{
-  display:none;
-}
-
-  .bandeau_accueil{
-  font-family: 'Roboto', cursive;
-  background-image: url('/static/img/accueil_students.png'); 
-  background-repeat: no-repeat; 
-  height:auto;
-  background-color:  #f1eef7 ;
-  }
-  .bandeau_accueil_title{
-    font-family: 'Roboto', cursive;
-    text-transform: uppercase ;
-    font-size:40px;
-    padding:40px 10px 10px 10px;
-    color:#222;    
-    
-  }   
-
-.bandeau_accueil_subtitle{
-  font-family: 'Roboto', cursive;
-  font-size:20px;
-  padding:40px 10px 10px 10px;
-  color:#222;  
-}
 
 
-}
-
-@media (max-width: 500px) {
-
-  .bandeau_accueil{
-  font-family: 'Roboto', cursive;
-  background-image: url('/static/img/accueil_students.png'); 
-  background-repeat: no-repeat; 
-  height:auto;
-  background-color:  #f1eef7 ;
-  }
-  .bandeau_accueil_title{
-    font-family: 'Roboto', cursive;
-    text-transform: uppercase ;
-    font-size:40px;
-    padding:40px 10px 10px 10px;
-    color:#222;    
-    
-  }  
-  .bandeau_accueil_subtitle{
-  font-family: 'Roboto', cursive;
-  font-size:20px;
-  padding:40px 10px 10px 10px;
-  color:#222;    
-  }
-}
 
 
 .bandeau_title{
@@ -750,7 +692,82 @@ a.icon_link_index:hover .sub_icon_link_index{
   text-decoration: none;
 }
 
+@media (max-width: 1181px) {
 
+      .vspace{margin-top: 0px;
+      }
+      .no_display_index{
+        display:none;
+      }
+
+      .bandeau_accueil{
+      font-family: 'Roboto', cursive;
+      background-repeat: no-repeat; 
+      height:auto;
+      background-color:  #FFF ;
+      background-image: url('/static/img/fond_accueil0.jpg');
+      }
+      .bandeau_accueil_title{
+        font-family: 'Roboto', cursive;
+        text-transform: uppercase ;
+        font-size:35px;
+        padding:40px 10px 10px 200px;
+        color:#222;    
+        
+      }   
+
+      .bandeau_accueil_subtitle{
+      font-family: 'Roboto', cursive;
+      font-size:20px;
+      padding:40px 10px 10px  200px;
+      color:#222;  
+      }
+      .title_bloc_index{
+        font-family: 'Roboto', cursive;
+        font-size: 35px;
+        font-weight: 600;
+        color: #5d4391;
+        margin:40px 0px 20px 0px;
+      }
+
+}
+
+@media (max-width: 700px) {
+
+      .vspace{margin-top: 0px;
+      }
+
+      .bandeau_accueil{
+      font-family: 'Roboto', cursive;
+      background-repeat: no-repeat; 
+      height:auto;
+      background-color:  #f1eef7 ;
+      background-image: url('/static/img/fond_accueil0.jpg');
+      }
+      .bandeau_accueil_title{
+        font-family: 'Roboto', cursive;
+        text-transform: uppercase ;
+        font-size:40px;
+        padding:40px 10px 10px 10px;
+        color:#222;    
+        
+      }  
+      .bandeau_accueil_subtitle{
+      font-family: 'Roboto', cursive;
+      font-size:20px;
+      padding:40px 10px 10px 10px;
+      color:#222;    
+      }
+
+      .title_bloc_index{
+        font-family: 'Roboto', cursive;
+        font-size: 35px;
+        font-weight: 600;
+        color: #5d4391;
+        margin:40px 0px 20px 0px;
+      }
+
+}
 
 /*--------------------------------------------------------------
 # Intro Section
