@@ -59,12 +59,13 @@ urlpatterns = [
     path('update_question/<int:id>/<int:idq>', update_question, name='update_question'),   
     path('delete_question/<int:id>/<int:idq>', delete_question  , name='delete_question'),
     path('clone_question/<int:id>/<int:idq>/<int:qtype>', clone_question  , name='clone_question'),
-
+    path('remove_question/<int:id>/<int:idq>', remove_question, name='remove_question'), # from a quizz
 
     path('create_question_positionnement/<int:idp>/<int:qtype>', create_question_positionnement, name='create_question_positionnement'),
     path('update_question_positionnement/<int:id>/<int:idp>', update_question_positionnement, name='update_question_positionnement'),   
     path('delete_question_positionnement/<int:id>/<int:idp>', delete_question_positionnement  , name='delete_question_positionnement'),
     path('clone_question_positionnement/<int:id>/<int:idp>/<int:qtype>', clone_question_positionnement  , name='clone_question_positionnement'),
+    path('remove_question_positionnement/<int:id>/<int:idp>', remove_question_positionnement, name='remove_question_positionnement'), # from a quizz
 
     path('goto_positionnement_numeric/<int:id>', goto_positionnement_numeric, name='goto_positionnement_numeric'),
     path('goto_positionnement_student/<int:id>', goto_positionnement_student, name='goto_positionnement_student'),
@@ -99,7 +100,7 @@ urlpatterns = [
     path('update_question/<int:id>/<int:idq>/<int:qtype>', update_question, name='update_question'),
  
 
-    path('remove_question/<int:id>/<int:idq>', remove_question, name='remove_question'), # from a quizz
+
     path('show_question/<int:id>', show_question, name='show_question'), 
 
 

@@ -14,11 +14,11 @@
     </div>
     <div class="row"> 
         <div class="col-xs-2 col-md-2" class="delete_question_div"> 
-            <a href="{% url 'update_question' question.id positionnement.id question.qtype %}" class="edit" title="Modifier" ><i class="fa fa-edit"></i></a> <br/><br/>
+            <a href="{% url 'update_question_positionnement' question.id positionnement.id question.qtype %}" class="edit" title="Modifier" ><i class="fa fa-edit"></i></a> <br/><br/>
 
-            <a href="{% url 'clone_question' question.id positionnement.id question.qtype %}" class="edit" title="Dupliquer"><i class="fa fa-copy"></i></a> <br/><br/>
+            <a href="{% url 'clone_question_positionnement' question.id positionnement.id question.qtype %}" class="edit" title="Dupliquer"><i class="fa fa-copy"></i></a> <br/><br/>
 
-            <a href="{% url 'remove_question' question.id positionnement.id %}"  class="delete_question" onclick="return TestDelete('cette question')" title="Supprimer"> <i class="fa fa-trash"></i></a>
+            <a href="{% url 'remove_question_positionnement' question.id positionnement.id %}"  class="delete_question" onclick="return TestDelete('cette question')" title="Supprimer"> <i class="fa fa-trash"></i></a>
 
         </div>
         <div class="col-xs-10 col-md-10">

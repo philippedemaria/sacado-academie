@@ -2425,6 +2425,14 @@ def remove_question(request,id,idq):
     return redirect ('create_question', idq, 0)
 
 
+def remove_question_positionnement(request,id,idp):
+    
+    request.session["tdb"] = False # permet l'activation du surlignage de l'icone dans le menu gauche 
+    positionement = Positionement.objects.get(pk = idp)
+    if positionement.teacher == request.user.teacher :
+        question = Question.objects.get(pk = id)
+        positionement.questions.remove(question)
+    return redirect ('create_question_positionement', idp, 0)
 
  
 def show_question(request,id):
