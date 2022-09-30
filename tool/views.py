@@ -1344,7 +1344,7 @@ def update_question_positionnement(request,id,idp,qtype):
                     if form_answer.is_valid():
                         form_answer.save()
 
-            return redirect('create_question' , idq,0)
+            return redirect('create_question_positionnement' , idq,0)
 
  
     bgcolors = ["bgcolorRed","bgcolorBlue","bgcolorOrange","bgcolorGreen"] 
@@ -1353,18 +1353,18 @@ def update_question_positionnement(request,id,idp,qtype):
     #Choix des questions
     if qtype == 1 :
         context.update( {   'title_type_of_question' : "Vrai / faux"   })
-        template = 'tool/question_vf.html'
+        template = 'tool/question_vf_positionnement.html'
 
     #Réponse rédigée
     elif qtype == 2 :
         context.update( {    'title_type_of_question' : "Réponse rédigée"   })
-        template = 'tool/form_question.html'
+        template = 'tool/form_question_positionnement.html'
 
     #QCM ou QCS
     elif qtype == 3 or qtype == 4  :
  
         context.update( {  'bgcolors' : bgcolors  ,  'title_type_of_question' : "QCM" , 'form_ans' : form_ans   })
-        template = 'tool/question_qcm_numeric.html'
+        template = 'tool/question_qcm_numeric_positionnement.html'
 
     return render(request, template , context)
 
