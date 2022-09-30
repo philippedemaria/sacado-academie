@@ -141,7 +141,7 @@ class Question(models.Model):
     Modèle représentant un associé.
     """
 
-    title         = models.TextField(max_length=255, default='',  blank=True, verbose_name="Réponse écrite")
+    title         = RichTextUploadingField( default='',  blank=True, verbose_name="Réponse écrite")
     calculator    = models.BooleanField(default=0, verbose_name="Calculatrice ?")
     date_modified = models.DateTimeField(auto_now=True)
     ####  type de question
@@ -149,6 +149,8 @@ class Question(models.Model):
     answer        = models.CharField(max_length=255, null = True,   blank=True, verbose_name="Réponse attendu")
 
     knowledge  = models.ForeignKey(Knowledge, related_name="question", blank=True, null = True,  on_delete=models.CASCADE) 
+    skills     = models.ManyToManyField(Skill, related_name="question", blank=True)
+
 
     imagefile  = models.ImageField(upload_to=question_directory_path, blank=True, verbose_name="Image", default="")
     audio      = models.FileField(upload_to=question_directory_path, blank=True, verbose_name="Audio", default="")
@@ -393,7 +395,7 @@ class Generate_qr(models.Model):
     """
     Modèle qui récupère les questions du quizz généré.
     """
-    quizz       = models.ForeignKey(Quizz,  related_name="generate_qr",  default ="" ,  on_delete=models.CASCADE, editable=False) 
+    quizz        = models.ForeignKey(Quizz,  related_name="generate_qr",  default ="" ,  on_delete=models.CASCADE, editable=False) 
     qr_text      = models.TextField( editable=False) 
     qrandom      = models.ForeignKey(Qrandom, blank=True, null=True, related_name="generate_qr" ,  on_delete=models.CASCADE , editable=False)  
     ranking      = models.PositiveIntegerField(default = 1 , editable=False)    
