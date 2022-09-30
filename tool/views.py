@@ -1318,7 +1318,7 @@ def create_question_positionnement(request,idp,qtype):
 
 
 
-def update_question_positionnement(request,id,idp,qtype):
+def update_question_positionnement(request,id,idp):
     
     request.session["tdb"] = False # permet l'activation du surlignage de l'icone dans le menu gauche 
     positionnement = Positionnement.objects.get(pk = idp)
