@@ -9,7 +9,7 @@
 	<input type="hidden" value="{{ question.id }}" class="sorted_question_id"   />
     <div class="row"> 
         <div class="col-xs-12 col-md-12">
-            <label>{% if from_ajax %}{{ nbq }}{% else %}{{ forloop.counter }}{% endif %}. {{ question.title|truncatechars_html:"20"}} {% if question %}{% if not question.is_publish %} <i class="fa fa-eye-slash"></i> {% endif %}{% endif %}</label>
+            <label>{% if from_ajax %}{{ nbq }}{% else %}{{ forloop.counter }}{% endif %}. {{ question.title|truncatechars_html:"20"|safe}} {% if question %}{% if not question.is_publish %} <i class="fa fa-eye-slash"></i> {% endif %}{% endif %}</label>
         </div>
     </div>
     <div class="row"> 
