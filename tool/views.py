@@ -1344,7 +1344,7 @@ def update_question_positionnement(request,id,idp,qtype):
                     if form_answer.is_valid():
                         form_answer.save()
 
-            return redirect('create_question_positionnement' , idq,0)
+            return redirect('create_question_positionnement' , idp,0)
 
  
     bgcolors = ["bgcolorRed","bgcolorBlue","bgcolorOrange","bgcolorGreen"] 
