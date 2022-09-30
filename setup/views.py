@@ -53,7 +53,6 @@ import uuid
 import time
 import os
 import fileinput 
-import random
 import json
 
 ##############   bibliothèques pour les impressions pdf    #########################
@@ -199,8 +198,11 @@ def index(request):
         form = AuthenticationForm()
         np_form = NewpasswordForm()
 
+        n_im = random.randint(1,7)
+        image_accueil = 'img/accueil_students'+str(n_im)+'.jpg'
+
         levels = Level.objects.order_by("ranking")
-        context = { 'nb_exercises' : nb_exercises , 'form' : form , 'np_form' : np_form , 'levels' : levels , 'nb_students' : nb_students , 'formules'  :  formules  }
+        context = { 'nb_exercises' : nb_exercises , 'form' : form , 'np_form' : np_form , 'levels' : levels , 'nb_students' : nb_students , 'formules'  :  formules , 'image_accueil' : image_accueil  }
 
  
         response = render(request, 'home.html', context)

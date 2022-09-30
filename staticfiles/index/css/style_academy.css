@@ -500,8 +500,7 @@ table.table-bordered.dataTable {
   height: 70px;
   transition: all 0.5s;
   z-index: 997;
-  width:1170px;
-  padding: 10px 0;
+  padding: 10px 30px;
   margin-left: auto;
   top: 0;
   margin-right: auto;
@@ -606,8 +605,9 @@ table.table-bordered.dataTable {
  
 .bandeau_accueil{
   font-family: 'Roboto', cursive;
-  /*background-image: url('/static/img/image_accueil00.jpg');*/
+  background-image: url('/static/img/fond_accueil.jpg');*/
   height:90vh;
+  background-repeat: no-repeat;
 }
 
 .bandeau_accueil_no_text{
@@ -619,16 +619,16 @@ table.table-bordered.dataTable {
 
 .bandeau_accueil_title{
   font-family: 'Roboto', cursive;
-  text-transform: uppercase ;
-  font-size:50px;
-  padding:140px 100px 50px 100px;
+  font-variant: small-caps ;
+  font-size:60px;
+  padding:140px 150px 50px 210px;
   color:#222;
 }  
 
 .bandeau_accueil_subtitle{
   font-family: 'Roboto', cursive;
   font-size:20px;
-  padding:50px 100px 50px 100px;
+  padding:50px 100px 50px 210px;
   color:#222;
 }
 

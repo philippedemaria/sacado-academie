@@ -87,7 +87,6 @@ def transfert_asso_acad(request,idl,start):
                         os.rename(  old_file  , new_file )
                         supportfile.save()
 
-
     else :
         level = None
         messagers = []
