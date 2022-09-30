@@ -162,14 +162,20 @@
                             </div>
 
                             <div class="row" >
-                                <div class="col-sm-12 col-md-12" >  
-                                    {{ form.knowledge|add_class:"form-control select2" }}
+                                <div class="col-sm-12 col-md-12" >
+                                    <div class="form-group"> 
+                                        <label>Savoir faire</label><br/>
+                                        {{ form.knowledge|add_class:"form-control select2" }}
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="row" >
-                                <div class="col-sm-12 col-md-12" >  
-                                    {{ form.skills|add_class:"form-control select2" }}
+                                <div class="col-sm-12 col-md-12" >
+                                    <div class="form-group"> 
+                                        <label>Compétences</label><br/>
+                                        {{ form.skills|add_class:"form-control select2" }}
+                                    </div>
                                 </div>
                             </div>
 
