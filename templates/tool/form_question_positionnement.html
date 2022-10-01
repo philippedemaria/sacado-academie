@@ -28,7 +28,7 @@
 {% block page_title %}
    Créateur de test de positionnement 
    {% if positionnement %}
-   <img width="25px" src="{% static 'img/angle-right.png' %}"/> <a href="{% url 'update_positionnement' positionnement.id %}"> <small>{{ positionnement.title }}  ({{ positionnement.duration|time_done }}) </small></a>
+   <img width="25px" src="{% static 'img/angle-right.png' %}"/> <a href="{% url 'update_positionnement' positionnement.id %}"> <small>{{ positionnement.title }}  ({{ positionnement.questions.count }} questions) </small></a>
    {% endif  %}
    <img width="25px" src="{% static 'img/angle-right.png' %}"/> 
    <small> 
