@@ -375,11 +375,12 @@ class Positionnement(ModelWithCode):
         skill_dict = {}
         for q in self.questions.all():
             for s in q.skills.all():
-                if not s in tab_skills :
+                if not s.id in tab_skills :
                     tab_skills.append(s.id)
                     skill_dict[s.name]=1
                 else :
                     skill_dict[s.name]+=1
+
 
         final_skills = []
         for k,v in skill_dict.items():
@@ -401,35 +402,24 @@ class Positionnement(ModelWithCode):
             elif q.knowledge :
                 knowledge_dict[q.knowledge]+=1
  
-
         final_knowledges = []
         final_themes     = []
-        final_dict       = {}
-  
-
 
         for k,v in knowledge_dict.items():
-            final_dict_k = {}
+
+            dico = { "key" : k.name , "nb" : v  }
+       
             if not k.theme.id in final_themes :
                 final_themes.append(k.theme.id)
-                final_dict["theme"] = k.theme.name                
-                list_k = []
-                final_dict["nbt"] = 0
-            
-            idx = final_themes.index(k.theme.id)
-            final_dict_k["key"] = k.name
-            final_dict_k["nb"]  = v
-            final_dict["nbt"] += 1
-            if len(final_knowledges)==0:
-                list_k.append( final_dict_k  )
+                final_knowledges.append( { "theme" : k.theme.name  , 'nbt' : 1, "knowledges" :  [ dico ] }  )
             else :
-                final_knowledges[idx]["knowledges"].append( final_dict_k  )
-            final_dict["knowledges"] = list_k
-
-        final_knowledges.append(final_dict)
-
+                idx = final_themes.index(k.theme.id)
+                final_knowledges[idx]["nbt"] += 1                
+                final_knowledges[idx]["knowledges"].append(  dico  )
 
         return final_knowledges
+
+
 
 
 

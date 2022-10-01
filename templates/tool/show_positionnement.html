@@ -43,7 +43,7 @@
                 </div>
                 <div class="col-sm-12 col-md-9">
                     {% for p in positionnement.knowledges %}
-                        <label>{{ p.theme }} : {{ p.nbt }}</label><br/>
+                        <li class="sanspuce"><label><b>{{ p.theme }} : {{ p.nbt }}</b></label></li>
                         {% for k in  p.knowledges %}   
                             <li><label>{{ k.key }} : {{ k.nb }}</label></li>
                         {% endfor %}
