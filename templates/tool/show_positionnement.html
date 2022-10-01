@@ -60,11 +60,14 @@
         {% for question in questions %}
         <div class="card" style="padding:20px;width:90%">  
             <div class="row">  
-                <div class="col-sm-12 col-md-7">
+                <div class="col-sm-1">
+                    <h2>{{ forloop.counter }}.</h2>
+                </div>
+                <div class="col-sm-11 col-md-7">
                     {{ question.title|safe }}
                     {% if question.imagefile %}<img src="{{ question.imagefile.url }}" {% if question.width %}width="{{ question.width }}"{% endif %} {% if question.height %}height="{{ question.height }}"{% endif %} />{% endif %}
                 </div>
-                <div class="col-sm-12 col-md-5">
+                <div class="col-sm-12 col-md-4">
                     <a href="{% url 'update_question_positionnement' question.id positionnement.id question.qtype   %}" class="pull-right"><i class="bi bi-gear"></i></a>
 
 
@@ -77,8 +80,11 @@
 
                 </div>
             </div>
-            <div class="row">  
-                <div class="col-sm-12 ">
+            <div class="row">
+                <div class="col-sm-1">
+                    
+                </div>
+                <div class="col-sm-11 ">
                     <table class="table borderless">
                         <tr>
                         {% for c in question.choices.all %}
