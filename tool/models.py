@@ -414,7 +414,7 @@ class Positionnement(ModelWithCode):
                 final_knowledges.append( { "theme" : k.theme.name  , 'nbt' : 1, "knowledges" :  [ dico ] }  )
             else :
                 idx = final_themes.index(k.theme.id)
-                final_knowledges[idx]["nbt"] += 1                
+                final_knowledges[idx]["nbt"] += v                
                 final_knowledges[idx]["knowledges"].append(  dico  )
 
         return final_knowledges
