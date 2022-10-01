@@ -34,6 +34,9 @@
 <div class="row">  
     <div class="col-sm-12 col-md-12">
         <div class="card" style="padding:20px;width:90%"> 
+
+            {{  positionnemnet.skills }}<hr/>{{  positionnemnet.knowledges }}<hr/>
+
             {% for s in positionnemnet.skills %}
                 <li class="sanspuce">{{ s.key }} : {{ s.nb }}</li>
             {% endfor %}
