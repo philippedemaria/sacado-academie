@@ -399,7 +399,7 @@ class Positionnement(ModelWithCode):
             if q.knowledge and not q.knowledge.id in tab_knowledges :
                 tab_knowledges.append(q.knowledge.id)
                 knowledge_dict[q.knowledge.name]=0
-            else :
+            elif q.knowledge :
                 knowledge_dict[q.knowledge.name]+=1
 
         final_knowledges = []
