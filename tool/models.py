@@ -370,7 +370,48 @@ class Positionnement(ModelWithCode):
         return d
 
 
+    def skills(self):
+        tab_skills = []
+        skill_dict = {}
+        for q in self.questions.all():
+            for s in q.skills.all():
+                if not s in tab_skills :
+                    tab_skills.append(s.name)
+                    skill_dict[s.name]=0
+                else :
+                    skill_dict[s.name]+=1
 
+        final_skills = []
+        final_dict   = {}
+
+        for k,v in skill_dict.items():
+            final_dict["key"] = k
+            final_dict["nb"]  = v
+            final_skills.append(final_dict)
+
+        return final_skills
+
+
+    def knowledges(self):
+        tab_knowledges = []
+        knowledge_dict = {}
+        for q in self.questions.all():
+            for s in q.skills.all():
+                if not s in tab_knowledges :
+                    tab_skills.append(s.name)
+                    knowledge_dict[s.name]=0
+                else :
+                    knowledge_dict[s.name]+=1
+
+        final_knowledges = []
+        final_dict       = {}
+
+        for k,v in knowledge_dict.items():
+            final_dict["key"] = k
+            final_dict["nb"]  = v
+            final_knowledges.append(final_dict)
+
+        return final_knowledges
 
 
 

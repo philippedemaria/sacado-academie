@@ -31,56 +31,71 @@
 
 {% block body %}
  
- 
-  <div class="row" align="center">  
-        <div class="col-sm-12 col-md-12">
-            {% for question in questions %}
-            <div class="card" style="padding:20px;width:90%">  
-                <div class="row">  
-                    <div class="col-sm-12 col-md-7">
-                        {{ question.title|safe }}
-                        {% if question.imagefile %}<img src="{{ question.imagefile.url }}" {% if question.width %}width="{{ question.width }}"{% endif %} {% if question.height %}height="{{ question.height }}"{% endif %} />{% endif %}
-                    </div>
-                    <div class="col-sm-12 col-md-5">
-                        {% if question.calculator %}<img src="{% static 'img/no_calculator.png' %}" width="25px" /> {% else %}<img src="{% static 'img/no_calculator.png' %}" width="25px"/>{% endif %}
-                        {% if question.qtype == 1 %}VF{% elif question.qtype == 2 %}Réponse écrite{% elif question.qtype == 3 %}QCM{% else %}QCS{% endif %}
-                        {% if question.qtype == 1 %}{{ question.answer}}{% endif %}<hr/>
-                        {% for s in question.skills.all %}
-                            {{ s }}{% if not forloop.last %}, {% endif %}
-                        {% endfor %}
-
-                    </div>
-                </div>
-                <div class="row">  
-                    <div class="col-sm-12 ">
-                        <table class="table borderless">
-                            <tr>
-                            {% for c in question.choices.all %}
-                                <td>{% if c.imageanswer %}
-                                        {{ c.imageanswer.url }}
-                                    {% else %}
-                                        {{ c.answer }}
-                                    {% endif %} 
-                                    {% if c.is_correct %}<i class="fa fa-check text-success"></i>{% else %}<i class="fa fa-times text-danger"></i>{% endif %}
-                                    {% if c.retroaction %}<hr/>{{ c.retroaction }}{% endif %}
-                                </td> 
-                            {% endfor %}
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-                <div class="row">  
-                    <div class="col-sm-12 ">
-                        {{ question.knowledge }}
-                    </div>
-                </div>
-            </div>    
+<div class="row">  
+    <div class="col-sm-12 col-md-12">
+        <div class="card" style="padding:20px;width:90%"> 
+            {% for s in positionnemnet.skills %}
+                <li class="sanspuce">{{ s.key }} : {{ s.nb }}</li>
+            {% endfor %}
+            <hr/>
+            {% for k in positionnement.knowledges %}
+                <li class="sanspuce">{{ k.key }} : {{ k.nb }}</li>
             {% endfor %}
         </div>
-        
+    </div>
+</div>
 
 
-  </div> 
+
+<div class="row">  
+    <div class="col-sm-12 col-md-12">
+        {% for question in questions %}
+        <div class="card" style="padding:20px;width:90%">  
+            <div class="row">  
+                <div class="col-sm-12 col-md-7">
+                    {{ question.title|safe }}
+                    {% if question.imagefile %}<img src="{{ question.imagefile.url }}" {% if question.width %}width="{{ question.width }}"{% endif %} {% if question.height %}height="{{ question.height }}"{% endif %} />{% endif %}
+                </div>
+                <div class="col-sm-12 col-md-5">
+                    {% if question.calculator %}<img src="{% static 'img/no_calculator.png' %}" width="25px" /> {% else %}<img src="{% static 'img/no_calculator.png' %}" width="25px"/>{% endif %}
+                    {% if question.qtype == 1 %}VF{% elif question.qtype == 2 %}Réponse écrite{% elif question.qtype == 3 %}QCM{% else %}QCS{% endif %}
+                    {% if question.qtype == 1 %}{{ question.answer}}{% endif %}<hr/>
+                    {% for s in question.skills.all %}
+                        {{ s }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+
+                </div>
+            </div>
+            <div class="row">  
+                <div class="col-sm-12 ">
+                    <table class="table borderless">
+                        <tr>
+                        {% for c in question.choices.all %}
+                            <td>{% if c.imageanswer %}
+                                    {{ c.imageanswer.url }}
+                                {% else %}
+                                    {{ c.answer }}
+                                {% endif %} 
+                                {% if c.is_correct %}<i class="fa fa-check text-success"></i>{% else %}<i class="fa fa-times text-danger"></i>{% endif %}
+                                {% if c.retroaction %}<hr/>{{ c.retroaction }}{% endif %}
+                            </td> 
+                        {% endfor %}
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="row">  
+                <div class="col-sm-12">
+                    {{ question.knowledge }}
+                </div>
+            </div>
+        </div>    
+        {% endfor %}
+    </div>
+    
+
+
+</div> 
 
 {% endblock %} 
  
