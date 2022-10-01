@@ -35,7 +35,7 @@
   <div class="row" align="center">  
         <div class="col-sm-12 col-md-12">
             {% for question in questions %}
-            <div class="card" style="padding:20px">  
+            <div class="card" style="padding:20px;width:100%">  
                 <div class="row">  
                     <div class="col-sm-12 col-md-7">
                         {{ question.title|safe }}
@@ -44,10 +44,14 @@
                     <div class="col-sm-12 col-md-5">
                         {% if question.calculator %}<img src="{% static 'img/no_calculator.png' %}" width="25px" /> {% else %}<img src="{% static 'img/no_calculator.png' %}" width="25px"/>{% endif %}
                         {% if question.qtype == 1 %}VF{% elif question.qtype == 2 %}Réponse écrite{% elif question.qtype == 3 %}QCM{% else %}QCS{% endif %}
-                        {% if question.qtype == 1 %}{{ question.answer}}{% endif %}
+                        {% if question.qtype == 1 %}{{ question.answer}}{% endif %}<hr/>
+                        {% for s in question.skills.all %}
+                            {{ s }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+
                     </div>
                 </div>
-                <div class="row" align="center">  
+                <div class="row">  
                     <div class="col-sm-12 ">
                         <table class="table borderless">
                             <tr>
@@ -65,16 +69,9 @@
                         </table>
                     </div>
                 </div>
-                <div class="row" align="center">  
+                <div class="row">  
                     <div class="col-sm-12 ">
                         {{ question.knowledge }}
-                    </div>
-                </div>
-                <div class="row" align="center">  
-                    <div class="col-sm-12 ">
-                        {% for s in question.skills.all %}
-                            {{ s }}{% if not forloop.last %}, {% endif %}
-                        {% endfor %}
                     </div>
                 </div>
             </div>    
