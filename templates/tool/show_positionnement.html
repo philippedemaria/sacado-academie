@@ -39,7 +39,7 @@
                 <div class="row">  
                     <div class="col-sm-12 col-md-7">
                         {{ question.title|safe }}
-                        {% if question.imagefile %}<img src="{{ question.imagefile.url }}" {% if question.width %}width="{{ width }}"{% endif %} {% if question.height %}height="{{ height }}"{% endif %} />
+                        {% if question.imagefile %}<img src="{{ question.imagefile.url }}" {% if question.width %}width="{{ width }}"{% endif %} {% if question.height %}height="{{ height }}"{% endif %} />{% endif %}
                     </div>
                     <div class="col-sm-12 col-md-5">
                         {% if question.calculator %}<img src="{% static 'img/no_calculator.png' %}" width="25px" /> {% else %}<img src="{% static 'img/no_calculator.png' %}" width="25px"/>{% endif %}
