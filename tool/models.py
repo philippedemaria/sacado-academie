@@ -396,7 +396,7 @@ class Positionnement(ModelWithCode):
         tab_knowledges = []
         knowledge_dict = {}
         for q in self.questions.all():
-            if not q.knowledge.id in tab_knowledges :
+            if q.knowledge and not q.knowledge.id in tab_knowledges :
                 tab_knowledges.append(q.knowledge.id)
                 knowledge_dict[q.knowledge.name]=0
             else :
