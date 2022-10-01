@@ -73,7 +73,7 @@
                 <div class="row" align="center">  
                     <div class="col-sm-12 ">
                         {% for s in question.skills.all %}
-                            {{ s }}{% if not forloop.last %}, {% endfor %}
+                            {{ s }}{% if not forloop.last %}, {% endif %}
                         {% endfor %}
                     </div>
                 </div>
