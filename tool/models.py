@@ -397,16 +397,37 @@ class Positionnement(ModelWithCode):
         for q in self.questions.all():
             if q.knowledge and not q.knowledge.id in tab_knowledges :
                 tab_knowledges.append(q.knowledge.id)
-                knowledge_dict[q.knowledge.name]=1
+                knowledge_dict[q.knowledge]=1
             elif q.knowledge :
-                knowledge_dict[q.knowledge.name]+=1
+                knowledge_dict[q.knowledge]+=1
+ 
 
         final_knowledges = []
+        final_themes     = []
+        final_dict       = {}
+  
+
+
         for k,v in knowledge_dict.items():
-            final_dict       = {}
-            final_dict["key"] = k
-            final_dict["nb"]  = v
-            final_knowledges.append(final_dict)
+            final_dict_k = {}
+            if not k.theme.id in final_themes :
+                final_themes.append(k.theme.id)
+                final_dict["theme"] = k.theme.name                
+                list_k = []
+                final_dict["nbt"] = 0
+            
+            idx = final_themes.index(k.theme.id)
+            final_dict_k["key"] = k.name
+            final_dict_k["nb"]  = v
+            final_dict["nbt"] += 1
+            if len(final_knowledges)==0:
+                list_k.append( final_dict_k  )
+            else :
+                final_knowledges[idx]["knowledges"].append( final_dict_k  )
+            final_dict["knowledges"] = list_k
+
+        final_knowledges.append(final_dict)
+
 
         return final_knowledges
 
