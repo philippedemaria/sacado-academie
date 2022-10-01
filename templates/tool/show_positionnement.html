@@ -35,14 +35,14 @@
     <div class="col-sm-12 col-md-12">
         <div class="card" style="padding:20px;width:90%"> 
 
-            {{  positionnemnet.skills }}<hr/>{{  positionnemnet.knowledges }}<hr/>
+            {{  positionnement.skills  }}<hr/>{{  positionnement.knowledges }}<hr/>
 
-            {% for s in positionnemnet.skills %}
-                <li class="sanspuce">{{ s.key }} : {{ s.nb }}</li>
+            {% for s in positionnement.skills %}
+                <li class="sanspuce"><label>{{ s.key }} : {{ s.nb }}</label></li>
             {% endfor %}
             <hr/>
             {% for k in positionnement.knowledges %}
-                <li class="sanspuce">{{ k.key }} : {{ k.nb }}</li>
+                <li class="sanspuce"><label>{{ k.key }} : {{ k.nb }}</label></li>
             {% endfor %}
         </div>
     </div>
