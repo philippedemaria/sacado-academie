@@ -65,6 +65,9 @@
                     {% if question.imagefile %}<img src="{{ question.imagefile.url }}" {% if question.width %}width="{{ question.width }}"{% endif %} {% if question.height %}height="{{ question.height }}"{% endif %} />{% endif %}
                 </div>
                 <div class="col-sm-12 col-md-5">
+                    <a href="{% url 'update_question_positionnement' question.id positionnement.id question.qtype   %}" class="pull-right"><i class="bi bi-gear"></i></a>
+
+
                     {% if question.calculator %}<img src="{% static 'img/no_calculator.png' %}" width="25px" /> {% else %}<img src="{% static 'img/no_calculator.png' %}" width="25px"/>{% endif %}
                     {% if question.qtype == 1 %}VF{% elif question.qtype == 2 %}Réponse écrite{% elif question.qtype == 3 %}QCM{% else %}QCS{% endif %}
                     {% if question.qtype == 1 %}{{ question.answer}}{% endif %}<hr/>
