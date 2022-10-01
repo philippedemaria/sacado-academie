@@ -398,7 +398,7 @@ class Positionnement(ModelWithCode):
         for q in self.questions.all():
             for s in q.skills.all():
                 if not s in tab_knowledges :
-                    tab_skills.append(s.name)
+                    tab_knowledges.append(s.name)
                     knowledge_dict[s.name]=0
                 else :
                     knowledge_dict[s.name]+=1
