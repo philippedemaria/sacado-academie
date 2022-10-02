@@ -14,7 +14,7 @@
 
 
 {% block page_title %}
-   <a href="{% url 'list_positionnements' %}" ><i class="bi bi-aspect-ratio"></i> </a>  Quizz  <img width="25px" src="{% static 'img/angle-right.png' %}"/> {{ positionnement.title }} 
+   <a href="{% url 'list_positionnements' %}" > {{ positionnement.title }} {{ positionnement.level.shortname }} 
 {% endblock %}
 
 
@@ -57,7 +57,7 @@
     <div style="height:40px"></div>                   
     <div class="row" > 
         <div class="col-sm-12 col-md-12" >
-            <button type="submit" class="btn btn-primary"><i class="fa fa-caret-right"></i> Démarrer le quizz</button>
+            <button type="submit" class="btn btn-primary"><i class="fa fa-caret-right"></i> Démarrer le test</button>
         </div>
     </div> 
 </form>  
