@@ -1516,7 +1516,11 @@ def goto_positionnement_numeric(request,id):
 def start_positionnement_student(request,id):
     """ démarrage d'un test de positionnement sur poste"""
     positionnement = Positionnement.objects.get(pk=id)
-    del request.session["answerpositionnement"]
+    try :
+        del request.session["answerpositionnement"]
+    except :
+        pass
+
     request.session["answerpositionnement"] = []
     context = {  "positionnement" : positionnement  }
 
