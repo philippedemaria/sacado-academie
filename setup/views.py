@@ -39,7 +39,7 @@ from school.forms import  SchoolForm
 from school.gar import *
 from socle.models import Level, Subject
 from lesson.models import ConnexionEleve
-from tool.models import Quizz, Question, Choice
+from tool.models import Quizz, Question, Choice , Positionnement
 from bibliotex.models import Exotex
 from datetime import date, datetime , timedelta
 
@@ -636,8 +636,10 @@ def contact(request):
 def advises_index(request):
     form = AuthenticationForm()
     np_form = NewpasswordForm()
-    context = { 'form' : form  , 'np_form' : np_form }
+    positionnements = Positionnement.objects.order_by("level__ranking")
+    context = { 'form' : form  , 'np_form' : np_form , 'positionnements' : positionnements   }
     return render(request, 'setup/advises.html', context)
+
 
 
 def faq(request):

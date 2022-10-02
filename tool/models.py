@@ -164,7 +164,7 @@ class Question(models.Model):
 
     is_correction = models.BooleanField(default=0, verbose_name="Correction ?")
     duration      = models.PositiveIntegerField(default=20, blank=True, verbose_name="Durée")
-    point         = models.PositiveIntegerField(default=1000, blank=True, verbose_name="Point")
+    point         = models.PositiveIntegerField(default=100, blank=True, verbose_name="Point")
 
  
     is_correct = models.BooleanField(default=1, verbose_name="Réponse correcte ?")
@@ -420,7 +420,21 @@ class Positionnement(ModelWithCode):
         return final_knowledges
 
 
-
+    def ans_for_this_question (self,q, student):
+        t = []
+        try :
+            ans = Answerpositionnement.objects.get(positionnement = self , student= student , question = q)
+            
+            if q.qtype == 2 :
+                t = ans.answer
+            else :
+                if ans.answer :
+                    a_tab = ans.answer.split(',')
+                    for a in a_tab :
+                        t.append(int(a))
+        except :
+            pass
+        return t
 
 
 
@@ -494,6 +508,7 @@ class Answerplayer(models.Model):
             i +=1
         return rep
 
+ 
 
 
 class Slide(models.Model):

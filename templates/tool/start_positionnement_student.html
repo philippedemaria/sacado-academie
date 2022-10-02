@@ -1,0 +1,66 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% load item_tags %}
+
+
+{% block require %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common3.js' %}"></script>
+    <script>
+        require(['script/ajax-pass_quizz_student']);
+    </script> 
+{% endblock %}
+
+
+
+{% block page_title %}
+   <a href="{% url 'list_positionnements' %}" ><i class="bi bi-aspect-ratio"></i> </a>  Quizz  <img width="25px" src="{% static 'img/angle-right.png' %}"/> {{ positionnement.title }} 
+{% endblock %}
+
+
+{% block page_menu_right %} 
+ 
+ 
+ 
+{% endblock %}
+
+
+
+
+
+
+{% block body %}
+ 
+<section class="content_main"> 
+<form action="{% url 'goto_positionnement_student' positionnement.id %}" method="POST">
+    {% csrf_token %}
+    <div class="row" >  
+        <div class="col-sm-12 col-md-4">
+            <div class="form-group">
+                <label>Ecrire votre nom.</label>
+                <input name="last_name" class="form-control" type="text" />
+            </div>
+        </div>
+    </div>
+    <div class="row" >  
+        <div class="col-sm-12 col-md-4">
+            <div class="form-group">
+                <label>Ecrire votre prénom.</label>
+                <input name="first_name" class="form-control" type="text" /> 
+            </div>
+        </div>
+    </div> 
+
+
+
+
+    <div style="height:40px"></div>                   
+    <div class="row" > 
+        <div class="col-sm-12 col-md-12" >
+            <button type="submit" class="btn btn-primary"><i class="fa fa-caret-right"></i> Démarrer le quizz</button>
+        </div>
+    </div> 
+</form>  
+</section>
+ 
+{% endblock %} 

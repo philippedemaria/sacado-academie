@@ -57,6 +57,19 @@ def no_table(arg):
 
 
 @register.filter
+def bgcolor(arg):
+    '''HTML entity decode'''
+    if arg < 40 :
+        return '#b5322b'
+    elif arg < 65 :
+        return  '#b5a32b'
+    elif arg < 90 :
+        return  '#62d85a'
+    else :
+        return '#1d6718'
+ 
+
+@register.filter
 def decode(arg):
     '''HTML entity decode'''
     string = html.unescape(arg)

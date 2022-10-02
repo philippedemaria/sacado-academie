@@ -86,7 +86,7 @@
     </div> 
     <div class="row" align="center"  style="width:80%;padding:10px ; margin-right: auto; margin-left:auto; background-color: #f1eef7 ;">  
         <div class="col-sm-12 col-md-12"align="center">
-            <h1 style="font-size:2.5em"  >  {{ question.title }}  </h1>
+            <h1 style="font-size:2.5em"  >  {{ question.title|safe }}   </h1>
         </div>
     </div>
     {% if question.imagefile %}
@@ -151,21 +151,21 @@
  
     {% endif %}
 
-<div style="height:40px"></div>
+    <div style="height:40px"></div>
 
-<div class="row" align="center" > 
-    <div class="col-sm-6 col-md-9" align="center"  ></div>
-    <div class="col-sm-6 col-md-3" align="center"  >
-        {% if positionnement.is_back and positionnement_nav_prev > 0 %}
-            <a href="{% url 'goto_positionnement_numeric' positionnement.id %}" class="btn btn-default"><i class="fa fa-caret-left"></i> Précedent</a>
-        {% endif %}  
-    </div>
-</div> 
-<div class="row" > 
-    <div class="col-sm-12 col-md-12" >
-        <button type="submit" class="btn btn-primary"><i class="fa fa-caret-right"></i> Enregistrement de la réponse</button>
-    </div>
-</div> 
+    <div class="row" align="center" > 
+        <div class="col-sm-6 col-md-9" align="center"  ></div>
+        <div class="col-sm-6 col-md-3" align="center"  >
+            {% if positionnement.is_back and positionnement_nav_prev > 0 %}
+                <a href="{% url 'goto_positionnement_numeric' positionnement.id %}" class="btn btn-default"><i class="fa fa-caret-left"></i> Précedent</a>
+            {% endif %}  
+        </div>
+    </div> 
+    <div class="row" > 
+        <div class="col-sm-12 col-md-12" >
+            <button type="submit" class="btn btn-primary"><i class="fa fa-caret-right"></i> Enregistrement de la réponse</button>
+        </div>
+    </div> 
 {% else %}
 
     <div class="row consigne_diapo"  align="center">  

@@ -24,6 +24,12 @@ define(['jquery',  'bootstrap', 'ui' , 'ui_sortable' , 'uploader','config_toggle
 
 
 
+        $(document).on('click', '.this_csv_file', function (event) {
+
+            idp = $(this).data("positionnemnet_id")
+            $("#csv_positionnement_id").val(idp);
+
+            });
 
 
 

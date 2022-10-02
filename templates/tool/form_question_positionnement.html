@@ -96,16 +96,8 @@
                                         <label>Durée</label><br/>
                                         {{ form.duration|add_class:"quizz_input quizz_input50" |attr:"placeholder:Ecrire votre question ici" |attr:"rows:1"|attr:"value:20" }}<label>s. </label>
                                     </div>
-                                    <div class="quizz_assets">
-                                        <label>Point</label><br>
-                                        {{ form.point|add_class:"quizz_input"|attr:"min:200"|attr:"max:2000"|attr:"rows:1"|attr:"value:1000" }}  
-                                    </div>
                                 </div>
                                 <div class="col-sm-6 col-md-2" align="center" > 
-                                    <div class="quizz_assets" id="check_calculator">
-                                       <label>Calculatrice</label><br>
-                                        {{ form.calculator  }} 
-                                    </div>
                                     <div class="quizz_assets"  id="check_publish">
                                         <label>Publication</label><br>
                                         {{ form.is_publish  }} 

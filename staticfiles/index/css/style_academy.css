@@ -126,6 +126,24 @@ a.sublisting:focus{
 }
 
 
+.card_positionnement{
+    border:#CCC solid 1px;
+    width:250px;
+    height:250px;
+    margin: 20px; 
+    padding:10px; 
+    border-radius: 5px;
+    float:left;
+  }
+
+.card_positionnement:hover{
+   background-color:  #f1eef7 ;
+}
+
+.card_positionnement:hover a{
+   color:#e00a72; ;
+}
+
 
 
 .helper_tip {

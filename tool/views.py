@@ -1270,6 +1270,7 @@ def create_question_positionnement(request,idp,qtype):
 
     formSet = inlineformset_factory( Question , Choice , fields=('answer','imageanswer','is_correct','retroaction') , extra=2)
     form_ans = formSet(request.POST or None,  request.FILES or None)
+  
     if request.method == "POST"  :
         if form.is_valid():
             nf         = form.save(commit=False) 
@@ -1315,6 +1316,58 @@ def create_question_positionnement(request,idp,qtype):
 
     return render(request, template , context)
 
+
+
+
+def create_question_csv_positionnement(request):
+ 
+
+    idp = request.POST.get("positionnement_id",None)
+    if not idp :
+        return redirect('list_positionnements' )
+
+    positionnement = Positionnement.objects.get(pk = idp)
+    csv_file = request.FILES["my_csv_file"]
+    if not csv_file.name.endswith('.csv'):
+        messages.error(request, "Le fichier n'est pas format CSV")
+        return HttpResponseRedirect(reverse("create_question_positionnement", args=[idp, qtype]))
+    # if file is too large, return
+    if csv_file.multiple_chunks():
+        messages.error(request, "Le fichier est trop lourd (%.2f MB)." % (csv_file.size / (1000 * 1000),))
+        return HttpResponseRedirect(reverse("create_question_positionnement", args=[idp, qtype]))
+    
+    file_data = csv_file.readlines()
+    list_names = ""
+    for line in file_data :
+        try:
+            line = line.decode("utf-8")
+        except UnicodeDecodeError:
+            messages.error(request, 'Erreur..... Votre fichier contient des caractères spéciaux qui ne peuvent pas être décodés. Merci de vérifier que votre fichier .csv est bien encodé au format UTF-8.')
+            return HttpResponseRedirect(reverse("create_question_positionnement", args=[idp, qtype]))
+            
+        if ";" in line:
+            fields = line.split(";")
+        elif "," in line:
+            fields = line.split(",")
+
+  
+        if fields[1] == "1" : calculator = True
+        else : calculator = False
+        if fields[4] == "1" : is_publish = True
+        else : is_publish = False
+        if fields[7] == "1" : is_correct = True
+        else : is_correct = False
+
+        question = Question.objects.create(title= fields[0], calculator=calculator,qtype= fields[2],answer= fields[3],is_publish= is_publish,duration= fields[5],point= fields[6],is_correct= is_correct,ranking= fields[8] )
+        length = len(fields)-9
+        for i in range(length//4+1) :
+            if fields[11+3*i] == "1" : is_correct = True
+            else : is_correct = False
+            Choice.objects.create(answer= fields[9+3*i],retroaction= fields[10+3*i],is_correct= fields[11+3*i],question= question)
+
+        positionnement.questions.add(question)
+
+    return redirect('list_positionnements' )
 
 
 
@@ -1459,36 +1512,59 @@ def goto_positionnement_numeric(request,id):
 
 
 
+
+def start_positionnement_student(request,id):
+    """ démarrage d'un test de positionnement sur poste"""
+    positionnement = Positionnement.objects.get(pk=id)
+    del request.session["answerpositionnement"]
+    request.session["answerpositionnement"] = []
+    context = {  "positionnement" : positionnement  }
+
+    return render(request, 'tool/start_positionnement_student.html', context)
+
+
+ 
+
 def goto_positionnement_student(request,id):
     """ participation à un quizz sur poste"""
-    student = request.user.student
+    student = request.session.get("student")
+
+    first_name = request.POST.get("first_name")
+    last_name  = request.POST.get("last_name")
+
+    if first_name and last_name :
+        request.session["student"] = first_name.capitalize()  +" "+last_name.capitalize() + str(uuid.uuid4())[:8]
+
+    if not  request.session["student"] : 
+        return redirect('index')
+
     request.session["tdb"] = False # permet l'activation du surlignage de l'icone dans le menu gauche 
-    quizz = Quizz.objects.get(pk= id)
+    positionnement = Positionnement.objects.get(pk= id)
 
     #Génération des questions
-    question_ids = list(quizz.questions.values_list("id",flat=True).order_by("ranking"))
+    question_ids = list(positionnement.questions.values_list("id",flat=True).order_by("ranking"))
     quizz_id     = request.session.get("quizz_id",None) 
 
     if not quizz_id :
-        quizz_id                    = quizz.id
-        request.session["quizz_id"] = quizz_id
+        positionnement_id                    = positionnement.id
+        request.session["positionnement_id"] = positionnement_id
 
-        if quizz.is_ranking :
+        if positionnement.is_ranking :
             random.shuffle(question_ids)
         
         request.session["question_ids"] = question_ids
     else :
-        quizz_id     = request.session.get("quizz_id")
-        question_ids = request.session.get("question_ids")
+        positionnement_id = request.session.get("positionnement_id")
+        question_ids      = request.session.get("question_ids")
 
     #Génération des réponses 
     is_shuffle = False
-    if quizz.is_shuffle :
+    if positionnement.is_shuffle :
         is_shuffle = True
 
     #Retour arrière
     is_back = False
-    if quizz.is_back :
+    if positionnement.is_back :
         is_back = True
 
 
@@ -1508,16 +1584,9 @@ def goto_positionnement_student(request,id):
         start_time_tab = request.POST.get("start_time").split(",")
         start_time =  int(start_time_tab[0])
         timer =  stop_time - start_time
-        today = time_zone_user(quizz.teacher.user)
+        today = time_zone_user(positionnement.teacher.user)
 
-        if quizz.stop and quizz.start :
-            if quizz.stop > today and quizz.start < today :
-                store_quizz_solution(quizz_id,student,q_id, solutions,timer)
-        elif quizz.stop :
-            if quizz.stop > today  :
-                store_quizz_solution(quizz_id,student,q_id, solutions,timer)
-        else :
-            store_quizz_solution(quizz_id,student,q_id, solutions,timer)
+        store_positionnement_solution(request ,positionnement_id,student,q_id, solutions,timer)
 
 
     if quizz_nav == len(question_ids) :
@@ -1533,11 +1602,102 @@ def goto_positionnement_student(request,id):
     quizz_nav += 1
     quizz_nav_prev = quizz_nav - 1
 
-    context = {  "positionnement" : positionnement , "question" : question , "quizz_nav" : quizz_nav, "quizz_nav_prev" : quizz_nav_prev ,"end_of_quizz" : end_of_quizz ,"stop_time" : stop_time , 'student' : student  }
+    context = { "first_name" : first_name  , "last_name" : last_name ,  "positionnement" : positionnement , "question" : question , "quizz_nav" : quizz_nav, "quizz_nav_prev" : quizz_nav_prev ,"end_of_quizz" : end_of_quizz ,"stop_time" : stop_time , 'student' : student  }
 
     return render(request, 'tool/pass_positionnement_student.html', context)
 
 
+
+
+def store_positionnement_solution( request ,positionnement_id,student,q_id, solutions,t):
+    """ Enregistrement des solutions postées 
+    par les id des choices proposés"""
+    question = Question.objects.get(pk=q_id)
+    answer  = []
+
+    i , score  = 1 , 0
+    is_correct = 0
+    for ans in solutions : # est une liste d'id des réponses choisies par les réponses proposées
+
+        if question.qtype == 1 :
+            if int(ans) == question.is_correct :
+                is_correct = 1
+                score      = question.point
+            answ = ans
+        elif question.qtype == 2 :
+            choices = question.choices.all()
+            for choice in choices :
+                if ans in choice.answer :
+                    is_correct = 1
+                    score      = question.point
+            answ = ans
+        else :
+            choices  = question.choices.values_list('id',flat=True).filter(is_correct=1)
+            corrects = 0
+            a = ""
+            if int(ans) in choices :
+                corrects += 1
+            if corrects == len(choices):
+                is_correct = 1
+                score      = question.point
+            aw = Choice.objects.get(pk=ans)
+            if aw.imageanswer !="":
+                answ = aw.imageanswer 
+            else :
+                answ = aw.answer 
+
+        answer.append(answ)
+
+        i +=1
+ 
+    timer = int(t)
+
+    themes = [ question.knowledge.theme.name ,  score ]
+
+    request.session.get("answerpositionnement").append (  (positionnement_id  , student, q_id ,   answer,   score,   timer,   is_correct , themes  ))
+
+
+
+def my_results(request):
+
+    answerpositionnements = request.session.get("answerpositionnement")
+    results , themes ,  final_skills , skill_tab  = []  , [] ,  [] ,  [] 
+    total = 0
+    for a_p in answerpositionnements :
+        question = Question.objects.get(pk=a_p[2])
+        dico =  {"positionnement_id" : a_p[0] , "student" : a_p[1], "question" : question, "answer" : a_p[3] , "score" : a_p[4] , "timer" : a_p[5] , "is_correct" : a_p[6] , 'themes' : a_p[7] }
+        results.append(dico)
+        themes.append(a_p[7])
+
+    
+        for skill in question.skills.all() :
+            if not skill.id in final_skills :
+                final_skills.append(skill.id)
+                total = 1
+                skill_tab.append({ "skill" : skill.name , "score" : a_p[4] })
+            else :
+                idx = final_skills.index(skill.id)
+                total += 1
+                skill_tab[idx]["score"] += a_p[4]
+                skill_tab[idx]["score"] = int(skill_tab[idx]["score"] / total)
+
+
+    final_themes , theme_tab  = [] ,  []  
+    for data in themes :
+        if not data[0] in final_themes :
+            final_themes.append(data[0])
+            total = 1
+            theme_tab.append({ "theme" : data[0] , "score" : data[1] })
+        else :
+            idx = final_themes.index(data[0])
+            total += 1
+            theme_tab[idx]["score"] += data[1]
+            theme_tab[idx]["score"] = int(theme_tab[idx]["score"] / total)
+
+
+
+    context = { 'results' : results , 'theme_tab' : theme_tab , 'skill_tab' : skill_tab   }
+    return render(request, 'tool/positionnement_results.html', context)
 
 ############################################################################################################
 ############################################################################################################
@@ -2242,8 +2402,6 @@ def print_quizz_to_pdf(request):
 
     result = subprocess.run(["pdflatex", "-interaction","nonstopmode",  "-output-directory", settings.DIR_TMP_TEX ,  file ])
     return FileResponse(open(file+".pdf", 'rb'),  as_attachment=True, content_type='application/pdf')
-
-
 
 
 ############################################################################################################

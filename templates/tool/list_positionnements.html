@@ -65,7 +65,11 @@
                           <td >
                              {{ positionnement.questions.count }} <a href="{% url 'create_question_positionnement' positionnement.id 0 %}"><i class="bi bi-gear"></i> </a> 
 
-                             <a href="{% url 'show_positionnement' positionnement.id %}"><i class="bi bi-eye"></i> </a> 
+                             <a href="{% url 'show_positionnement' positionnement.id %}"><i class="bi bi-eye"></i> </a>
+
+                            <a href="#" data-toggle='modal' data-target='#div_help' data-positionnemnet_id="{{ positionnement.id }}" class="this_csv_file" >CSV</a>
+
+
                           </td>
                           <td>
                               
@@ -80,7 +84,60 @@
 </section>
 
 
+        <div class="modal fade" id="div_help" tabindex="-1" role="dialog" aria-labelledby="div_help">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <div class="row">
+                                <div class="col-sm-11 col-md-11">
+                                    Aide à la création d'un csv en UTF-8
+                                </div>
+                                <div class="col-sm-1 col-md-1">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button> 
+                                </div>
+                        </div>
+                    </div>
+                    <div class="modal-body" style="font-size:14px;" >
+                        Les champs doivent s'écrire dans cet ordre avec ces choix possibles.
+                        <li><b>Enoncé :</b> l'énoncé, écrit en HTML, ne peut pas contenir d'image !</li>
+                        <li><b>Calculatrice :</b> 0 ou  1. 1 si autorisée</li>
+                        <li><b>Type de question :</b> Renseigner 1 pour Vrai/Faux, 2 pour réponse écrite , 3 pour QCM, 4 pour QCS</li>
+                        <li><b>Réponse attendue :</b> seulement pour le type 2. Si plusieurs possibilités, les séparer par ____ <small>(4 _)</small>. Laisser vide si type 3 ou 4.</li>
+                        <li><b>Publication :</b> 0 ou  1. 1 si publiée</li>
+                        <li><b>Durée :</b> en secondes</li>
+                        <li><b>Point :</b> de 0 à 100</li>
+                        <li><b>Correct ?:</b> 0 ou  1. Seulement pour le type 2. 0 si Faux correct.  1 si VRAI correct. Laisser vide si type 3 ou 4. </li>
+                        <li><b>Ordre :</b> nombre de la question dans le questionnaire </li>
+                        <hr/><b>Proposition possibles :</b> Type 3 ou 4. Les 3 champs suivants s'écrivent autant de fois que de propositions
+                        <li><b>Proposition :</b></li>
+                        <li><b>Rétroaction :</b> vide si aucune</li>
+                        <li><b>Correcte ? :</b> 0 ou  1. 1 si correcte</li>
+                        <hr/>
+                        <a href="https://sacado-academie.fr/ressources/csv_type_question.ods" class="btn btn-default">Télécharger un exemple de fichier .ods qui sera complété puis convertit en CSV</a>
 
+                        <form action="{% url 'create_question_csv_positionnement' %}" enctype="multipart/form-data" method="POST">
+                          <div class="row">{% csrf_token %}
+                              <div class="col-sm-12 col-md-12"> 
+                                  <div class="form-group"> 
+                                      <input type="file" name="my_csv_file" class="btn btn-default" />
+                                      <input type="hidden" name="positionnement_id" id="csv_positionnement_id" />
+                                  </div>
+                              </div>  
+                          </div> 
+                          <div class="row">
+                              <div class="col-sm-12 col-md-12"> 
+                                  <div class="form-group"> 
+                                      <button type="submit" class="btn btn-primary">Téléverser et créer les questions</button>
+                                  </div>
+                              </div>  
+                          </div> 
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
 

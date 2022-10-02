@@ -16,10 +16,37 @@ Intro Section -
     <div class="container bg_white">
         <div class="row">
             <div class="col-xs-12 col-md-12" >
-                <h1 class="title_bloc_index">Les résultats de votre enfant sont plutôt </h1>
+                <h1 class="title_bloc_index">Positionnement </h1>
             </div>
         </div>
 
+
+
+        <div class="row">
+            <div class="col-xs-12 col-md-12" >
+                <p>L'équipe Sacado a conçu un test de positionnemnt par niveau. Ces tests s'appuient sur les évaluations nationales et identifient les réussites et les manques par rapport aux attentes de l'Education Nationale. </p>
+                <p>Nous vous proposons de réaliser un test <b class="rose">gratuitement</b> pour obtenir votre profil de connaissances. Nous vous conseillerons une utiisation optimale de la plateforme Sacado Académie à l'issue de ce questionnaire. Bonne passation.</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 col-md-12" align="center" >
+            {% for p in positionnements %}
+                <div class="card_positionnement">
+                    Test de positionnement <a href="{% url 'start_positionnement_student' p.id %}" style="font-size:100px">{{ p.level.shortname}}</a>
+                </div>
+            {% endfor%}
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+        {% comment %}
         <div class="row  align-items-center">
             <div class="col-xs-6 col-md-4" align="center">
                 <div class="photo_background" id="photo_background2">
@@ -48,7 +75,6 @@ Intro Section -
                     <div class="photo_background_texte"  id="photo_background_texte3"><small><b>Et il veut</b></small> <br/> Reprendre confiance en ses capacités </div>
                 </div>
             </div>
-
         </div>
 
         <div class="row  align-items-center" style="margin-top: 20px">
@@ -81,55 +107,39 @@ Intro Section -
             </div> 
         </div>
 
-
-
-
         <div class="row  align-items-center" style="margin-top: 60px">
+            <div class="col-sm-12 col-md-3"></div>
+                <div class="col-sm-12 col-md-6">
+                    <div class="form">
+                      <p>Vous souhaitez obtenir des infos complémentaires, laissez-nous un message et nous vous répondrons rapidement. </p>
+                      <form action="{% url 'send_message' %}" method="post" >
+                          {% csrf_token %}
+                        <div class="form-group">
+                          <input type="text" name="name" class="form-control" id="name" placeholder="Votre nom" data-rule="minlen:4" data-msg="Please enter at least 4 chars" required />
+                        </div>
+                        <div class="form-group">
+                          <input type="email" class="form-control" name="email" id="email" placeholder="Votre email" data-rule="email" data-msg="Please enter a valid email" required />
+                        </div>
+                        <div class="form-group">
+                          <input type="text" class="form-control" name="subject" id="subject" placeholder="Objet" data-rule="minlen:4" data-msg="Au moins 8 caractères" required />
+                        </div>
+                        <div class="form-group">
+                          <textarea class="form-control" name="message" rows="5" required data-msg="Ecrire votre message" placeholder="Message"></textarea>
+                        </div>
 
+                        <div class="form-group">
+                          <img src="{% static 'img/som_token.png' %}" />
+                          <input type="text" name="token" class="form-control" id="token" placeholder="Ecrire le résultat de la somme" required />
+                        </div>
 
-              <div class="col-sm-12 col-md-3"></div>
-
-              <div class="col-sm-12 col-md-6">
-
-                <div class="form">
-
-                  
-                  <p>Vous souhaitez obtenir des infos complémentaires, laissez-nous un message et nous vous répondrons rapidement. </p>
-                  <form action="{% url 'send_message' %}" method="post" >
-                      {% csrf_token %}
-                    <div class="form-group">
-                      <input type="text" name="name" class="form-control" id="name" placeholder="Votre nom" data-rule="minlen:4" data-msg="Please enter at least 4 chars" required />
-                    </div>
-                    <div class="form-group">
-                      <input type="email" class="form-control" name="email" id="email" placeholder="Votre email" data-rule="email" data-msg="Please enter a valid email" required />
-                    </div>
-                    <div class="form-group">
-                      <input type="text" class="form-control" name="subject" id="subject" placeholder="Objet" data-rule="minlen:4" data-msg="Au moins 8 caractères" required />
-                    </div>
-                    <div class="form-group">
-                      <textarea class="form-control" name="message" rows="5" required data-msg="Ecrire votre message" placeholder="Message"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                      <img src="{% static 'img/som_token.png' %}" />
-                      <input type="text" name="token" class="form-control" id="token" placeholder="Ecrire le résultat de la somme" required />
+                        <div class="text-center"><button type="submit" name="info_academy" value="yes" class="btn-inscription">Envoyer</button></div>
+                      </form>
                     </div>
 
-                    <div class="text-center"><button type="submit" name="info_academy" value="yes" class="btn-inscription">Envoyer</button></div>
-                  </form>
                 </div>
-
-              </div>
-
-
+        </div>
+        {% endcomment %}
     </div>
-
-
-
-
-
-
-
 </section>
 
 {% endblock %} 

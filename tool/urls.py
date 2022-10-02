@@ -67,8 +67,17 @@ urlpatterns = [
     path('clone_question_positionnement/<int:id>/<int:idp>/<int:qtype>', clone_question_positionnement  , name='clone_question_positionnement'),
     path('remove_question_positionnement/<int:id>/<int:idp>', remove_question_positionnement, name='remove_question_positionnement'), # from a quizz
 
+    path('create_question_csv_positionnement', create_question_csv_positionnement, name='create_question_csv_positionnement'),
+
+
+
     path('goto_positionnement_numeric/<int:id>', goto_positionnement_numeric, name='goto_positionnement_numeric'),
     path('goto_positionnement_student/<int:id>', goto_positionnement_student, name='goto_positionnement_student'),
+    path('start_positionnement_student/<int:id>', start_positionnement_student, name='start_positionnement_student'),
+    path('my_results', my_results, name='my_results'), # résutats des tests
+
+
+
 
     path('quizz_actioner', quizz_actioner  , name='quizz_actioner'),
     path('quizz_archived', all_quizzes_archived  , name='all_quizzes_archived'),
