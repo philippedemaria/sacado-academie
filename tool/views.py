@@ -1363,7 +1363,7 @@ def create_question_csv_positionnement(request):
         for i in range(length//4+1) :
             if fields[11+3*i] == "1" : is_correct = True
             else : is_correct = False
-            Choice.objects.create(answer= fields[9+3*i],retroaction= fields[10+3*i],is_correct= fields[11+3*i],question= question)
+            Choice.objects.create(answer= fields[9+3*i],retroaction= fields[10+3*i],is_correct= is_correct ,question= question)
 
         positionnement.questions.add(question)
 
