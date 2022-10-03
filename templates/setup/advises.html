@@ -35,6 +35,9 @@ Intro Section -
                 <div class="card_positionnement">
                     Test de positionnement <a href="{% url 'start_positionnement_student' p.id %}" style="font-size:100px">{{ p.level.shortname}}</a>
                 </div>
+            {% empty %}
+                <div class="alert alert-danger">
+                    Tests de positionnement en cours de création
             {% endfor%}
             </div>
         </div>
