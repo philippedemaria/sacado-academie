@@ -636,7 +636,7 @@ def contact(request):
 def advises_index(request):
     form = AuthenticationForm()
     np_form = NewpasswordForm()
-    positionnements = Positionnement.objects.order_by("level__ranking")
+    positionnements = Positionnement.objects.filter(is_publish=1).order_by("level__ranking")
     context = { 'form' : form  , 'np_form' : np_form , 'positionnements' : positionnements   }
     return render(request, 'setup/advises.html', context)
 
