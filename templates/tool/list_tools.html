@@ -53,10 +53,10 @@
                                 <td>
                                      <input type="checkbox" name="get_this_tools" class="get_this_tool" data-tool_id="{{ tool.id }}"/>
                                 </td>
-                                <td>
+                                <td style="width:300px">
                                     <a href="{% url 'show_tool' tool.id  %}"><img src="{{ tool.imagefile.url }}" height="190px" border="0px" /></a> 
                                 </td>
-                                <td style="width:300px">
+                                <td >
                                    <a href="{% url 'show_tool' tool.id  %}">{{ tool.title }}</a> 
                                     {% if request.user.is_superuser %}
                                         <a href="{% url 'delete_tool'  tool.id %}"  class="pull-right" onclick="return TestDelete('cet outil')"><i class="fa fa-trash"></i></a>                                       
