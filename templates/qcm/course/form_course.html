@@ -99,16 +99,36 @@
                    {{ form.relationships|add_class:"form-control select2"}} 
                    {{ form.relationships.errors }}  
                 {% endif %}
+                <h4 class="thin">Liens vers les outils péda</h4>
+                <div class="div_links">                
+                {% for tool in tools %}
+                    <div style="font-size: 16px;margin-top: 5px"> 
+                        <a href="https://sacado-academie.fr/qcm/show_this_exercise/{{ relationship.exercise.id }}/" target="_blank" > 
+                            <img src="{{ tool.imagefile.url }}" width="180px" height="100px"  style="float:left;margin-right: 5px">
+                                {{ tool.title|cleanhtml|capfirst }}
+                                {% if remark %}
+                                   {{ remark|safe }}
+                                {% endif  %}
+                                    {% if tool.is_publish %}
+                                    <div class="text-success">
+                                        <small> Publié</small>
+                                    </div>  
+                                {% else  %} 
+                                    <div class="text-danger">
+                                        <small> Non publié</small>
+                                    </div>
+                                {% endif  %}
+                            </a>
+                        <div style="clear:both"> </div>   
+                    </div>
+                {% endfor %}               
+                </div>
                 <h4 class="thin">Liens vers les exercices</h4>
                 <div class="div_links">                
                 {% for relationship in relationships %}
                     <div style="font-size: 16px;margin-top: 5px"> 
-
                         <a href="https://sacado-academie.fr/qcm/show_this_exercise/{{ relationship.exercise.id }}/" target="_blank" > 
-
                             <img src="{{ relationship.exercise.supportfile.imagefile.url }}" width="180px" height="100px"  style="float:left;margin-right: 5px">
-
-
                                 {% if relationship.exercise.supportfile.title %}
                                     {{ relationship.exercise.supportfile.title|cleanhtml|capfirst }}
                                 {% elif relationship.exercise.supportfile.annoncement %}
@@ -116,16 +136,11 @@
                                 {% else %}
                                     {{ relationship.exercise.knowledge.name }}
                                 {% endif %}
-              
-
-
                                 {% if relationship.exercise.supportfile.calculator %}
                                   <img src="{% static 'img/calculator.png' %}" width="20px" />
                                 {% else %}
                                   <img src="{% static 'img/no_calculator.png' %}"  width="0px" />
                                 {% endif  %}
-
-
                                  <br>
                                 <small>   
                                     <i class="fa fa-barcode"></i> {{ relationship.exercise.supportfile.code }}  
@@ -134,17 +149,14 @@
                                 </small>
 
                             </a>
-
                         <div style="clear:both"> </div>   
-
                     </div>
-                {% endfor %}                
+                {% endfor %}               
                 </div>
-        <!--/panel-group-->
-
-
             </div>
         </div>
     </form>  
 </section>
 {% endblock %} 
+
+

@@ -20,7 +20,7 @@ from qcm.forms import FolderForm , ParcoursForm , Parcours_GroupForm, Remediatio
 from tool.forms import QuizzForm
 from socle.models import  Theme, Knowledge , Level , Skill , Waiting , Subject
 from bibliotex.models import Bibliotex
-from tool.models import Quizz
+from tool.models import Quizz, Tool
 from flashcard.models import Flashpack
 from django.http import JsonResponse 
 from django.core import serializers
@@ -8096,6 +8096,7 @@ def create_course(request, idc , id ):
 
     form = CourseForm(request.POST or None , parcours = parcours )
     relationships = Relationship.objects.filter(parcours = parcours,exercise__supportfile__is_title=0).order_by("ranking")
+    tools         = Tool.objects.filter(levels=parcours.level)
     if request.method == "POST" :
         if form.is_valid():
             nf =  form.save(commit = False)
@@ -8112,10 +8113,9 @@ def create_course(request, idc , id ):
         else:
             print(form.errors)
 
-    context = {'form': form,   'teacher': teacher, 'parcours': parcours , 'relationships': relationships , 'course': None , 'communications' : [], 'group' : group, 'group_id' : group_id , 'role' : role }
+    context = {'form': form,   'teacher': teacher, 'parcours': parcours , 'relationships': relationships , 'tools': tools , 'course': None , 'communications' : [], 'group' : group, 'group_id' : group_id , 'role' : role }
 
     return render(request, 'qcm/course/form_course.html', context)
-
 
 
 
@@ -8127,6 +8127,7 @@ def create_course_sequence(request, id ):
     parcours = Parcours.objects.get(pk =  id)
     teacher =  request.user.teacher
     relationships = Relationship.objects.filter(parcours = parcours,exercise__supportfile__is_title=0).order_by("ranking")
+    tools         = Tool.objects.filter(levels=parcours.level)
     if parcours.is_sequence :
         role, group , group_id , access = get_complement(request, teacher, parcours)
         
@@ -8153,7 +8154,7 @@ def create_course_sequence(request, id ):
             else:
                 print(form.errors)
 
-        context = {'form': form,   'teacher': teacher, 'parcours': parcours , 'relationships': relationships , 'course': None , 'communications' : [], 'group' : group, 'group_id' : group_id , 'role' : role }
+        context = {'form': form,   'teacher': teacher, 'parcours': parcours , 'relationships': relationships , 'tools': tools ,  'course': None , 'communications' : [], 'group' : group, 'group_id' : group_id , 'role' : role }
 
 
     else :
