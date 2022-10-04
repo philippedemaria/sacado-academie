@@ -4,30 +4,34 @@
 
 {% csrf_token %}
 <div class="row">
-    <div class="col-sm-12 col-md-12">  
-        {{ form.title.label_tag }}
-        {{ form.title|add_class:"form-control" }}
+    <div class="col-sm-12 col-md-8">  
+        <div class="form-group"> 
+            {{ form.title.label_tag }}
+            {{ form.title|add_class:"form-control" }}
+        </div>
+        <div class="form-group"> 
+            {{ form.levels.label_tag }}  
+            {{ form.levels|add_class:"form-control select2" }}
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-sm-12 col-md-4">  
-        {{ form.is_asso.label_tag }}<br/>
-        {{ form.is_asso |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non" }}
-    </div>
-    <div class="col-sm-12 col-md-4">  
-        {{ form.is_publish.label_tag }}<br/>
-        {{ form.is_publish |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non" }}
-    </div>
-    <div class="col-sm-12 col-md-4">  
-        {{ form.is_ebep.label_tag }}<br/>
-        {{ form.is_ebep |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non" }}
-    </div>
-</div>
-<hr/>
-<div class="row">
-    <div class="col-sm-12 col-md-12 alert-danger">  
-        {{ form.url.label_tag }} <em>A ne renseigner qu'avec grande prudence et après avoir mis en place l'url.</em><br/>
-        {{ form.url|add_class:"form-control"}}
+    <div class="col-sm-12 col-md-4"> 
+        <table class="table borderless">
+            <tr>
+              <td>{{ form.is_publish.label_tag }} </td>
+              <td>{{ form.is_publish|attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}</td>
+              <td>{{ form.is_publish.errors }}</td>
+            </tr> 
+            <tr>
+              <td>{{ form.is_ebep.label_tag }} </td>
+              <td>{{ form.is_ebep|attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non" }}</td>
+              <td>{{ form.is_ebep.errors }}</td>
+            </tr> 
+            <tr>
+              <td>{{ form.is_asso.label_tag }}</td>
+              <td>{{ form.is_asso |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non" }}</td>
+              <td>{{ form.is_asso.errors }}</td>
+            </tr> 
+        </table>
     </div>
 </div>
 <hr/>
@@ -37,22 +41,20 @@
         {{ form.remark }}
     </div>
 </div>
+<hr/>
 <div class="row">
-    <div class="col-sm-12 col-md-12"> 
+    <div class="col-sm-12 col-md-7"> 
         <div class="form-group"> 
             {{ form.imagefile.label_tag }}  
             {{ form.imagefile|add_class:"btn btn-default" }}
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-sm-12 col-md-12"> 
-        <div class="form-group"> 
-            {{ form.levels.label_tag }}  
-            {{ form.levels|add_class:"form-control select2" }}
-        </div>
+    <div class="col-sm-12 col-md-7 alert-danger">  
+        {{ form.url.label_tag }} <em>A ne renseigner qu'avec grande prudence et après avoir mis en place l'url.</em><br/>
+        {{ form.url|add_class:"form-control"}}
     </div>
 </div>
+<hr/>
 <div class="row">
     <div class="col-sm-12 col-md-8"> 
         <div class="form-group">
