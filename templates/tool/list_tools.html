@@ -44,6 +44,7 @@
                         <th style="width:30px">Choix</th>
                         <th>Vue</th>
                         <th>Titre</th>
+                        <th>Niveaux cibles</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -57,13 +58,17 @@
                                 </td>
                                 <td style="line-height: 200px">
                                    <a href="{% url 'show_tool' tool.id  %}">{{ tool.title }}</a> 
-                           
                                     {% if request.user.is_superuser %}
-                                        <a href="{% url 'delete_tool'  tool.id %}"  class="pull-right" onclick="return TestDelete('cet outil')">Supprimer</a> 
-                                        <span class="pull-right">|</span>                                        
-                                        <a href="{% url 'update_tool'  tool.id %}" class="pull-right" >Modifier</a>
+                                        <a href="{% url 'delete_tool'  tool.id %}"  class="pull-right" onclick="return TestDelete('cet outil')"><i class="fa fa-trash"></i></a>                                       
+                                        <a href="{% url 'update_tool'  tool.id %}" class="pull-right" ><i class="bi bi-gear"></i></a>
                                     {% endif %}
                                 </td>
+                                <td>
+                                    {% for l in tool.levels.all %}
+                                        <li>{{ l.name }}</li>
+                                    {% endif %}
+                                </td>
+
                             </tr>
                         {% endfor %}
                     </tbody>
