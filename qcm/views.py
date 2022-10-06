@@ -2885,8 +2885,7 @@ def show_parcours(request, idf = 0, id=0):
 
 def open_section_to_read(student, parcours, listing_order):
  
-    list_bool , blocs = [] ,  [] 
-
+    list_bool, blocs = [] ,  [] 
     try :
 
         if student.adhesions.last().formule_id > 1 and parcours.is_sequence :
@@ -2905,7 +2904,11 @@ def open_section_to_read(student, parcours, listing_order):
             # et tel que le bloc prÃ©cÃ©dent n'ait pas ete traitÃ© ou ait ete mal rÃ©ussi
             reussi=[]
             for i in range(len(blocs)):
-                avg_student = student.answers.filter(exercise__in = [listing_order[j].exercise.id for j in blocs[i][1:]] , parcours = parcours).aggregate(average=Avg("point"))
+                
+                for_average = listing_order.values_list("exercise__id" , flat=True).filter(is_in_average=1)
+                inter_list = intersection([listing_order[j].exercise.id for j in blocs[i][1:]], for_average)
+
+                avg_student = student.answers.filter(exercise__in = inter_list , parcours = parcours).aggregate(average=Avg("point"))
                 traite = avg_student['average']!=None
                 reussi.append(traite and avg_student['average']>80) 
                 if i!=0 and not(traite) and not(reussi[i-1]) :
