@@ -167,18 +167,15 @@
                         <div class="alert alert-danger" style="position: absolute; z-index:9; top:100px;font-size:12px;border-radius: 0px 4px 4px  0px;"> 
                               <i class="fa fa-lock"></i> <span class="hidden_lock"> {{ rc.lock|date:"d-m-Y à H:i" }}</span>
                         </div>
-       
-                            <img src="{{ rc.exercise.supportfile.imagefile.url }}"  class="image_parcours" {% if not rc.is_publish %} style="opacity:0.8" {% endif %}  >
-               
+                        <img src="{{ rc.exercise.supportfile.imagefile.url }}"  class="image_parcours" {% if not rc.is_publish %} style="opacity:0.8" {% endif %}  >
                     {% else %}  
                         {% if parcours_available.is_ok  %}
-
                             {% if not rdoc.is_display   %} 
                                 <div class="alert alert-danger" style="position: absolute; z-index:9; top:100px;font-size:12px;border-radius: 0px 4px 4px  0px;"> 
                                       <i class="fa fa-lock"></i> Vous devez obtenir 80% de réussite aux exercices à la section précédente  
                                 </div>
                      
-                                    <img src="{{ rc.exercise.supportfile.imagefile.url }}"  class="image_parcours"   style="opacity:0.8"    >
+                                <img src="{{ rc.exercise.supportfile.imagefile.url }}"  class="image_parcours"   style="opacity:0.8"    >
                     
                             {% elif parcours.is_next and not available.is_ok %} 
                                 <div class="alert alert-danger" style="position: absolute; z-index:9; top:100px;font-size:12px;border-radius: 0px 4px 4px  0px;"> 
@@ -237,7 +234,7 @@
                 {% endif  %}
             
             {% else %}
-                <a href="#" class="detail_parcours"      data-exercise_id="{{ rc.exercise.id }}"  
+                <a  href="#" class="detail_parcours"      data-exercise_id="{{ rc.exercise.id }}"  
                     data-num_exo="{{ forloop.counter}}"  data-parcours_id="{{ parcours.id }}">
                     <img src="{{ rc.exercise.supportfile.imagefile.url }}" class="image_parcours" {% if not rc.is_publish %} style="opacity:0.8" {% endif %}  >
                 </a> 
@@ -260,9 +257,12 @@
                 <i class="fa fa-fw fa-clock-o"></i> {{ rc.duration }} min.
                 <i class="fa fa-fw fa-save"></i> {{ rc.situation}}
 
+                {% if rc.is_in_average %}
+                        <i class="bi bi-award"></i>
+                {% endif %}
 
 
-                
+
                 {% if not rc.parcours.is_evaluation %}
                 {% if rc.relationships_courses.all|length > 0 %}  
                     <i class="fa fa-fw fa-desktop"></i>
