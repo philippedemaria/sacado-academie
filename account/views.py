@@ -45,12 +45,13 @@ import uuid
 
 
 def creation_auto(request):# user et parent du parent
-    students = Student.objects.filter(user__username__contains="Profsacado",user__user_type=0).exclude(level=6)
+    students = Student.objects.filter(user__username__contains="ProfSacAdo",user__user_type=0).exclude(level=6)
      
     for student in students :
         group = student.students_to_group.first()
         user.student.username = "Eleve_test_"+str(student.level)+"_"+group.name.split(" ")[0]
         user.save()
+        messages.success(request, student )
         groups = [group]
         attribute_all_documents_of_groups_to_a_new_student(groups, student)
 
