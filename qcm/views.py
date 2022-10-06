@@ -4194,6 +4194,28 @@ def ajax_publish(request):
         Customexercise.objects.filter(pk = int(customexercise_id)).update(is_publish = statut)    
     return JsonResponse(data) 
 
+
+@csrf_exempt # PublieDépublie un exercice depuis organize_parcours
+def ajax_average(request):  
+
+    data = {}
+    relationship_id = request.POST.get("relationship_id")
+    relationship = Relationship.objects.get(pk = int(relationship_id))
+
+
+    if relationship.is_in_average :
+        Relationship.objects.filter(pk = int(relationship_id)).update(is_in_average = 0)
+        data["remove"] = "btn-success"
+        data["add"] = "btn-default"
+
+    else:
+        Relationship.objects.filter(pk = int(relationship_id)).update(is_in_average = 1)
+        data["remove"] = "btn-default"
+        data["add"] = "btn-success"
+   
+    return JsonResponse(data) 
+
+
 @csrf_exempt   # PublieDépublie un parcours depuis form_group et show_group
 def ajax_publish_parcours(request):  
 

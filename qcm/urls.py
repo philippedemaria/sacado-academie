@@ -340,6 +340,8 @@ urlpatterns = [
     
     path('ajax/sort_sequence', ajax_sort_sequence, name='ajax_sort_sequence'),
     path('ajax/publish', ajax_publish, name='ajax_publish'),  
+    path('ajax/average', ajax_average, name='ajax_average'),  
+
     path('ajax/publish_parcours', ajax_publish_parcours, name='ajax_publish_parcours'),
     path('ajax_sharer_parcours', ajax_sharer_parcours, name='ajax_sharer_parcours'),
 

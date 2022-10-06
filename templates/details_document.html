@@ -78,7 +78,13 @@
                 data-relationship_id="{{rc.id}}">   
               <i class="fa fa-minus-circle"></i>
           </div>
-
+          <!-- average  -->
+          <div class="btn btn-{% if  rc.is_in_average %}success{% else %}default{% endif %} select_average"  
+                style="position: absolute; right : 0px; top:173px;" 
+                id="average{{rc.id}}"  title="Rentre en compte pour le calcul de la moyenne de la section" 
+                data-relationship_id="{{rc.id}}">   
+              <i class="bi bi-award"></i>
+          </div>
           <!--  
           =============================================================================================================
           =============================================================================================================

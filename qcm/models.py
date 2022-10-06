@@ -58,8 +58,6 @@ def audio_directory_path(instance,filename):
     return "audio/{}/{}".format(instance.id,filename)
 
 
-
-
 def convert_time(duree) :
     try :
         d = int(duree)
@@ -1456,6 +1454,8 @@ class Relationship(models.Model):
     document_id = models.IntegerField(  default=0,  blank=True, null=True, editable=False)    
     type_id = models.IntegerField(  default=0,  blank=True, null=True, editable=False)
 
+    is_in_average = models.BooleanField(default=0,  blank=True, editable=False)
+    
     def __str__(self):
 
         try :

@@ -79,6 +79,14 @@
                 data-relationship_id="{{rc.id}}">   
               <i class="fa fa-minus-circle"></i>
           </div>
+          <!-- average  -->
+          <div class="btn btn-default select_average"  
+                style="position: absolute; right : 0px; top:200px;" 
+                id="constraint{{rc.id}}"  title="Rentre en compte pour le calcul de la moyenne de la secton" 
+                data-relationship_id="{{rc.id}}">   
+              <i class="bi bi-award"></i>
+          </div>
+
 
           <!--  
           =============================================================================================================
@@ -552,16 +560,16 @@
 
           <!-- Exercice dissocié  -->
           {% if  group  %}  
-          {% get_students_from_group_and_rc rc group as data_rc %}
+              {% get_students_from_group_and_rc rc group as data_rc %}
 
-          {% if  data_rc.nb == only_real_student.count  %}  
-          <div  style="position: absolute; right : 0px; top:60px;" title="Cet exercice est indiviualisé à certains élèves. Cliquez sur l'icone dans la barre d'outil pour modifier."  >   
-              <a href="#customcard{{rc.id}}" class="detail_parcours btn btn-warning" data-custom=1
-                 data-exercise_id="{{ rc.id }}"  data-num_exo="{% if not rc.is_publish %}{{ nb_exo_only|index:forloop.counter0 }}{% else %}{{ nb_exo_visible|index:forloop.counter0 }}{% endif %}" data-parcours_id="{{ parcours.id }}">
-                <i class="fa fa-users"></i><span id="nb_indiv_id_student{{rc.id }}">{{ data_rc.nb }} </span> 
-              </a>
-          </div>
-          {% endif %}
+              {% if  data_rc.nb == only_real_student.count  %}  
+              <div  style="position: absolute; right : 0px; top:60px;" title="Cet exercice est indiviualisé à certains élèves. Cliquez sur l'icone dans la barre d'outil pour modifier."  >   
+                  <a href="#customcard{{rc.id}}" class="detail_parcours btn btn-warning" data-custom=1
+                     data-exercise_id="{{ rc.id }}"  data-num_exo="{% if not rc.is_publish %}{{ nb_exo_only|index:forloop.counter0 }}{% else %}{{ nb_exo_visible|index:forloop.counter0 }}{% endif %}" data-parcours_id="{{ parcours.id }}">
+                    <i class="fa fa-users"></i><span id="nb_indiv_id_student{{rc.id }}">{{ data_rc.nb }} </span> 
+                  </a>
+              </div>
+              {% endif %}
  
           {% endif %}
 

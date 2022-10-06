@@ -1420,7 +1420,7 @@ define(['jquery', 'bootstrap', 'ui', 'ui_sortable'], function ($) {
                 )
                 });
 
-                 // Publie ou dépublie un exercice
+            // Publie ou dépublie un exercice
             $('.action_content').on('click', function (event) {
                 let relationship_id = $(this).attr("data-relationship_id");
                 let statut = $(this).attr("data-statut");
@@ -1448,6 +1448,38 @@ define(['jquery', 'bootstrap', 'ui', 'ui_sortable'], function ($) {
                     }
                 )
                 });   
+        
+
+               
+
+
+            // valide si l'exercice est dans le calcul de la moyenne d'une section
+            $('.select_average').on('click', function (event) {
+                let relationship_id = $(this).attr("data-relationship_id");
+                let csrf_token = $("input[name='csrfmiddlewaretoken']").val();
+                $.ajax(
+                    {
+                        type: "POST",
+                        dataType: "json",
+                        data: {
+                            'relationship_id': relationship_id,
+                            csrfmiddlewaretoken: csrf_token
+                        },
+                        url: "../../ajax/average" ,
+                        success: function (data) {                
+                            $('#average'+relationship_id).removeClass(data.remove);
+                            $('#average'+relationship_id).addClass(data.add);
+                        }
+                    }
+                )
+                });   
+        
+
+
+
+
+
+
         // ==================================================================================================
         // ==================================================================================================
         // ============= Mutualisation de parcours
