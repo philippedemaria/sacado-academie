@@ -61,7 +61,7 @@
                     {% for rc in rcs %}
                     <th style="position: relative;" class="sub_over">
                         {% if rc.exercise.supportfile.imagefile %}
-                        <img src="{{ rc.exercise.supportfile.imagefile.url }}" width="150px" class="imagefile" />
+                        <img src="{{ rc.exercise.supportfile.imagefile.url }}" width="150px" class="smallimagefile" />
                         {% else %} 
                             {% if rc.exercise  %}
                                 <span class="th_real_time_label">{{ rc.instruction|safe|truncatewords:"20" }}</span>
