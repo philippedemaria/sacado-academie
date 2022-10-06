@@ -9,6 +9,11 @@ from django.urls import path
 from account.views import *
 
 urlpatterns = [
+
+    path('creation_auto', view=creation_auto, name='creation_auto'),
+
+
+
     path('login', view=LoginView.as_view(template_name='registration/login.html', redirect_authenticated_user=True), name='login'),
     #path('logout', LogoutView.as_view(template_name='home.html'), name='logout'),
     path('logout', logout_view, name='logout'),
