@@ -49,8 +49,8 @@ def creation_auto(request):# user et parent du parent
      
     for student in students :
         group = student.students_to_group.first()
-        user.student.username = "Eleve_test_"+str(student.level)+"_"+group.name.split(" ")[0]
-        user.save()
+        student.user.username = "Eleve_test_"+str(student.level)+"_"+group.name.split(" ")[0]
+        student.user.save()
         messages.success(request, student )
         groups = [group]
         attribute_all_documents_of_groups_to_a_new_student(groups, student)
