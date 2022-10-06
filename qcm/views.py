@@ -4208,11 +4208,15 @@ def ajax_average(request):
         data["remove"]  = "btn-success"
         data["add"]     = "btn-default"
         data["opacity"] = 0.3
+        data["addclass"] = "btn-default"
+        data["removeclass"] = "btn-success"
     else:
         Relationship.objects.filter(pk = int(relationship_id)).update(is_in_average = 1)
         data["remove"]  = "btn-default"
         data["add"]     = "btn-success"
         data["opacity"] = 1
+        data["addclass"] = "btn-success"
+        data["removeclass"] = "btn-default"
     return JsonResponse(data) 
 
 

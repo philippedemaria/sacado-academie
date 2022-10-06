@@ -1470,6 +1470,7 @@ define(['jquery', 'bootstrap', 'ui', 'ui_sortable'], function ($) {
                             $('#average'+relationship_id).removeClass(data.remove);
                             $('#average'+relationship_id).addClass(data.add);
                             $('#card'+relationship_id).css("opacity", data.opacity);
+                            $('#publisher'+relationship_id).removeClass(data.noclass);
                         }
                     }
                 )
