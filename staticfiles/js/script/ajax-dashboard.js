@@ -1469,6 +1469,7 @@ define(['jquery', 'bootstrap', 'ui', 'ui_sortable'], function ($) {
                         success: function (data) {                
                             $('#average'+relationship_id).removeClass(data.remove);
                             $('#average'+relationship_id).addClass(data.add);
+                            $('#card'+relationship_id).css("opacity", data.opacity);
                         }
                     }
                 )

@@ -4,7 +4,7 @@
 
 
 {% if rc.type_id == 0 %}
-<div class="card_freeze" style="{% if not rc.is_publish %}background-color: #F5F5F5{% else %}background:#FFF{% endif %}" id="card{{rc.id}}">
+<div class="card_freeze {% if not rc.is_in_average %}is_in_average_card{% endif %}" style="{% if not rc.is_publish %}background-color: #F5F5F5{% else %}background:#FFF{% endif %}" id="card{{rc.id}}">
     <!-- Entete de la card  -->
     <div class="card-body" style="height:37px;">
           <input type="hidden" value="{{ rc.exercise.id }}" name="input_exercise_id" class="div_exercise_id" data-custom=0 /><!--  sert à classer les thèmes  -->
