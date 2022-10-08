@@ -87,7 +87,11 @@ class QuestionPositionnementForm(forms.ModelForm):
 		positionement = kwargs.pop('positionnement')
 		super(QuestionPositionnementForm, self).__init__(*args, **kwargs)
 
-		level = positionement.level
+		level_id = int(positionement.level.id)
+		if level_id < 13 :
+			level_id = level_id - 1
+			level    = Level.objects.get(pk=level_id)
+
 		subject = positionement.subject
 		knowledges = []
 			
