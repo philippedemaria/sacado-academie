@@ -165,7 +165,7 @@
                                         {% endif %}
                                     {% else %}
                                         {% for c in result.question.choices.all %}
-                                            <span class="btn btn-default">{{ c.answer }}
+                                            <li>{{ c.answer|safe }}
                                             {% if c.is_correct %}
                                                 <i class="fa fa-check text-success"></i>
                                             {% else %}
@@ -175,7 +175,7 @@
                                             {% if c.imagefile %}
                                                 <img src="{{ c.imagefile.url }}" width="150px">
                                             {% endif %}
-                                            </span>
+                                            </li>
                                         {% endfor %}
                                     {% endif %}
                                 </td>
@@ -186,7 +186,8 @@
                                         {{ a }}  
                                         {% if not forloop.last %}<br/>{% endif %}
                                     {% endfor %}
-                                    <small> {% if result.is_correct %}<i class="fa fa-check text-success"></i>{% else %}<i class="fa fa-times text-danger"></i>{% endif %} </small>
+                                    <hr/>
+                                    {% if result.is_correct %}<span class="text-success">Réponse juste</span>{% else %}<span class="text-danger">Réponse juste</span>{% endif %}
 
                                 </td>
               

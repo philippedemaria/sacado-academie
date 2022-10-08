@@ -14,8 +14,7 @@
 
 
 {% block page_title %}
-   <a href="{% url 'list_positionnements' %}" ><i class="bi bi-aspect-ratio"></i> </a>  Quizz  <img width="25px" src="{% static 'img/angle-right.png' %}"/> {{ positionnement.title }} <small> {{ positionnement.code }}</small>
- 
+    {{ positionnement.title }} <small> {{ positionnement.level.name }}</small>
 {% endblock %}
 
 
@@ -43,28 +42,29 @@
 {% if  quizz_nav == 0 %}
     <div class="row consigne_diapo"  align="center">  
         <div class="col-sm-12 col-md-12">
- 
             {% if positionnement.vignette %}<img src="{{ positionnement.vignette.url }}" width="300px"  />{% endif %}
         </div>
     </div>
     <div class="row" >  
         <div class="col-sm-12 col-md-12">
+            <div class="card card_passation">
+                <h1>Vous êtes {{ first_name }} {{ last_name }}</h1>            
+                <hr/>
 
-            <h1>Vous êtes {{ first_name }} {{ last_name }}</h1>            
-            <hr/>
+                <h2 style="line-height: 80px;" > Consignes.</h2>
 
-            <h2 style="line-height: 80px;" > Consignes.</h2>
+                <span style="font-size:1.2em; text-align: left;" >    
+                    Nombre de questions : <b>{{ positionnement.questions.count}}</b> <br/>
+                    Vous devez répondre à chaque question.<br/> Le type de question est indiqué en haut de page.<br/>
+                     
+                    {% if positionnement.is_back %}
+                        A tout moment, Vous pouvez revenir à une question en arrière lorsque vous avancez dans le test. 
+                    {% else %}
+                        <span class="text-danger">Attention, vous ne pouvez pas revenir en arrière lorsque vous avancez dans le test.</span> 
+                    {% endif %}
+                </span>
+            </div>
 
-            <span style="font-size:1.2em; text-align: left;" >    
-                Nombre de questions : <b>{{ positionnement.questions.count}}</b> <br/>
-                Vous devez répondre à chaque question.<br/> Le type de question est indiqué en haut de page.<br/>
-                 
-                {% if positionnement.is_back %}
-                    A tout moment, Vous pouvez revenir à une question en arrière lorsque vous avancez dans le test. 
-                {% else %}
-                    <span class="text-danger">Attention, vous ne pouvez pas revenir en arrière lorsque vous avancez dans le test.</span> 
-                {% endif %}
-            </span>
         </div>
     </div> 
     <div style="height:40px"></div>                   
@@ -77,10 +77,10 @@
 {% elif not end_of_quizz %}
 
     <div class="row">  
-        <div class="col-sm-2 col-md-2" align="left">
-            <img src="{% if question.calculator %}{% static 'img/calculator.png' %}{% else %}{% static 'img/no_calculator.png' %}{% endif %}" height="50px" />
-        </div>
-        <div class="col-sm-8 col-md-8" align="center">
+        <div class="col-sm-12 col-md-12" >
+            <div style="margin:10px 0px 30px 0px">
+            <img src="{% if question.calculator %}{% static 'img/calculator.png' %}{% else %}{% static 'img/no_calculator.png' %}{% endif %}" height="30px" style="float:left;margin-right:40px" />
+            <span style="font-size:20px">
                 {% if question.qtype == 1 %}
                     <b>Vrai  ou  Faux ?</b>
                 {% elif question.qtype == 2 %}
@@ -90,85 +90,91 @@
                 {% else %}
                     <b> Choisir la seule bonne réponse</b>. 
                 {% endif %}
+            </span>
+            </div>
         </div>
     </div> 
-    <div class="row" align="center"  style="width:80%;padding:10px ; margin-right: auto; margin-left:auto; background-color: #f1eef7 ;">  
-        <div class="col-sm-12 col-md-12"align="center">
-            <h1 style="font-size:2.5em"  >  {{ question.title|safe }}  </h1>
-        </div>
 
- 
-    {% include 'tool/kind_of_question.html' %}
-    </div>    
-    <hr/> 
-    {% if question.tool   %}  
-        <div class="row" style="margin-bottom:  20px; margin-top: 20px;"> 
-            <div class="col-sm-12 col-md-12" align="center">
-                <button class="btn btn-default" id="sqrt_tool">$\sqrt{x}$</button> 
-                <button class="btn btn-default" id="pow_tool">$x^{n}$</button> 
-            </div> 
-        </div> 
-    {% endif %}
+    <div class="card card_passation">
+        <div class="row"   style="padding:10px ;  ">  
+            <div class="col-sm-12 col-md-12" >
+                <h1 style="font-size:1.5em"  > #{{ question.id }}. {{ question.title|safe }}  </h1>
+            </div>
 
-    
-    {% if question.qtype == 1 %} 
-        <div class="row"> 
-            <div class="col-sm-12 col-md-6 bgcolorBlue white"  align="center" style="border-radius : 10px ">
-                <label style="font-size:3.5em" class="thin">
-                    VRAI <input type="radio" name="solution" value="1"   class="answer_quizz_vf">
-                </label>  
+     
+        {% include 'tool/kind_of_question.html' %}
+        </div>    
+        <hr/> 
+        {% if question.tool   %}  
+            <div class="row" style="margin-bottom:  20px; margin-top: 20px;"> 
+                <div class="col-sm-12 col-md-12" align="center">
+                    <button class="btn btn-default" id="sqrt_tool">$\sqrt{x}$</button> 
+                    <button class="btn btn-default" id="pow_tool">$x^{n}$</button> 
+                </div> 
             </div> 
+        {% endif %}
 
-            <div class="col-sm-12 col-md-6 bgcolorRed white"  align="center" style="border-radius : 10px ">
-                <label style="font-size:3.5em" class="thin">FAUX <input type="radio" name="solution" value="0"    class="answer_quizz_vf"></label>  
-            </div> 
-        </div> 
-    {% elif question.qtype == 2 %}
-        <div class="row"> 
-            <div class="col-sm-12 col-md-12"  align="center" style="border-radius : 10px ">
-                <input type="text" name="solution" id="solution" required class="quizz_box_answer quizz_font40"  value="{{ this_answer.answer }}" >
-            </div> 
-        </div> 
-    {% elif question.qtype > 2 %}   
-        {% for choice in question.choices.all %}
-            {% cycle 'A' 'B' 'C' 'D'  as choice_letter silent %}
-            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-6" style="margin-bottom: 5px ; font-size:1.2em; border-radius : 10px;background-color: #f1eef7 ;">
-                <div class="row" >
-                    <div class="col-sm-12 col-md-12  col-lg-12 col-xl-6 {{ rowcolor }}"  
-                         style="color:#5d4391;  padding: 5px; font-size : 1.5em">  
-                         <input type="{% if question.qtype == 3 %}checkbox{% else %}radio{% endif %}" name="solution" id="solution{{ choice.id }}" value="{{ choice.id }}"   class="answer_quizz"> 
-                         {{ choice.answer }}
-                         {% if choice.imageanswer %}
-                         <img src="{{ choice.imageanswer.url }}" height="200px" />
-                         {% endif %}
-                         <span id="ans_retroaction{{ choice.id }}" class="retroaction_ans"></span>
-                    </div>
-                </div>  
-            </div> 
-        {% endfor %}
-        {% resetcycle %}
- 
-    {% endif %}
+        
+        {% if question.qtype == 1 %} 
+            <div class="row"> 
+                <div class="col-sm-12 col-md-6 bgcolorBlue white"  align="center" style="border-radius : 10px ">
+                    <label style="font-size:2em" class="thin">
+                        VRAI <input type="radio" name="solution" value="1"   class="answer_quizz_vf">
+                    </label>  
+                </div> 
 
-<div style="height:40px"></div>
-
-<div class="row" align="center" > 
-    <div class="col-sm-6 col-md-9" align="center"  ></div>
-    <div class="col-sm-6 col-md-3" align="center"  >
-        {% if positionnement.is_back and quizz_nav_prev > 0 %}
-            <a href="{% url 'goto_quizz_student' quizz.id %}" class="btn btn-default"><i class="fa fa-caret-left"></i> Précedent</a>
-        {% endif %}  
-    </div>
-</div> 
-<div class="row" > 
-    <div class="col-sm-12 col-md-12" id="button_submit_div">
-        {% if question.has_choices_with_retroaction %}
-            <a href="javascript:void();" id="show_retroaction" class="btn btn-primary"><i class="fa fa-caret-right"></i> Enregistrer la réponse</a>
-        {% else %}
-            <button type="submit" class="btn btn-primary"><i class="fa fa-caret-right"></i> Enregistrer la réponse</button>
+                <div class="col-sm-12 col-md-6 bgcolorRed white"  align="center" style="border-radius : 10px ">
+                    <label style="font-size:2em" class="thin">FAUX <input type="radio" name="solution" value="0"    class="answer_quizz_vf"></label>  
+                </div> 
+            </div> 
+        {% elif question.qtype == 2 %}
+            <div class="row"> 
+                <div class="col-sm-12 col-md-12"  align="center" style="border-radius : 10px ">
+                    <input type="text" name="solution" id="solution" required class="quizz_box_answer quizz_font40"  value="{{ this_answer.answer }}" >
+                </div> 
+            </div> 
+        {% elif question.qtype > 2 %}   
+            {% for choice in question.choices.all %}
+                {% cycle 'A' 'B' 'C' 'D'  as choice_letter silent %}
+                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-6" style="margin-bottom: 5px ; font-size:1.5em; border-radius : 10px;background-color: #f1eef7 ;">
+                    <div class="row" >
+                        <div class="col-sm-12 col-md-12  col-lg-12 col-xl-6 {{ rowcolor }}"  
+                             style="color:#5d4391;  padding: 5px; ">  
+                             <input type="{% if question.qtype == 3 %}checkbox{% else %}radio{% endif %}" name="solution" id="solution{{ choice.id }}" value="{{ choice.id }}"   class="answer_quizz"> 
+                             {{ choice.answer }} 
+                             {% if choice.imageanswer %}
+                             <img src="{{ choice.imageanswer.url }}" height="200px" />
+                             {% endif %}
+                             <span id="ans_retroaction{{ choice.id }}" class="retroaction_ans"></span>
+                        </div>
+                    </div>  
+                </div> 
+            {% endfor %}
+            {% resetcycle %}
+     
         {% endif %}
     </div>
-</div> 
+    <div style="height:40px"></div>
+
+    <div class="row" align="center" > 
+        <div class="col-sm-6 col-md-9" align="center"  ></div>
+        <div class="col-sm-6 col-md-3" align="center"  >
+            {% if positionnement.is_back and quizz_nav_prev > 0 %}
+                <a href="{% url 'goto_quizz_student' quizz.id %}" class="btn btn-default"><i class="fa fa-caret-left"></i> Précedent</a>
+            {% endif %}  
+        </div>
+    </div> 
+    <div class="row" > 
+        <div class="form-group">
+            <div class="col-sm-12 col-md-12" id="button_submit_div">
+                {% if question.has_choices_with_retroaction %}
+                    <a href="javascript:void();" id="show_retroaction" class="btn btn-primary"><i class="fa fa-caret-right"></i> Enregistrer la réponse</a>
+                {% else %}
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-caret-right"></i> Enregistrer la réponse</button>
+                {% endif %}
+            </div>
+        </div>
+    </div> 
 {% else %}
 
     <div class="row consigne_diapo"  align="center">  

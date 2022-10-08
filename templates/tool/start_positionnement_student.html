@@ -14,7 +14,7 @@
 
 
 {% block page_title %}
-   <a href="{% url 'list_positionnements' %}" > {{ positionnement.title }} {{ positionnement.level.shortname }} 
+   {{ positionnement.title }} {{ positionnement.level.name }} 
 {% endblock %}
 
 

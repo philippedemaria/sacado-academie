@@ -1571,7 +1571,7 @@ def goto_positionnement_student(request,id):
     if positionnement.is_back :
         is_back = True
 
-
+    print(question_ids)
     #####################################################################################
     ######## Navigation dans le quizz
     #####################################################################################
@@ -1621,6 +1621,7 @@ def store_positionnement_solution( request ,positionnement_id,student,q_id, solu
 
     i , score  = 1 , 0
     is_correct = 0
+    corrects = 0
     for ans in solutions : # est une liste d'id des réponses choisies par les réponses proposées
 
         if question.qtype == 1 :
@@ -1637,10 +1638,12 @@ def store_positionnement_solution( request ,positionnement_id,student,q_id, solu
             answ = ans
         else :
             choices  = question.choices.values_list('id',flat=True).filter(is_correct=1)
-            corrects = 0
+
             a = ""
             if int(ans) in choices :
+                print("ici corrects == len(choices)")
                 corrects += 1
+
             if corrects == len(choices):
                 is_correct = 1
                 score      = question.point
@@ -1651,21 +1654,20 @@ def store_positionnement_solution( request ,positionnement_id,student,q_id, solu
                 answ = aw.answer 
 
         answer.append(answ)
-
         i +=1
  
     timer = int(t)
-
     themes = [ question.knowledge.theme.name ,  score ]
-
     request.session.get("answerpositionnement").append (  (positionnement_id  , student, q_id ,   answer,   score,   timer,   is_correct , themes  ))
+
 
 
 
 def my_results(request):
 
     answerpositionnements = request.session.get("answerpositionnement")
-    results , themes ,  final_skills , skill_tab  = []  , [] ,  [] ,  [] 
+
+    results , themes ,  final_skills , skill_tab , subskill_tab  = []  , [] ,  [] ,  [] ,  []
     total = 0
     for a_p in answerpositionnements :
         question = Question.objects.get(pk=a_p[2])
@@ -1678,27 +1680,32 @@ def my_results(request):
             if not skill.id in final_skills :
                 final_skills.append(skill.id)
                 total = 1
-                skill_tab.append({ "skill" : skill.name , "score" : a_p[4] })
+                subskill_tab.append({ "skill" : skill.name , "score" : a_p[4] , "total" : 1 })
             else :
                 idx = final_skills.index(skill.id)
                 total += 1
-                skill_tab[idx]["score"] += a_p[4]
-                skill_tab[idx]["score"] = int(skill_tab[idx]["score"] / total)
+                subskill_tab[idx]["score"] += a_p[4]
+                subskill_tab[idx]["total"] += 1
+
+    for s in subskill_tab :
+        skill_tab.append({ "skill" : s["skill"] , "score" : int(s["score"]//s["total"])  })
 
 
-    final_themes , theme_tab  = [] ,  []  
+
+    final_themes , theme_tab , subtheme_tab  = [] ,  [] ,  []  
     for data in themes :
         if not data[0] in final_themes :
             final_themes.append(data[0])
             total = 1
-            theme_tab.append({ "theme" : data[0] , "score" : data[1] })
+            subtheme_tab.append({ "theme" : data[0] , "score" : data[1] , "total" : 1 })
         else :
             idx = final_themes.index(data[0])
-            total += 1
-            theme_tab[idx]["score"] += data[1]
-            theme_tab[idx]["score"] = int(theme_tab[idx]["score"] / total)
+            subtheme_tab[idx]["score"] += data[1]
+            subtheme_tab[idx]["total"] += 1
 
 
+    for t in subtheme_tab :
+        theme_tab.append({ "theme" : t["theme"] , "score" : int(t["score"]//t["total"])  })
 
     context = { 'results' : results , 'theme_tab' : theme_tab , 'skill_tab' : skill_tab   }
     return render(request, 'tool/positionnement_results.html', context)

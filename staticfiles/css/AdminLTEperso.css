@@ -2594,7 +2594,7 @@ li.my_slide{
 
 
 #built_diaporama #ul_slider .consigne_diapo *  {
-    font-size : 30px;
+    font-size : 25px;
   }
 
  
@@ -4201,6 +4201,12 @@ table.table-bordered.dataTable {
   margin-left:10px
 }
 
+
+.card_passation{
+    margin: 0px ;
+    padding: 20px 50px ;
+    width:100%;
+}
 /********************************************* bleu :  #005e74 ************************************/
 /********************************************* violet hover :  #5d4391 ************************************/
 /********************************************* violet light :  #f1eef7 ************************************/
