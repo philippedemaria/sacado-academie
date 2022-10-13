@@ -6,13 +6,11 @@
 
 {% block require %}
     <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common4.js' %}"></script>
-    <script>
-        require(['script/ajax-parcours']);
-    </script> 
+
 
     {% if not course %}
     <script>
-        require(['script/ajax-parcours-complement']);
+        require(['script/ajax-course-complement']);
     </script> 
     {% endif %} 
     
@@ -103,13 +101,8 @@
                 <div class="div_links">                
                 {% for tool in tools %}
                     <div style="font-size: 16px;margin-top: 5px"> 
-                        <a href="https://sacado-academie.fr/qcm/show_this_exercise/{{ relationship.exercise.id }}/" target="_blank" > 
                             <img src="{{ tool.imagefile.url }}" width="180px" height="100px"  style="float:left;margin-right: 5px">
-                                {{ tool.title|cleanhtml|capfirst }}
-                                {% if remark %}
-                                   {{ remark|safe }}
-                                {% endif  %}
-                                    {% if tool.is_publish %}
+                                {% if tool.is_publish %}
                                     <div class="text-success">
                                         <small> Publié</small>
                                     </div>  
@@ -119,12 +112,13 @@
                                     </div>
                                 {% endif  %}
 
-                                <span class="btn btn-primary btn-xs insert_into_course" data_url=""></span>
-                            </a>
+                                <span class="btn btn-primary btn-xs insert_into_course" data-tool_remark="{{ tool.remark }}">Inclure dans le cours</span>
+
                         <div style="clear:both"> </div>   
                     </div>
                 {% endfor %}               
                 </div>
+
                 <h4 class="thin">Liens vers les exercices</h4>
                 <div class="div_links">                
                 {% for relationship in relationships %}

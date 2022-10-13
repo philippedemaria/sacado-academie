@@ -18,7 +18,24 @@ define(['jquery', 'bootstrap'], function ($) {
         $('#id_notification').prop('checked', false); 
 
 
-});
+
+
+        $(".insert_into_course").on('click', function (event) {
+            value = $(this).data("tool_remark");
+            console.log(value) ;
+            console.log(CKEDITOR.instances) ;
+            CKEDITOR.instances['id_annoncement'].setData(value)  ;
+        });
+
+
+
+
+
+
+
+
+
+    });
 
 });
 
