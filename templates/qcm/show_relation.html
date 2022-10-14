@@ -26,13 +26,9 @@
     {% get_available relation student  as available %}                                    <!-- Si le nombre de tentative est dépassée ou pas : même code que get_parcours_available mais pour une relationship -->
     {% get_parcours_available parcours student relation.exercise as parcours_available %} <!-- Si le nombre de tentative est dépassée ou pas : même code que get_available pour une parcours -->
     <div class="col-sm-12 col-md-1 col-lg-1 full_screen_size">
-        {% if student.ebep %}
-        <div class="calculator_img"  class="calculator_img double_bottom_padding">
-              <a href="#" id="use_tools" ><img src="{% static 'img/situation.png' %}"  class="img_size_square_75" /></a>            
-              <p>Outils</p>
-        </div>
-        {% endif  %} 
 
+
+ 
         <div class="situation double_bottom_padding">
         {% if relation.exercise.supportfile.calculator %}
  
@@ -133,7 +129,6 @@
             <i class="fa fa-barcode fa-4x"></i>
             <p>{{ relation.exercise.supportfile.code }}</p>
         </div>
-
     </div>   
     <div class="col-sm-12 col-md-8 col-lg-8">
 
@@ -253,6 +248,14 @@
                         {% endif %}
                     {% else %}
                       <a href="javascript:history.back()"><input type="button" value="Revenir aux exercices" class="btn btn-default "/></a>
+
+
+
+
+                      <span style="cursor: pointer" id="use_tools" class="btn btn-quizz_bank" >Utiliser l'aide SACADO</span>            
+               
+
+
                     {% endif %}
 
 
@@ -270,10 +273,8 @@
           </div>
             
       </form>
-
     </div> 
     <div class="col-sm-2 col-md-1 col-lg-1">
-
       {% if relation.is_not_consigne_remediation %}
       <h1 class="thin">Aides</h1>
          {% for remediation in relation.is_not_consigne_remediation %}
@@ -328,22 +329,20 @@
 
 
         {% include 'qcm/signal_exercise_peda_live.html' %}
-
-
     </div> 
 
 
-      {% if student.ebep %}
-          <div  id="ebep_div">
-              {% for tool in relation.exercise.tools.all %}          
-              <div class="row">
-                  <div class="col-sm-12 col-md-12 col-lg-12" align="left">
-                      {{ tool.remark|safe }}
-                  </div>
-              </div>
-              {% endfor  %} 
-          </div>
-      {% endif %} 
+
+    <div id="ebep_div">
+        {% for tool in relation.exercise.tools.all %}          
+ 
+            <div class="col-sm-12 col-md-11 col-lg-11">
+                {{ tool.remark|safe }}
+            </div>
+
+        {% endfor  %} 
+    </div>
+
 
 
  <!--   <script type="text/javascript" src="{% static 'js/lib/geogebra.js' %}"></script>-->
