@@ -2,8 +2,9 @@
 {% load widget_tweaks %}
 {% load static %}
 
+
+
 {% block require %}
- 
     {% if avatar_student_id %}
     <script src="{% static 'js/require.js' %}" data-main="{% static 'js/common3.js' %}"></script>
     {% else %}
@@ -21,6 +22,15 @@
  
 {% block page_menu_right %}
 {% endblock %}
+
+
+{% block styleMk4ht %}
+    <link rel="stylesheet" href="{% static 'css/crop.css' %}"> 
+    <link rel="stylesheet" href="{% static 'css/cropme.css' %}">
+
+{% endblock %}
+
+
 
 
 {% block body %}
@@ -44,10 +54,8 @@
                     <a href="javascript:history.back()"><input type="button" value="Annuler"
                                class="btn btn-default" /></a>
 
-                    <a href="#" data-toggle='modal' data-target='#importer_photo'  class="btn btn-sacado" >
-                        Importer une photo
-                    </a>
- 
+
+
                 </div>   
             </div>
         </div>
@@ -74,9 +82,7 @@
                     <a href="javascript:history.back()"><input type="button" value="Annuler"
                                class="btn btn-default" /></a>
 
-                    <a href="#" data-toggle='modal' data-target='#importer_photo_title'  class="btn btn-sacado" >
-                        Importer un arrière plan
-                    </a>
+
 
 
                 </div>   
@@ -113,6 +119,16 @@
                     </div> 
                 </div> 
                 <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <div class="cropme" style="width: 90px; height: 90px;"></div>
+                            </div>
+                        </div>
+                    </div>  
+
+
                     <div class="row">
                         <div class="col-sm-12 col-md-6">
                             <div class="form-group">
@@ -154,6 +170,13 @@
                     </div> 
                 </div> 
                 <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <div class="cropme" style="width: 310px; height: 130px;"></div>
+                            </div>
+                        </div>
+                    </div> 
                     <div class="row">
                         <div class="col-sm-12 col-md-6">
                             <div class="form-group">
