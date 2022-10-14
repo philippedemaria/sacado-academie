@@ -11,7 +11,7 @@
 
             <div  class="box box-widget widget-user-2 widget-user-parent" 
                     {% if student.user.backtitle %} 
-                        style="background-image: url({{ student.user.backtitle.url  }});"  
+                        style="background-image: url({{ student.user.backtitle }});"  
                     {% else %} 
                         style="background-color: #af9cd4 ; background-image: url('/background/default.jpg');" 
                     {% endif %} > 
@@ -29,7 +29,7 @@
                 <div class="box-footer">
                     <div class="row"> 
                         <div class="col-lg-6 col-xs-6" style="font-size:11px;color: #777">
-                            <a href="{% url 'change_adhesion' student.user.id %}">Menu {{ student.data_menu.name  }}</a>
+                            <a href="{% url 'change_adhesion' student.user.id %}">Menu {{ student.data_menu.name }}</a>
                         </div>
                         <div class="col-lg-6 col-xs-6" style="font-size:11px;color: #777" align="right">
                             <a href="{% url 'change_avatar' student.user.id %}"><i class="bi bi-gear"></i></a>
