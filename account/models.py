@@ -71,7 +71,10 @@ class Avatar(models.Model):
 
 class Background(models.Model):
 
-    image = models.ImageField(upload_to=background_directory_path,verbose_name="background")
+    image    = models.ImageField(upload_to=background_directory_path,verbose_name="background")
+    is_title = models.BooleanField(default=0)
+
+
 
     def __str__(self):
         image = self.image
@@ -129,7 +132,7 @@ class User(AbstractUser):
     is_board   = models.BooleanField(default=0)
     avatar     = models.ImageField(upload_to=avatar_directory_path,verbose_name="avatar", blank=True, null= True, default ="" )
     background = models.ImageField(upload_to=background_directory_path,verbose_name="background", blank=True, null= True, default ="" )
-
+    backtitle  = models.ImageField(upload_to=background_directory_path,verbose_name="back title", blank=True, null= True, default ="" )
 
     def __str__(self):
         return "{} {}".format(self.last_name, self.first_name)
@@ -489,6 +492,18 @@ class Student(ModelWithCode):
             test = False
  
         return test
+
+
+
+
+    def nb_task(self):
+
+        relationships = self.students_relationship.exclude(date_limit = None)
+        som = 0
+        for relationship in relationships :
+            if self.answers.filter(exercise = relationship.exercise).count()> 0:#Tache effectuée.
+                som  +=1
+        return relationships.count() - som
 
 
     def this_exercise_is_locked(self,exercise, parcours , custom, today):

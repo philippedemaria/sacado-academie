@@ -31,11 +31,17 @@ class AvatarForm(forms.ModelForm):
         fields = '__all__'
 
 
+
 class AvatarUserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('avatar',)
 
+
+class BacktitleUserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('backtitle',)
 
 
 class BackgroundForm(forms.ModelForm):

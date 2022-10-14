@@ -48,8 +48,9 @@ urlpatterns = [
     path('create_avatar/<int:id>', create_avatar, name='create_avatar'),
     path('delete_avatar/<int:id>', delete_avatar, name='delete_avatar'),
     path('list_avatars', list_avatars, name='list_avatars'),
-
-
+    path('change_avatar/<int:ids>', change_avatar, name='change_avatar'),
+    path('change_backtitle/<int:ids>', change_backtitle, name='change_backtitle'),
+    
     path('background', background, name='background'),
     path('create_background/<int:id>', create_background, name='create_background'),
     path('delete_background/<int:id>', delete_background, name='delete_background'),

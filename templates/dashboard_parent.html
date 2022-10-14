@@ -9,66 +9,87 @@
     <div class="col-md-12 col-lg-12 col-xs-12">
         {%  for student in students %}
 
-            <a  href="{% url 'detail_student_all_views' student.user.id  %}"  class="edit" >
-            <div  class="box box-widget widget-user-2" 
-                  style="background-color: #af9cd4"  > 
+            <div  class="box box-widget widget-user-2 widget-user-parent" 
+                    {% if student.user.backtitle %} 
+                        style="background-image: url({{ student.user.backtitle.url  }});"  
+                    {% else %} 
+                        style="background-color: #af9cd4 ; background-image: url('/background/default.jpg');" 
+                    {% endif %} > 
                   <!-- Add the bg color to the header using any of the bg-* classes -->
                 <div class="handler widget-user-header">
-                    {% if student.user.avatar %}
-                    <div style="position: absolute; top : 10px; text-align: center;"> 
-                        <img src="{{ student.user.avatar }}" class="avatar_big"  />
-                    </div>
-                    {% endif %}
-                    <div class="box_title_vignette"> 
-                        <span style="color:#FFF;" class="thin"> 
-                            {{ student.user.first_name  }} 
-                             
-                            <span class="pull-right"  style="margin-right: 10px" >{{ student.data_menu.name  }}</span>
-                        </span>
-                    </div>
+
                 </div>
+
+                {% if student.user.avatar %} 
+                    <img src="{{ student.user.avatar }}"  class="avatar" />
+                {% else %}
+                    <img src="{% static 'img/avatar/1.jpg' %}" width="80px" height="80px" class="avatar" />
+                {% endif %}
+
                 <div class="box-footer">
-                    <div class="row extend">                              
-                        <div class="col-lg-7 col-xs-7">
-                            <a  href="{% url 'detail_student_all_views' student.user.id  %}"  class="edit" ><i class="fa fa-mortar-board"></i> Bilans</a>   
+                    <div class="row"> 
+                        <div class="col-lg-6 col-xs-6" style="font-size:11px;color: #777">
+                            <a href="{% url 'change_adhesion' student.user.id %}">Menu {{ student.data_menu.name  }}</a>
                         </div>
-                        {% if student.data_menu.id > 2 %}
-                        <div class="col-lg-5 col-xs-5">
-                            <a  href="{% url 'list_discussion_lesson_parent' student.user.id  %}"  class="edit" ><i class="bi bi-envelope"></i> Messages</a>   
+                        <div class="col-lg-6 col-xs-6" style="font-size:11px;color: #777" align="right">
+                            <a href="{% url 'change_avatar' student.user.id %}"><i class="bi bi-gear"></i></a>
                         </div>
-                        {% endif %}
                     </div>
-                    <div class="row">                              
+                    <div class="row extend_name" align="center"> 
+                        <div class="col-lg-12 col-xs-12">
+                            <span style="font-size: 26px">{{ student.user.first_name|lower|capfirst  }} {{ student.user.last_name|lower|capfirst  }}</span> 
+                        </div>
+                    </div>
 
- 
+                    <div class="row" align="center"> 
+                        <div class="col-lg-12 col-xs-12">
+                            <p class="thin" style="color: #777">{{ student.user.username }} </p> 
+                        </div>
+                    </div>
+                    <div class="row extend_extra" align="center"> 
+                        <div class="col-lg-12 col-xs-12">
+                            <a  href="{% url 'detail_student_all_views' student.user.id  %}"  class="btn btn-sacado" >Voir les statistiques et bilan</a>   
+                        </div>
+                    </div>
 
-                        {% if request.user.is_in_academy %}
-                            <div class="col-lg-7 col-xs-7">
-                                <span class="helper_tip" style="color: #5d4391;"><label><i class="bi bi-chevron-bar-right"></i>  {{ student.user.username }} </label> 
-                                    <div class="helper_tip_text_right" >Identifiant de connexion de {{ student.user.first_name  }} .</div>
+                    <div class="row" align="center">                              
+                        <div class="col-lg-4 col-xs-4">
+                            {% if student.nb_task %}
+                                <a  href="{% url 'my_child_tasks' student.user.id %}"> 
+                                    <span style="font-size:26px">{{ student.nb_task }}</span><br/> <span style="font-size:12px">Tâches</span>
+                                </a>                                     
+                            {% else %} 
+                                <span  class="no_button" title="Votre formule ne vous permet pas d'accéder à cette fonctionnalité" {% if not student.data_menu.id > 2 %} style="color:#999" {% endif %}  >
+                                    <span style="font-size:26px">{{ student.nb_task }}</span><br/> <span style="font-size:12px">Tâches</span>
+                                </span> 
+                            {% endif %} 
+
+                        </div>   
+                        <div class="col-lg-4 col-xs-4">
+                            {% if student.data_menu.id > 2 %}
+                                <a  href="{% url 'list_discussion_lesson_parent' student.user.id  %}">
+                                    <span style="font-size:26px">{{ student.user.user_message.count }}</span><br/> <span style="font-size:12px">Messages</span>
+                                </a>
+                            {% else %} 
+                                <span title="Votre formule ne vous permet pas d'accéder à cette fonctionnalité" style="color:#999" >
+                                    <span style="font-size:26px">{{ student.user.user_message.count }}</span><br/> <span style="font-size:12px">Messages</span>
                                 </span>
-                            </div>
+                            {% endif %}   
+                        </div>
+                        <div class="col-lg-4 col-xs-4">
                             {% if student.data_menu.id == 4 %}
-                            <div class="col-lg-5 col-xs-5">
-                                <a  href="{% url 'detail_student_lesson' student.user.id  %}"  class="edit" ><i class="bi bi-camera-video"></i> Leçons</a>   
-                            </div>
+                                <a  href="{% url 'detail_student_lesson' student.user.id  %}">  
+                                    <span style="font-size:26px">{{ student.user.these_events.count }}</span> <br/> <span style="font-size:12px">Leçons</span>
+                                </a>   
+                            {% else %} 
+                                <span  title="Votre formule ne vous permet pas d'accéder à cette fonctionnalité" style="color:#999"  > 
+                                    <span style="font-size:26px">{{ student.user.these_events.count }}</span> <br/> <span style="font-size:12px">Leçons</span>
+                                </span>
                             {% endif %}
-                            {% if student.is_task_exists %}
-                            <div class="col-lg-12 col-xs-12">
-                                <a  href="{% url 'my_child_tasks' student.user.id %}" class="edit"   >
-                                    <i class="fa fa-calendar-check"></i>
-                                    Tâches
-                                </a>  
-                            </div>
-                            {% endif %}
-                        {% endif %}
-
-
-
+                        </div>
                     </div>
                 </div>
             </div>
-            </a>  
         {% endfor %}
     </div>
 </div>
@@ -83,7 +104,7 @@
 
     {%  for student in responses_student %} 
     <div class="col-sm-12 col-md-{% if students.count > 2 %}6{% else %}12{% endif %}">
-        <h2>{{ student.grouper.user.first_name }}</h2>
+        <h2>{{ student.grouper.user.first_name|lower|capfirst }}</h2>
         <table class="table" style="background-color:#FFF; width:100%">
             {% regroup student.list by exercise as responses_list %}
             <thead>

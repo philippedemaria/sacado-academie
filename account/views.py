@@ -35,7 +35,7 @@ from sendmail.models import Communication
 from socle.models import Level
 from socle.models import Theme
 from sendmail.forms import EmailForm
-from .forms import UserForm, UserUpdateForm, StudentForm, TeacherForm, ParentForm, ParentUpdateForm, ManagerUpdateForm, NewUserTForm,ManagerForm , ResponseForm , NewpasswordForm , SetnewpasswordForm , AvatarForm , AvatarUserForm, BackgroundForm , BackgroundUserForm
+from .forms import *
 from templated_email import send_templated_mail
 from general_fonctions import *
 from school.views import this_school_in_session
@@ -283,8 +283,61 @@ def avatar(request) :
 
     avatars = Avatar.objects.filter(adult=adult)
 
-    context = {'avatar_form': avatar_form, 'avatars' : avatars}
+    context = {'avatar_form': avatar_form, 'avatars' : avatars , 'avatar_student_id' : False  }
     return render(request, 'account/avatar_form.html', context)
+
+
+
+def change_avatar(request,ids) :
+
+    user = User.objects.get(pk = ids )
+    avatar_form = AvatarUserForm(request.POST or None, request.FILES or None, instance = user  ) 
+    backtitle_form = BacktitleUserForm(request.POST or None, request.FILES or None, instance = user  ) 
+    
+
+        
+    if request.method == 'POST':
+        if avatar_form.is_valid():
+            user.avatar = request.POST.get("avatar")
+            user.save()
+            return redirect('index')
+        else:
+            messages.error(request, avatar_form.errors)
+
+ 
+
+    if user.user_type == 0 : adult = 0
+    else : adult = 1
+
+    avatars    = Avatar.objects.filter(adult=adult)
+    backtitles = Background.objects.filter(is_title=1)
+
+    context = {'avatar_form': avatar_form, 'backtitle_form': backtitle_form, 'avatars' : avatars , 'backtitles' : backtitles , 'avatar_student_id' : True , 'ids' : ids }
+    return render(request, 'account/avatar_theme_form.html', context)
+
+
+
+
+
+def change_backtitle(request,ids) :
+
+    user = User.objects.get(pk = ids )
+    backtitle_form = BacktitleUserForm(request.POST or None, request.FILES or None, instance = user  ) 
+     
+    if request.method == 'POST':
+        if backtitle_form.is_valid():
+            user.backtitle = request.POST.get("backtitle")
+            user.save()
+            return redirect('index')
+        else:
+            messages.error(request, backtitle_form.errors)
+
+    return redirect( 'change_avatar', ids)
+
+
+
+
+
 
 
 
@@ -348,14 +401,13 @@ def background(request) :
         else:
             messages.error(request, user_form.errors)
 
-    backgrounds = Background.objects.all()
+    backgrounds = Background.objects.filter(is_title=0)
 
     context = {'background_form': background_form, 'backgrounds' : backgrounds}
     return render(request, 'account/background_form.html', context)
 
 
-
-
+ 
 #####################################
 
  

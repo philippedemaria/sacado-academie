@@ -4,8 +4,11 @@
 
 {% block require %}
  
-    <script src="{% static 'js/require.js' %}" data-main="{% static 'js/common2.js' %}"></script> 
- 
+    {% if avatar_student_id %}
+    <script src="{% static 'js/require.js' %}" data-main="{% static 'js/common3.js' %}"></script>
+    {% else %}
+    <script src="{% static 'js/require.js' %}" data-main="{% static 'js/common2.js' %}"></script>
+    {% endif %}
 
     <script>
        require(['script/ajax-avatar']);
@@ -34,21 +37,7 @@
                 {% endfor %}
             </div>
         </div>  
- 
-        {% comment %}
-        <div class="row">
-            <div class="col-sm-12 col-md-6">
-                <div class="form-group">
-                    <label>{{ avatar_form.avatar.label_tag }}</label>
-                    {{ avatar_form.avatar |add_class:"btn btn-default" }}
-                    {{ avatar_form.avatar.errors }}
-                </div>
-            </div>
-        </div>  
-        {% endcomment %}
-                <input type="hidden" name="avatar" id="id_avatar"  >
- 
-             
+        <input type="hidden" name="avatar" id="id_avatar"  >   
         <div class="row">
             <div class="col-sm-12 col-md-12">
                 <div class="form-group">
@@ -57,12 +46,57 @@
                         <input type="button" value="Annuler"
                                class="btn btn-default" />
                     </a>
+
+                    <a href="#" data-toggle='modal' data-target='#importer_photo'  class="btn btn-sacado" >
+                        Importer une photo
+                    </a>
+
+
                 </div>   
             </div>
         </div>
     </form>
 </section>
  
+<div class="modal fade" id="importer_photo" tabindex="-1" role="dialog" aria-labelledby="importer_photo">
+    <div class="modal-dialog" role="document">
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="modal-content" >
+                <div class="modal-header">
+                    <div class="row">
+                        <div class="col-sm-11 col-md-11">
+                            Importer une image/une photo de profil
+                        </div>
+                        <div class="col-sm-1 col-md-1">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button> 
+                        </div>
+                    </div> 
+                </div> 
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label>{{ avatar_form.avatar.label_tag }}</label>
+                                {{ avatar_form.avatar |add_class:"btn btn-default" }}
+                                {{ avatar_form.avatar.errors }}
+                            </div>
+                        </div>
+                    </div>  
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <input value="Importer" type="submit" class="btn btn-primary"/>
+                            </div>   
+                        </div>
+                    </div>
+                </div> 
+            </div> 
+        </form>
+    </div> 
+</div> 
  
 {% endblock %}
 

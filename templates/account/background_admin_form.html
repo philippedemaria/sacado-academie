@@ -41,7 +41,18 @@
                     {{ form.image.errors }}
                 </div>
             </div>
-        </div>     
+        </div>   
+
+        <div class="row">
+            <div class="col-sm-12 col-md-6">
+                <div class="form-group">
+                    <label>{{ form.is_title.label_tag }}</label>
+                    {{ form.is_title |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}
+                    {{ form.is_title.errors }}
+                </div>
+            </div>
+        </div> 
+
    
         <div class="row">
             <div class="col-sm-12 col-md-12">

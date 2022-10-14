@@ -1,0 +1,181 @@
+{% extends 'dashboard.html' %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block require %}
+ 
+    {% if avatar_student_id %}
+    <script src="{% static 'js/require.js' %}" data-main="{% static 'js/common3.js' %}"></script>
+    {% else %}
+    <script src="{% static 'js/require.js' %}" data-main="{% static 'js/common2.js' %}"></script>
+    {% endif %}
+
+    <script>
+       require(['script/ajax-avatar']);
+    </script> 
+{% endblock %}
+
+{% block page_title %}
+    <i class="fa fa-user"></i> Modifier le profil
+{% endblock %}
+ 
+{% block page_menu_right %}
+{% endblock %}
+
+
+{% block body %}
+    
+<section class="content_main">
+    <h1>Changer l'avatar {% if student.user.avatar %}<img src="{{ student.user.avatar.url }}" class="avatar" width="80px" height="80px"  />{% else %}<img src="{% static 'img/avatar/1.jpg' %}" class="avatar" width="80px" height="80px"  />{% endif %}</h1>
+    <form action="" method="POST">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                {% for avatar in avatars %}
+                    <a href="javascript:void()" class="choicer_avatar" data-url="{{ avatar.image.url }}"> <img src="{{ avatar.image.url }}" class="avatar" height='90px' width='90px' /></a>
+                {% endfor %}
+            </div>
+        </div>  
+        <input type="hidden" name="avatar" id="id_avatar"  >   
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <div class="form-group">
+                    <input value="Enregistrer" type="submit" class="btn btn-primary"/>
+                    <a href="javascript:history.back()"><input type="button" value="Annuler"
+                               class="btn btn-default" /></a>
+
+                    <a href="#" data-toggle='modal' data-target='#importer_photo'  class="btn btn-sacado" >
+                        Importer une photo
+                    </a>
+ 
+                </div>   
+            </div>
+        </div>
+    </form>
+    <hr/>
+
+    <h1>Changer l'arrière plan {% if student.user.backtitle %} <img src="{{ student.user.backtitle.url }}" width="310px" height="130px"  />{% else %}<div class="widget-user-parent" style="width:310px; height : 130px"  /><div class="widget-user-header" style="width:310px; height : 130px;background-color: #af9cd4">  </div></div>{% endif %}</h1>
+
+    <form action="{% url 'change_backtitle' ids %}" method="POST">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                {% for backtitle in backtitles %}
+                    <a href="javascript:void()" class="choicer_backtitle" data-url="{{ backtitle.image.url }}"> <img src="{{ backtitle.image.url }}" class="list_fond" width="310px" height="130px"  /></a>
+                {% endfor %}
+            </div>
+        </div>  
+        <input type="hidden" name="backtitle" id="id_backtitle"  >
+
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <div class="form-group">
+                    <input value="Enregistrer" type="submit" class="btn btn-primary"/>
+                    <a href="javascript:history.back()"><input type="button" value="Annuler"
+                               class="btn btn-default" /></a>
+
+                    <a href="#" data-toggle='modal' data-target='#importer_photo_title'  class="btn btn-sacado" >
+                        Importer un arrière plan
+                    </a>
+
+
+                </div>   
+            </div>
+        </div>
+    </form>
+
+
+
+
+
+
+</section>
+ 
+
+
+
+
+<div class="modal fade" id="importer_photo" tabindex="-1" role="dialog" aria-labelledby="importer_photo">
+    <div class="modal-dialog" role="document">
+        <form action="" method="POST"  enctype='multipart/form-data'>
+            {% csrf_token %}
+            <div class="modal-content" >
+                <div class="modal-header">
+                    <div class="row">
+                        <div class="col-sm-11 col-md-11">
+                            Importer une image/une photo de profil
+                        </div>
+                        <div class="col-sm-1 col-md-1">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button> 
+                        </div>
+                    </div> 
+                </div> 
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label>{{ avatar_form.avatar.label_tag }}</label>
+                                {{ avatar_form.avatar |add_class:"btn btn-default" }}
+                                {{ avatar_form.avatar.errors }}
+                            </div>
+                        </div>
+                    </div>  
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <input value="Importer" type="submit" class="btn btn-primary"/>
+                            </div>   
+                        </div>
+                    </div>
+                </div> 
+            </div> 
+        </form>
+    </div> 
+</div> 
+
+
+<div class="modal fade" id="importer_photo_title" tabindex="-1" role="dialog" aria-labelledby="importer_photo_title">
+    <div class="modal-dialog" role="document">
+        <form action="" method="POST"  enctype='multipart/form-data'>
+            {% csrf_token %}
+            <div class="modal-content" >
+                <div class="modal-header">
+                    <div class="row">
+                        <div class="col-sm-11 col-md-11">
+                            Importer un arrière plan
+                        </div>
+                        <div class="col-sm-1 col-md-1">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button> 
+                        </div>
+                    </div> 
+                </div> 
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+                                <label>{{ backtitle_form.backtitle.label_tag }}</label>
+                                {{ backtitle_form.backtitle |add_class:"btn btn-default" }}
+                                {{ backtitle_form.backtitle.errors }}
+                            </div>
+                        </div>
+                    </div>  
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <input value="Importer" type="submit" class="btn btn-primary"/>
+                            </div>   
+                        </div>
+                    </div>
+                </div> 
+            </div> 
+        </form>
+    </div> 
+</div> 
+ 
+{% endblock %}
+
+ 

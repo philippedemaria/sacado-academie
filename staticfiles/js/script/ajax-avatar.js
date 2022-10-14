@@ -16,7 +16,16 @@ define(['jquery', 'bootstrap'], function ($) {
 
 
 
-        
+ 
+
+        $(".choicer_backtitle").on('click', function (event) {
+
+            let url = $(this).data("url");
+            $("#id_backtitle").val(url);
+            $(".choicer_backtitle").addClass("list_avatar_opaque");
+            $(this).removeClass("list_avatar_opaque");
+
+        });        
   
 
 
