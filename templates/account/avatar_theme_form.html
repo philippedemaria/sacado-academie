@@ -26,7 +26,7 @@
 {% block body %}
     
 <section class="content_main">
-    <h1>Changer l'avatar {% if student.user.avatar %}<img src="{{ student.user.avatar }}" class="avatar" width="80px" height="80px"  />{% else %}<img src="{% static 'img/avatar/1.jpg' %}" class="avatar" width="80px" height="80px"  />{% endif %}</h1>
+    <h1>Changer l'avatar {% if student.user.avatar %}<img src="{{ student.user.avatar.url }}" class="avatar" width="80px" height="80px"  />{% else %}<img src="{% static 'img/avatar/1.jpg' %}" class="avatar" width="80px" height="80px"  />{% endif %}</h1>
     <form action="" method="POST">
         {% csrf_token %}
         <div class="row">
@@ -56,7 +56,7 @@
 
     <h1>Changer l'arrière plan 
         {% if student.user.backtitle %} 
-        <img src="{{ student.user.backtitle }}" width="310px" height="130px"  />
+        <img src="{{ student.user.backtitle.url }}" width="310px" height="130px"  />
         {% else %}
         <div class="widget-user-parent" style="width:310px; height : 130px"  /><div class="widget-user-header" style="width:310px; height : 130px;background-color: #af9cd4">  </div></div>
         {% endif %}</h1>
