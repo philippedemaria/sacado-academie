@@ -43,6 +43,7 @@
                     <thead>
                     <tr>
                         <th>Image</th>
+                        <th>Arrière plan de titre</th>
                         <th></th>
                     </tr>
                     </thead>
@@ -51,6 +52,9 @@
                             <tr>
                                 <td style="min-width:250px">
                                     <img src="{{ background.image.url }}" width='300px' />
+                                </td>
+                                <td style="min-width:250px">
+                                   {% if background.is_title %}Oui{% else %}Non{% endif %}
                                 </td>
                                 <td style="font-size: 14px; min-width:400px">
                                     <a href="{% url 'delete_background' background.id %}"  onclick="return TestDelete('ce fond')"> 
