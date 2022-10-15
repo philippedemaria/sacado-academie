@@ -321,7 +321,8 @@ class Student(ModelWithCode):
         return data
 
 
-
+    def these_last_exercises_done(self):
+        return self.answers.order_by("-date")[:10]
 
 
     def bilan_skills(self, skill):

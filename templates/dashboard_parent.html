@@ -94,60 +94,88 @@
     </div>
 </div>
  
- 
-
 <hr>   
 
-<div class="row" >  
+<div class="row" >
+    <div class="col-sm-12 col-md-12">
 
-    {% regroup last_exercises_done by student as responses_student %}
 
-    {%  for student in responses_student %} 
-    <div class="col-sm-12 col-md-{% if students.count > 2 %}6{% else %}12{% endif %}">
-        <h2>{{ student.grouper.user.first_name|lower|capfirst }}</h2>
-        <table class="table" style="background-color:#FFF; width:100%">
-            {% regroup student.list by exercise as responses_list %}
-            <thead>
-                <tr style="background-color:#f4f6f9"> 
-                <td><span  style="font-weight:100;font-size:20px ">Derniers exercices </span> </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                </tr>
-            </thead>
-            <tbody>
-            {% for r in responses_list %}
-                <tr>
-                    <td> 
-                        <a href="{% url 'show_this_exercise'  r.grouper.id   %}" >  
-                            <img src="{{ r.grouper.supportfile.imagefile.url }}" class="imagefile">
-                        </a>
-                    </td>
-                    <td style="width:75%"><a href="{% url 'show_this_exercise' r.grouper.id %}">{{ r.grouper }}</a></td>
-                    <td>{{ r.grouper.theme.name }}</td>
-                    <td style="width:10%">
-                        {% for s in r.list  %}
-                            <div  class="markdown pull-right
-                                {% if s.point < 30 %}
-                                 red 
-                                {% elif s.point < 60 %}
-                                orange
-                                {% elif s.point < 80 %}
-                                green
-                                {% else %}
-                                darkgreen
-                                {% endif %}">
-                                <small>{{ s.point }}%</small>
-                            </div> 
-                        {% endfor %}
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+
+    <ul class="nav nav-tabs">
+        {%  for student in students %} 
+            <li {% if forloop.first %} class="active" {% endif %}>
+                <a data-toggle="tab" href="#div{{ forloop.counter }}">
+                    {% if student.user.avatar %} 
+                        <img src="{{ student.user.avatar }}" width="40px" height="40px"  class="avatar" />
+                    {% else %}
+                        <img src="{% static 'img/avatar/1.jpg' %}" width="40px" height="40px" class="avatar" />
+                    {% endif %}
+                    {{ student|lower|capfirst }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <div class="tab-content">
+        {%  for student in students %} 
+            <div id="div{{ forloop.counter }}" class="tab-pane fade {% if forloop.first %}in active{% endif %}">
+                <div class="row" >
+                    <div class="col-sm-12 col-md-6">
+                        <table class="table" style="background-color:#FFF;">
+                            {% regroup student.these_last_exercises_done by exercise as responses_list %}
+                            <thead>
+                                <tr style="background-color:#f4f6f9"> 
+                                <td><span  style="font-weight:100;font-size:20px ">10 derniers exercices </span> </td>
+                                <td></td>
+                                <td></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for r in responses_list %}
+                                <tr>
+                                    <td> 
+                                        <a href="{% url 'show_this_exercise'  r.grouper.id   %}" >  
+                                            <img src="{{ r.grouper.supportfile.imagefile.url }}" class="imagefile">
+                                        </a>
+                                    </td>
+                                    <td>{{ r.grouper.theme.name }}</td>
+                                    <td >
+                                        {% for s in r.list  %}
+                                            <div  class="markdown pull-right
+                                                {% if s.point < 30 %}
+                                                 red 
+                                                {% elif s.point < 60 %}
+                                                orange
+                                                {% elif s.point < 80 %}
+                                                green
+                                                {% else %}
+                                                darkgreen
+                                                {% endif %}">
+                                                <small>{{ s.point }}%</small>
+                                            </div> 
+                                        {% endfor %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
     </div>
-    {% endfor %}
+
+
+
+
+ 
 </div>
+
+
+
+
+
+ 
 </section> 
 
 

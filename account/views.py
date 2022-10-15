@@ -1083,7 +1083,7 @@ def detail_student_all_views(request, id):
                 datas["h"]    = student_answers_nb
                 datas["a"]    = int(average["average_score"])
                 datas["n"]    = student_answers_nb
-                datas["l"]    = 9*step
+                datas["l"]    = 10*step
                 datas["le"]   = student_answers  
                 datas["m"]    = month
 
