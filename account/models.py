@@ -507,6 +507,14 @@ class Student(ModelWithCode):
         return relationships.count() - som
 
 
+    def nb_exercises(self):
+
+        return self.answers.values_list("exercise_id", flat=True).distinct().count()
+
+
+
+
+
     def this_exercise_is_locked(self,exercise, parcours , custom, today):
         
         tst = False 
