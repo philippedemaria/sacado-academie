@@ -102,32 +102,34 @@
 </div>
 {% endif %}
 
-<div class="content-wrapper">
+
     <div class="content_title" id="content_title_page">
-        <h1 class="thin">
+
             <nav class="navbar navbar-default">
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="navbar-header"> 
-                        {% block page_title %}
-                                {% if request.user.is_authenticated %}
-                                    {% if user.is_teacher %}
-                                        <span style="color:#5d4391"><i class="bi bi-people icon_size" ></i> Groupes  </span> 
-                                        {% if webinaire %}
-                                        <div class="webinaire_index">
-                                            <i class="fa fa-bullhorn text-warning"></i> Invitation Webinaire</b> le {{ webinaire.date_time|date:"d-m-y à H:i"}} <i class="fa fa-hand-o-right"></i><a href="{% url 'webinaire_register'  %}" > Voir le menu</a>
-                                        </div>
+                        <div class="navbar-header">         
+                            <h1 class="thin">
+                            {% block page_title %}
+                                    {% if request.user.is_authenticated %}
+                                        {% if user.is_teacher %}
+                                            <span style="color:#5d4391"><i class="bi bi-people icon_size" ></i> Groupes  </span> 
+                                            {% if webinaire %}
+                                            <div class="webinaire_index">
+                                                <i class="fa fa-bullhorn text-warning"></i> Invitation Webinaire</b> le {{ webinaire.date_time|date:"d-m-y à H:i"}} <i class="fa fa-hand-o-right"></i><a href="{% url 'webinaire_register'  %}" > Voir le menu</a>
+                                            </div>
+                                            {% endif %}
+                                        {% elif user.is_student %}                                        
+                                            <span style="color:#5d4391"><i class="bi bi-markdown icon_size" ></i> Matières  </span>  
+                                            <a href="#" data-toggle='modal' data-target='#video_sacado' class="btn btn-violet" style="color:#FF0000; font-size:14px; margin-left: 100px"> 
+                                                <i class="fa fa-play"></i> Sacado en vidéo
+                                            </a>
+                                        {% elif user.is_parent %}                                        
+                                            <span style="color:#5d4391"><i class="bi bi-speedometer2 icon_size" ></i> Tableau de bord  </span>  
                                         {% endif %}
-                                    {% elif user.is_student %}                                        
-                                        <span style="color:#5d4391"><i class="bi bi-markdown icon_size" ></i> Matières  </span>  
-                                        <a href="#" data-toggle='modal' data-target='#video_sacado' class="btn btn-violet" style="color:#FF0000; font-size:14px; margin-left: 100px"> 
-                                            <i class="fa fa-play"></i> Sacado en vidéo
-                                        </a>
-                                    {% elif user.is_parent %}                                        
-                                        <span style="color:#5d4391"><i class="bi bi-speedometer2 icon_size" ></i> Tableau de bord  </span>  
                                     {% endif %}
-                                {% endif %}
-                        {% endblock %}
+                            {% endblock %}
+                            </h1>
                             <a href="#" id="mobile_version_button" class="mobile_version pull-right"><i class="fa fa-bars"></i></a>
                         </div>
                         <ul class="nav navbar-nav navbar-right">
@@ -180,9 +182,14 @@
                     </div>
                 </div>
             </nav> 
-        </h1>
     </div>
-        
+
+
+
+
+
+
+<div class="content-wrapper">     
     {%  block body %}
         <div class="content_list" id="search_result">
         {% if request.user.is_authenticated %}
