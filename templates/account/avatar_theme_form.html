@@ -51,19 +51,37 @@
             <div class="col-sm-12 col-md-12">
                 <div class="form-group">
                     <input value="Enregistrer" type="submit" class="btn btn-primary"/>
-                    <a href="javascript:history.back()"><input type="button" value="Annuler"
-                               class="btn btn-default" /></a>
-
-
-
+                    <a href="javascript:history.back()"><input type="button" value="Annuler"class="btn btn-default" /></a>
                 </div>   
             </div>
         </div>
     </form>
     <hr/>
-
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            Importer une image/une photo de profil
+        </div>
+    </div>
+    <form action="" method="POST">
+        <div class="row">
+            <div class="col-sm-12 col-md-6">
+                <div class="form-group">
+                    <label>{{ avatar_form.avatar.label_tag }} <span class="text-danger">largeur : 90px et hauteur : 90px</span></label>
+                    {{ avatar_form.avatar |add_class:"btn btn-default" }}
+                    {{ avatar_form.avatar.errors }}
+                </div>
+            </div>
+        </div>  
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <div class="form-group">
+                    <input value="Importer" type="submit" class="btn btn-primary"/>
+                </div>   
+            </div>
+        </div>
+    </form>
+    <hr/>
     <h1>Changer l'arrière plan</h1>
-
     <form action="{% url 'change_backtitle' ids %}" method="POST">
         {% csrf_token %}
         <div class="row">
@@ -74,23 +92,44 @@
             </div>
         </div>  
         <input type="hidden" name="backtitle" id="id_backtitle"  >
-
         <div class="row">
             <div class="col-sm-12 col-md-12">
                 <div class="form-group">
                     <input value="Enregistrer" type="submit" class="btn btn-primary"/>
-                    <a href="javascript:history.back()"><input type="button" value="Annuler"
-                               class="btn btn-default" /></a>
-
-
-
-
+                    <a href="javascript:history.back()"><input type="button" value="Annuler" class="btn btn-default" /></a>
                 </div>   
             </div>
         </div>
     </form>
 
+    <hr/>
 
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            Importer un arrière plan
+        </div>
+    </div>
+
+    <form action="" method="POST">
+        {% csrf_token %}  
+        <div class="row">
+            <div class="col-sm-12 col-md-6">
+                <div class="form-group">
+                    <label>{{ backtitle_form.backtitle.label_tag }} <span class="text-danger">largeur : 310px et hauteur : 130px</span></label>
+                    {{ backtitle_form.backtitle |add_class:"btn btn-default" }}
+                    {{ backtitle_form.backtitle.errors }}
+                </div>
+            </div>
+        </div>  
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <div class="form-group">
+                    <input value="Importer" type="submit" class="btn btn-primary"/>
+                </div>   
+            </div>
+        </div>
+
+    </form>
 
 
 
@@ -101,103 +140,8 @@
 
 
 
-<div class="modal fade" id="importer_photo" tabindex="-1" role="dialog" aria-labelledby="importer_photo">
-    <div class="modal-dialog" role="document">
-        <form action="" method="POST"  enctype='multipart/form-data'>
-            {% csrf_token %}
-            <div class="modal-content" >
-                <div class="modal-header">
-                    <div class="row">
-                        <div class="col-sm-11 col-md-11">
-                            Importer une image/une photo de profil
-                        </div>
-                        <div class="col-sm-1 col-md-1">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button> 
-                        </div>
-                    </div> 
-                </div> 
-                <div class="modal-body">
 
-                    <div class="row">
-                        <div class="col-sm-12 col-md-6">
-                            <div class="form-group">
-                                <div class="cropme" style="width: 90px; height: 90px;"></div>
-                            </div>
-                        </div>
-                    </div>  
-
-
-                    <div class="row">
-                        <div class="col-sm-12 col-md-6">
-                            <div class="form-group">
-                                <label>{{ avatar_form.avatar.label_tag }}</label>
-                                {{ avatar_form.avatar |add_class:"btn btn-default" }}
-                                {{ avatar_form.avatar.errors }}
-                            </div>
-                        </div>
-                    </div>  
-                    <div class="row">
-                        <div class="col-sm-12 col-md-12">
-                            <div class="form-group">
-                                <input value="Importer" type="submit" class="btn btn-primary"/>
-                            </div>   
-                        </div>
-                    </div>
-                </div> 
-            </div> 
-        </form>
-    </div> 
-</div> 
-
-
-<div class="modal fade" id="importer_photo_title" tabindex="-1" role="dialog" aria-labelledby="importer_photo_title">
-    <div class="modal-dialog" role="document">
-        <form action="" method="POST"  enctype='multipart/form-data'>
-            {% csrf_token %}
-            <div class="modal-content" >
-                <div class="modal-header">
-                    <div class="row">
-                        <div class="col-sm-11 col-md-11">
-                            Importer un arrière plan
-                        </div>
-                        <div class="col-sm-1 col-md-1">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button> 
-                        </div>
-                    </div> 
-                </div> 
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-sm-12 col-md-6">
-                            <div class="form-group">
-                                <div class="cropme" style="width: 310px; height: 130px;"></div>
-                            </div>
-                        </div>
-                    </div> 
-                    <div class="row">
-                        <div class="col-sm-12 col-md-6">
-                            <div class="form-group">
-                                <label>{{ backtitle_form.backtitle.label_tag }}</label>
-                                {{ backtitle_form.backtitle |add_class:"btn btn-default" }}
-                                {{ backtitle_form.backtitle.errors }}
-                            </div>
-                        </div>
-                    </div>  
-                    <div class="row">
-                        <div class="col-sm-12 col-md-12">
-                            <div class="form-group">
-                                <input value="Importer" type="submit" class="btn btn-primary"/>
-                            </div>   
-                        </div>
-                    </div>
-                </div> 
-            </div> 
-        </form>
-    </div> 
-</div> 
+ 
  
 {% endblock %}
 

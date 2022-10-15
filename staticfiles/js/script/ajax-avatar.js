@@ -26,8 +26,6 @@ define(['jquery', 'bootstrap'], function ($) {
             $(this).removeClass("list_avatar_opaque");
 
         });        
-  
-
 
 });
 

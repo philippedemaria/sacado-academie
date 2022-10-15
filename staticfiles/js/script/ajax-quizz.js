@@ -288,7 +288,7 @@ define(['jquery',  'bootstrap', 'ui' , 'ui_sortable' , 'uploader','config_toggle
                                                 $("#preview"+nb).attr("src", image );
                                             }) ;
 
-            if (file) { console.log(file) ;
+            if (file) { 
               reader.readAsDataURL(file);
             }            
 

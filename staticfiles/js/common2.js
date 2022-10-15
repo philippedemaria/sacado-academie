@@ -40,6 +40,9 @@ requirejs.config({
         uploader: "lib/jquery.smartuploader",
         tex: "lib/tex_math_ml", 
 
+        crop   : "lib/crop", 
+        cropper: "lib/cropper", 
+
     },
     shim: {
         "bootstrap": {
@@ -75,7 +78,12 @@ requirejs.config({
         "uploader": {
             deps: ['jquery',]
         },
-
+        "crop": {
+            deps: ['jquery',]
+        },
+        "cropme": {
+            deps: ['jquery',]
+        },
         mathjax: {
             exports: "MathJax",
             init: function () {
@@ -98,6 +106,6 @@ requirejs.config({
 
 require(['jquery', 'bootstrap', 'bootstrap_popover',  'bcPicker',  'mathjax' , 'ckeditor_jquery', 'ckeditor', 'ckeditor_init',   'datatables', 'datatables_bootstrap',
     'config_select2', 'config_datepicker', 'config_toggle', 'config_colorpicker', 'fonctions_jquery', 'fonctions',   'uploader',   'config_datatable',  'tex' ,
-    'multiselect', 'ui', 'slimscroll', 'chart']);
+    'multiselect', 'ui', 'slimscroll', 'chart', 'crop', 'cropper']);
 
 // suppression de admin dans le chargement  : 'admin', 
