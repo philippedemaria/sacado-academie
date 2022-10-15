@@ -58,7 +58,7 @@
                                 <a  href="{% url 'my_child_tasks' student.user.id %}"> 
                                     <span style="font-size:26px">{{ student.nb_task }}</span><br/> <span style="font-size:12px">Tâches</span>
                                 </a>                                     
-                            {% else %} 
+                            {% elif not student.data_menu.id > 2 %} 
                                 <span  class="no_button" title="Votre formule ne vous permet pas d'accéder à cette fonctionnalité" {% if not student.data_menu.id > 2 %} style="color:#999" {% endif %}  >
                                     <span style="font-size:26px">{{ student.nb_task }}</span><br/> <span style="font-size:12px">Tâches</span>
                                 </span> 
