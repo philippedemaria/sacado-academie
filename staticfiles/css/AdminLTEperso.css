@@ -990,15 +990,6 @@ label {
     left: -200px;
 } 
 
-.tab-pane{
-  padding: 15px;
-  background-color: #FFF;
-  border-left: 1px solid #CCC;
-  border-right: 1px solid #CCC;
-  border-bottom: 1px solid #CCC; 
-}
-
-
 .margin_space5{
   margin-right: 5px;
   margin-bottom: 5px;
@@ -4233,7 +4224,7 @@ table.table-bordered.dataTable {
 /********************************************* beige #e6e2dd ***************************************/
 /********************************************* beige clair #f2f1f0***************************************/
 
-
+ }
 
 
 .under_constraint{
@@ -8250,6 +8241,23 @@ a.white, a.white:active, a.white:visited, a.white:hover, .white{
   text-transform: uppercase;
 }
 /* NAV TABS */
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+    color: #555;
+    cursor: default;
+    background-color: #fff;
+    border: 1px solid #d8ccf0;
+    border-bottom-color: transparent;
+}
+
+.tab-pane{
+  padding: 15px;
+  background-color: #FFF;
+  border-left: 1px solid #d8ccf0;
+  border-right: 1px solid #d8ccf0;
+  border-bottom: 1px solid #d8ccf0; 
+}
+
+
 .nav-tabs-custom {
   margin-bottom: 20px;
   background: #fff;
