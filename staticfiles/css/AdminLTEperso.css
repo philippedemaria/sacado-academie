@@ -8186,7 +8186,6 @@ a.white, a.white:active, a.white:visited, a.white:hover, .white{
  .navbar{
   margin-bottom: 25px;
   margin-top: 0px;
-  padding-top: 3px;
   min-height: 60px;
 }
 .nav > li > a {
