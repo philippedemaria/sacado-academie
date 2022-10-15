@@ -514,12 +514,7 @@ form{
   height: 45px !important;
 }
 
-.navbar-default{
-background-color: #FFF;
-border :  transparent !important;
-margin-bottom: 20px;
-border-radius:0px;
-}
+
 
 .pagination > .active > a, .pagination > .active > span, .pagination > .active > a:hover, .pagination > .active > span:hover, .pagination > .active > a:focus, .pagination > .active > span:focus {
     z-index: 3;
