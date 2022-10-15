@@ -54,14 +54,15 @@
 
                     <div class="row" align="center">                              
                         <div class="col-lg-4 col-xs-4">
-                            {% if student.nb_task %}
+                            {% if student.data_menu.id > 2 %}
                                 <a  href="{% url 'my_child_tasks' student.user.id %}"> 
                                     <span style="font-size:26px">{{ student.nb_task }}</span><br/> <span style="font-size:12px">Tâches</span>
                                 </a>                                     
-                            {% elif not student.data_menu.id > 2 %} 
-                                <span  class="no_button" title="Votre formule ne vous permet pas d'accéder à cette fonctionnalité" {% if not student.data_menu.id > 2 %} style="color:#999" {% endif %}  >
+                            {% else %} 
+                                <span  class="no_button" title="Votre formule ne vous permet pas d'accéder à cette fonctionnalité" style="color:#999" >
                                     <span style="font-size:26px">{{ student.nb_task }}</span><br/> <span style="font-size:12px">Tâches</span>
-                                </span> 
+                                </span>
+
                             {% endif %} 
 
                         </div>   
