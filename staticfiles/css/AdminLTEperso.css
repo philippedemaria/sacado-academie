@@ -840,6 +840,7 @@ li label{
 
 .round{
     margin-top: 150px;
+    margin-bottom: 30px;
     border-radius: 50%;
     -webkit-box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
     -moz-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
