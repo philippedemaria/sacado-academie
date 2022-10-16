@@ -2338,9 +2338,8 @@ def ajax_chargethemes_exercise(request):
     return JsonResponse(data)
  
  
-@login_required(login_url= 'index')
-def lock_all_exercises_for_this_student(parcours,student):
 
+def lock_all_exercises_for_this_student(parcours,student):
     dateur = parcours.stop
     for exercise in  parcours.exercises.all() :
         relationship = Relationship.objects.get(parcours=parcours, exercise = exercise) 
@@ -2368,7 +2367,6 @@ def lock_all_exercises_for_this_student(parcours,student):
 
 
 
-@login_required(login_url= 'index')
 def lock_all_exercises_for_student(dateur,parcours):
 
     for student in parcours.students.all() :
