@@ -14,8 +14,8 @@ from django.db.models import Q
 class Group(ModelWithCode):
 
     FORMULES = (
-        (1, "autonomie"),
-        (2, "ADAPTATIF et Perso"),
+        (1, "SANS Visio"),
+        (2, "AVEC Visio"),
     )
 
 

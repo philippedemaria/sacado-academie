@@ -915,12 +915,13 @@ def ajax_choose_parcours(request):
     subject_id = request.POST.get("subject_id",None) 
 
     if level_id and subject_id :
-        parcours = Parcours.objects.filter(level_id=level_id , subject_id = subject_id , teacher_id = 2480, is_share=1 ,is_trash=0)
+        folders  = Folder.objects.filter(level_id=level_id , subject_id = subject_id , teacher_id = 2480, is_share=1 ,is_trash=0)
     else :
-        parcours = Parcours.objects.filter(level_id=0 , subject_id = 0 , teacher_id = 2480, is_share=1 ,is_trash=0)
+        folders  = Folder.objects.filter(level_id=0 , subject_id = 0 ,teacher_id = 2480, is_share=1 ,is_trash=0)
 
     data = {}
-    data['html'] = render_to_string('group/listingOfparcours.html', {  'parcourses':parcours  })
+    
+    data['html'] = render_to_string('group/listingOfparcours.html', {   'folders':folders })
  
  
     return JsonResponse(data)

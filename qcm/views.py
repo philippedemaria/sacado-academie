@@ -66,6 +66,21 @@ import html
 from general_fonctions import *
  
 
+
+def unified_courses():
+
+    for level in Level.objects.exclude(pk=13):
+        relationships = Relationship.objects.filter(type_id=2,parcours__level_id= level.id ,parcours__subject_id=1).order_by("document_id") 
+        for relationship in relationships :
+            course = Course.objects.get(pk= relationship.document_id)
+            crs    = Course.objects.values_list("id",flat=True).filter(title__startswith = course.title,level_id=7,subject_id=1).exclude(Q(title__contains='sommaire')|Q(title__contains='savoir faire')|Q(title__contains='savoir-faire'))
+            crs0   = crs.filter( teacher_id=2480)
+
+            if crs0 :
+                crs1 = crs0.first()
+            relationship.document_id = crs1
+            relationship.save()
+            #course.delete()
 #################################################################
 # Transformation de parcours en séquences
 #################################################################
@@ -1632,6 +1647,10 @@ def list_archives(request):
 
 @login_required(login_url= 'index')
 def list_sequences(request):
+
+
+    unified_courses()
+
 
     teacher = request.user.teacher
     today   = time_zone_user(teacher.user)

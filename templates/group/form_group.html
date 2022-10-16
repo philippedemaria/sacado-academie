@@ -52,29 +52,23 @@
             {% csrf_token %}
             <div class="row">
                 <div class="col-sm-12 col-md-3">
-                    <div class="form-group">
                         <label>Nom : <font style="font-size:12px">18 lettres max.</font></label>
                         {{ form.name |add_class:"form-control" }}
                         {{ form.name.errors }}
-                    </div>
                 </div>
                 <div class="col-sm-12 col-md-4">
-                    <div class="form-group">
                         <label>Niveau : <span class="helper_tip"> <i class="fa fa-question-circle"></i>
                                     <div class="helper_tip_text" >Si aucun niveau n'apparait, sélectionner vos niveaux préférés <a href="{% url 'profile' %}">ici</a>.</div>
                                 </span></label>
                         {{ form.level |add_class:"form-control select2" }}
                         {{ form.level.errors }}
-                    </div>
                 </div>
                 <div class="col-sm-12 col-md-3">
-                    <div class="form-group">
                         <label>Enseignement :<span class="helper_tip"> <i class="fa fa-question-circle"></i>
                                     <div class="helper_tip_text" >Si aucun enseignement n'apparait, sélectionner vos enseignements <a href="{% url 'profile' %}">ici</a>.</div>
                                 </span></label>
                         {{ form.subject |add_class:"form-control select2" }}
                         {{ form.subject.errors }}
-                    </div>
                 </div>
                 <div class="col-sm-12 col-lg-2">
                       {{ form.color.label_tag }} <span class="helper_tip"> <i class="fa fa-question-circle"></i>
@@ -86,72 +80,69 @@
                       </div>
                 </div>
             </div> 
-
-
-
             <div class="row"> 
+                <div class="form-group">
+                    <div class="col-sm-12 col-md-4">
+                           <label>Suivi parent ?
+                                <span class="helper_tip"> <i class="fa fa-question-circle"></i>
+                                        <div class="helper_tip_text" > Si oui, le suivi par les parents est disponible via un code unique et secret sur le tableau de bord élève. </div>
+                                </span>
+                            </label> <br>
+                            {{ form.suiviparent  |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}
+                    </div>
+                    {% if group %}
+                     <div class="col-sm-12 col-md-4">
+                           <label>Verrouiller ?  
+                                <span class="helper_tip"> <i class="fa fa-question-circle"></i>
+                                    <div class="helper_tip_text" > Interdit d'inscrire de nouveaux élèves et ne permet plus l'inscription par lien de connexion. </div>
+                                </span>
+                            </label> <br>
+                            {{ form.lock  |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}
+                    </div>
+                    {% endif %}
+                    <div class="col-sm-12 col-md-4">
+                           <label>Formule associé
+                                <span class="helper_tip"> <i class="fa fa-question-circle"></i>
+                                        <div class="helper_tip_text" > Service de visioconférence Big Blue Button assurée par nos serveurs. </div>
+                                </span>
+                            </label> <br>
+                            {{ form.formule_id |add_class:"form-control select2" }}
+                    </div>
 
-  
-                <div class="col-sm-12 col-md-4">
-                       <label>Suivi parent ?
-                            <span class="helper_tip"> <i class="fa fa-question-circle"></i>
-                                    <div class="helper_tip_text" > Si oui, le suivi par les parents est disponible via un code unique et secret sur le tableau de bord élève. </div>
-                            </span>
-                        </label> <br>
-                        {{ form.suiviparent  |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}
-                </div>
 
-                <div class="col-sm-12 col-md-4">
-                       <label>Formule associé
-                            <span class="helper_tip"> <i class="fa fa-question-circle"></i>
-                                    <div class="helper_tip_text" > Si oui, le suivi par les parents est disponible via un code unique et secret sur le tableau de bord élève. </div>
-                            </span>
-                        </label> <br>
-                        {{ form.formule_id |add_class:"form-control select2" }}
                 </div>
-
-                {% if group %}
-                 <div class="col-sm-12 col-md-4">
-                       <label>Verrouiller ?  
-                            <span class="helper_tip"> <i class="fa fa-question-circle"></i>
-                                <div class="helper_tip_text" > Interdit d'inscrire de nouveaux élèves et ne permet plus l'inscription par lien de connexion. </div>
-                            </span>
-                        </label> <br>
-                        {{ form.lock  |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}
-                </div>
-                {% endif %}
             </div>
-           
-                    <div class="row">
-                        <hr>
-                        <div class="col-sm-8 col-md-10">
-                            <label>L'équipe SACADO vous propose ses dossiers, ses parcours et ses cours déjà créés et testés en classe. Souhaitez-vous les récupérer pour les niveaux et enseignements choisis ? <small>Vous pourrez les modifier par la suite. <span class="text-danger">Cocher ce bouton après avoir bien choisi le niveau.</span></small></label>
-                        </div>
-                        <div class="col-sm-4 col-md-2">
-                            {{ form.recuperation  |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}
-                        </div>
-                    </div>
-                        
-                    <div class="row" id="choosen_parcours_for_this_level_and_subject">
-                        <hr>
-                        <div class="col-sm-12 col-md-12">
-                            <label>Sélectionner les dossiers, parcours, cours proposés.</label>
-                        </div>
-                    </div>
-                    <div id="choosen_parcours_by_this_level_and_subject">
-                    </div>
-
-
-
-
-            {% if not sacado_asso %}
+            <div class="row">
+                <hr>
+                <div class="col-sm-8 col-md-10">
+                    <label>L'équipe SACADO vous propose ses dossiers, ses parcours et ses cours déjà créés et testés en classe. Souhaitez-vous les récupérer pour les niveaux et enseignements choisis ? <small>Vous pourrez les modifier par la suite. <span class="text-danger">Cocher ce bouton après avoir bien choisi le niveau.</span></small></label>
+                </div>
+                <div class="col-sm-4 col-md-2">
+                    {{ form.recuperation  |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}
+                </div>
+            </div> 
+            <div class="row" id="choosen_parcours_for_this_level_and_subject">
+                <hr>
+                <div class="col-sm-12 col-md-12">
+                    <label>Sélectionner les dossiers, parcours, cours proposés.</label>
+                </div>
+            </div>
+            <div id="choosen_parcours_by_this_level_and_subject">
+            </div>
             <hr>
             <div class="row">
                 <div class="col-sm-12 col-md-12">
                     <div class="form-group"><h5><i class="fa fa-users"></i> Ajouter des élèves</h5>
-                         <ul>
-                            <li class="sans_puce"><label><input type="radio" name="record_student" id="record_student_now" /> J'ai la liste de mes élèves et je veux les inscrire maintenant.<br> <small><b>Conseil</b> : Créez-vous un compte élève maintenant pour avoir un profil élève en cochant le bouton ci-dessus.  </small></label></li>
+                         <ul>{% if group %}
+                            <li class="sans_puce">
+                                <label>
+                                     J'ai la liste de mes élèves et je veux les inscrire maintenant. <input type="checkbox" name="this_record_student_now" id="this_record_student_now" data-toggle="toggle"  data-onstyle="primary" data-offstyle="default" data-on="Oui" data-off="Non" /> 
+                                </label>
+                            </li>
+                            {% else  %}
+                            <li class="sans_puce"><label><input type="radio" name="record_student" id="record_student_now" /> J'ai la liste de mes élèves et je veux les inscrire maintenant. </label></li>
                             <li class="sans_puce"><label><input type="radio" name="record_student" id="record_student_auto" /> Je veux inscrire mes élèves plus tard et générer un lien d'inscription. <small>Avec ce lien, les élèves pourront s'inscrire seuls. Ce lien est donné après la création du groupe.</small></label></li>
+                            {% endif  %}
                         </ul>
                     </div>
                 </div>
@@ -162,7 +153,7 @@
                         <label>Possibilité d'inscrire les élèves par leur prénom et nom.<small><em> L'adresse mail est facultative. L'identifiant est généré directement.</em> <br><span style="color:#cb2131">Respecter le format donné : 1 élève par ligne : nom; prénom; email. Ces informations séparées par un ;  <br/>Le mot de passe par défaut est : <b>sacado2020</b>, chaque identifiant élève s'obtient dans le détail du groupe. </span></small></label> <br> 
                         <textarea name="students" id="students_id"  style="border:1px #CCC solid" class="form-control" rows="10" placeholder="Turing ; Alan ; alan.turing@enigma.com"></textarea>
 
-                         <label style="color:#cb2131"><small> <b>Conseil :</b> Après la création du groupe, accéder à votre groupe via Détails et télécharger la liste des identifiants au format pdf pour la distribuer à vos élèves.</span></small></label>
+                         <label style="color:#cb2131"><small> <b>Conseil :</b> Après la création du groupe, accéder à votre groupe via Détails et télécharger la liste des identifiants au format pdf pour la distribuer à vos élèves.</small></label>
                     </div>
                 </div>
             </div> 
@@ -174,69 +165,8 @@
                     </div>
                 </div>
             </div>  
-            {% else   %}
-            <hr>
-            <div class="row">
-                <div class="col-sm-12 col-md-12">
-                    <div class="form-group">
-                        <h3 class="thin"><a href="#" data-toggle="collapse" data-target="#collapsed"> <i class="fa fa-plus-circle text-primary"></i> Ajouter des élèves</a></h3>
-                    </div>
-                </div>
-            </div> 
-                {% if group %}
-                    <div class="row collapse" id="collapsed"  >
-                        <div class="col-sm-12 col-md-12" style="overflow-y:auto; height: 500px;margin-bottom: 20px">
-                            {% if not group.lock %}                              
-                            <table  class="table table-hover standard_tab_sort2000" id='table_o'>
-                                <thead>
-                                <tr>
-                                    <td></td>
-                                    <td>Nom</td>
-                                    <td>Prénom</td>
-                                    <td>Groupes</td>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                    {% for student in all_students %}
-                                        <tr id="tr{{student.user.id}}">
-                                            <td>
-                                                 <input type="checkbox" class="student_select_to_school" data_student_id="{{student.user.id}}" data_group_id="{{ group.id}}" id="std{{student.user.id}}" /> 
-                                            </td>
-                                            <td>
-                                               <label for="std{{student.user.id}}">{{ student.user.last_name|lower|capfirst }}  </label>
-                                            </td>
-                                            <td>
-                                                {{ student.user.first_name|lower|capfirst }} 
-                                            </td>
-                                            <td>
-                                                {% for g in student.students_to_group.all %}{{ g }}{% endfor %}
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                            {% else %}
-                                <div class="form-group alert alert-danger">
-                                    Votre groupe est verrouillé. Vous devez déverrouiller votre groupe pour ajouter des élèves.
-                                </div>
-                            {% endif   %}
-                        </div>
-                    </div> 
-                    <hr> 
-                {% else %}
-                    <div class="row">
-                        <div class="col-sm-12 col-md-12">
-                            <div class="form-group alert alert-danger">
-                                Vous avez opté pour la version ETABLISSEMENT. Créer votre groupe et vous pourrez rajouter les élèves ensuite parmi les élèves de votre établissement.
-                            </div>
-                        </div>
-                    </div> 
-                {% endif   %}
-            {% endif   %}
 
-
-
-            {% if group %}
+            {% if group %}<input id="is_update" type="hidden"  value="yes"  />
                 <div class="row">
                     <div class="col-sm-12 col-md-5">
                         <div class="form-group">
@@ -245,7 +175,6 @@
                                                                        class="btn btn-default "/></a>
                         </div>
                     </div>
-                {% if not sacado_asso or request.user.is_manager or request.user.is_superuser    %}
 
                     <div class="col-sm-12 col-md-7">
                         <div class="form-group">
@@ -253,26 +182,19 @@
                             <a href="{% url 'delete_group_and_his_documents' group.id %}" class="btn btn-danger" onclick="return TestDelete('ce groupe')"><i class="bi bi-radioactive"></i> Forcer la suppresion de ce groupe</a>
                         </div>
                     </div>
-                {% endif %}
-                
-
+                </div>
             {% else %}
-
-
                 <div class="row">
-                <div class="col-sm-12 col-md-8">
-                    <div class="form-group">
-                        <input value="Créer le groupe" type="submit" class="btn btn-primary"  id="test_students"  />
-                        <a href="javascript:history.back()"><input type="button" value="Retour"
-                                                                   class="btn btn-default "/></a>
+                    <div class="col-sm-12 col-md-8">
+                        <div class="form-group">
+                            <input value="Créer le groupe" type="submit" class="btn btn-primary"  id="test_students"  />
+                            <a href="javascript:history.back()"><input type="button" value="Retour"
+                                                                       class="btn btn-default "/></a>
+                        </div>
                     </div>
                 </div>
-
-
-
-
             {% endif %}
-            </div>
+
         </div>
         <div class="col-sm-12 col-md-6">
             {% if group %}

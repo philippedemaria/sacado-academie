@@ -4966,6 +4966,14 @@ a:focus {
     color : #007bff!important;
 }
 
+
+.navbar-default {
+    background-color: #fff;
+    border-color: #fff;
+}
+
+
+
 /*
  * asso
  * ----------------------

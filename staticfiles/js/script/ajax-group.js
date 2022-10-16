@@ -348,6 +348,26 @@ define(['jquery','bootstrap_popover', 'bootstrap','chart'], function ($) {
                 }
             });
 
+
+
+        $("#this_record_student_now").change(function () {
+
+                if ($("#this_record_student_now").is(":checked")) {
+                        $("#teacher_record").toggle();
+                        $("#auto_record").toggle(); 
+                }
+
+
+            }); 
+
+
+
+
+
+
+
+
+
        
     });
 });
