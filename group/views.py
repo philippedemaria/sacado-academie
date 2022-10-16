@@ -4,7 +4,7 @@ from account.models import Student, Teacher, Parent, Adhesion, User, Resultknowl
 from account.forms import UserForm
 from group.models import Group, Sharing_group
 from socle.models import Knowledge, Theme, Level, Skill
-from qcm.models import Exercise, Parcours, Relationship, Studentanswer, Resultexercise , Resultggbskill, Customexercise , Tracker
+from qcm.models import Exercise, Parcours, Relationship, Studentanswer, Resultexercise , Resultggbskill, Customexercise , Tracker , Folder
 from group.forms import GroupForm , GroupTeacherForm
 from flashcard.models import Flashpack
 from sendmail.models import Email
