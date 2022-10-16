@@ -1649,7 +1649,7 @@ def list_archives(request):
 def list_sequences(request):
 
 
-    unified_courses()
+    #unified_courses()
 
 
     teacher = request.user.teacher
