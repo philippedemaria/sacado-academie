@@ -78,8 +78,8 @@ def unified_courses():
 
             if crs0 :
                 crs1 = crs0.first()
-            relationship.document_id = crs1
-            relationship.save()
+                relationship.document_id = crs1
+                relationship.save()
             #course.delete()
 #################################################################
 # Transformation de parcours en séquences
