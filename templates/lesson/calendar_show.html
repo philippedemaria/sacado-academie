@@ -72,7 +72,15 @@
         </div>
 
         <div class=" col-xs-12 col-md-3  col-lg-2">
-            Mes élèves <a href="{% url 'add_students_to_my_lesson_group' %}" class="pull-right"><i class="bi bi-plus-circle"></i> Ajouter</a><hr/>
+            Mes élèves
+
+            {% if request.user.is_superuser %}
+            <a href="{% url 'add_students_to_my_lesson_group' %}" class="pull-right"><i class="bi bi-plus-circle"></i> Ajouter</a>
+            {% endif %}
+
+
+            <hr/>
+
  
 
                 {% regroup students by level as level_list %}
