@@ -623,7 +623,8 @@ table.table-bordered.dataTable {
  
 .bandeau_accueil{
   font-family: 'Roboto', cursive;
-  background-image: url('/static/img/fond_accueil.jpg'); 
+  background-image: url('/static/img/fond_accueil00.jpg'); 
+  background-size: cover;
   background-repeat: no-repeat;
 }
 

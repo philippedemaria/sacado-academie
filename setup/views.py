@@ -199,7 +199,7 @@ def index(request):
         np_form = NewpasswordForm()
 
         n_im = random.randint(1,7)
-        image_accueil = 'img/accueil_students'+str(n_im)+'.jpg'
+        image_accueil = 'img/accueil_students'+str(n_im)+'.png'
 
         levels = Level.objects.order_by("ranking")
         context = { 'nb_exercises' : nb_exercises , 'form' : form , 'np_form' : np_form , 'levels' : levels , 'nb_students' : nb_students , 'formules'  :  formules , 'image_accueil' : image_accueil  }

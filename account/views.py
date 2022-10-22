@@ -68,7 +68,7 @@ def logout_view(request):
                  
 
 def list_teacher(request):
-    teachers = User.objects.filter(user_type=User.TEACHER).exclude(pk__lte=131100)
+    teachers = User.objects.filter(user_type=User.TEACHER)
     return render(request, 'account/list_teacher.html', {'teachers': teachers})
 
 
