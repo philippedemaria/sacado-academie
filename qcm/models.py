@@ -57,6 +57,13 @@ def file_directory_to_student(instance, filename):
 def audio_directory_path(instance,filename):
     return "audio/{}/{}".format(instance.id,filename)
 
+def etype_directory_path(instance, filename):
+    return "exercise/qtype/{}".format(filename)
+
+
+def choice_directory_path(instance, filename):
+    return "exercise/choices/{}".format(filename) 
+
 
 def convert_time(duree) :
     try :
@@ -1882,14 +1889,28 @@ class Criterion(models.Model):
         autoposition = self.autopositions.filter(customexercise = customexercise, parcours = parcours, student = student).last()
         return autoposition.position
 
+class Etype(models.Model):
+    """
+    Modèle représentant un associé.
+    """
+    title     = models.TextField(max_length=255, default='',  blank=True, verbose_name="Type")
+    imagefile = models.ImageField(upload_to=etype_directory_path, blank=True, default="", verbose_name="Image")
+    html      = models.TextField( default='',  blank=True, verbose_name="Html éventuel")
+    url       = models.CharField(max_length=255,  blank=True, default='', verbose_name="url") 
+    is_online = models.BooleanField(default=0, verbose_name="En ligne ?")
+    template  = models.CharField(max_length=255,  blank=True, default='', verbose_name="template") 
+    ranking   = models.PositiveIntegerField(default=0,   ) 
+
+    def __str__(self):
+        return self.title
 
 class Customexercise(ModelWithCode):
 
-    instruction = RichTextUploadingField( verbose_name="Consigne*") 
-    teacher = models.ForeignKey(Teacher, related_name="teacher_customexercises", blank=True, on_delete=models.CASCADE)
-    calculator = models.BooleanField(default=0, verbose_name="Calculatrice ?")
+    instruction  = RichTextUploadingField( verbose_name="Consigne*") 
+    teacher      = models.ForeignKey(Teacher, related_name="teacher_customexercises", blank=True, on_delete=models.CASCADE)
+    calculator   = models.BooleanField(default=0, verbose_name="Calculatrice ?")
  
-    date_created = models.DateTimeField(auto_now_add=True, verbose_name="Date de création")
+    date_created  = models.DateTimeField(auto_now_add=True, verbose_name="Date de création")
     date_modified = models.DateTimeField(auto_now=True, verbose_name="Date de modification")
     #### pour donner une date de remise - Tache     
     start = models.DateTimeField(null=True, blank=True, verbose_name="A partir de")
@@ -1927,6 +1948,19 @@ class Customexercise(ModelWithCode):
     file_cor = models.ImageField(upload_to=vignette_directory_path, blank=True, verbose_name="Fichier de correction", default="")
     video_cor = models.CharField(max_length = 100, blank=True, verbose_name="Code de la vidéo Youtube", default="")
     is_publish_cor = models.BooleanField(default=0, verbose_name="Publié ?")    
+
+
+    etype     = models.ForeignKey(Etype, related_name="customexercises", null=True, blank=True, on_delete=models.CASCADE)
+    filltheblanks = RichTextUploadingField( default='',  blank=True, verbose_name="Texte à trous") 
+    ####  Cas spécifique axe gradué qtype =18
+    xmin       = models.FloatField( null = True,   blank=True, verbose_name="x min ")
+    xmax       = models.FloatField( null = True,   blank=True, verbose_name="x max ")
+    tick       = models.FloatField( null = True,   blank=True, verbose_name="Graduation")
+    precision  = models.FloatField( null = True,   blank=True, verbose_name="Précision") 
+    ####  Pseudo aléatoire
+    pseudoalea_nb = models.PositiveIntegerField(default=0, blank=True, )
+
+
 
     def __str__(self):       
         return "{}".format(self.instruction)
@@ -2182,6 +2216,55 @@ class Customexercise(ModelWithCode):
         return test
 
 
+
+
+
+######################################################################
+#####  type de réponse possible et choix pour les types d'exercices
+######################################################################
+class Choice(models.Model):
+    """
+    Modèle représentant un associé.
+    """
+
+    imageanswer    = models.ImageField(upload_to=choice_directory_path,  null=True,  blank=True, verbose_name="Image", default="")
+    answer         = models.TextField(max_length=255, default='', null=True,  blank=True, verbose_name="Réponse écrite")
+    retroaction    = models.TextField(max_length=255, default='', null=True,  blank=True, verbose_name="Rétroaction")
+    imageanswerbis = models.ImageField(upload_to=choice_directory_path,  null=True,  blank=True, verbose_name="Image par paire", default="")
+    answerbis      = models.TextField(max_length=255, default='', null=True,  blank=True, verbose_name="Réponse par paire")
+
+    is_correct     = models.BooleanField(default=0, verbose_name="Réponse correcte ?")
+    customexercise = models.ForeignKey(Customexercise, related_name="choices", blank=True, null = True,  on_delete=models.CASCADE)
+    def __str__(self):
+        return self.answer 
+
+
+
+class Subchoice(models.Model):
+    """
+    Modèle représentant un associé.
+    """
+    imageanswer = models.ImageField(upload_to=choice_directory_path,  null=True,  blank=True, verbose_name="Image", default="")
+    answer      = models.TextField(max_length=255, default='', null=True,  blank=True, verbose_name="Réponse écrite")
+    retroaction = models.TextField(max_length=255, default='', null=True,  blank=True, verbose_name="Rétroaction")
+
+    is_correct  = models.BooleanField(default=0, verbose_name="Réponse correcte ?")
+    choice      = models.ForeignKey(Choice, related_name="subchoices", blank=True, null = True,  on_delete=models.CASCADE)
+    def __str__(self):
+        return self.answer 
+######################################################################
+#####  type de réponse possible et choix pour les types de questions
+######################################################################
+
+
+
+
+
+
+
+
+
+
 class Autoposition(models.Model): # Commentaire et note pour les exercices customisés coté enseignant
 
     customexercise = models.ForeignKey(Customexercise,  on_delete=models.CASCADE,   related_name='autopositions', editable=False)
@@ -2195,6 +2278,21 @@ class Autoposition(models.Model): # Commentaire et note pour les exercices custo
     def __str__(self):        
         return "{} {} {}".format(self.customexercise, self.criterion , self.position)
 
+
+
+class Variable(models.Model):
+
+    name  = models.CharField(max_length=50,  blank=True, verbose_name="variable")
+    customexercise  = models.ForeignKey(Customexercise, related_name="variables", blank=True, null = True,  on_delete=models.CASCADE)
+    ## Variable numérique
+    is_integer = models.BooleanField(default=1, verbose_name="Valeur entière ?")        
+    maximum = models.IntegerField(default=10)
+    minimum = models.IntegerField(default=0)
+    ## Variable littérale
+    words  = models.CharField(max_length=255,  blank=True, verbose_name="Liste de valeurs")
+
+    def __str__(self):
+        return self.name 
 
 
 

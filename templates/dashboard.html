@@ -683,6 +683,11 @@
             <div class="col-lg-1 col-xs-1"> 
                  <a href="{% url 'admin_qrandom'  level.id  %}">QA   </a> 
             </div> 
+            {% comment %}
+            <div class="col-lg-1 col-xs-1"> 
+                 <a href="{% url 'admin_customexercises'  level.id  %}">E   </a> 
+            </div> 
+            {% endcomment %}
         </div>
     {% endfor %} 
     <hr class="divider">

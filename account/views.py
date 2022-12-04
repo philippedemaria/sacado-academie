@@ -1045,14 +1045,18 @@ def detail_student_all_views(request, id):
             step = 0
             init , end = 1 + 10*j, 11+10*j
             real_month = [0,31,28,31,30,31,30,31,31,30,31,30,31]
-            end = min(real_month[month],end )
+            end = min(real_month[month], end )
 
             begin   = datetime( year , month , init)
             last_d  = datetime( year , month , end)
 
             if j == 2 :
-                end = min(  end,res.day+1)
-                last_d = datetime( year , month+1 , 1)
+                end = min(end,31)
+                end =  end+1
+                try :
+                    last_d = datetime( year , month+1 , 1)
+                except :
+                    last_d = datetime( year , 12 , 1)
 
 
             student_answers_global = Studentanswer.objects.filter( student  = student , date__gte  = begin , date__lte  = last_d )
@@ -1067,9 +1071,12 @@ def detail_student_all_views(request, id):
             for i in range(init,end):
                 datas = {}
                 test_date = datetime( year , month , i)
-                if i == res.day: 
-                    mnth = month + 1
-                    test_date_last = datetime( year , mnth , 1)
+                if i == res.day:
+                    try : 
+                        mnth = month + 1
+                        test_date_last = datetime( year , mnth , 1)
+                    except : 
+                        test_date_last = datetime( year+1 , 1 , 1)
                 else : test_date_last = datetime( year , month , i+1)
 
                 student_answers    = Studentanswer.objects.filter( student  = student , date__gte  = test_date , date__lte  = test_date_last)
@@ -1083,7 +1090,8 @@ def detail_student_all_views(request, id):
                 datas["h"]    = student_answers_nb
                 datas["a"]    = int(average["average_score"])
                 datas["n"]    = student_answers_nb
-                datas["l"]    = 10*step
+                if j == 2 and  month>2 and month%2==0 : datas["l"]    = 9*step
+                else : datas["l"]    = 10*step
                 datas["le"]   = student_answers  
                 datas["m"]    = month
 
