@@ -15,8 +15,8 @@ from sendmail.forms import  EmailForm
 from group.forms import GroupForm 
 from group.models import Group , Sharing_group
 from school.models import Stage, School
-from qcm.models import  Folder , Parcours , Blacklist , Studentanswer, Exercise, Exerciselocker ,  Relationship,Resultexercise, Generalcomment , Resultggbskill, Supportfile,Remediation, Constraint, Course, Demand, Mastering, Masteringcustom, Masteringcustom_done, Mastering_done, Writtenanswerbystudent , Customexercise, Customanswerbystudent, Comment, Correctionknowledgecustomexercise , Correctionskillcustomexercise , Remediationcustom, Annotation, Customannotation , Customanswerimage , DocumentReport , Tracker , Criterion , Autoposition
-from qcm.forms import FolderForm , ParcoursForm , Parcours_GroupForm, RemediationForm ,  AudioForm , UpdateSupportfileForm, SupportfileKForm, RelationshipForm, SupportfileForm, AttachForm ,   CustomexerciseNPForm, CustomexerciseForm ,CourseForm , CourseNPForm , DemandForm , CommentForm, MasteringForm, MasteringcustomForm , MasteringDoneForm , MasteringcustomDoneForm, WrittenanswerbystudentForm,CustomanswerbystudentForm , WAnswerAudioForm, CustomAnswerAudioForm , RemediationcustomForm , CustomanswerimageForm , DocumentReportForm, CriterionForm
+from qcm.models import *
+from qcm.forms import *
 from tool.forms import QuizzForm
 from socle.models import  Theme, Knowledge , Level , Skill , Waiting , Subject
 from bibliotex.models import Bibliotex
@@ -2138,8 +2138,10 @@ def all_folders(request):
         group_id = request.session.get("group_id",None)
         if group_id :
             group = Group.objects.get(pk = group_id)
+
         else :
-            group = None   
+            group = None
+ 
     except :
         group = None
 
@@ -2149,7 +2151,8 @@ def all_folders(request):
     else :
         inside = False
 
-    return render(request, 'qcm/list_folders_shared.html', {  'teacher' : teacher ,   'parcourses': parcourses , 'inside' : inside ,  'group' : group   })
+
+    return render(request, 'qcm/list_folders_shared.html', {  'teacher' : teacher ,   'parcourses': parcourses , 'inside' : inside ,  'group' : group    })
 
 
 
@@ -9940,4 +9943,103 @@ def repaired_reporting(request, pk,code ):
 def simulator(request):
     context = {}
     return render(request, 'qcm/simulator.html', context )
+
+#############################################################################################################################################
+#############################################################################################################################################
+####   Préparation aux évaluations
+#############################################################################################################################################
+#############################################################################################################################################
+def make_slots(this_parcours, parcours_ids, nf,student):
+
+    delta     = nf.date - nf.date_created # nombre de jours
+    durations = [0,5,5,5,10,10,10,10,15,20,25,30,45,60] # par niveau
+    nb_days   = int(delta.days)-1
+    days      = list()*int(nb_days)
+    today     = datetime.now().date()
+
+    # creation du parcours global
+    for parcours_id in parcours_ids :
+        parcours      = Parcours.objects.get(pk=parcours_id)
+        relationships = parcours.parcours_relationship.order_by('ranking')[2:]
+        rank = 1
+        for relationship in relationships :
+            skills = relationship.skills.all()             
+            relationship.pk=None
+            relationship.parcours = this_parcours
+            relationship.ranking = rank
+            try :
+                relationship.save()
+                relationship.students.add(student)
+                relationship.skills.set(skills)
+
+            except : pass
+            rank += 1
+
+    
+    nb_relationships_by_day = this_parcours.parcours_relationship.count()//nb_days
+
+    # Création des slots
+    for i in range(nb_days) : # i représente le slot du ième jour
+        j=nb_days-i
+        this_day  = today + timedelta(days = i+1)
+        this_slot = Slot.objects.create(date = this_day, content = "<b>Jour J-"+str(j)+".</b> ", prepeval = nf ,done=0)
+        relationships = this_parcours.parcours_relationship.order_by('ranking')[i*nb_relationships_by_day:(i+1)*nb_relationships_by_day]
+        this_slot.relationships.set(relationships)
+
+ 
+
+
+
+def get_details_from_student(student):
+    adhesion = student.adhesions.last()
+    teacher_id = 2480
+    subject_id = 1
+    level_id = adhesion.level.id
+    return teacher_id, subject_id , level_id
+
+
+def prep_eval(request,id):
+
+    student = request.user.student
+
+    prepevals  = Prepeval.objects.filter(student  = student)
+    parcourses = Parcours.objects.filter(students = student)
+
+    student = request.user.student
+    form    = PrepevalForm(request.POST or None)
+    context = {  'prepevals' : prepevals , 'parcourses' : parcourses  , 'form' : form  , 'student' : student }
+
+    teacher_id, subject_id, level_id = get_details_from_student(student)
+
+    if request.method == 'POST':
+        parcours_ids = request.POST.getlist('parcours_ids')
+        if form.is_valid():
+            nf = form.save(commit=False)
+            nf.student = student
+            this_parcours = Parcours.objects.create(title="Révision du "+str(nf.date), teacher_id = teacher_id, author_id = teacher_id, subject_id = subject_id,  is_publish=1 , level_id = level_id , is_sequence=1)
+            nf.parcours = this_parcours
+            nf.save()
+            slots = make_slots(this_parcours, parcours_ids , nf,student)
+            this_parcours.students.add(student)
+
+ 
+    return render(request, 'qcm/prep_eval.html', context)
+
+
+def show_prepeval(request,idp):
+
+    prepeval = Prepeval.objects.get(pk=idp)
+    slots    = prepeval.slots.all()
+    today    = date.today() 
+
+    context = {'prepeval' : prepeval , 'slots' : slots , 'today' : today }
+
+    return render(request, 'qcm/show_prep_eval.html', context)
+
+
+
+
+def delete_prepeval(request,ids,idp):
+    Prepeval.objects.filter(pk=idp).delete()
+    return redirect('prep_eval', ids)
 

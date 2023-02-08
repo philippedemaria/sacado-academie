@@ -1,0 +1,222 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% load item_tags %}
+ 
+ 
+{% block page_title %}
+    <i class="bi bi-calendar-week"></i> Prép'Eval
+{% endblock %}
+
+
+{% block require %}
+
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common3_withoutMathJax.js' %}"></script>
+    <script>
+        require(['script/ajax-prep_eval']);
+    </script> 
+{% endblock %} 
+
+
+
+{% block page_menu_right %}
+{% endblock %}
+
+ 
+
+
+
+
+{% block body  %}  
+
+
+<section class="content_main">
+
+    <div class="row">
+        <div class="col-xs-12">
+            {% for prepeval in prepevals %}
+                <div class="student_init">
+                    <a href="{% url 'show_prepeval' prepeval.id %}" >
+                        <i class="bi bi-grid icon_size"></i> <label class="big_size margin_bottom20">{{ prepeval.date|date:"d N Y" }} </label><br/>
+                    </a>
+                    <a href="{% url 'delete_prepeval' request.user.id prepeval.id %}">
+                        Supprime
+                    </a>
+                </div>
+
+            {% endfor%}
+            <a href="#" class="student_init" data-toggle='modal' data-target='#prepeval_form'>
+                <i class="bi bi-circle-plus icon_size"></i> Nouvelle évaluation en vue 
+            </a>
+        </div>
+    </div>
+
+</section>
+
+
+<div class="modal fade" id="prepeval_form" tabindex="-1" role="dialog" aria-labelledby="prepeval_form">
+    <div class="modal-dialog modal-lg" role="document"  style="width:750px">
+        <div class="modal-content" >
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>                 
+                <h2>Nouvelle préparation à une évaluation</h2>              
+            </div>
+            <div class="modal-body">
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <div class="wrapper_slider_prepeval">
+                        <div class="slider_prepeval">
+                            <ul>
+                                <li class="my_slide_prepeval">
+                                    <div class="timeline" align="center">
+                                        <div class="line1"></div>
+                                        <div class="line2"></div>                            
+                                        <div class="step1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-1-circle-fill active" viewBox="0 0 18 18">
+                                              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0ZM9.283 4.002H7.971L6.072 5.385v1.271l1.834-1.318h.065V12h1.312V4.002Z"/>
+                                            </svg><br/>
+                                            <small class="active">Date</small>
+                                        </div>
+                                        <div class="step2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-2-circle-fill " viewBox="0 0 18 18">
+                                              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0ZM6.646 6.24c0-.691.493-1.306 1.336-1.306.756 0 1.313.492 1.313 1.236 0 .697-.469 1.23-.902 1.705l-2.971 3.293V12h5.344v-1.107H7.268v-.077l1.974-2.22.096-.107c.688-.763 1.287-1.428 1.287-2.43 0-1.266-1.031-2.215-2.613-2.215-1.758 0-2.637 1.19-2.637 2.402v.065h1.271v-.07Z"/>
+                                            </svg><br/>
+                                            <small>Thèmes</small>
+                                        </div>
+                                        <div class="step3">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-3-circle-fill" viewBox="0 0 18 18">
+                                              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0Zm-8.082.414c.92 0 1.535.54 1.541 1.318.012.791-.615 1.36-1.588 1.354-.861-.006-1.482-.469-1.54-1.066H5.104c.047 1.177 1.05 2.144 2.754 2.144 1.653 0 2.954-.937 2.93-2.396-.023-1.278-1.031-1.846-1.734-1.916v-.07c.597-.1 1.505-.739 1.482-1.876-.03-1.177-1.043-2.074-2.637-2.062-1.675.006-2.59.984-2.625 2.12h1.248c.036-.556.557-1.054 1.348-1.054.785 0 1.348.486 1.348 1.195.006.715-.563 1.237-1.342 1.237h-.838v1.072h.879Z"/>
+                                            </svg><br/>
+                                           <small>Création</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="slide_prepeval_title">
+                                       <h3 class="text-mauve">Quel est le jour de ton évaluation ?</h3> 
+                                       <label>Clique sur la date de ton évaluation</label>
+                                    </div>
+                                    <div class="slide_prepeval_body" align="center">
+                                        <div id="datepicker"></div>
+                                        <div class="no_visu_on_load">{{ form.date }}</div> 
+                                        <div style="height:50px"></div> 
+
+                                    </div>
+                                    <div class="slide_prepeval_footer">
+                                        <div calss="row">
+                                            <div class="col-xs-6">
+                                            </div>
+                                            <div class="col-xs-6" align="center">
+                                                <span data-nav="next" class="btn btn-lg btn-primary prep_eval_nav"><i class="fa fa-caret-right"></i> Suivant</span>
+                                            </div>
+                                        </div>
+                                    </div> 
+                                </li>
+                                <li class="my_slide_prepeval">
+                                    <div class="timeline" align="center">
+                                        <div class="line1"></div>
+                                        <div class="line2"></div>                            
+                                        <div class="step1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-1-circle-fill " viewBox="0 0 18 18">
+                                              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0ZM9.283 4.002H7.971L6.072 5.385v1.271l1.834-1.318h.065V12h1.312V4.002Z"/>
+                                            </svg><br/>
+                                            <small>Date</small>
+                                        </div>
+                                        <div class="step2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-2-circle-fill active" viewBox="0 0 18 18">
+                                              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0ZM6.646 6.24c0-.691.493-1.306 1.336-1.306.756 0 1.313.492 1.313 1.236 0 .697-.469 1.23-.902 1.705l-2.971 3.293V12h5.344v-1.107H7.268v-.077l1.974-2.22.096-.107c.688-.763 1.287-1.428 1.287-2.43 0-1.266-1.031-2.215-2.613-2.215-1.758 0-2.637 1.19-2.637 2.402v.065h1.271v-.07Z"/>
+                                            </svg><br/>
+                                            <small  class="active">Thèmes</small>
+                                        </div>
+                                        <div class="step3">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-3-circle-fill" viewBox="0 0 18 18">
+                                              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0Zm-8.082.414c.92 0 1.535.54 1.541 1.318.012.791-.615 1.36-1.588 1.354-.861-.006-1.482-.469-1.54-1.066H5.104c.047 1.177 1.05 2.144 2.754 2.144 1.653 0 2.954-.937 2.93-2.396-.023-1.278-1.031-1.846-1.734-1.916v-.07c.597-.1 1.505-.739 1.482-1.876-.03-1.177-1.043-2.074-2.637-2.062-1.675.006-2.59.984-2.625 2.12h1.248c.036-.556.557-1.054 1.348-1.054.785 0 1.348.486 1.348 1.195.006.715-.563 1.237-1.342 1.237h-.838v1.072h.879Z"/>
+                                            </svg><br/>
+                                           <small>Création</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="slide_prepeval_title">
+
+                                       <h3 class="text-mauve">L'évaluation porte sur ?</h3> 
+                                       <label>Sélectionne le ou les thèmes que tu veux réviser.</label>
+                                        
+                                    </div>
+                                    <div class="slide_prepeval_body prep_eval_theme">
+                                        {% for p in parcourses  %}
+                                            <div class="selector_theme" data-parcours_id="{{ p.id }}">
+                                                <i class="bi bi-plus-circle"></i> {{ p.title }}  <input value="{{ p.id }}" name="parcours_ids" type="checkbox" class="no_display_on_load" />
+                                            </div>
+                                        {% endfor %} 
+                                    </div>
+                                    <div class="slide_prepeval_footer">
+                                        <div calss="row">
+                                            <div class="col-xs-6" align="center">
+                                                <span data-nav="prev" class="btn btn-lg btn-default prep_eval_nav"><i class="fa fa-caret-left"></i> Précédent</span>
+                                            </div>
+                                            <div class="col-xs-6" align="center">
+                                                <span data-nav="next" class="btn btn-lg btn-primary prep_eval_nav"><i class="fa fa-caret-right"></i> Suivant</span>
+                                            </div>
+                                        </div>
+                                    </div> 
+                                </li>
+                                <li class="my_slide_prepeval">
+                                    <div class="timeline" align="center">
+                                        <div class="line1"></div>
+                                        <div class="line2"></div>                            
+                                        <div class="step1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-1-circle-fill " viewBox="0 0 18 18">
+                                              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0ZM9.283 4.002H7.971L6.072 5.385v1.271l1.834-1.318h.065V12h1.312V4.002Z"/>
+                                            </svg><br/>
+                                            <small>Date</small>
+                                        </div>
+                                        <div class="step2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-2-circle-fill" viewBox="0 0 18 18">
+                                              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0ZM6.646 6.24c0-.691.493-1.306 1.336-1.306.756 0 1.313.492 1.313 1.236 0 .697-.469 1.23-.902 1.705l-2.971 3.293V12h5.344v-1.107H7.268v-.077l1.974-2.22.096-.107c.688-.763 1.287-1.428 1.287-2.43 0-1.266-1.031-2.215-2.613-2.215-1.758 0-2.637 1.19-2.637 2.402v.065h1.271v-.07Z"/>
+                                            </svg><br/>
+                                            <small>Thèmes</small>
+                                        </div>
+                                        <div class="step3">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-3-circle-fill active" viewBox="0 0 18 18">
+                                              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0Zm-8.082.414c.92 0 1.535.54 1.541 1.318.012.791-.615 1.36-1.588 1.354-.861-.006-1.482-.469-1.54-1.066H5.104c.047 1.177 1.05 2.144 2.754 2.144 1.653 0 2.954-.937 2.93-2.396-.023-1.278-1.031-1.846-1.734-1.916v-.07c.597-.1 1.505-.739 1.482-1.876-.03-1.177-1.043-2.074-2.637-2.062-1.675.006-2.59.984-2.625 2.12h1.248c.036-.556.557-1.054 1.348-1.054.785 0 1.348.486 1.348 1.195.006.715-.563 1.237-1.342 1.237h-.838v1.072h.879Z"/>
+                                            </svg><br/>
+                                           <small class="active">Création</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="slide_prepeval_title">
+                                        <h3 class="text-mauve">Création</h3> 
+                                        <label>Vérifie tes données et crée ton agenda</label>
+                                    </div>
+                                    <div class="slide_prepeval_body" style="padding:20px;">
+
+                                        <div class="madate">Mon évaluation est prévue le <span id="madate" class="text-mauve"></span></div>
+                                        <div class="mesthemes">Les thèmes sont <div id="mesthemes" class="text-mauve"></div></div>
+
+         
+                                    </div>
+                                    <div class="slide_prepeval_footer">
+                                        <div calss="row">
+                                            <div class="col-xs-6" align="center">
+                                                <span data-nav="prev" class="btn btn-lg btn-default prep_eval_nav"><i class="fa fa-caret-left"></i> Précédent</span>
+                                            </div>
+                                            <div class="col-xs-6" align="center">
+                                                <button type="submit" class="btn btn-lg btn-primary">Créer mon agenda</button>
+                                            </div>
+                                        </div>
+                                    </div> 
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </form>
+            </div> 
+        </div>
+    </div> 
+</div>
+
+
+
+
+{% endblock %} 

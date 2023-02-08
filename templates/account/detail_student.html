@@ -11,7 +11,7 @@
 
  
 {% block page_title %}
-    <span   style="color:{{ group.color|contrast_color_title }}" ><i class="fa fa-mortar-board"></i> </span>
+    <span   style="color:{{ group.color|contrast_color_title }}" ><i class="bi bi-trophy icon_size"></i> </span>
  
     {% if request.user.user_type == 2 %}
         {% if group %} <a href="{% url 'list_parcours_group' group.id %}" style="color:{{ group.color|contrast_color_title }}" >{{ group.name }}</a> {% endif %}
@@ -88,7 +88,7 @@
 
 {% block page_menu_right %}
 
-
+    {% comment %}
     {% if  request.user.is_in_academy %}
 
         {% if request.user.is_student %}
@@ -162,7 +162,7 @@
 
     {% endif %}
 
-
+    {% endcomment %}
 
 {% endblock %}
 

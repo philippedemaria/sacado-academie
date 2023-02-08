@@ -69,15 +69,13 @@
         </div>
     {% endif %}
 
-
-    {% if request.user.is_in_academy   %}
     <div class="row">
-        <div class="col-md-12 col-lg-12 col-xs-12"> 
+        <div class="col-md-12 col-lg-12 col-xs-12">
+        
             <div class="alert alert-warning">
                 <p>Un flashpack est un ensemble de flashcards (ou cartes mémoires). </p>
                 <p>Une carte mémoire est une carte sur laquelle vous pouvez écrire une définition, une formule, une méthode à connaitre. </p>
                 <p>Une fois que votre flashpack est créé, vous pouvez revoir toutes les notions d'un même thème ou chapitre qui vous parait important. Ainsi, vous réactivez votre mémoire pour fixer les notions.</p>
-
                 <p>Cette réactivation, ritualisée, est portée par les sciences cognitives et Stanislas Dehaene dont voici son approche par les <a href="http://parisinnovationreview.com/article/les-quatre-piliers-de-lapprentissage-stanislas-dehaene" target="_blank">4 piliers de l'apprentissage</a> :
                 <ol>
                   <li>L'attention</li>
@@ -86,26 +84,34 @@
                   <li>La consolidation</li>
                 </ol> 
                 </p>
-
-
                 <div class="row">
-                    <div class="col-md-12 col-lg-12 col-xs-12" align="center"> 
-                        <a href="{% url 'create_flashpack_academy' 0 %}" class="btn btn-new-violet">Créer un flashpack</a>
+                    <div class="col-md-12 col-lg-12 col-xs-12"> 
+                        <a {% if request.user.is_in_academy   %}href="{% url 'create_flashpack_academy' 0 %}"{% endif %} class="btn btn-new-violet" >Créer un flashpack</a>
                     </div>        
                 </div>
             </div>
+        
 
+        
         </div>        
     </div>
 
 
+    {% if not request.user.is_in_academy   %} 
 
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-xs-12">
+        
+            <div class="alert alert-warning">
+                   Votre accès est bloqué.  La date de validité de votre abonnement est expirée.
+            </div>
+        
+
+        
+        </div>        
+    </div>
 
     {% endif %}
-
-
-
-
 
 </section>
 {% endblock %}

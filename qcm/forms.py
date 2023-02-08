@@ -1,6 +1,6 @@
 import datetime
 from django import forms
-from .models import Folder, Parcours, Blacklist, Exercise, Remediation, Relationship, DocumentReport, Supportfile, Course, Comment, Demand, Mastering,Mastering_done, Writtenanswerbystudent, Customexercise,Customanswerimage , Customanswerbystudent, Masteringcustom, Masteringcustom_done, Remediationcustom, Criterion
+from .models import *
 from account.models import Student , Teacher
 from socle.models import Knowledge, Skill
 from group.models import Group
@@ -462,4 +462,14 @@ class CriterionForm (forms.ModelForm):
 		self.fields['knowledge'] = forms.ModelChoiceField(queryset=knowledges,  required=False ) 
  
 
+########################################################################################################################################### 
+########################################################################################################################################### 
+######################################################      Prep_eval             ######################################################### 
+########################################################################################################################################### 
+########################################################################################################################################### 
 
+class PrepevalForm (forms.ModelForm):
+
+	class Meta:
+		model = Prepeval
+		fields = ("date",)

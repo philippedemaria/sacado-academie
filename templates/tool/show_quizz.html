@@ -30,13 +30,11 @@
 
 
 {% block page_menu_right %}
-
     {% if request.user.user_type == 2 %}
     <a href="{% url 'list_quizzes' %}" class="btn btn-new">Mes quizz</a>
     {% else %}
     <a href="javascript:history.back()"><input type="button" value="Retour" class="btn btn-default "/></a>
     {% endif %}
-
 {% endblock %}
 
 

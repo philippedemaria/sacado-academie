@@ -13,7 +13,7 @@
  
 </li>
 
-{% if not is_gar_check %}
+ 
 <li class="dropdown {% if '/myaccount' in request.path %}active{% endif %}">
     <a href="#" class="main" id="account">
     {% if request.user.avatar and sacado_asso  %}
@@ -25,12 +25,22 @@
     {% endif %} 
     </a>    
 </li>
-{% endif %}
+
+<li class='dropdown'>
+    <a href="{% url 'index' %}" class="main" >
+
+        <i class="bi bi-grid icon_size"></i> 
+        <div class="captionmenu">Tableau de bord</div>
+
+    </a>
+</li>
+
+ 
 
 
 {% if student.nb_subjects > 2 %}
 <li class='dropdown'>
-    <a href="{% url 'index' %}" class="main" >
+    <a href="{% url 'dash_student' %}" class="main" >
 
         <i class="bi bi-markdown icon_size"></i> 
         <div class="captionmenu">Matières</div>
@@ -39,16 +49,22 @@
 </li>
 {% else %}
 <li class='dropdown'>
-    <a href="{% url 'index' %}" class="main" >
+    <a href="{% url 'dash_student' %}" class="main" >
 
         <i class="bi bi-grid-3x2-gap icon_size"></i> 
-        <div class="captionmenu">Tableau de bord</div>
+        <div class="captionmenu">Entrainement</div>
 
     </a>
 </li>
 {% endif %}
 
 
+<li  class="dropdown {% if 'exercise' in request.path %} active{% endif %}">
+    <a href="{% url 'detail_student_all_views' user.id %}" class="main" >
+        <i class="bi bi-trophy icon_size"></i>
+        <div class="captionmenu">Suivis</div>
+    </a>
+</li>
 
 
 {% if request.user.is_in_academy and request.user.student.data_menu.id > 2 %}
@@ -61,7 +77,15 @@
 {% endif %}
 
 
-
+<li  class="dropdown {% if 'prep_eval' in request.path %}
+active
+{% endif %} 
+">
+    <a href="{% url 'prep_eval' user.id %}" class="main" >
+        <i class="bi bi-calendar-week icon_size"></i>
+        <div class="captionmenu">Prép' éval</div>
+    </a>
+</li>
 
 
 
@@ -70,10 +94,13 @@ active
 {% endif %} 
 ">
     <a href="{% url 'detail_student_all_views' user.id %}" class="main" >
-        <i class="bi bi-trophy icon_size"></i>
-        <div class="captionmenu">Suivis</div>
+        <i class="bi bi-clipboard-data icon_size"></i>
+        <div class="captionmenu">Scores</div>
     </a>
 </li>
+
+
+
 <!-- 
 <li  class='dropdown {% if 'exercise' in request.path %}
 active
@@ -92,7 +119,7 @@ active
         <div class="captionmenu">Messages</div>
     </a>
 </li>
---> 
+
 
 {% if not request.user.is_in_academy %}
 <li  class="dropdown  {% if '/tool' in request.path %} active{% endif %}">
@@ -102,7 +129,7 @@ active
     </a>
 </li>
 {% endif %}
-
+--> 
 
 <li  class="dropdown  {% if '/flashpack' in request.path %} active{% endif %}">
     <a href="{% url 'flashpacks' %}" class="main" >

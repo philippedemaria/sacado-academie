@@ -626,6 +626,8 @@ table.table-bordered.dataTable {
   background-image: url('/static/img/fond_accueil00.jpg'); 
   background-size: cover;
   background-repeat: no-repeat;
+  background:-webkit-gradient(linear, left bottom, right top, from(#38438b), color-stop(#944b94), color-stop(#d75a88), color-stop(#ff7e71), color-stop(#ffb25f), to(#ffeb68));background:-webkit-linear-gradient(left bottom, #38438b, #944b94, #d75a88, #ff7e71, #ffb25f, #ffeb68);background:-o-linear-gradient(left bottom, #38438b, #944b94, #d75a88, #ff7e71, #ffb25f, #ffeb68);background:linear-gradient(to right top, #38438b, #944b94, #d75a88, #ff7e71, #ffb25f, #ffeb68);
+  height:100vh;
 }
 
 .bandeau_accueil_no_text{

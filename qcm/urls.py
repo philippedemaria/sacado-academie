@@ -451,10 +451,10 @@ urlpatterns = [
     path('ajax_auto_evaluation', ajax_auto_evaluation, name='ajax_auto_evaluation'), 
 
     ######################################################################################################################################################
-    #####################################         Customexercises         ################################################################################
+    ##############################    Préparation aux évaluations         ################################################################################
     ######################################################################################################################################################
-
-    #path('admin_customexercises', admin_customexercises, name='admin_customexercises'), 
-    
+    path('prep_eval/<int:id>', prep_eval, name='prep_eval'), 
+    path('show_prepeval/<int:idp>', show_prepeval, name='show_prepeval'), 
+    path('delete_prepeval/<int:ids>/<int:idp>', delete_prepeval, name='delete_prepeval'), 
 
  ]

@@ -163,19 +163,14 @@ def index(request):
             template = 'dashboard.html'
             context = {'this_user': this_user, 'teacher': teacher, 'groups': groups,  'parcours': None, 'today' : today , 'timer' : timer , 'nb_teacher_level' : nb_teacher_level , 
                        'relationships': relationships, 'parcourses': parcourses, 'index_tdb' : index_tdb, 'folders_tab' : folders_tab , 'connexion_lessons' : connexion_lessons ,
-                       'communications': communications, 'parcours_tab': parcours_tab, 'webinaire': webinaire,
-                       }
+                       'communications': communications, 'parcours_tab': parcours_tab, 'webinaire': webinaire}
         
-        elif request.user.is_student:  ## student
+        elif request.user.is_student :  ## student
 
-            if request.user.closure : 
-                if request.user.closure < today :
-                    messages.error(request,"Votre adhésion est terminée.")  
-                    return redirect("logout")
+            template = 'dashboard_student_init.html'
+            context  = {}
 
-            template, context = student_dashboard(request, 0)
-
-        elif request.user.is_parent:  ## parent
+        elif request.user.is_parent :  ## parent
             if request.session.get('student_id',None) : # Sert pour la réservation de leçon
                 del request.session['student_id']
 
@@ -207,6 +202,25 @@ def index(request):
  
         response = render(request, 'home.html', context)
         return response
+
+
+
+def dash_student(request):
+    
+    if request.user.is_authenticated and request.user.is_student :
+        today = time_zone_user(request.user)
+        index_tdb = True  
+  
+        if request.user.closure and request.user.closure < today :
+            messages.error(request,"Votre adhésion est terminée.")  
+            return redirect("logout")
+
+        template, context = student_dashboard(request, 0)
+
+        return render(request, template , context)
+    else :
+        return redirect ('index')
+ 
  
 
  

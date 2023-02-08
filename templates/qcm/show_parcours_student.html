@@ -36,12 +36,18 @@
 
 
 {% block page_menu_right %}
-    {% if not parcours.is_sequence %}
-        {% include 'qcm/submenu_parcours_student.html' %}
-    {% else %}
-        <a href="javascript:history.back()"><input type="button" value="Retour" class="btn btn-default "/></a>
-    {% endif %}
+
+    {% comment %}
+        {% if not parcours.is_sequence %}
+            {% include 'qcm/submenu_parcours_student.html' %}
+        {% else %}
+            <a href="javascript:history.back()"><input type="button" value="Retour" class="btn btn-default "/></a>
+        {% endif %}
+    {% endcomment %}
+
 {% endblock %}
+
+
 
 
 {% block body %}

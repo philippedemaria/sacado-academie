@@ -5,7 +5,7 @@
 
 {% if rc.type_id == 0 %}
 
-    {% get_constraint_to_this_relationship  rc  student as    under_score   %}
+    {% get_constraint_to_this_relationship  rc  student as    data_under_score   %}
     {%  get_last_score_and_time   rc.exercise   rc.parcours   student    as    data %}
     {%  get_noggb_data   rc   student    as    noggb_data %}
 
@@ -65,7 +65,7 @@
 
         <!-- Fin de div de résultat -->
         <!-- Si l'exercice est bloqué, on pose une div par-dessus -->
-        {% if  under_score %} <!-- under_score = l'exercice est sous contrainte car l'élève n'a pas obtenu les résultats suffisants-->
+        {% if  data_under_score.under_score %} <!-- under_score = l'exercice est sous contrainte car l'élève n'a pas obtenu les résultats suffisants-->
             <div class="under_constraint"> <!-- div de fond pour opacité -->
             </div>    
             <div class="label_under_constraint"> <!-- Texte -->
@@ -77,23 +77,11 @@
                         Pour accéder à cet exercice, vous devez réussir les exercices ci-dessous avec les scores minimum donnés.
                     </div>
                 </div>
-
                 <div  class="clear_under_constraint">
-                    <div class="col-xs-12 col-md-12">
-                        {% if rc.relationship_constraint.all|length == forloop.counter0 %} <br> <br>
-                            <span class="text-red"> Tous les exercices précédents avec 
-
-                              {% for constraint in rc.relationship_constraint.all %}
-                                    {% if forloop.last %}  {{ constraint.scoremin }}% {% endif %} 
-                              {% endfor %}
-                            </span>
-                        {% else %}   
-
-                              {% for constraint in rc.relationship_constraint.all %}
-                                    <div class="text-red"  style="font-size: 12px;"><i class="fa fa-minus-circle"></i> {{ constraint }}</div>
-                              {% endfor %}
-
-                        {% endif %} 
+                    <div class="col-xs-12 col-md-12">  
+                        {% for constraint in data_under_score.constraint_list %}
+                            <div class="text-red"  style="font-size: 12px;"><i class="fa fa-minus-circle"></i> {{ constraint }}</div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -151,7 +139,6 @@
             {% if student %}
 
                 {% get_this_exercise_is_locked  student rc rc.parcours 0 today as is_blck %}
-
                 {% get_available rc student  as available %} 
                 {% get_parcours_available parcours student rc.exercise as parcours_available %}
 
@@ -160,8 +147,6 @@
                     Parcours de maîtrise proposé<br/><i class="fa fa-sitemap"></i>
                 </a>
                 {% endif  %}
-
-
                 {% if rc.exercise.supportfile.is_ggbfile %}  
                     {% if is_blck and rdoc.is_display  %}
                         <div class="alert alert-danger" style="position: absolute; z-index:9; top:100px;font-size:12px;border-radius: 0px 4px 4px  0px;"> 
@@ -176,37 +161,26 @@
                                 </div>
                      
                                 <img src="{{ rc.exercise.supportfile.imagefile.url }}"  class="image_parcours"   style="opacity:0.8"    >
-                    
                             {% elif parcours.is_next and not available.is_ok %} 
                                 <div class="alert alert-danger" style="position: absolute; z-index:9; top:100px;font-size:12px;border-radius: 0px 4px 4px  0px;"> 
                                       <i class="fa fa-lock"></i>  Vous devez passer à un autre exercice  
                                 </div>
                      
                                     <img src="{{ rc.exercise.supportfile.imagefile.url }}"  class="image_parcours" {% if not rc.is_publish %} style="opacity:0.8" {% endif %}  >
-                    
                             {% else %}
                                 <a href="{% if not is_lock  %}{% url 'execute_exercise'  rc.parcours.id  rc.exercise.id   %}{% endif %}">  
                                     <img src="{{ rc.exercise.supportfile.imagefile.url }}"  class="image_parcours" {% if not rc.is_publish %} style="opacity:0.8" {% endif %}>
                                 </a>
                             {% endif %}
-
                         {% else %}                                            
-
                             <div class="alert alert-danger" style="position: absolute; z-index:9; top:100px;font-size:12px;border-radius: 0px 4px 4px  0px;"> 
                                   <i class="fa fa-lock"></i>   Vous devez passer à un autre exercice  
                             </div>
-                 
-                                <img src="{{ rc.exercise.supportfile.imagefile.url }}"  class="image_parcours" {% if not rc.is_publish %} style="opacity:0.8" {% endif %}  >
-                
-
+                            <img src="{{ rc.exercise.supportfile.imagefile.url }}"  class="image_parcours" {% if not rc.is_publish %} style="opacity:0.8" {% endif %}  >
                         {% endif  %}
-
                     {% endif  %}
-
                 {% else %}
-                    
                     {% if is_blck %}
-
                         <div class="alert alert-danger" style="position: absolute; z-index:9; top:100px;font-size:12px;border-radius: 0px 4px 4px  0px;"> 
                               <i class="fa fa-lock"></i> <span class="hidden_lock"> {{ rc.lock|date:"d-m-Y à H:i" }}</span>
                         </div>
@@ -214,32 +188,26 @@
                             <img src="{{ rc.exercise.supportfile.imagefile.url }}"  class="image_parcours" {% if not rc.is_publish %} style="opacity:0.8" {% endif %}  >
                         </a>
                     {% else %}
-
-
-                            {% if parcours.is_next and not available.is_ok %} 
-                                <div class="alert alert-danger" style="position: absolute; z-index:9; top:100px;font-size:12px;border-radius: 0px 4px 4px  0px;"> 
-                                      <i class="fa fa-lock"></i>  Vous devez passer à l'exerice suivant
-                                </div>
-                     
+                        {% if parcours.is_next and not available.is_ok %} 
+                            <div class="alert alert-danger" style="position: absolute; z-index:9; top:100px;font-size:12px;border-radius: 0px 4px 4px  0px;"> 
+                                  <i class="fa fa-lock"></i>  Vous devez passer à l'exerice suivant
+                            </div>
+                 
+                            <img src="{{ rc.exercise.supportfile.imagefile.url }}"  class="image_parcours" {% if not rc.is_publish %} style="opacity:0.8" {% endif %}  >
+                
+                        {% else %}
+                            <a href="{% url 'write_exercise'  rc.id   %}"> 
                                 <img src="{{ rc.exercise.supportfile.imagefile.url }}"  class="image_parcours" {% if not rc.is_publish %} style="opacity:0.8" {% endif %}  >
-                    
-                            {% else %}
-                                <a href="{% url 'write_exercise'  rc.id   %}"> 
-                                    <img src="{{ rc.exercise.supportfile.imagefile.url }}"  class="image_parcours" {% if not rc.is_publish %} style="opacity:0.8" {% endif %}  >
-                                </a>
-                            {% endif %}
-
+                            </a>
+                        {% endif %}
                     {% endif  %}
-
                 {% endif  %}
-            
             {% else %}
                 <a  href="#" class="detail_parcours"      data-exercise_id="{{ rc.exercise.id }}"  
                     data-num_exo="{{ forloop.counter}}"  data-parcours_id="{{ parcours.id }}">
                     <img src="{{ rc.exercise.supportfile.imagefile.url }}" class="image_parcours" {% if not rc.is_publish %} style="opacity:0.8" {% endif %}  >
                 </a> 
             {% endif  %}
-            
             {% if  rc.date_limit %}
                 {% if not data.score %} 
                     <div  class="btn btn-danger"  style="position: absolute; right : 0px; top:120px;">   
@@ -247,53 +215,42 @@
                     </div>
                 {% endif %}    
             {% endif %}   
-
             {% if not rc.exercise.supportfile.id == 6520 %}            
-            <div class="card-text" style="background-color:{{ parcours.color }};color:{{ parcours.color|contrast_color }}">
-
-
-
-                <i class="fa fa-fw fa-barcode"></i> {{ rc.exercise.supportfile.code }}
-                <i class="fa fa-fw fa-clock-o"></i> {{ rc.duration }} min.
-                <i class="fa fa-fw fa-save"></i> {{ rc.situation}}
-
-                {% if rc.is_in_average %}
+                <div class="card-text" style="background-color:{{ parcours.color }};color:{{ parcours.color|contrast_color }}">
+                    <i class="fa fa-fw fa-barcode"></i> {{ rc.exercise.supportfile.code }}
+                    <i class="fa fa-fw fa-clock-o"></i> {{ rc.duration }} min.
+                    <i class="fa fa-fw fa-save"></i> {{ rc.situation}}
+                    {% if rc.is_in_average %}
                         <i class="bi bi-award"></i>
-                {% endif %}
-
-
-
-                {% if not rc.parcours.is_evaluation %}
-                {% if rc.relationships_courses.all|length > 0 %}  
-                    <i class="fa fa-fw fa-desktop"></i>
-                {% endif  %}
-                {% endif  %}
-
-
-
-                {% if noggb_data.is_corrected %}
-                    <span class="pull-right selector_div_result helper_tip" data-relation_id ="{{ rc.id }}"  data-custom=0 ><i class="fa fa-trophy" style="color:{{ parcours.color|contrast_color }}"></i>
-                        <div class="helper_tip_text" >Résultat disponible. </div>
-                    </span>
-                {% else %}
-                    {% if submitter %}
-                        {% if not rc.exercise.supportfile.is_ggbfile %}  
-                        <span class="pull-right selector_div_result" data-relation_id ="{{ rc.id }}"  data-custom=0 ><i class="fa fa-copy" style="color:{{ parcours.color|contrast_color }}"></i></span>
+                    {% endif %}
+                    {% if not rc.parcours.is_evaluation %}
+                    {% if rc.relationships_courses.all|length > 0 %}  
+                        <i class="fa fa-fw fa-desktop"></i>
+                    {% endif  %}
+                    {% endif  %}
+                    {% if noggb_data.is_corrected %}
+                        <span class="pull-right selector_div_result helper_tip" data-relation_id ="{{ rc.id }}"  data-custom=0 ><i class="fa fa-trophy" style="color:{{ parcours.color|contrast_color }}"></i>
+                            <div class="helper_tip_text" >Résultat disponible. </div>
+                        </span>
+                    {% else %}
+                        {% if submitter %}
+                            {% if not rc.exercise.supportfile.is_ggbfile %}  
+                                <span class="pull-right selector_div_result" data-relation_id ="{{ rc.id }}"  data-custom=0 ><i class="fa fa-copy" style="color:{{ parcours.color|contrast_color }}"></i></span>
+                            {% endif %}
                         {% endif %}
                     {% endif %}
-                {% endif %}
 
-                {% if rc.relationship_remediation.all|length > 0 %}
-                    <span class="helper_tip_card"><i class="fa fa-fw fa-paperclip pull-right" style="color:{{ parcours.color|contrast_color }}"></i>
-                    <div class="helper_tip_text_card" >Cet exercice contient une aide extérieure ou une consigne orale.</div>
-                </span>
-                {% endif  %}
-                {% if  rc.is_correction_visible %}
-                    <span class="helper_tip"> <i class="pull-right  fa fa-copyright" style="color:{{ parcours.color|contrast_color }}"></i> 
-                        <div class="helper_tip_text" >Correction disponible. Entrer dans l'exercice. </div>
-                    </span> 
-                {% endif  %}
-            </div>
+                    {% if rc.relationship_remediation.all|length > 0 %}
+                        <span class="helper_tip_card"><i class="fa fa-fw fa-paperclip pull-right" style="color:{{ parcours.color|contrast_color }}"></i>
+                            <div class="helper_tip_text_card" >Cet exercice contient une aide extérieure ou une consigne orale.</div>
+                        </span>
+                    {% endif  %}
+                    {% if  rc.is_correction_visible %}
+                        <span class="helper_tip"> <i class="pull-right  fa fa-copyright" style="color:{{ parcours.color|contrast_color }}"></i> 
+                            <div class="helper_tip_text" >Correction disponible. Entrer dans l'exercice. </div>
+                        </span> 
+                    {% endif  %}
+                </div>
             {% endif  %}
         </div>
     </div>

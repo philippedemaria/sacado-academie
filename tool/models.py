@@ -24,7 +24,8 @@ POLICES = (
         (56, '56'),
     )
 
-
+def qtype_directory_path(instance, filename):
+    return "tool/qtype/{}".format(filename)
 
 def choice_directory_path(instance, filename):
     return "choices/{}".format(filename) 
@@ -134,6 +135,30 @@ class VariableImage(models.Model):
 
     def __str__(self):
         return self.variable.name 
+
+
+
+class Qtype(models.Model):
+    """ Modèle représentant un associé. """
+    title     = models.TextField(max_length=255, default='',  blank=True, verbose_name="Type")
+    imagefile = models.ImageField(upload_to=qtype_directory_path, blank=True, default="", verbose_name="Image")
+    html      = models.TextField( default='',  blank=True, verbose_name="Html éventuel")
+    url       = models.CharField(max_length=255,  blank=True, default='', verbose_name="url") 
+    is_online = models.BooleanField(default=0, verbose_name="En ligne ?")
+    template  = models.CharField(max_length=255,  blank=True, default='', verbose_name="template de quizz") 
+    ranking   = models.PositiveIntegerField(default=0,   ) 
+    custom    = models.CharField(max_length=255,  null = True,   blank=True, default='', verbose_name="template pour les exos")
+    is_sub    = models.BooleanField(default=0 ) # subchoices required
+    is_alea   = models.BooleanField(default=0 ) # subchoices required
+    extra     = models.PositiveIntegerField(default=0,   ) # Nombre d'extra pour le inline formset
+    is_pseudo = models.BooleanField(default=0 ) 
+    is_insert = models.BooleanField(default=0 ) 
+
+    def __str__(self):
+        return self.title
+
+
+
 
 
 class Question(models.Model):

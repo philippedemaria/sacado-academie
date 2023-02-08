@@ -25,112 +25,7 @@
 <section class="content_main content_main_exercise">
     {% get_available relation student  as available %}                                    <!-- Si le nombre de tentative est dépassée ou pas : même code que get_parcours_available mais pour une relationship -->
     {% get_parcours_available parcours student relation.exercise as parcours_available %} <!-- Si le nombre de tentative est dépassée ou pas : même code que get_available pour une parcours -->
-    <div class="col-sm-12 col-md-1 col-lg-1 full_screen_size">
-
-
- 
-        <div class="situation double_bottom_padding">
-        {% if relation.exercise.supportfile.calculator %}
- 
- 
-            {% if exercise.level < 7  %}
-                <a href="#" data-toggle='modal' data-target='#calculator'>
-                    <img src="{% static 'img/calculator.png' %}"  class="img_size_square_75" />
-                </a>
-            {% elif exercise.level == 14  %}
-                <a href="#" data-toggle='modal' data-target='#calculator'>
-                    <img src="{% static 'img/calculator.png' %}"  class="img_size_square_75" />
-                </a>
-            {% else  %}
-                <a href="{% url 'simulator' %}"  target='_blank'>
-                    <img src="{% static 'img/calculator.png' %}"  class="img_size_square_75" />
-                </a>
-            {% endif  %}
-            
-        {% else %}
-            <img src="{% static 'img/no_calculator.png' %}"    class="img_size_square_75" />
-        {% endif  %} 
-        </div>
-
-        {% comment %}
-        <div class="situation">
-            <a href="#" id="open_draft"><img src="{% static 'img/draft.png' %}"  class="img_size_square_75"  /></a> </br>
-        </div>
-        {% endcomment %}
-
-        <div class="situation">
-            {% if relation.duration == 5 %}
-              <img src="{% static 'img/horloge5.png' %}"   class="img_size_square_75" />
-            {% elif relation.duration == 10 %}
-              <img src="{% static 'img/horloge10.png' %}"   class="img_size_square_75" />
-            {% elif relation.duration == 15 %}
-              <img src="{% static 'img/horloge15.png' %}"   class="img_size_square_75" />
-            {% elif relation.duration == 20 %}
-              <img src="{% static 'img/horloge20.png' %}"   class="img_size_square_75"  />
-            {% elif relation.duration == 25 %}
-              <img src="{% static 'img/horloge25.png' %}"   class="img_size_square_75"  />
-            {% elif relation.duration == 30 %}
-              <img src="{% static 'img/horloge30.png' %}"   class="img_size_square_75" />
-            {% elif relation.duration == 35 %}
-              <img src="{% static 'img/horloge35.png' %}"    class="img_size_square_75" />
-            {% elif relation.duration == 40 %}
-              <img src="{% static 'img/horloge40.png' %}"   class="img_size_square_75"/>
-            {% elif relation.duration == 45 %}
-              <img src="{% static 'img/horloge45.png' %}"    class="img_size_square_75" />
-            {% elif relation.duration == 50 %}
-              <img src="{% static 'img/horloge50.png' %}"   class="img_size_square_75" />
-            {% elif relation.duration == 55 %}
-              <img src="{% static 'img/horloge55.png' %}"   class="img_size_square_75" />
-            {% elif relation.duration == 60 %}
-              <img src="{% static 'img/horloge60.png' %}"   class="img_size_square_75" />
-            {% else %}
-              <img src="{% static 'img/horloge15.png' %}"   class="img_size_square_75" />
-            {% endif  %} 
-            <p> {{ relation.duration }} minute{{ relation.duration|pluralize }}</p>
-        </div>
-        <div class="situation">
-             <i class="fa fa-refresh refresh_5x" style="color : #5d4391"></i>
-            <p>{{ relation.situation }} situation{{ relation.situation|pluralize }}</p>
-        </div>
-        <div class="situation" > 
-          {% if  parcours.maxexo > -1 %}
-              {% with nb_attempt=parcours_available.nbleft  %}
-
-                  <div class="available_attempt" id="attempt" style="font-weight:800" >
-                        {{ nb_attempt }} 
-                  </div>
-                  <p>Tentative{{ nb_attempt|pluralize  }} <span class="left_attempt">restante{{ nb_attempt|pluralize  }}</span></p>
-              {% endwith %}
-          {% else %}
-              {% if  relation.maxexo > -1 %}
-                  {% with nb_attempt=available.nbleft  %}
-                    <div class="available_attempt" id="attempt" style="font-weight:800" >
-                       {{ nb_attempt }}   
-                    </div>
-                    <p>Tentative{{ nb_attempt|pluralize  }} <span class="left_attempt">restante{{ nb_attempt|pluralize  }}</span></p>
-                  {% endwith %}
-              {% else  %} 
-                  <div class="available_infinite" id="attempt" style="font-weight:800" > 
-                     &infin;  
-                  </div>                  
-                  {% with nb_attempt=available.nbleft  %}
-                  <p>Tentative{{ nb_attempt|pluralize  }} <span class="left_attempt">restante{{ nb_attempt|pluralize  }}</span></p>
-                  {% endwith %}
-              {% endif  %} 
-          {% endif %}
-        </div>
-
-        <div class="situation coefficient_small" style="text-align: center">
-            <div style="font-weight:800;font-size: 25px;" >{{ relation.coefficient }}</div>
-            <p class="coefficient_small_label">Coefficient</p>
-        </div>
-
-        <div class="situation left_attempt">
-            <i class="fa fa-barcode fa-4x"></i>
-            <p>{{ relation.exercise.supportfile.code }}</p>
-        </div>
-    </div>   
-    <div class="col-sm-12 col-md-8 col-lg-8">
+    <div class="col-sm-12 col-md-9 col-lg-9" align="center">
 
       {% if exercise.audiofile %}
         <div id="audio_open">
@@ -153,46 +48,6 @@
         {% csrf_token %}  
 
           <div class='justify-content-center'  style="position:relative">
-              {% if parcours.is_evaluation %}
-                 {% if parcours_available.is_ok   %}
-                      {% if available.is_ok %} 
-                          <div class="alert alert-danger" style="width:750px; position:absolute;z-index: 500;"  role="alert" id="message_alerte">
-                              <h2>Cet exercice est proposé dans une <b>évaluation</b></h2> 
-                              <br/>Vous devez répondre à <b>{{ relation.situation }} question{{ relation.situation|pluralize  }}</b>.<br/>
-                                {% if parcours.is_stop %}
-     
-                                  <h3>Finir l'exercice avant d'en sortir.</h3>
-     
-                                  <p></p>
-                                  <a href="#" class="btn btn-danger" data-dismiss="alert" aria-label="close">J ai compris, enlever ce bandeau.</a>  
-                                {% else %}
-                                  <br/>
-                                  <small><em>Cliquez sur la croix pour faire disparaitre ce bandeau  </em></small><i class="fas fa-long-arrow-alt-right"></i> 
-                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                                {% endif %}
-                          </div>
-
-                      {% else   %}
-                          <div style="width:750px; height : 550px; position:absolute; z-index:1000; opacity: 0.9; background-color: #FFF" >
-                          </div>
-
-                              <div class="alert alert-danger" style="position:absolute; z-index:1001; top: 150px; text-align:center" >
-                                  <b><i class="fa fa-lock fa-10x"></i><br/><br/> Vous avez atteint la limite des tentatives. Vous ne pouvez plus soumettre le résultat.</b>
-                              </div>
-                      {% endif   %}
-
-                  {% else   %}
-                      <div style="width:750px; height : 550px; position:absolute; z-index:1000; opacity: 0.9; background-color: #FFF" >
-                      </div>
-
-                          <div class="alert alert-danger" style="position:absolute; z-index:1001; top: 150px; text-align:center" >
-                              <b><i class="fa fa-lock fa-10x"></i><br/><br/> Vous avez atteint la limite des tentatives. Vous ne pouvez plus soumettre le résultat.</b>
-                          </div>
-                  {% endif   %}
-
-              {% endif %}
-
-
               <div class='justify-content-center' >
                   <div style="position:absolute;bottom:80px;font-size: 12px;width:50px;color:#0d72ac;left:780px;">
                       Mode plein <br> écran <br>
@@ -240,25 +95,9 @@
 
                         {% endif %}
                     {% endif %}  
-
-                      <!-- Retour aux exercices du parcours -->
-                    {% if parcours.is_evaluation %}
-                        {% if  parcours.is_exit %}
-                          <a href="{% url 'show_parcours_student' parcours.id %}"  class="btn btn-default" >  Revenir aux exercices   </a>
-                        {% endif %}
-                    {% else %}
                       <a href="javascript:history.back()"><input type="button" value="Revenir aux exercices" class="btn btn-default "/></a>
-
-
-
-
                       <span style="cursor: pointer" id="use_tools" class="btn btn-quizz_bank" >Utiliser l'aide SACADO</span>            
                
-
-
-                    {% endif %}
-
-
                       <!-- ligne d'enregistrement -->
                       <input id="relation" name="relation_id"  type="hidden" value="{{ relation.id }}"/>
                       <input id="start_time" name="start_time"  type="hidden" value="{{ start_time }}"/>
@@ -347,7 +186,7 @@
 
  <!--   <script type="text/javascript" src="{% static 'js/lib/geogebra.js' %}"></script>-->
                   <!-- Additional Javascript for Geogebra exercises -->
-         <script type="text/javascript" src="https://cdn.geogebra.org/apps/deployggb.js"></script> 
+    <script type="text/javascript" src="https://cdn.geogebra.org/apps/deployggb.js"></script> 
     <script type="text/javascript">
           // parameters of the geogebra app
 
