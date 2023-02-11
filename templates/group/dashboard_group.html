@@ -37,40 +37,13 @@
 {% block body %}
  
 <section class="content_main"> 
-    {% comment %}
-     <a href="#" class="sub_menu_right pull-right whire" id="right_menu_open"><i class="fa fa-angle-double-left"></i> </a> 
-    {% endcomment %}
 
-    {% if parcourses_on_fire %}
-    <div class="row" id="mixedSlider">
-        <div class="col-md-12 col-lg-12 col-xs-12 in_this_time_container MS-content"> 
-            <div class="in_this_time">En ce moment : Vers les exercices </div>
 
-            {% for parcours in parcourses_on_fire %}
-                <div class="item">
-                {% if parcours.is_evaluation %}
-                    {% with evaluation=parcours %} 
-                        {% get_min_score parcours student as data_min %}
-                        {% include 'qcm/evaluation_tag_student.html' %}
-                    {% endwith %}
-                {% else %}  
-                    {% get_min_score parcours student as data_min %}              
-                    {% include 'qcm/parcours_tag_student_index.html' %}                
-                {% endif %}
-                </div>
-            {% endfor  %}
-            <!-- ******************************************************************************************** -->
-        </div>        
-        <div class="MS-controls">
-            <button class="MS-left no_visu_on_load"><i class="fa fa-angle-left" aria-hidden="true"></i></button>
-            <a href="#" class="MS-right"><i class="bi bi-arrow-right-circle"  ></i></a>
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-xs-12">
+            <div class="alert alert-info">10 minutes par jour</div>
         </div>
     </div>
-    {% endif %}
-
-
-
-
 
 
 
@@ -78,131 +51,14 @@
 
     <div class="row">
         <div class="col-md-12 col-lg-12 col-xs-12">
-            {% if responses|length > 0 %}
-
-                {% for response in responses %}
-
-                    <form method="POST" action="{% url 'check_response_from_mail' %}" class="alert alert-danger" >
-                        {% csrf_token %}
-                        <div style="background: #F7F7F7; border:solid 1px #CCC;padding:20px;">
-                            {{ response.response|safe }}
-                        </div>   <br/>
-
-
-                        J'ai pris connaissance de la réponse.
-                        <input required type="checkbox" name="is_read" value="1">
-                        <input required type="hidden"  name="response_id" value="{{ response.id }}"><br/>
-                        <input value="Envoyer" type="submit" class="btn btn-primary"/>
-                    </form>
-                    <hr/>
-                {% endfor %}
-            {% endif %}
-
-
-
-            <!-- ******************************************************************************************** -->
-
             {%  if folders %}
             <div class="row"></div> 
                 {% for folder in folders %}
                     {% include 'qcm/folder_tag_student.html' %}
                 {% endfor  %} 
             {% endif %}  
-
-            <!-- *************************************** Parcours ******************************************* -->
-            {%  if sequences %}
-            <div class="row"></div> 
-                <h2 class='thin'>Sequences</h2>
-                {% for parcours in sequences %}
-                        {% get_min_score parcours student as data_min %}
-                        {% include 'qcm/sequence_tag_student.html' %}
-
-                {% endfor  %}   
-            {% endif %}  
-
-
-            {%  if parcourses %}
-            <div class="row"></div> 
-                <h2 class='thin'>Parcours</h2>
-                {% for parcours in parcourses %}
-                        {% get_percent parcours student as data %}  
-                        {% get_min_score parcours student as data_min %}
-                        
-                        {% include 'qcm/parcours_tag_student.html' %}
-
-                {% endfor  %}   
-            {% endif %}  
-            <!-- ******************************************************************************************** -->
-            <!-- ************************************* Evaluations ****************************************** -->
-            {%  if evaluations %}
-            <div class="row"></div> 
-            <h2 class='thin'>Evaluations</h2>
-                {%  for evaluation in  evaluations %} 
-                    {% get_percent evaluation student as data %}  
-                    {% get_min_score evaluation student as data_min %} 
-                    {% include 'qcm/evaluation_tag_student.html' %}
-                {% endfor %}
-            {% endif %}  
-            <!-- ******************************************************************************************** -->
-            <!-- *********************************** Tache à faire ****************************************** -->            
-            {% if relationships_in_tasks|length > 0 %}
-               <!-- Add the bg color to the header using any of the bg-* classes -->
-            <div class="row"></div>
-            <hr>
-            <h2 class="thin">Tâches en cours</h2>
-                 {% for relation in relationships_in_tasks %}
-                        <div class="card_freeze">
-                            <div class="card-body student">
-                                <span style="color:{{ relation.parcours.color }}"> {{ relation.parcours }}</span>
-     
-                                {% if relation.exercise.supportfile.calculator %}
-                                  <img src="{% static 'img/calculator.png' %}" class="pull-right" width="35px" />
-                                {% else %}
-                                  <img src="{% static 'img/no_calculator.png' %}" class="pull-right"   width="35px" />
-                                {% endif  %} 
-                            </div>                    
-                            <div class="card-image">
-                                {% if student %}
-                                <a href="{% url 'execute_exercise'  relation.parcours.id  relation.exercise.id   %}">  <img src="{{ relation.exercise.supportfile.imagefile.url }}"  class="image_parcours" {% if not relation.is_publish %} style="opacity:0.3" {% endif %}    ></a>
-                                {% else %}
-                                <a href="#" class="detail_parcours"  data-exercise_id="{{ relation.exercise.id }}"  data-num_exo="{{ forloop.counter}}"   data-parcours_id="{{ parcours.id }}">
-                                    <img src="{{ relation.exercise.supportfile.imagefile.url }}" class="image_parcours" {% if not relation.is_publish %} style="opacity:0.3" {% endif %}  >
-                                </a> 
-                                {% endif  %}
-
-
-                                {% if  relation.date_limit %}
-                                    {% get_done relation student as result   %} 
-                                    {% if not result %} 
-                                        <div  class="btn btn-danger"  style="position: absolute; right : 0px; top:120px;">   
-                                              Avant le {{relation.date_limit|date:"d N Y" }}
-                                        </div>
-                                    {% endif %}    
-                                {% endif %}   
-                                <div class="card-text" style="background-color:{{ relation.parcours.color }}">
-                                    <i class="fa fa-barcode"></i> {{ relation.exercise.supportfile.code }}  
-                                    <i class="fa fa-clock-o"></i> {{ relation.duration }} min.
-                                    <i class="fa fa-save"></i> {{ relation.situation}}
-                                </div>
-                            </div>
-                        </div> 
-                 {% endfor %}
-            {% endif %}
-            <!-- ******************************************************************************************** -->
-            <!-- ******************************* Exercices déjà faits *************************************** -->
-  
-            <!-- ******************************************************************************************** -->
         </div>
- 
     </div>
-
-
-
-
-
-
-
-
 </section> 
 
 

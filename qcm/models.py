@@ -8,7 +8,7 @@ from account.models import Student, Teacher, ModelWithCode, generate_code, User
 from socle.models import  Knowledge, Level , Theme, Skill , Subject
 from django.apps import apps
 from ckeditor_uploader.fields import RichTextUploadingField
-from django.db.models import Q, Min, Max
+from django.db.models import Q, Min, Max ,Avg
 import os.path
 from django.utils import timezone
 from general_fonctions import *
@@ -1976,7 +1976,6 @@ class Relationship(models.Model):
         return self.relationship_remediation.filter(consigne = 0)
 
 
-
 class Studentanswer(models.Model):
 
     parcours = models.ForeignKey(Parcours,  on_delete=models.CASCADE, blank=True, null=True,  related_name='answers', editable=False)
@@ -2363,10 +2362,6 @@ class Customexercise(ModelWithCode):
         if self.customexercise_mastering_custom.count() :
             test = True
         return test
-
-
-
-
 
 ######################################################################
 #####  type de réponse possible et choix pour les types d'exercices
@@ -2866,3 +2861,41 @@ class Slot(models.Model):
     done          = models.BooleanField( blank=True, default=0, )
     def __str__(self):
         return "{}".format(self.date)
+
+    def dataset(self):
+        data = {}
+        nbr     = self.relationships.exclude(type_id=2).count()
+        student_answers = self.prepeval.student.answers.filter(parcours=self.prepeval.parcours)
+        nb_ans  = student_answers.values_list('exercise_id',flat=True).distinct().count()
+        nbr_no  = nbr - nb_ans
+        try :
+            student_answers = student_answers.filter(parcours=self.prepeval.parcours).aggregate(average=Avg("point"))
+            percent = int(student_answers["average"])
+        except :
+            percent = 0
+        if percent == 0 : 
+            comment = "Il est temps de commencer ta révision quotidienne. Bonne préparation."
+            color = '#9975e0' 
+        elif percent > 92 : 
+            comment = "Bravo ! Cette session doit te donner confiance. Tu réalises une excellente séance de travail."
+            color = '#1d6718' 
+        elif  percent > 70 : 
+            comment = "Tu réalises une bonne séance de travail."
+            color = '#62d85a'
+        elif  percent > 50 : 
+            comment = "Tu réalises une moyenne séance de travail."  
+            color = '#b5a32b' 
+        else : 
+            comment = "Tu  réalises une séance de travail insuffisante pour te permettre de réussir ton évaluation. Tu dois recommencer les exercices."
+            color = '#b5322b' 
+
+        is_end = False
+        if nbr <= nb_ans + 2 : is_end = True
+        
+        data["nb_ans"] = nb_ans
+        data["percent"] = percent 
+        data["nbr_no"] = nbr_no
+        data["comment"] = comment
+        data["color"] = color
+        data['end'] = is_end
+        return data

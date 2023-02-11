@@ -7,7 +7,7 @@
  
     <a href="{% url 'logout' %}"><img src="{% static 'img/sacadoLogo.png' %}" style="vertical-align: text-bottom;" width="35px"/>
         <div class="captionmenu sacado_menu">
-         ACADÉMIE
+         SACADO
         </div>
     </a>
  
@@ -21,7 +21,7 @@
         <div class="captionmenu">{{ request.user.first_name }}</div>
     {% else %} 
         <i class="bi bi-person-circle icon_size"></i> 
-        <div class="captionmenu">Compte</div>
+        <div class="captionmenu">Mon compte</div>
     {% endif %} 
     </a>    
 </li>
@@ -50,8 +50,7 @@
 {% else %}
 <li class='dropdown'>
     <a href="{% url 'dash_student' %}" class="main" >
-
-        <i class="bi bi-grid-3x2-gap icon_size"></i> 
+        <i class="bi bi-graph-up-arrow  icon_size"></i>
         <div class="captionmenu">Entrainement</div>
 
     </a>
@@ -61,20 +60,10 @@
 
 <li  class="dropdown {% if 'exercise' in request.path %} active{% endif %}">
     <a href="{% url 'detail_student_all_views' user.id %}" class="main" >
-        <i class="bi bi-trophy icon_size"></i>
+        <i class="bi bi-clipboard-data icon_size"></i>
         <div class="captionmenu">Suivis</div>
     </a>
 </li>
-
-
-{% if request.user.is_in_academy and request.user.student.data_menu.id > 2 %}
-<li class='dropdown'>
-    <a href="{% url 'detail_student_lesson' request.user.id %}" class="main" >
-        <i class="bi bi-camera-video icon_size"></i> 
-        <div class="captionmenu">Leçons</div>
-    </a>
-</li>
-{% endif %}
 
 
 <li  class="dropdown {% if 'prep_eval' in request.path %}
@@ -83,22 +72,9 @@ active
 ">
     <a href="{% url 'prep_eval' user.id %}" class="main" >
         <i class="bi bi-calendar-week icon_size"></i>
-        <div class="captionmenu">Prép' éval</div>
+        <div class="captionmenu">Prép' Éval</div>
     </a>
 </li>
-
-
-
-<li  class="dropdown {% if 'exercise' in request.path %}
-active
-{% endif %} 
-">
-    <a href="{% url 'detail_student_all_views' user.id %}" class="main" >
-        <i class="bi bi-clipboard-data icon_size"></i>
-        <div class="captionmenu">Scores</div>
-    </a>
-</li>
-
 
 
 <!-- 
@@ -134,10 +110,18 @@ active
 <li  class="dropdown  {% if '/flashpack' in request.path %} active{% endif %}">
     <a href="{% url 'flashpacks' %}" class="main" >
         <i class="bi bi-layers icon_size"></i> 
-        <div class="captionmenu">Flashpack</div>
+        <div class="captionmenu">Flashcards</div>
     </a>
 </li> 
 
+{% if request.user.is_in_academy and request.user.student.data_menu.id > 2 %}
+<li class='dropdown'>
+    <a href="{% url 'detail_student_lesson' request.user.id %}" class="main" >
+        <i class="bi bi-camera-video icon_size"></i> 
+        <div class="captionmenu">Leçons</div>
+    </a>
+</li>
+{% endif %}
 {% comment %} 
 {% if request.user.is_in_academy %}   
 <li  class="dropdown  {% if '/academy' in request.path %} active{% endif %}">

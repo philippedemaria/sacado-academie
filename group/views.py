@@ -165,9 +165,9 @@ def student_dashboard(request,group_id):
     timer = today.time()
 
 
-    trackers= Tracker.objects.filter( user = request.user)
-    for tracker in trackers:
-        tracker.delete()
+    # trackers= Tracker.objects.filter( user = request.user)
+    # for tracker in trackers:
+    #     tracker.delete()
 
     if int(group_id) > 0 :
 
@@ -177,13 +177,13 @@ def student_dashboard(request,group_id):
 
         folders = student.folders.filter( is_publish=1 , subject = group.subject,level = group.level,is_archive=0, groups = group , is_trash=0).order_by("ranking")
         
-        bases = group.group_parcours.filter(Q(is_publish=1) | Q(start__lte=today, stop__gte=today), students =student , subject = group.subject, level = group.level , folders = None, is_archive =0 , is_trash=0).distinct()
+        #bases = group.group_parcours.filter(Q(is_publish=1) | Q(start__lte=today, stop__gte=today), students =student , subject = group.subject, level = group.level , folders = None, is_archive =0 , is_trash=0).distinct()
 
-        parcourses = bases.filter(is_evaluation=0, is_sequence=0).order_by("ranking")
-        sequences  = bases.filter(is_evaluation=0, is_sequence=1).order_by("ranking")
-        evaluations = bases.filter(is_evaluation=1).order_by("ranking")
+        # parcourses = bases.filter(is_evaluation=0, is_sequence=0).order_by("ranking")
+        # sequences  = bases.filter(is_evaluation=0, is_sequence=1).order_by("ranking")
+        # evaluations = bases.filter(is_evaluation=1).order_by("ranking")
 
-        last_exercises_done = student.answers.filter(exercise__knowledge__theme__subject=group.subject).order_by("-date")[:5]
+        #last_exercises_done = student.answers.filter(exercise__knowledge__theme__subject=group.subject).order_by("-date")[:5]
 
     else :
 
@@ -194,62 +194,69 @@ def student_dashboard(request,group_id):
         except :
             folders = student.folders.filter( is_publish=1 , is_archive=0, is_trash=0).order_by("ranking")
 
-        bases = student.students_to_parcours
-        parcourses = bases.filter(is_evaluation=0, folders = None, is_publish=1,is_trash=0, is_sequence=0).order_by("ranking")
-        sequences = bases.filter(is_evaluation=0, folders = None, is_publish=1,is_trash=0, is_sequence=1).order_by("ranking")
-        evaluations = bases.filter(Q(is_publish=1) | Q(start__lte=today, stop__gte=today), folders = None, is_evaluation=1,is_trash=0).order_by("ranking")
-        last_exercises_done = student.answers.order_by("-date")[:5]
+        # bases = student.students_to_parcours
+        # parcourses = bases.filter(is_evaluation=0, folders = None, is_publish=1,is_trash=0, is_sequence=0).order_by("ranking")
+        # sequences = bases.filter(is_evaluation=0, folders = None, is_publish=1,is_trash=0, is_sequence=1).order_by("ranking")
+        # evaluations = bases.filter(Q(is_publish=1) | Q(start__lte=today, stop__gte=today), folders = None, is_evaluation=1,is_trash=0).order_by("ranking")
+        # last_exercises_done = student.answers.order_by("-date")[:5]
    
         parcourses_on_fire = student.students_to_parcours.filter(Q(is_publish=1) | Q(start__lte=today, stop__gte=today), is_active=1,  is_archive =0 , is_trash=0).distinct()
 
-    flashpacks = Flashpack.objects.filter(Q(answercards=None) | Q(answercards__rappel=today), Q(stop=None) | Q(stop__gte=today), students=student,is_global=1).exclude(madeflashpack__date=today).distinct()
+    #flashpacks = Flashpack.objects.filter(Q(answercards=None) | Q(answercards__rappel=today), Q(stop=None) | Q(stop__gte=today), students=student,is_global=1).exclude(madeflashpack__date=today).distinct()
 
-    customexercises_set = set()
+        #customexercises_set = set()
     nb_custom = 0
-    for p in parcourses :
-        custom_exercises = Customexercise.objects.filter(Q(is_publish=1) | Q(start__lte=today), parcourses = p , date_limit__gte=today).order_by("date_limit")
-        nb_custom += custom_exercises.count()
-        customexercises_set.update(set(custom_exercises))
-    customexercises = list(customexercises_set)
+    # for p in parcourses :
+    #     custom_exercises = Customexercise.objects.filter(Q(is_publish=1) | Q(start__lte=today), parcourses = p , date_limit__gte=today).order_by("date_limit")
+    #     nb_custom += custom_exercises.count()
+    #     customexercises_set.update(set(custom_exercises))
+    #customexercises = list(customexercises_set)
 
-    relationships = Relationship.objects.filter(Q(is_publish=1) | Q(start__lte=today), parcours__in=parcourses, date_limit__gte=today).order_by("date_limit")
-    nb_relationships =  relationships.count()
-
-
-    exercise_tab = []
-    for r in relationships:
-        if r not in exercise_tab:
-            exercise_tab.append(r.exercise)
-    num = 0
-    for e in exercise_tab:
-        if Studentanswer.objects.filter(student=student, exercise=e).count() > 0:
-            num += 1
+    # relationships = Relationship.objects.filter(Q(is_publish=1) | Q(start__lte=today), parcours__in=parcourses, date_limit__gte=today).order_by("date_limit")
+    # nb_relationships =  relationships.count()
 
 
-    for c in customexercises :
-        if c.customexercise_custom_answer.filter(student=student).count() > 0:
-            num += 1
-
-    try:
-        ratio = int(num / (nb_relationships+nb_custom) * 100)
-    except:
-        ratio = 0
-
-    ratiowidth = int(0.9*ratio)
+    # exercise_tab = []
+    # for r in relationships:
+    #     if r not in exercise_tab:
+    #         exercise_tab.append(r.exercise)
+    # num = 0
+    # for e in exercise_tab:
+    #     if Studentanswer.objects.filter(student=student, exercise=e).count() > 0:
+    #         num += 1
 
 
-    responses = request.user.user_response.exclude(is_read=1)
+    # for c in customexercises :
+    #     if c.customexercise_custom_answer.filter(student=student).count() > 0:
+    #         num += 1
 
-    studentanswers =  student.answers.all()
-    exercises = Exercise.objects.filter(pk__in=studentanswers.values_list('exercise', flat=True))
+    # try:
+    #     ratio = int(num / (nb_relationships+nb_custom) * 100)
+    # except:
+    #     ratio = 0
+
+    # ratiowidth = int(0.9*ratio)
+
+
+    # responses = request.user.user_response.exclude(is_read=1)
+
+    # studentanswers =  student.answers.all()
+    # exercises = Exercise.objects.filter(pk__in=studentanswers.values_list('exercise', flat=True))
     
-    relationships_in_late = student.students_relationship.filter(Q(is_publish = 1)|Q(start__lte=today), parcours__in=parcourses, is_evaluation=0, date_limit__lt=today).exclude(exercise__in=exercises).order_by("date_limit")
-    relationships_in_tasks = student.students_relationship.filter(Q(is_publish = 1)|Q(start__lte=today), parcours__in=parcourses, date_limit__gte=today).exclude(exercise__in=exercises).order_by("date_limit")
+    # relationships_in_late = student.students_relationship.filter(Q(is_publish = 1)|Q(start__lte=today), parcours__in=parcourses, is_evaluation=0, date_limit__lt=today).exclude(exercise__in=exercises).order_by("date_limit")
+    # relationships_in_tasks = student.students_relationship.filter(Q(is_publish = 1)|Q(start__lte=today), parcours__in=parcourses, date_limit__gte=today).exclude(exercise__in=exercises).order_by("date_limit")
 
-    context = {'student_id': student.user.id, 'student': student, 'relationships': relationships, 'timer' : timer ,  'last_exercises_done' : last_exercises_done, 'responses' : responses , 'flashpacks' : flashpacks, 
-               'evaluations': evaluations, 'ratio': ratio, 'today' : today ,  'parcourses': parcourses,   'customexercises': customexercises, 'group' : group , 'groups' : groups ,
-               'ratiowidth': ratiowidth, 'relationships_in_late': relationships_in_late, 'index_tdb' : True, 'folders' : folders, 'parcourses_on_fire' : parcourses_on_fire ,  
-               'relationships_in_tasks': relationships_in_tasks , 'student_index' : student_index , 'sequences' : sequences}
+    context = {'student_id': student.user.id, 'student': student, 
+                #'relationships': relationships, 'timer' : timer ,  'last_exercises_done' : last_exercises_done, 'responses' : responses , 
+               #'evaluations': evaluations, 'ratio': ratio,
+                'today' : today ,   
+                'group' : group , 'groups' : groups ,
+               #'ratiowidth': ratiowidth, 'relationships_in_late': relationships_in_late, 'index_tdb' : True, 
+               'folders' : folders, #'parcourses_on_fire' : parcourses_on_fire ,  
+               #'relationships_in_tasks': relationships_in_tasks , 'student_index' : student_index , 
+
+                # 'customexercises': customexercises, 'flashpacks' : flashpacks,'evaluations': evaluations,'parcourses': parcourses, 'sequences' : sequences
+               }
 
  
     return template, context

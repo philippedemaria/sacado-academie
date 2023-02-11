@@ -215,9 +215,9 @@
                     </div>
                 {% endif %}    
             {% endif %}   
+            {% comment %}
             {% if not rc.exercise.supportfile.id == 6520 %}            
                 <div class="card-text" style="background-color:{{ parcours.color }};color:{{ parcours.color|contrast_color }}">
-                    <i class="fa fa-fw fa-barcode"></i> {{ rc.exercise.supportfile.code }}
                     <i class="fa fa-fw fa-clock-o"></i> {{ rc.duration }} min.
                     <i class="fa fa-fw fa-save"></i> {{ rc.situation}}
                     {% if rc.is_in_average %}
@@ -252,6 +252,7 @@
                     {% endif  %}
                 </div>
             {% endif  %}
+            {% endcomment %}
         </div>
     </div>
 <!---------------------------------------------------------->
@@ -439,29 +440,25 @@
 <!--------------------      COURS       -------------------->
 <!---------------------------------------------------------->
 {% with  rc.type_of_document as course %}
-<div  class="card_freeze is_document_sequence"  style="border: 3px solid {{ parcours.color}}">
+<div  class="card_freeze is_document_sequence"  style="border: 3px solid #7F62B4">
 
-        <h1 class="is_document_sequence_color"> {{ course.forme }}</h1>
+        <h1 class="is_document_sequence_color_title"> {{ course.forme }}</h1>
         <h3 class="is_document_sequence_color">      {% if course.title|length > 40 %}
                       {{ course.title|truncatechars:"40" }}
                     {% else %}
                         {{ course.title}}
                     {% endif %}</h3>
 
-   
- 
-
-
     <!-- box-footer DES FONCTIONNALITES  -->
-    <div class="box-footer" style="position: absolute; font-size:25px;padding-top:20px;height:70px;width:283px;bottom:0px"> 
+    <div class="document_sequence_footer"> 
  
          <div class="row">  
-            <div class="col-lg-6 col-xs-6">
-                <a href="{% url 'show_course_sequence_student' course.id parcours.id %}" class="edit">
-                    <i class="fa fa-fw fa-play"></i> Lecture
+            <div class="col-lg-6 col-xs-6" align="center">
+                <a href="{% url 'show_course_sequence_student' course.id parcours.id %}" class="white" >
+                    Lire ce cours
                 </a>
             </div> 
-            <div class="col-lg-6 col-xs-6" style="font-size:16px;color: #998fa6">
+            <div class="col-lg-6 col-xs-6" align="center">
                     <i class="fa fa-fw fa-clock"></i>  {{ course.duration }} min. 
             </div>
 
@@ -477,30 +474,25 @@
 <!--------------------       Quizz      -------------------->
 <!---------------------------------------------------------->
 {% with  rc.type_of_document as quizz %}
-<div  class="card_freeze is_document_sequence"  style="border: 3px solid {{ parcours.color}}"> 
+<div  class="card_freeze is_document_sequence"  style="border: 3px solid #7F62B4"> 
 
-        <h1 style="color: #5d4391;margin-left:10px">QUIZZ</h1>
-        <h3 style="color: #5d4391;margin-left:10px">      {% if quizz.title|length > 40 %}
-                      {{ quizz.title|truncatechars:"40" }}
-                    {% else %}
-                        {{ quizz.title}}
-                    {% endif %}</h3>
-
-   
- 
-
-
-
-
+    <h1 class="is_document_sequence_color_title"> QUIZZ</h1>
+    <h3 class="is_document_sequence_color">      
+        {% if quizz.title|length > 40 %}
+            {{ quizz.title|truncatechars:"40" }}
+        {% else %}
+            {{ quizz.title}}
+        {% endif %}
+    </h3>
     <!-- box-footer DES FONCTIONNALITES  -->
-    <div class="box-footer" style="position: absolute; font-size:25px;padding-top:20px;height:70px;width:283px;bottom:0px">
+    <div class="document_sequence_footer">
          <div class="row">  
             <div class="col-lg-6 col-xs-6">
-                <a href="{% url 'goto_quizz_student' quizz.id %}" class="edit">
+                <a href="{% url 'goto_quizz_student' quizz.id %}" class="white">
                     <i class="fa fa-fw fa-play"></i> Lecture
                 </a>
             </div> 
-            <div class="col-lg-6 col-xs-6" style="font-size:16px;color: #998fa6">
+            <div class="col-lg-6 col-xs-6" style="font-size:16px;color: #FFF">
                     <i class="fa fa-fw fa-clock"></i>  {{ quizz.duration|time_done }} 
             </div>
 
@@ -517,21 +509,21 @@
 <!---------------------------------------------------------->
 
 {% with  rc.type_of_document as flashpack %}
-<div  class="card_freeze is_document_sequence"  style="border: 3px solid {{ parcours.color}}">
+<div  class="card_freeze is_document_sequence"  style="border: 3px solid #7F62B4">
  
-        <h1 class="is_document_sequence_color">FLASHPACK</h1>
-        <h3 class="is_document_sequence_color">  
-                    {% if flashpack.title|length > 30 %}
-                    <span class="helper_tip" style="color:{{ flashpack.color|contrast_color }};font-size:18px;">{{ flashpack.title|truncatechars:"30" }}
-                        <div class="helper_tip_text_right" style="font-size:18px;">{{ flashpack.title }}</div>
-                    </span>
-                    {% else %}
-                        {{ flashpack.title}}
-                    {% endif %}
-        </h3>
+    <h1 class="is_document_sequence_color_title"> FLASHCARDS</h1>
+    <h3 class="is_document_sequence_color">  
+        {% if flashpack.title|length > 30 %}
+        <span class="helper_tip" style="color:{{ flashpack.color|contrast_color }};font-size:18px;">{{ flashpack.title|truncatechars:"30" }}
+            <div class="helper_tip_text_right" style="font-size:18px;">{{ flashpack.title }}</div>
+        </span>
+        {% else %}
+            {{ flashpack.title}}
+        {% endif %}
+    </h3>
  
     <!-- box-footer DES FONCTIONNALITES  -->
-    <div class="box-footer" style="position: absolute; font-size:25px;padding-top:20px;height:70px;width:283px;bottom:0px">
+    <div class="document_sequence_footer">
          <div class="row">  
             <div class="col-lg-12 col-xs-12">
                 {% get_today_cards flashpack today student as spaced_repetitions %}  
@@ -560,19 +552,20 @@
 <!--------------------     BIBLIOTEX    -------------------->
 <!---------------------------------------------------------->
 {% with  rc.type_of_document as bibliotex %}
-<div  class="card_freeze is_document_sequence"  style="border: 3px solid {{ parcours.color}}">
+<div  class="card_freeze is_document_sequence"  style="border: 3px solid #7F62B4">
 
-        <h1 class="is_document_sequence_color">BIBLIOTEX</h1>
-        <h3 style="is_document_sequence_color">     
-            {% if bibliotex.title|length > 40 %}
-              {{ bibliotex.title|truncatechars:"40" }}
-            {% else %}
-                {{ bibliotex.title}}
-            {% endif %}
-        </h3>
-
+    <h1 class="is_document_sequence_color_title"> BIBLIOTEX</h1>
+    <h3 class="is_document_sequence_color">  
+        {% if flashpack.title|length > 30 %}
+        <span class="helper_tip" style="color:{{ flashpack.color|contrast_color }};font-size:18px;">{{ flashpack.title|truncatechars:"30" }}
+            <div class="helper_tip_text_right" style="font-size:18px;">{{ flashpack.title }}</div>
+        </span>
+        {% else %}
+            {{ flashpack.title}}
+        {% endif %}
+    </h3>
     <!-- box-footer DES FONCTIONNALITES  -->
-    <div class="box-footer" style="position: absolute; font-size:25px;padding-top:10px;height:70px;width:283px;bottom:0px">
+    <div class="document_sequence_footer">
         <div class="row"> 
            <div class="col-lg-12 col-xs-12">
                 <a href="{% url 'parcours_show_bibliotex_student' parcours.id bibliotex.id  %}" class="edit"> <i class="bi bi-play"></i> Voir les {{ bibliotex.exotexs.count}} exercices</a>  

@@ -93,11 +93,12 @@ h1, .h1, h2, .h2, h3, .h3 {
   float:left;
   display: block;
   font-size: 16px;
+  position: relative;
 }
 
 .student_init:hover{
   border-radius:6px;
-  border:1px solid;
+  border:3px solid;
   background-color: #f1eef7;
   width:280px;
   margin:20px;
@@ -105,6 +106,44 @@ h1, .h1, h2, .h2, h3, .h3 {
   padding: 10px;
   float:left;
   display: block;
+  text-decoration: none;
+}
+
+.student_init_dashboard{ 
+  text-align: left;
+  border-radius:6px;
+  border:2px solid #E76080;
+  background-color:  #FFF;  
+  color:  #E76080;
+  width:280px;
+  margin:20px;
+  height: 150px;
+  padding: 10px;
+  display: block;
+  font-size: 16px;
+  position: relative;
+}
+
+.student_init_dashboard:hover{
+  text-align: left;
+  border-radius:6px;
+  border:4px solid #E76080;
+  background-color:  #FFF;
+  color:  #E76080;
+  width:280px;
+  margin:20px;
+  height: 150px;
+  padding: 10px;
+  display: block;
+  font-size: 16px;
+  position: relative;
+  text-decoration: none;
+}
+
+
+
+a.init:hover{
+  text-decoration: none;
 }
 
 .big_size{
@@ -4191,7 +4230,8 @@ table.table-bordered.dataTable {
     position:relative;
     width:290px;
     height:235px;
-    border : 1px solid #e6e2dd;
+    border : 1px solid #e6e2dd;    
+    background-color: #FFF;
 }
 
 
@@ -4220,15 +4260,46 @@ table.table-bordered.dataTable {
 }
 
 .is_document_sequence{
-  background-color:#946AE6;
-  border-radius: 0px 30px 0px 0px;
+  background-color:#FFF;
+  border-radius: 10px;
   color:white;
 }
 
-.is_document_sequence_color{
+.is_document_sequence_color_title{
   color: white;
-  margin-left:10px
+  background-color: #7F62B4 ;
+  border-radius: 15px;
+  margin : 20px 15px ; 
+  padding:10px;
 }
+
+.is_document_sequence_color{
+  color: #a80dff;  
+  margin : 0px 15px ; 
+  padding:10px;
+}
+
+.document_sequence_footer{
+    position: absolute; 
+    font-size:16px;
+    padding-top:30px;
+    height:50px;
+    width:285px;
+    bottom:0px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    padding: 15px 10px;
+    color: #ffffff;
+    background-color: #A383D9 ; 
+}
+
+
+
+
+
+
 
 
 .card_passation{

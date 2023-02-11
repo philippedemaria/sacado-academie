@@ -5,7 +5,7 @@
  
  
 {% block page_title %}
-    <i class="bi bi-calendar-week"></i> Prép'Eval
+    <i class="bi bi-calendar-week"></i> Prép' Éval
 {% endblock %}
 
 
@@ -36,17 +36,22 @@
         <div class="col-xs-12">
             {% for prepeval in prepevals %}
                 <div class="student_init">
-                    <a href="{% url 'show_prepeval' prepeval.id %}" >
-                        <i class="bi bi-grid icon_size"></i> <label class="big_size margin_bottom20">{{ prepeval.date|date:"d N Y" }} </label><br/>
+                    <a href="{% url 'show_prepeval' prepeval.id %}" class="init">
+                        <label class="big_size margin_bottom20"> Évaluation du {{ prepeval.date|date:"d N Y" }} </label><br/>
+                        Tu as choisi les thèmes :
+                        {% for t in prepeval.parcours.get_themes %}
+                            <li class="sanspuce text-mauve">{{ t.theme.name }}</li>
+                        {% endfor %}
                     </a>
-                    <a href="{% url 'delete_prepeval' request.user.id prepeval.id %}">
-                        Supprime
+
+                    <a href="{% url 'delete_prepeval' request.user.id prepeval.id %}" class="this_trash_bin_absolute">
+                        <i class="bi bi-trash"></i>
                     </a>
                 </div>
 
             {% endfor%}
             <a href="#" class="student_init" data-toggle='modal' data-target='#prepeval_form'>
-                <i class="bi bi-circle-plus icon_size"></i> Nouvelle évaluation en vue 
+                <span style="line-height:110px"><i class="bi bi-plus-circle-dotted"></i> Nouvelle évaluation en approche</span> 
             </a>
         </div>
     </div>
@@ -197,12 +202,18 @@
          
                                     </div>
                                     <div class="slide_prepeval_footer">
-                                        <div calss="row">
+                                        <div class="row">
                                             <div class="col-xs-6" align="center">
                                                 <span data-nav="prev" class="btn btn-lg btn-default prep_eval_nav"><i class="fa fa-caret-left"></i> Précédent</span>
                                             </div>
                                             <div class="col-xs-6" align="center">
-                                                <button type="submit" class="btn btn-lg btn-primary">Créer mon agenda</button>
+                                                <button type="submit" class="btn btn-lg btn-primary" id="submit_button">Créer mon agenda</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-xs-12" align="center">
+                                                <span id="spinner"> </span>
                                             </div>
                                         </div>
                                     </div> 

@@ -255,8 +255,9 @@ table.puzzle td {
 }
 .image_parcours{
   float:left;
-  width:288px; 
+  width:289px; 
   height: 194px; 
+  margin-top: 5px;
 }
 
 .details_relation{
@@ -2027,8 +2028,8 @@ a.prep_day{
     margin-left:10px;
     padding: 10px;
     border-radius: 10px;
-    background-color: #ccf1ff;
-    color : #006e99 ;
+    background-color: #9975e0;
+    color : #FFF ;
     float:left;
     font-weight:normal;
 }
@@ -2037,6 +2038,7 @@ a.prep_day_today{
     background-color: #9975e0;
     color : white ;
     text-decoration: none;
+    border :4px solid #5d4391 ;
 }
 
 
@@ -2048,6 +2050,11 @@ a.prep_day:hover{
 }
 
 
+a.prep_day_active {
+    background-color: #5d4391;
+    color : white ;
+    text-decoration: none;
+}
 
 
 
@@ -2058,14 +2065,24 @@ a.prep_day:hover{
 }
 
 .prep_listing{
-    list-style: none;
+    display: block;
+    width:100%;
     padding:5px;
     border:1px solid #5d4391;
     color: #5d4391;
     background-color: white;
     margin:5px 0px;
     height:90px;
+    cursor:pointer;
 }
+
+a.prep_listing:hover,a.prep_listing:focus,a.prep_listing:active{
+    background-color: #EDCAFF;
+    text-decoration: none;
+}
+
+
+
 
 .prep_done{
     background-color: #F0F0F0;
@@ -2080,5 +2097,61 @@ a.prep_day:hover{
 
 .this_panel{
   display: block
+}
+
+.this_trash_bin_absolute{
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+}
+
+.this_trophy_absolute{
+  position: absolute;
+  right: 35px;
+  bottom: 5px;
+}
+.shortpanels{
+  width:245px;
+  float:left;
+  margin-right:5px;
+  background-color:#EDCAFF; 
+}
+
+.bilan_prep{
+    width:100%;
+    margin-top:55px;
+    padding:10px;
+    border:1px solid #5d4391;
+    color: #5d4391;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.bilan_prep_round{
+    float :left;
+    font-size:12px;
+}
+
+.prep_round{
+    width:120px;
+    height:120px;
+    border-radius: 50%;
+    margin:10px ;
+    padding:20px 10px; 
+    border:10px solid #9975e0;
+    font-size: 50px;
+    color: #9975e0;
+}
+
+.prep_comment_title{
+   clear:both;
+   font-size: 22px;
+   color: #9975e0;
+   margin-top:15px;
+   font-weight: 600;
+}
+
+.prep_comment{
+  clear:both;
 }
 

@@ -9949,6 +9949,35 @@ def simulator(request):
 ####   Préparation aux évaluations
 #############################################################################################################################################
 #############################################################################################################################################
+def structure_idx(liste):
+    listes,origins = [],[]
+    for i in range(len(liste)) :
+        if liste[i] != 2 :
+            origins.append( i )
+            try :
+                if liste[i+1]==2:
+                    listes.append(origins)
+                    origins = []
+            except :
+                listes.append(origins)
+                origins = []
+    return listes
+
+def list_idx(listes):
+    nlistes = []
+    for liste in listes :
+        if len(liste)<4: congruence,odd = 2,0
+        elif 3<len(liste)<7: congruence,odd = 2,0
+        elif 6<len(liste)<10: congruence,odd = 2,1
+        elif 9<len(liste)<13: congruence,odd = 3,0
+        else : congruence,odd = 3,1
+        i=0
+        for c in liste:
+            if i%congruence==odd  : nlistes.append(c)
+            i+=1
+    return nlistes 
+
+
 def make_slots(this_parcours, parcours_ids, nf,student):
 
     delta     = nf.date - nf.date_created # nombre de jours
@@ -9960,34 +9989,45 @@ def make_slots(this_parcours, parcours_ids, nf,student):
     # creation du parcours global
     for parcours_id in parcours_ids :
         parcours      = Parcours.objects.get(pk=parcours_id)
-        relationships = parcours.parcours_relationship.order_by('ranking')[2:]
+        relationships = parcours.parcours_relationship.exclude(type_id=1).exclude(exercise__supportfile__is_title=1).order_by('ranking')[2:]
         rank = 1
         for relationship in relationships :
             skills = relationship.skills.all()             
             relationship.pk=None
+            relationship.situation=3
+            try :
+                if relationship.exercise.supportfile.level < 10 : duree = 3
+                else : duree = 5 
+            except : duree = 3
+            relationship.duration = duree
             relationship.parcours = this_parcours
-            relationship.ranking = rank
+            relationship.ranking  = rank
             try :
                 relationship.save()
                 relationship.students.add(student)
                 relationship.skills.set(skills)
-
             except : pass
             rank += 1
 
-    
     nb_relationships_by_day = this_parcours.parcours_relationship.count()//nb_days
-
     # Création des slots
     for i in range(nb_days) : # i représente le slot du ième jour
-        j=nb_days-i
+        j = nb_days-i
         this_day  = today + timedelta(days = i+1)
         this_slot = Slot.objects.create(date = this_day, content = "<b>Jour J-"+str(j)+".</b> ", prepeval = nf ,done=0)
-        relationships = this_parcours.parcours_relationship.order_by('ranking')[i*nb_relationships_by_day:(i+1)*nb_relationships_by_day]
-        this_slot.relationships.set(relationships)
-
- 
-
+        relationships  = this_parcours.parcours_relationship.order_by('ranking')[i*nb_relationships_by_day:(i+1)*nb_relationships_by_day]
+        documents_list = this_parcours.parcours_relationship.values_list("type_id",flat=True).order_by('ranking')[i*nb_relationships_by_day:(i+1)*nb_relationships_by_day]
+        stte_idx = list_idx( structure_idx( list(documents_list) ) )
+        # enlève de cette liste les exos qui sont dans studentanswer
+        print("Jour "+str(i))  
+        for j in range(len(relationships)):
+            if j in stte_idx :
+                this_slot.relationships.add(relationships[j])
+                print('Exercice : ' ,relationships[j].id)
+            elif relationships[j].type_id == 2 :
+                if Course.objects.get(pk = relationships[j].document_id ).forme != "" :
+                    print('Autre : ' ,relationships[j].document_id)
+                    this_slot.relationships.add(relationships[j])
 
 
 def get_details_from_student(student):
@@ -10000,15 +10040,14 @@ def get_details_from_student(student):
 
 def prep_eval(request,id):
 
-    student = request.user.student
+    student = Student.objects.get(user_id=id)
+    request.session["tdb"] = "prep_eval" # permet l'activation du surlignage de l'icone dans le menu gauche
+    request.session["subtdb"] = ""
 
-    prepevals  = Prepeval.objects.filter(student  = student)
+    prepevals  = Prepeval.objects.filter(student  = student).order_by("-date")
     parcourses = Parcours.objects.filter(students = student)
 
-    student = request.user.student
     form    = PrepevalForm(request.POST or None)
-    context = {  'prepevals' : prepevals , 'parcourses' : parcourses  , 'form' : form  , 'student' : student }
-
     teacher_id, subject_id, level_id = get_details_from_student(student)
 
     if request.method == 'POST':
@@ -10022,11 +10061,16 @@ def prep_eval(request,id):
             slots = make_slots(this_parcours, parcours_ids , nf,student)
             this_parcours.students.add(student)
 
+    context = {  'prepevals' : prepevals , 'parcourses' : parcourses  , 'form' : form  , 'student' : student }
  
     return render(request, 'qcm/prep_eval.html', context)
 
 
 def show_prepeval(request,idp):
+
+    request.session["tdb"] = "prep_eval" # permet l'activation du surlignage de l'icone dans le menu gauche
+    request.session["subtdb"] = ""
+
 
     prepeval = Prepeval.objects.get(pk=idp)
     slots    = prepeval.slots.all()
@@ -10037,9 +10081,8 @@ def show_prepeval(request,idp):
     return render(request, 'qcm/show_prep_eval.html', context)
 
 
-
-
 def delete_prepeval(request,ids,idp):
     Prepeval.objects.filter(pk=idp).delete()
     return redirect('prep_eval', ids)
+
 

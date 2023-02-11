@@ -167,8 +167,18 @@ def index(request):
         
         elif request.user.is_student :  ## student
 
+            student = request.user.student
+            this_today = datetime.now().date()
+            prepevals  = student.prepevals.filter(date__gte = this_today)
+            try :
+                student_answer = student.answers.last()
+                parcours       = student_answer.parcours
+            except:
+                parcours = None
+
+            context  = { 'prepevals' : prepevals , 'parcours' : parcours }
             template = 'dashboard_student_init.html'
-            context  = {}
+
 
         elif request.user.is_parent :  ## parent
             if request.session.get('student_id',None) : # Sert pour la réservation de leçon

@@ -89,18 +89,22 @@ define(['jquery', 'bootstrap','ui'], function ($) {
        $(document).on('click','.prep_day',function(){
 
 
+            $(".prep_day").removeClass('prep_day_active') ;
+            $(this).addClass('prep_day_active') ;
+
             var loop = $(this).data("panel");
             $(".panels").addClass('no_visu_on_load') ;
             $(".panels").removeClass('this_panel') ;
 
             $("#panel"+loop).removeClass('no_visu_on_load') ;
             $("#panel"+loop).addClass('this_panel') ;
-
-
-
-
        })
 
+
+          $(document).on('click','#submit_button',function(){
+
+            $("#spinner").html("<i class='fa fa-spinner fa-2x fa-pulse'></i>") ;
+       })    
 
 
     });
