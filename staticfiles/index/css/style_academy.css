@@ -2226,9 +2226,10 @@ a.detail_index:hover{
 
 
 .modal_level{
-  color:white;
-  font-size: 18px;
-  background-color: #ae45eb;
+    color:white;
+    font-size: 18px;
+    background-color: #ae45eb;
+    background-image: url('/static/img/fond_accueil_ter.png'); 
 }
 
 .modal_title_level{
