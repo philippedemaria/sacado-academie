@@ -5396,6 +5396,35 @@ def show_exercise(request, id):
     return render(request, url , context)
 
 
+
+
+def show_this_index_exercise(request, id):
+
+    exercise  = Exercise.objects.get(pk = id)
+
+
+
+    if exercise.supportfile.is_ggbfile :
+        wForm = None
+        url = "qcm/show_index_exercise.html" 
+    elif exercise.supportfile.is_python :
+        url = "basthon/index_teacher.html"
+        wForm = None
+    else :
+        wForm = WrittenanswerbystudentForm(request.POST or None, request.FILES or None )
+        url = "qcm/show_teacher_writing.html" 
+
+
+    context = {'exercise': exercise, }
+
+    return render(request, url, context)
+
+
+
+
+
+
+
 @login_required(login_url= 'index')
 def show_this_exercise(request, id):
 
@@ -5421,8 +5450,6 @@ def show_this_exercise(request, id):
         today = timezone.now()
 
     start_time = time.time()
-
-
 
     if exercise.supportfile.is_ggbfile :
         wForm = None

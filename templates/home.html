@@ -61,12 +61,15 @@ Intro Section -
                 </div>
             </div> 
     </div>
+    <div class="row">
+        <div class="col-xs-12 col-md-12" align="center" >
+
+            <a href="#" data-toggle='modal' data-target='#div_levels' class="white" > Essayer gratuitement nos exercices </a>
+        </div>
+    </div>
 
 
-
-
-
-    <div class="modal fade" id="div_methode_sacado" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2">
+    <div class="modal fade" id="div_methode_sacado" tabindex="-1" role="dialog" aria-labelledby="div_methode_sacado">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content" >
                 <div class="modal-header">
@@ -102,6 +105,30 @@ Intro Section -
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="div_levels" tabindex="-1" role="dialog" aria-labelledby="div_levels">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content" >
+                <div class="modal-header">
+                    <h2 class="font_sacado">Choisir votre exercice</h2>
+                </div>
+                <div class="modal-body modal_level">
+                    {% for data in dataset %}
+                    <div class="modal_title_level">{{ data.level.name }}</div>
+                    <div class="row" align="center">
+                        {% for exercise in data.exercises %}
+                        <div class="col-xs-4 col-md-4">
+                            <a href="{% url 'show_this_index_exercise' exercise.id %}">{% if  exercise.supportfile.imagefile %} <img src="{{ exercise.supportfile.imagefile.url }}"  width="150px" /> {% endif %}</a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </section>
 
 <div class="background_accueil">
@@ -111,10 +138,8 @@ Intro Section -
                 <h1 class="title_bloc_index">NOTRE MÉTHODE</h1>
                 <p class="p_index">  Votre enfant progresse à son rythme avec des <b class="rose">exercices interactifs, corrigés immédiatement</b>, qu’il peut recommencer sans limitation. Les variables des exercices sont <b class="rose">aléatoires</b> pour ancrer les procédures en mémoire et non les résultats.</p>
                 <p class="p_index"><img src="{% static 'img/image_a.png' %}" style="float:right" />  Chaque jour, <b class="rose">10 minutes</b> d'entrainement sur nos exercices structurés en parcours permettent de reprendre les procédures et techniques et de les fixer dans la mémoire. Ces <b class="rose">rituels</b> facilitent la maîtrise des <b class="rose">automatismes</b> à la base de l'apprentissage des mathématiques.</p>
-                <p class="p_index"> A partir du menu  <span class="sacado">Adaptatif</span>, Sacado Académie utilise la puissance de l'<b class="rose">enseignement adaptatif</b>. Les exercices sont alors proposés selon les réussites des enfants.  </p>
+                <p class="p_index">Sacado Académie utilise la puissance de l'<b class="rose">enseignement adaptatif</b>. Les exercices sont alors proposés selon les réussites des enfants.  </p>
                 <p class="p_index"> De la <b class="rose">maternelle</b> à la <b class="rose">terminale</b>, SACADO Académie propose des parcours<b class="rose"> 100% mathématiques</b> conformes aux <b class="rose">réformes</b> et aux <b class="rose">programmes scolaires 2022-2023</b> de l’Éducation Nationale.</p>
-
-
             </div>
         </div>
     </div>

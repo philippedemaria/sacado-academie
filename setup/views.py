@@ -206,9 +206,17 @@ def index(request):
         n_im = random.randint(1,7)
         image_accueil = 'img/accueil_students'+str(n_im)+'.png'
 
-        levels = Level.objects.order_by("ranking")
-        context = { 'nb_exercises' : nb_exercises , 'form' : form , 'np_form' : np_form , 'levels' : levels , 'nb_students' : nb_students , 'formules'  :  formules , 'image_accueil' : image_accueil  }
 
+        levels = Level.objects.exclude(pk=13).exclude(pk=17).order_by("ranking")
+        dataset = list()
+        for level in levels :
+            dico = {}
+            dico["level"] = level
+            exercises = Exercise.objects.filter(level=level)[:3]
+            dico["exercises"] = exercises
+            dataset.append(dico)
+
+        context = { 'nb_exercises' : nb_exercises , 'form' : form , 'np_form' : np_form , 'levels' : levels , 'nb_students' : nb_students , 'formules'  :  formules , 'image_accueil' : image_accueil , 'dataset' : dataset }
  
         response = render(request, 'home.html', context)
         return response
