@@ -1264,7 +1264,7 @@ def create_question_positionnement(request,idp,qtype):
     request.session["tdb"] = False # permet l'activation du surlignage de l'icone dans le menu gauche 
     positionnement = Positionnement.objects.get(pk = idp)
     questions = positionnement.questions.order_by("ranking")
-
+    
     form = QuestionPositionnementForm(request.POST or None, request.FILES or None, positionnement = positionnement)
     all_questions = Question.objects.filter(is_publish=1)
 
