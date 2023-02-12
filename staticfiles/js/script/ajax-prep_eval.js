@@ -17,6 +17,9 @@ define(['jquery', 'bootstrap','ui'], function ($) {
 
         $(document).on('click', '.selector_theme', function (event) {
 
+
+            if ( $('.this_liste_themes').length <3 ) {
+
                 $(this).find('input').attr('checked',true);
                 var myStr = $("#mesthemes").html();
                 var mySearch = $(this).text().trim();
@@ -35,10 +38,19 @@ define(['jquery', 'bootstrap','ui'], function ($) {
                     $(this).find('input').attr('checked',true);
 
                     if ( myStr.indexOf(mySearch) == -1 ) {  
-                        $("#mesthemes").append( "<ol id='liste"+p_id+"'>"+mySearch+"</ol>" );
+                        $("#mesthemes").append( "<ol id='liste"+p_id+"' class='this_liste_themes'>"+mySearch+"</ol>" );
                     };
  
                 } 
+
+            }
+            else
+            {
+                alert("Vous ne pouvez pas sélectionner plus de 3 thèmes pour une même évaluation.")
+            }
+
+
+
          });
 
 

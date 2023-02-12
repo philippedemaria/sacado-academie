@@ -40,8 +40,13 @@
 .sanspuce{
   list-style: none;
 }
+
 .rose{
-  color:#e00a72;
+  color:#B8009D;
+}
+
+.rose_light{
+  color:#E13B65;
 }
 
 .alert-sacado{
@@ -50,15 +55,22 @@
   color :  #5d4391 ;
 }
 
+.border_card{
+  border: 1px solid #4C1684;
+}
+
+.bigger_size{
+  font-size: 1.4em;
+}
 
 .card-header{
-  background-color: #f1eef7 ;
-  border : solid 1px #f1eef7 ;
+  background-color: #4C1684 ;
+  border : solid 1px #4C1684 ;
   color :  #5d4391 ;
 }
 
 .no_display_index{
-  padding-top:100px;
+  padding-top:60px;
 }
 
 
@@ -141,11 +153,12 @@ a.sublisting:focus{
   }
 
 .card_positionnement:hover{
-   background-color:  #f1eef7 ;
+   background-color: #A165D9 ;
+   color:#fff; 
 }
 
 .card_positionnement:hover a{
-   color:#e00a72; ;
+   color:#fff; 
 }
 
 
@@ -263,6 +276,12 @@ a.menuright:hover{
 a.white, a.white:active, a.white:visited{
     color: #FFF;
 }
+
+
+a.white:hover{
+  color :  #E13B65 ;
+}
+
 
 .content {
     background-color: #F7F7F7;
@@ -606,9 +625,12 @@ table.table-bordered.dataTable {
 /*--------------------------------------------------------------
 # main_body
 --------------------------------------------------------------*/
-
+.font_white{
+  color:white;
+}
 .bebas {
-  font-family: 'Roboto', cursive;
+    font-family: 'Roboto', sans-serif;
+    color: white;
 }
 
 .bg_white{
@@ -626,39 +648,42 @@ table.table-bordered.dataTable {
 }
  
 .bandeau_accueil{
-  font-family: 'Roboto', cursive;
-  background-image: url('/static/img/fond_accueil00.jpg'); 
+  font-family: 'Roboto',  sans-serif;
+  background-image: url('/static/img/fond_accueil.png'); 
   background-size: cover;
   background-repeat: no-repeat;
-  background:-webkit-gradient(linear, left bottom, right top, from(#38438b), color-stop(#944b94), color-stop(#d75a88), color-stop(#ff7e71), color-stop(#ffb25f), to(#ffeb68));background:-webkit-linear-gradient(left bottom, #38438b, #944b94, #d75a88, #ff7e71, #ffb25f, #ffeb68);background:-o-linear-gradient(left bottom, #38438b, #944b94, #d75a88, #ff7e71, #ffb25f, #ffeb68);background:linear-gradient(to right top, #38438b, #944b94, #d75a88, #ff7e71, #ffb25f, #ffeb68);
+/*  background:-webkit-gradient(linear, left bottom, right top, from(#38438b), color-stop(#944b94), color-stop(#d75a88), color-stop(#ff7e71), color-stop(#ffb25f), to(#ffeb68));background:-webkit-linear-gradient(left bottom, #38438b, #944b94, #d75a88, #ff7e71, #ffb25f, #ffeb68);background:-o-linear-gradient(left bottom, #38438b, #944b94, #d75a88, #ff7e71, #ffb25f, #ffeb68);background:linear-gradient(to right top, #38438b, #944b94, #d75a88, #ff7e71, #ffb25f, #ffeb68);
+  */
   height:100vh;
 }
 
 .bandeau_accueil_no_text{
-  font-family: 'Roboto', cursive;
+  font-family: 'Roboto', sans-serif;
   }
 
 
 .bandeau_accueil_title{
-  font-family: 'Roboto', cursive;
-  font-variant: small-caps ;
-  font-size:60px;
-  padding:140px 0px 50px 290px;
+  font-family: 'Roboto',  sans-serif;
+  font-size:70px;
+  font-weight: 800;
+  padding:120px 0px 50px 100px;
   color:#FFF;
 }  
 
 .bandeau_accueil_subtitle{
-  font-family: 'Roboto', cursive;
-  font-size:20px;
-  padding:40px 0px 50px 290px;
+  font-family: 'Roboto',  sans-serif;
+  font-size:25px;
+  padding:40px 0px 50px 100px;
   color:#FFF;
 }
 
 .background_accueil{
-  background-color: #f1eef7 ;
+  background-color: #FFF ;
 }
 
-
+.no_visu_on_load{
+  display:none;
+}
 
 
 
@@ -671,10 +696,18 @@ table.table-bordered.dataTable {
 }
 
 .title_bloc_index{
-  font-family: 'Roboto', cursive;
+  font-family: 'Roboto', sans-serif;
   font-size: 70px;
   font-weight: 600;
   color: #5d4391;
+  margin:80px 0px;
+}
+
+.title_bloc_index_white{
+  font-family: 'Roboto', sans-serif;
+  font-size: 70px;
+  font-weight: 600;
+  color: #FFF;
   margin:80px 0px;
 }
 
@@ -688,18 +721,18 @@ table.table-bordered.dataTable {
 }
 
 .this_price{
+   margin : 20px 0px;
    font-size:24px;
    font-weight: 600; 
 }
 
 .plus{
-  margin:20px 0px;
+  margin:30px 0px;
 }
 
 .sub_header {
   font-weight: 500;
   font-size: 30px;
-  color: #5d4391;
  }
 
 .justify-content-center{
@@ -717,45 +750,59 @@ a.icon_link_index:hover .sub_icon_link_index{
   text-decoration: none;
 }
 
-@media (max-width: 1181px) {
+
+.fond_bis{
+  font-family: 'Roboto',  sans-serif;
+  background-image: url('/static/img/fond_accueil_bis.png'); 
+  background-repeat: no-repeat;
+}
+
+
+
+
+
+
+
+
+@media (max-width: 1396px) {
 
       .vspace{margin-top: 0px;
       }
-      .no_display_index{
-        display:none;
+      .no_display_index img{
+        width:350;
       }
 
       .bandeau_accueil{
-      font-family: 'Roboto', cursive;
-      background-repeat: no-repeat; 
-      height:auto;
-      background-color:  #FFF ;
-      background-image: url('/static/img/fond_accueil0.jpg');
+        font-family: 'Roboto',  sans-serif;
+        background-image: url('/static/img/fond_accueil.png'); 
+        background-size: cover;
+        background-repeat: no-repeat;
+      /*  background:-webkit-gradient(linear, left bottom, right top, from(#38438b), color-stop(#944b94), color-stop(#d75a88), color-stop(#ff7e71), color-stop(#ffb25f), to(#ffeb68));background:-webkit-linear-gradient(left bottom, #38438b, #944b94, #d75a88, #ff7e71, #ffb25f, #ffeb68);background:-o-linear-gradient(left bottom, #38438b, #944b94, #d75a88, #ff7e71, #ffb25f, #ffeb68);background:linear-gradient(to right top, #38438b, #944b94, #d75a88, #ff7e71, #ffb25f, #ffeb68);
+        */
+        height:100vh;
       }
+
+
       .bandeau_accueil_title{
         font-family: 'Roboto', cursive;
         text-transform: uppercase ;
-        font-size:35px;
-        padding:40px 10px 10px 200px;
-        color:#222;    
+        font-size:50px;
+        color:white;    
         
       }   
 
       .bandeau_accueil_subtitle{
       font-family: 'Roboto', cursive;
-      font-size:20px;
-      padding:40px 10px 10px  200px;
-      color:#222;  
+      font-size:30px;
+      color:white;  
       }
-      .title_bloc_index{
-        font-family: 'Roboto', cursive;
-        font-size: 35px;
-        font-weight: 600;
-        color: #5d4391;
-        margin:40px 0px 20px 0px;
-      }
+ 
 
 }
+
+
+
+
 
 @media (max-width: 700px) {
 
@@ -1093,7 +1140,6 @@ a.icon_link_index:hover .sub_icon_link_index{
   text-align: center;
   font-weight: 700;
   position: relative;
-  font-family: "bebas", sans-serif;
 }
 
 .section-header p {
@@ -1109,9 +1155,14 @@ a.icon_link_index:hover .sub_icon_link_index{
 --------------------------------*/
 
 .section-bg {
-  background: #f1eef7;
+  background: #4c1684;  
+  color:white;
   padding: 20px;
   font-family: "Roboto", sans-serif;
+}
+
+.section-bg a{
+  color:white;
 }
 
 /* About Us Section
@@ -1722,6 +1773,7 @@ a.icon_link_index:hover .sub_icon_link_index{
   margin-left: auto;
   padding: 0px 30px 30px 30px;  
   font-family: "Roboto";
+  font-size: 24px;
   }
 
  
@@ -2254,29 +2306,35 @@ a.detail_index:hover{
 }
 
 .label_exercise{
-  padding-top: 90px;
+  padding-top: 60px;
   padding-left: 60px;
   background-image: url('/static/img/exercise_label2.png');
   background-size: cover; 
-  height: 255px;
+  height: 255px;  
+  font-size: 18px;  
+  margin-top:150px;
 }
 
 
 .label_exercise_mater{
-  padding-top: 55px;
+  margin-top:50px;
+  padding-top: 50px;
   padding-left: 45px;
   background-image: url('/static/img/exercise_label.png');
   background-size: cover; 
-  height: 225px;
+  height: 225px; 
+  font-size: 18px;
 }
 
 
 .label_exercise_lycee{
-  padding-top: 40px!important;
+  padding-top: 45px!important;
   padding-left: 45px;
   background-image: url('/static/img/exercise_label3.png');
   background-size: cover; 
   height: 300px;
+  font-size: 18px;
+  margin-top:150px;
 }
 
 .line_through {
@@ -2342,4 +2400,38 @@ a.detail_index:hover{
     font-size: 18px;
     font-weight: 600;
     width: 100%;
+}
+
+
+@media (max-width: 1300px) {
+
+      .min_width{display:none;
+      }
+
+      .label_exercise_mater{
+          padding-top: 55px;
+          padding-left: 25px;
+          background-image: url(/static/img/exercise_label.png);
+          background-size: cover;
+          height: 225px;
+          font-size: 18px;
+      }
+      .label_exercise{
+          padding-top: 55px;
+          padding-left: 25px;
+          background-image: url(/static/img/exercise_label.png);
+          background-size: cover;
+          height: 225px;
+          font-size: 18px;
+      }
+      .label_exercise_lycee {
+        padding-top: 40px!important;
+        padding-left: 45px;
+        background-image: url(/static/img/exercise_label3.png);
+        background-size: cover;
+        height: 300px;          
+        font-size: 18px;
+      }
+}
+
 }

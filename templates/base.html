@@ -45,27 +45,19 @@
     <div class="header_bar">
         <div class="logo float-left">
             <a class="navbar-brand sacado" href="{% url 'index' %}"><img src="{% static 'img/sacadoA1.png' %}"/>
-               SACADO ACADÉMIE </a><i class="bi bi-telephone"></i> 06********
+               SACADO ACADÉMIE </a><i class="bi bi-telephone"></i> 06 03 54 27 47
         </div>
 
-
-        <nav class="main-nav float-right d-none d-lg-block">
-            <ul>
-
-                
-            </ul>
-        </nav><!-- .main-nav -->
+ 
 
 
             <nav class="main-nav float-right d-none d-lg-block">
                 <ul style="color:#5d4391 ;">
 
-
-
-                    <li> <a href="{% url 'acad_exercises' %}" class="detail_index_menu{% if 'acad_exercises' in request.path %}_active{% endif %}"  >Exercices</a></li>
-                    <li> <a href="{% url 'parents' %}" class="detail_index_menu{% if 'parents' in request.path %}_active{% endif %}"  >Espace Parent</a></li>
-                    <li> <a href="{% url 'numeric' %}"  class="detail_index_menu{% if 'numeric' in request.path %}_active{% endif %}" >Apprentissage actif</a></li>
-                    <li> <a href="{% url 'contact' %}"  class="detail_index_menu{% if 'contact' in request.path %}_active{% endif %}" >Contact</a></li>
+                    <li class="min_width"> <a href="{% url 'acad_exercises' %}" class="detail_index_menu{% if 'acad_exercises' in request.path %}_active{% endif %}"  >Exercices</a></li>
+                    <li class="min_width"> <a href="{% url 'parents' %}" class="detail_index_menu{% if 'parents' in request.path %}_active{% endif %}"  >Espace Parent</a></li>
+                    <li class="min_width"> <a href="{% url 'numeric' %}"  class="detail_index_menu{% if 'numeric' in request.path %}_active{% endif %}" >Apprentissage actif</a></li>
+                    <li class="min_width"> <a href="{% url 'contact' %}"  class="detail_index_menu{% if 'contact' in request.path %}_active{% endif %}" >Contact</a></li>
                     <li><a href="#menus" class="btn-inscription">Inscription</a></li>
                     <li><a href="#" data-toggle='modal' data-target='#connexion' class="btn-inscription">Connexion</a></li>
 
@@ -91,7 +83,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content" >
             <div class="modal-header">
-                <h1  class='sacado bebas'  >Se connecter</h1>
+                <h1>Se connecter</h1>
             </div>
             <div class="modal-body">
                    
@@ -119,7 +111,7 @@
                     <div class="row">
                         <div class="col-lg-5 col-xs-12">  
                             <div class="form-group">   
-                                <a href="#"  data-toggle='modal' data-target='#lostpasswordModal' style="font-size:12px; color : #ef635c;">Identifiants oubliés ?</a>  
+                                <a href="#"  data-toggle='modal' data-target='#lostpasswordModal' style="font-size:12px; color : #EB5B45;">Identifiants oubliés ?</a>  
                             </div>        
                         </div>
                         <div class="col-lg-4 col-xs-12">  
@@ -154,7 +146,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class='sacado bebas'  >Mot de passe oublié</h4>
+                <h4 >Mot de passe oublié</h4>
             </div>
             <div class="modal-body">
                     <div class="row">

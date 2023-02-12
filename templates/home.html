@@ -46,21 +46,62 @@ Intro Section -
 ============================-->
 <section class="bandeau_accueil">
     <div class="row">
-
             <div class="col-xs-12 col-md-12 col-lg-6" >
                 <div class="bandeau_accueil_title">
-                    Comprendre <br/>pour performer<br/> en Mathématiques
+                    Ritualiser <br/>pour performer  en Mathématiques
                 </div>
                 <div class="bandeau_accueil_subtitle">
-                10 minutes chaque jour avec la  <b>méthode SACADO</b> 
+                10 minutes chaque jour avec la   <a href="#" data-toggle='modal' data-target='#div_methode_sacado' class="rose_light" ><b>méthode SACADO</b> </a>
                 </div>
             </div>
-            <div class="col-xs-0 col-md-0 col-lg-6 no_display_index" >
-                <img src="{% static 'img/accueil_0.png'  %}"/>
-            </div>
+            <div class="col-xs-12 col-md-12 col-lg-6" >
+                <img src="{% static 'img/accueil_0.png'  %}" class="no_display_index" />
+                <div align="center" >
+                    <a href="{% url 'advises_index' %}" class="white bigger_size">Je souhaite passer un test de positionnement GRATUITEMENT.</a>
+                </div>
+            </div> 
     </div>
 
 
+
+
+
+    <div class="modal fade" id="div_methode_sacado" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content" >
+                <div class="modal-header">
+                    <h2 class="font_sacado">    La méthode SACADO</h2>
+                </div>
+                <div class="modal-body">
+                  
+                    <span class="rose">Constat</span> : si une information n’est pas répétée dans le temps, elle est oubliée par les enfants, selon une loi qu’on appelle la courbe de l’oubli. Pour lutter contre cette courbe, il est important de travailler l’ancrage en mémoire, pédagogie permettant la mémorisation durable, au fil du temps, d’informations apprises.
+
+                    C’est la méthode Sacado©<br/>
+
+                    <img src="{% static 'img/ebbinghaus.jpg' %}" /><br/>
+
+                     
+
+                    Comment faire ? La méthode Sacado © permet de travailler efficacement grâce à nos quatre concepts issus des sciences cognitives :
+
+                    <li class="sanspuce">1. <span class="rose">Le e-learning </span>: espacer les apprentissages dans la durée permet au cerveau de ne pas saturer. 
+                        <em><span class="rose">Préconisation Sacado©</span> : 10 min d’entraînement quotidien sur notre plateforme est un bon moyen d’améliorer le taux de rétention et ancrer les points importants.</em>
+                    </li>
+                    
+                    <li class="sanspuce">2. <span class="rose">Le reminder ou « rappel » </span>: permet de reconnecter le cerveau aux informations apprises. Il est essentiel dans l’ancrage en mémoire à long terme, c’est le principe même de la répétition. <em><span class="rose">Préconisation Sacado©</span> : 10 min d’entraînement quotidien et/ou l’étalement des révisions grâce à notre programmateur d’évaluations jusqu’au jour J.</em></li>
+                    
+                    <li class="sanspuce">3. <span class="rose">Le learning-by-doing </span>: on apprend mieux quand on fait par soi-même. <em><span class="rose">Préconisation Sacado©</span> : l’entraînement quotidien va sécuriser votre enfant, qui va apprendre de ses erreurs grâce à nos corrections immédiates des exercices.</em></li>
+                    
+                    <li class="sanspuce">4. <span class="rose">L’émotionnel </span>: L’émotion stimule la mémorisation. Le cerveau retient les informations plus intensément s’il l’enfant y trouve du plaisir. 
+                        <em><span class="rose">Préconisation Sacado©</span> : l’accompagnement et la motivation par le jeu (ludification ou gamification) permet d’ajouter cet aspect émotionnel aux expériences d’apprentissage.</em>
+                    </li>
+                    
+                    <li class="sanspuce"><span class="rose"><b>Le petit + Sacado© </b></span> nous offrons la possibilité à votre enfant de créer ses propres cartes de révision (flashcards) qui mêlent les 4 piliers : la révision en ligne, le rappel (grâce à notre programmateur), l’engagement actif et l’envie de réussir !</li>
+
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 
 <div class="background_accueil">
@@ -70,7 +111,7 @@ Intro Section -
                 <h1 class="title_bloc_index">NOTRE MÉTHODE</h1>
                 <p class="p_index">  Votre enfant progresse à son rythme avec des <b class="rose">exercices interactifs, corrigés immédiatement</b>, qu’il peut recommencer sans limitation. Les variables des exercices sont <b class="rose">aléatoires</b> pour ancrer les procédures en mémoire et non les résultats.</p>
                 <p class="p_index"><img src="{% static 'img/image_a.png' %}" style="float:right" />  Chaque jour, <b class="rose">10 minutes</b> d'entrainement sur nos exercices structurés en parcours permettent de reprendre les procédures et techniques et de les fixer dans la mémoire. Ces <b class="rose">rituels</b> facilitent la maîtrise des <b class="rose">automatismes</b> à la base de l'apprentissage des mathématiques.</p>
-                <p class="p_index"> A partir du menu  <span class="bebas sacado">Adaptatif</span>, Sacado Académie utilise la puissance de l'<b class="rose">enseignement adaptatif</b>. Les exercices sont alors proposés selon les réussites des enfants.  </p>
+                <p class="p_index"> A partir du menu  <span class="sacado">Adaptatif</span>, Sacado Académie utilise la puissance de l'<b class="rose">enseignement adaptatif</b>. Les exercices sont alors proposés selon les réussites des enfants.  </p>
                 <p class="p_index"> De la <b class="rose">maternelle</b> à la <b class="rose">terminale</b>, SACADO Académie propose des parcours<b class="rose"> 100% mathématiques</b> conformes aux <b class="rose">réformes</b> et aux <b class="rose">programmes scolaires 2022-2023</b> de l’Éducation Nationale.</p>
 
 
@@ -78,27 +119,27 @@ Intro Section -
         </div>
     </div>
 </div>
-
+<div class="fond_bis">
 <section class="container" id="menus">
     <div class="row">
         <div class="col-xs-12 col-md-12">
-            <h1 class="title_bloc_index">NOS MENUS</h1>
+            <h1 class="title_bloc_index_white">NOS MENUS</h1>
         </div>
     </div>
     <div class="row">
         <div class="col-xs-12 col-md-12 full_height" align="center" >
-            <div style="background-color: #ffc107 ; padding:10px; margin-bottom:30px; ">Offre d'essai : 15 jours gratuits (Hors messages, tchats et visios)</div>
+            <div style="background-color: #EB5B45 ; padding:10px; margin-bottom:30px; color:white; ">Offre d'essai : 7 jours gratuits (Hors messages, tchats et visios)</div>
         </div>
     </div>
     <div class="row">
         <div class="col-xs-12 col-md-4"  align="center">
-            <div class="card" >             
+            <div class="card border_card" >             
                 <div class="card-header">              
                     <div class="row">
                         <div class="col-sm-4 col-md-3">
                             <img src="{% static 'img/menu_autonomie.png' %}"  width="60px">
                         </div>
-                        <div class="col-sm-8 col-md-9">
+                        <div class="col-sm-8 col-md-9 font_white">
                          Menu<div class="bebas sub_header">Autonomie</div> 
                         </div>
                     </div>
@@ -108,18 +149,21 @@ Intro Section -
                     <div class="card-block plus">
                         <p class="card-text">  <a href="#" data-toggle='modal' data-target='#Autonomie'  class="detail_index"><i class="bi bi-cursor"></i>  Plus de détails <i class="bi bi-question-circle"></i></a>  </p>
                     </div>
-                    <a href="{% url 'choice_menu' 1 %}" class="btn btn-asso">Choisir ce menu</a>
+                    <div class="card-block plus">
+                        <a href="{% url 'choice_menu' 1 %}" class="btn btn-asso">Choisir ce menu</a>
+                    </div>
+
                 </div>
             </div>
         </div>
         <div class="col-xs-12 col-md-4"  align="center">
-            <div class="card" >             
+            <div class="card border_card" >             
                 <div class="card-header">              
                     <div class="row">
                         <div class="col-sm-4 col-md-3">
                             <img src="{% static 'img/menu_ia.png' %}"  width="60px">
                         </div>
-                        <div class="col-sm-8 col-md-9">
+                        <div class="col-sm-8 col-md-9 font_white">
                          Menu<div class="bebas sub_header">Adaptatif</div> 
                         </div>
                     </div>
@@ -128,46 +172,22 @@ Intro Section -
                     <div class="this_price"> <span class="currency">9 €</span>/mois<br/><small style="font-size:12px">Sans engagement</small></div>
                     <div class="card-block plus">
                         <p class="card-text">  <a href="#" data-toggle='modal' data-target='#IA'  class="detail_index"><i class="bi bi-cursor"></i>  Plus de détails <i class="bi bi-question-circle"></i></a>  </p>
-                    </div>
-                    <a href="{% url 'choice_menu' 2 %}" class="btn btn-asso">Choisir ce menu</a>
-                </div>
-            </div>
-        </div>
-
-        {% comment %}
-        <div class="col-xs-6 col-md-4"  align="center">
-            <div class="card" >             
-                <div class="card-header">              
-                    <div class="row">
-                        <div class="col-sm-4 col-md-3">
-                            <img src="{% static 'img/menu_suivi.png' %}"  width="60px">
-                        </div>
-                        <div class="col-sm-8 col-md-9">
-                         Menu<div class="bebas sub_header">Suivi</div> 
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="this_price"> <span class="currency">15 €</span>/mois<br/><small style="font-size:12px">Sans engagement</small></div>
+                    </div>                    
                     <div class="card-block plus">
-                        <p class="card-text">  <a href="#" data-toggle='modal' data-target='#Suivi'  class="detail_index"><i class="bi bi-cursor"></i> Plus de détails <i class="bi bi-question-circle"></i></a>  </p>
+                        <a href="{% url 'choice_menu' 2 %}" class="btn btn-asso">Choisir ce menu</a>
                     </div>
-                    <a href="{% url 'choice_menu' 3 %}" class="btn btn-asso">Choisir ce menu</a>
                 </div>
             </div>
         </div>
-        {% endcomment %}
-
-
 
         <div class="col-xs-12 col-md-4"  align="center">
-            <div class="card" >             
+            <div class="card border_card" >             
                 <div class="card-header">              
                     <div class="row">
                         <div class="col-sm-4 col-md-3">
                             <img src="{% static 'img/menu_accompagnement.png' %}"  width="60px">
                         </div>
-                        <div class="col-sm-8 col-md-9">
+                        <div class="col-sm-8 col-md-9 font_white">
                          Menu<div class="bebas sub_header">Personnalisé</div> 
                         </div>
                     </div>
@@ -177,7 +197,9 @@ Intro Section -
                     <div class="card-block plus">
                         <p class="card-text">  <a href="#" data-toggle='modal' data-target='#accompagnement'  class="detail_index"><i class="bi bi-cursor"></i>  Plus de détails <i class="bi bi-question-circle"></i></a>  </p>
                     </div>
-                    <a href="{% url 'choice_menu' 3 %}" class="btn btn-asso">Choisir ce menu</a>
+                    <div class="card-block plus">
+                        <a href="{% url 'choice_menu' 3 %}" class="btn btn-asso">Choisir ce menu</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -186,19 +208,14 @@ Intro Section -
 
 
  
-    <div class="row alert alert-sacado" style="margin-top:20px">
-        <div class="col-xs-12 col-md-12">
-              <a href="{% url 'advises_index' %}" class="detail_index">Vous souhaitez être conseillé avant de choisir votre menu ? cliquez ici.</a>
-        </div>
-    </div>
  
-    <div class="row">
+    <div class="row" style="margin-top:80px">
         <div class="col-xs-12 col-md-12">
             <h1 class="title_bloc_index">NOTRE INTERFACE</h1>
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" style="margin-bottom:60px">
         <div class="col-xs-6 col-md-4"  align="center">
             <a href="{% url 'acad_exercises' %}" class="icon_link_index" >
                 <div class="sub_icon_link_index">
@@ -228,11 +245,8 @@ Intro Section -
             </a>          
         </div>
     </div>
-
-
-
-
 </section>
+</div>
  
 
 <div class="modal fade" id="Autonomie" tabindex="-1" role="dialog" aria-labelledby="Autonomie">
@@ -258,16 +272,16 @@ Intro Section -
  
                 <b class="rose">Interface Enfant </b>
 
-                <li>Tous les cours</li>
-                <li>Tous les exercices</li>
-                <li>Tableau de bord</li>
+                <li>Tous les cours.</li>
+                <li>Tous les exercices.</li>
+                <li>Préparation d'évaluation en fonction des chapitres travaillés en classe.</li>
                 <li>Suivi détaillé de sa progression jour par jour.</li>
                <br/>
                 <b class="rose">Interface Parent</b>
 
-                <li>Visualisation des résultats de chacun de vos enfants sur votre tableau de bord</li>
-                <li>Choix de la réception d’un mail à chaque exercice fait (fréquence à choisir)</li>
-                <li>Choix de la réception d’un rapport d’activité (nombre et % de réussite des exercices effectués)</li>
+                <li>Visualisation des résultats de chacun de vos enfants sur votre tableau de bord.</li>
+                <li>Choix de la réception d’un mail à chaque exercice fait (fréquence à choisir).</li>
+                <li>Choix de la réception d’un rapport d’activité (nombre et % de réussite des exercices effectués).</li>
                 <li>Génération d’un bilan (format pdf)</li>
 
             </div>
@@ -302,15 +316,15 @@ Intro Section -
 
                 <li>Séquences d’exercices organisées par un programme d’intelligence artificiel, qui adapte une section de cours et d’activités en fonction de ses résultats.</li>
                 <li>Niveaux structurés en fonction de ses réussites (il saute des paliers) ou de ses lacunes (il s’entraine  jusqu’à sa réussite !)</li>
-                <li>Tableau de bord</li>
-                <li>Suivi détaillé de sa progression jour par jour</li>
+                <li>Préparation d'évaluation en fonction des chapitres travaillés en classe.</li>
+                <li>Suivi détaillé de sa progression jour par jour.</li>
                <br/>
                 <b class="rose">Interface Parent</b>
 
-                <li>Visualisation des résultats de chacun de vos enfants sur votre tableau de bord</li>
-                <li>Choix de la réception d’un mail à chaque exercice fait (fréquence à choisir)</li>
-                <li>Choix de la réception d’un rapport d’activité (nombre et % de réussite des exercices effectués)</li>
-                <li>Génération d’un bilan (format pdf)</li>
+                <li>Visualisation des résultats de chacun de vos enfants sur votre tableau de bord.</li>
+                <li>Choix de la réception d’un mail à chaque exercice fait (fréquence à choisir).</li>
+                <li>Choix de la réception d’un rapport d’activité (nombre et % de réussite des exercices effectués).</li>
+                <li>Génération d’un bilan (format pdf).</li>
 
             </div>
         </div>
@@ -349,14 +363,14 @@ Intro Section -
 
                     <li>Séquences d’exercices organisés par un programme d’intelligence artificiel, qui adapte une section de cours et d’activités en fonction de ses résultats.</li>
                     <li>Niveaux structurés en fonction de ses réussites (il saute des paliers) ou de ses lacunes (il s’entraine  jusqu’à sa réussite !)</li>
-                    <li>Tableau de bord</li>
+                    <li>Préparation d'évaluation en fonction des chapitres travaillés en classe.</li>
                     <li>Suivi détaillé de sa progression jour par jour.</li>
                    <br/>
                     <b class="rose">Interface Parent</b>
 
-                    <li>Visualisation des résultats de chacun de vos enfants sur votre tableau de bord</li>
-                    <li>Choix de la réception d’un mail à chaque exercice fait (fréquence à choisir)</li>
-                    <li>Choix de la réception d’un rapport d’activité (nombre et % de réussite des exercices effectués)</li>
+                    <li>Visualisation des résultats de chacun de vos enfants sur votre tableau de bord.</li>
+                    <li>Choix de la réception d’un mail à chaque exercice fait (fréquence à choisir).</li>
+                    <li>Choix de la réception d’un rapport d’activité (nombre et % de réussite des exercices effectués).</li>
                     <li>Génération d’un bilan (format pdf).</li>
                 </div>
 
@@ -401,7 +415,7 @@ Intro Section -
 
                     <li>Séquences d’exercices organisées par un programme d’intelligence artificiel, qui adapte une section de cours et d’activités en fonction de ses résultats.</li>
                     <li>Niveaux structurés en fonction de ses réussites (il saute des paliers) ou de ses lacunes (il s’entraine  jusqu’à sa réussite !)</li>
-                    <li>Tableau de bord</li>
+                    <li>Préparation d'évaluation en fonction des chapitres travaillés en classe.</li>
                     <li>Suivi détaillé de sa progression jour par jour</li>
                    <br/>
                     <b class="rose">Interface Parent</b>
