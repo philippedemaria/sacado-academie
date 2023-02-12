@@ -71,7 +71,7 @@
 }
 
 .no_display_index{
-  padding-top:60px;
+  padding-top:40px;
 }
 
 
@@ -801,9 +801,16 @@ a.icon_link_index:hover .sub_icon_link_index{
 
 }
 
+@media (max-width: 990px) {
 
+      .vspace{margin-top: 0px;
+      }
 
+      .no_display_index{
+        display: none;
+      }
 
+}
 
 @media (max-width: 700px) {
 
