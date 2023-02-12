@@ -54,8 +54,8 @@ Intro Section -
                 10 minutes chaque jour avec la   <a href="#" data-toggle='modal' data-target='#div_methode_sacado' class="rose_light" ><b>méthode SACADO</b> </a>
                 </div>
             </div>
-            <div class="col-xs-12 col-md-12 col-lg-6" >
-                <img src="{% static 'img/accueil_0.png'  %}" class="no_display_index" />
+            <div class="col-xs-12 col-md-12 col-lg-6 no_display_index" >
+                <img src="{% static 'img/accueil_0.png'  %}"/>
                 <div align="center" >
                     <a href="{% url 'advises_index' %}" class="white bigger_size">Je souhaite passer un test de positionnement GRATUITEMENT.</a>
                 </div>
@@ -132,6 +132,7 @@ Intro Section -
         </div>
     </div>
     <div class="row">
+        {% comment %}
         <div class="col-xs-12 col-md-4"  align="center">
             <div class="card border_card" >             
                 <div class="card-header">              
@@ -156,7 +157,10 @@ Intro Section -
                 </div>
             </div>
         </div>
-        <div class="col-xs-12 col-md-4"  align="center">
+        {% endcomment %}
+
+
+        <div class="col-xs-12 col-md-6"  align="center">
             <div class="card border_card" >             
                 <div class="card-header">              
                     <div class="row">
@@ -169,7 +173,7 @@ Intro Section -
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="this_price"> <span class="currency">9 €</span>/mois<br/><small style="font-size:12px">Sans engagement</small></div>
+                    <div class="this_price"> <span class="currency">5 €</span>/mois<br/><small style="font-size:12px">Sans engagement</small></div>
                     <div class="card-block plus">
                         <p class="card-text">  <a href="#" data-toggle='modal' data-target='#IA'  class="detail_index"><i class="bi bi-cursor"></i>  Plus de détails <i class="bi bi-question-circle"></i></a>  </p>
                     </div>                    
@@ -180,7 +184,7 @@ Intro Section -
             </div>
         </div>
 
-        <div class="col-xs-12 col-md-4"  align="center">
+        <div class="col-xs-12 col-md-6"  align="center">
             <div class="card border_card" >             
                 <div class="card-header">              
                     <div class="row">
@@ -222,7 +226,7 @@ Intro Section -
                     <img src="{% static 'img/icone_exos.jpg' %}"/> <br/> 
                     <p class="p_index"><strong style="color:#444"> Cours et exercices</strong> <br/>  
                          
-                    <small>Interactifs, autocorrigés et détaillés </small> </p> 
+                    <small>Interactifs, autocorrigés et détaillés<br/> Préparation aux évaluations</small> </p> 
                 </div>
             </a>
         </div>
@@ -231,7 +235,7 @@ Intro Section -
                 <div class="sub_icon_link_index">
                     <img src="{% static 'img/icone_interface.jpg' %}"/> <br/> 
                     <p class="p_index"><strong style="color:#444" >  Espace parent</strong> <br/>                         
-                    <small>Interface complète </small>  </p>
+                    <small>Interface complète<br/>  et détaillée </small>  </p>
                 </div>
             </a>   
         </div>
