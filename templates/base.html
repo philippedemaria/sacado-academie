@@ -54,9 +54,7 @@
             <nav class="main-nav float-right d-none d-lg-block">
                 <ul style="color:#5d4391 ;">
 
-                    <li class="min_width"> <a href="{% url 'acad_exercises' %}" class="detail_index_menu{% if 'acad_exercises' in request.path %}_active{% endif %}"  >Exercices</a></li>
                     <li class="min_width"> <a href="{% url 'parents' %}" class="detail_index_menu{% if 'parents' in request.path %}_active{% endif %}"  >Espace Parent</a></li>
-                    <li class="min_width"> <a href="{% url 'numeric' %}"  class="detail_index_menu{% if 'numeric' in request.path %}_active{% endif %}" >Apprentissage actif</a></li>
                     <li class="min_width"> <a href="{% url 'contact' %}"  class="detail_index_menu{% if 'contact' in request.path %}_active{% endif %}" >Contact</a></li>
                     <li><a href="#menus" class="btn-inscription">Inscription</a></li>
                     <li><a href="#" data-toggle='modal' data-target='#connexion' class="btn-inscription">Connexion</a></li>
