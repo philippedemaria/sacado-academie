@@ -1268,7 +1268,10 @@ def create_question_positionnement(request,idp,qtype):
     form = QuestionPositionnementForm(request.POST or None, request.FILES or None, positionnement = positionnement)
     all_questions = Question.objects.filter(is_publish=1)
 
-    formSet = inlineformset_factory( Question , Choice , fields=('answer','imageanswer','is_correct','retroaction','imageanswerbis','answerbis') , extra=2)
+    if qtype == 9 : extra = 1
+    else : extra = 2
+
+    formSet = inlineformset_factory( Question , Choice , fields=('answer','imageanswer','is_correct','retroaction','imageanswerbis','answerbis') , extra=extra)
     form_ans = formSet(request.POST or None,  request.FILES or None)
   
     if request.method == "POST"  :
