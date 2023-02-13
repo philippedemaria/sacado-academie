@@ -1883,7 +1883,7 @@ def list_parcours_group(request,id):
 
     folders     = group.group_folders.filter(Q(teacher=teacher)|Q(author=teacher)|Q(coteachers = teacher), subject = group.subject, level = group.level , is_favorite=1, is_archive=0, is_trash=0 ).distinct().order_by("ranking")
 
-    bases       = group.group_parcours.filter(Q(teacher=teacher)|Q(author=teacher)|Q(coteachers = teacher), subject = group.subject, level = group.level , is_favorite=1, folders = None, is_trash=0, is_testpos=0).distinct()
+    bases       = group.group_parcours.filter(Q(teacher=teacher)|Q(author=teacher)|Q(coteachers = teacher), subject = group.subject, level = group.level , is_favorite=1, folders = None, is_trash=0).distinct()
 
 
     evaluations = bases.filter( is_evaluation=1, is_sequence=0).order_by("ranking")
@@ -1930,7 +1930,7 @@ def list_sub_parcours_group(request,idg,idf):
     except :
         group = groupe
  
-    parcours_tab = folder.parcours.filter(is_archive=0 , is_sequence=0 , is_trash=0,is_testpos=0).order_by("is_evaluation", "ranking")
+    parcours_tab = folder.parcours.filter(is_archive=0 , is_sequence=0 , is_trash=0).order_by("is_evaluation", "ranking")
     sequences    = folder.parcours.filter(is_archive=0 , is_sequence=1 , is_trash=0).order_by("ranking")
     quizzes      = folder.quizz.filter(teacher=teacher,is_archive=0,parcours=None)
     bibliotexs   = folder.bibliotexs.filter(Q(teacher=teacher)|Q(author=teacher)|Q(coteachers = teacher),is_archive=0,parcours=None)
@@ -3404,9 +3404,7 @@ def create_test_ia(request,idp):
         parcours.title = "TPo "+title
         parcours.is_publish = 0        
         parcours.code = str(uuid.uuid4())[:8] 
-        parcours.is_testpos = 1
         parcours.maxexo = 1
-        parcours.is_testpos = 1
         parcours.target_id = p_id
         if Parcours.objects.filter(target_id = p_id).count()==0 :
             parcours.save()
@@ -5416,18 +5414,18 @@ def ajax_publish_parcours(request):
         if statut == 1 :
             pcs = Parcours.objects.get(pk = int(parcours_id))
             exercise_ids = Relationship.objects.values_list("exercise_id",flat=True).filter(parcours=pcs, is_publish=1)
-            if pcs.is_testpos : # Training pour le test de positionnement
-                pcs_str = convert_into_str(exercise_ids)
-                Testtraining.objects.filter(parcours = pcs.target_id).update(questions_effective = pcs_str)
-            elif pcs.is_ia and not pcs.is_testpos : # Training pour le parcours IA
-                students  = pcs.students.all()
-                knowledge_ids = Parcourscreator.objects.filter(parcours_id = pcs.id).values_list('knowledge_id',flat=True).distinct()
-                for kid in knowledge_ids :
-                    for student in students :
-                        exercise_ids_std = Relationship.objects.values_list("exercise_id",flat=True).filter(parcours=pcs, is_publish=1,students=student)
-                        exercise_ids_std_str = convert_into_str(exercise_ids_std)
-                        Parcourscreator.objects.filter(parcours_id = pcs.id , knowledge_id = kid , student_id = student.user.id).update(effective = "")
-                        Parcourscreator.objects.filter(parcours_id = pcs.id , knowledge_id = kid , student_id = student.user.id).update(effective = exercise_ids_std_str)
+            # if pcs.is_testpos : # Training pour le test de positionnement
+            #     pcs_str = convert_into_str(exercise_ids)
+            #     Testtraining.objects.filter(parcours = pcs.target_id).update(questions_effective = pcs_str)
+            # elif pcs.is_ia and not pcs.is_testpos : # Training pour le parcours IA
+            students  = pcs.students.all()
+            knowledge_ids = Parcourscreator.objects.filter(parcours_id = pcs.id).values_list('knowledge_id',flat=True).distinct()
+            for kid in knowledge_ids :
+                for student in students :
+                    exercise_ids_std = Relationship.objects.values_list("exercise_id",flat=True).filter(parcours=pcs, is_publish=1,students=student)
+                    exercise_ids_std_str = convert_into_str(exercise_ids_std)
+                    Parcourscreator.objects.filter(parcours_id = pcs.id , knowledge_id = kid , student_id = student.user.id).update(effective = "")
+                    Parcourscreator.objects.filter(parcours_id = pcs.id , knowledge_id = kid , student_id = student.user.id).update(effective = exercise_ids_std_str)
 
         Parcours.objects.filter(pk = int(parcours_id)).update(is_publish = statut)
     else :
@@ -6985,7 +6983,7 @@ def show_this_index_exercise(request, id):
 
     return render(request, url, context)
 
-    
+
 
 def show_this_exercise_test(request, id):
 
