@@ -1295,7 +1295,7 @@ def create_question_positionnement(request,idp,qtype):
  
     #Choix des questions
     if qtype == 0 :
-        qtypes = Qtype.objects.order_by("ranking")
+        qtypes = Qtype.objects.filter(is_online=1).order_by("ranking")
         context.update( {  'title_type_of_question' : "Choisir un type de question" , 'qtypes' : qtypes  })
         template = 'tool/choice_type_of_question_positionnement.html'
 
