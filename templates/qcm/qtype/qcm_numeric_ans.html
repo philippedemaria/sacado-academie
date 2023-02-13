@@ -1,0 +1,51 @@
+{% extends 'qcm/qtype/form_answer_all_types.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+
+{% block require %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common4.js' %}"></script>
+    <script>
+        require(['script/ajax-check_qcm_numeric','script/slider_answer_box']);
+    </script> 
+{% endblock %}
+
+
+{% block answer_all_type_template %}
+
+	{% for annoncement in annoncements %} 
+        <li class="this_slide" id="this_slide{{ forloop.counter }}">
+
+		    {% include 'qcm/qtype/_annoncement_instruction.html' %}
+		    <div align="left" style="margin-bottom:20px;">
+				<label class="legend_answer text-green_index zoom_in">Cocher {% if supportfile.qtype %} la bonne réponse{% else %} la ou les bonnes réponses{% endif %}.</label>
+		        <div class="custom_all_answers custom_content">        
+					{% for choice in shufflechoices|index:forloop.counter0 %}
+					<div class="row quizz_item zoom_in" style="padding: 10px;"> 
+						<div class="col-sm-11 proposition " align='left'>
+						{% if choice.imageanswer  %}<img src="{{ choice.imageanswer.url }}" height="80px" />{% endif %} {{ choice.answer  }} 
+						</div>  	 
+						<div class="col-sm-1" align='left'>
+							<input type="{% if supportfile.qtype == 3  %}radio{% else %}checkbox{% endif %}" data-is_correct=""
+								   name="answers" value="{{ choice.id }}" data-loop="{{ forloop.parentloop.counter }}" class="selected_answer"  />
+						</div>
+					</div>
+					{% endfor %}            
+		        </div>
+
+		    </div>
+		    <div class="row validation">
+		    	<div class="col-sm-12 col-md-3" align="center"  >
+		            <a  href="#" class="btn btn-lg btn-primary show_this_qcm_correction" data-supportfile_id="{{ supportfile.id }}"   
+		            	id="nav_start{{ forloop.counter }}" data-loop="{{ forloop.counter }}"><i class="fa fa-caret-right"></i> Valider </a>
+		        </div>
+		    </div>
+			{% include 'qcm/qtype/_correction_div.html' %}
+        </li> 
+    {% endfor %}
+
+	{% include 'qcm/qtype/_last_slide.html' %}
+
+        
+
+{% endblock %}

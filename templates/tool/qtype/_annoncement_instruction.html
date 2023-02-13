@@ -1,0 +1,11 @@
+<div align="left" style="margin-top:10px">
+	<div class="consigne zoom_in">
+	{% if relation.instruction %}
+	    {{ relation.instruction|safe }}
+	{% elif relation.exercise.supportfile.annoncement %}
+	    {{ supportfile.annoncement|safe }}
+	{% elif supportfile.annoncement %}
+		{{ supportfile.annoncement|safe }}
+	{% endif %}    
+	</div>
+</div>

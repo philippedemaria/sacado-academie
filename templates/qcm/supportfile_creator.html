@@ -1,0 +1,94 @@
+{% extends 'dashboard.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+
+{% block require %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common3_withoutMathJax.js' %}"></script>
+    <script>
+        require(['script/ajax-exercise','script/ajax-exercise_form']);
+    </script>     
+    {% if   supportfile %}
+        {% if supportfile.qtype == 7 or  supportfile.qtype == 9 %}
+        <script>
+            require(['script/add-ckeditor_update_customexercise']);
+        </script> 
+        {% else %}
+        <script>
+            require(['script/update_customexercises']);
+        </script> 
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+
+{% block page_title %}
+<div id="new_style"><i class="bi bi-explicit-fill sacado_color_text"></i> 
+    <small> 
+    {% if supportfile %}  
+        {{ supportfile.qtype_title }} <img src="{% static 'img/angle-right.png' %}" width="25px"/> <b>{{ qt.title}}</b>
+    {% else %} 
+        Création d'exercice  <img src="{% static 'img/angle-right.png' %}" width="25px"/> <b>{{ qt.title}}</b>
+    {% endif %}
+    {% if knowledge  %}
+        {{ knowledge.level.shortname }}, {{ knowledge.theme.name }},  {{ knowledge.name|truncatechars:"80" }}
+    {% endif %}     
+    </small>  
+</div>
+{% endblock %}
+
+
+{% block page_menu_right %}
+{% endblock %}
+
+
+
+{% block body %}
+<style>
+ul#id_skills li{
+    list-style: none;
+}
+</style>
+
+<div class="content_main">
+
+    <div class="col-sm-12 col-md-12" id="full_kind_exercise_div">
+        <div style="margin-top:35px">
+
+            <div class="row">
+
+                {% for qt in qtypes %}
+
+                <div class="col-xs-6 col-sm-4 col-md-3" align='left'>
+                    <div class="qtypes_choice qtypes_choice_square" style="background-image: url({{ qt.imagefile.url }});background-color: white; background-size: contain;background-repeat: no-repeat;height:100px;width:100%">
+                        <a href="{% url 'create_supportfile' qt.id 0  %}">
+                            <div style="height:98px;width:97px;float:left " />
+                            </div>
+                            <div style="padding:10px;float:left;background: white;width:227px;">
+                                <label>{{ qt.title }}</label> 
+                                {% if qt.is_alea %}<span class="helper_tip"> <img src="{% static 'img/shuffle.png' %}" width="15px" style="vertical-align: baseline;" />
+                                <div class="helper_tip_text" ><label>Aléatoire.</label> SACADO gère les variables dynamiques aléatoires déclarées à la création de l'exercice.</div>
+                                    </span>
+                                {% endif %}
+                                {% if qt.is_pseudo %}<span class="helper_tip"> <img src="{% static 'img/pseudo_shuffle.png' %}" width="15px" style="vertical-align: baseline;" />
+                                <div class="helper_tip_text" ><label>Pseudo aléatoire.</label> SACADO crée un exercice en choisissant aléatoirement des situations parmi vos choix enregistrés.</div>
+                                    </span>{% endif %}<br/>
+                                    {{ qt.html }}
+                                
+                            </div>
+                        </a>  
+                    </div>
+                </div>
+                {% endfor %}             
+
+
+            </div>    
+        </div>
+    </div>
+
+
+
+
+ 
+</div>
+{% endblock %}

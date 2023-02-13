@@ -1,0 +1,478 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% load item_tags %}
+
+
+{% block require %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common4.js' %}"></script>
+    <script>
+        require(['script/ajax-support_exercise']);
+        //require(['script/ajax-exercise-canvas']);
+    </script> 
+{% endblock %}
+
+ 
+
+{% block page_title %}
+
+    <img src="{{ supportfile.qtype_logo.url }}" width="100px" class="qtype_logo_img" />
+    {% if relation %}
+    <span style="color:{{ relation.parcours.color  }}">  {{ relation.parcours }} </span> 
+    <img src="{% static 'img/angle-right.png' %}"/> 
+    {% endif  %}
+    {{ supportfile.qtype_title}} 
+                                             
+{% endblock %}
+
+
+{% block page_menu_right %}
+    {% if relation.exercise.supportfile.knowledge %}{{relation.exercise.supportfile.knowledge }}{% else %}{{ supportfile.knowledge }}{% endif %}
+{% endblock %}
+
+
+    
+
+
+{% block body %}
+<style>body{overflow-x:hidden;}</style>
+
+
+<section class="content_main">
+    <form action="{% url 'store_the_score_relation_ajax'  %}" method="POST" enctype='multipart/form-data' id="all_types_form">
+      {% csrf_token %}
+      {% with element_is_display=supportfile.element_is_display %} 
+        <div class="row">
+ 
+            {% if student %}
+            {% get_available relation student  as available %}                                    <!-- Si le nombre de tentative est dépassée ou pas : même code que get_parcours_available mais pour une relationship -->
+            {% get_parcours_available relation.parcours student relation.exercise as parcours_available %} <!-- Si le nombre de tentative est dépassée ou pas : même code que get_available pour une parcours --> 
+            <div class="col-sm-12 col-md-1 col-lg-1 full_screen_size form_card" align="center">
+                {% if student.ebep %}
+                <div class="calculator_img"  class="calculator_img double_bottom_padding">
+                      <a href="#" id="use_tools" ><img src="{% static 'img/situation.png' %}"  class="img_size_square_75" /></a>            
+                      <p>Outils</p>
+                </div>
+                {% endif  %} 
+
+                <div class="situation double_bottom_padding">
+                {% if relation.is_calculator %}
+         
+         
+                    {% if exercise.level < 7  %}
+                        <a href="#" data-toggle='modal' data-target='#calculator'>
+                            <img src="{% static 'img/calculator.png' %}"  class="img_size_square_75" />
+                        </a>
+                    {% elif exercise.level == 14  %}
+                        <a href="#" data-toggle='modal' data-target='#calculator'>
+                            <img src="{% static 'img/calculator.png' %}"  class="img_size_square_75" />
+                        </a>
+                    {% else  %}
+                        <a href="{% url 'simulator' %}"  target='_blank'>
+                            <img src="{% static 'img/calculator.png' %}"  class="img_size_square_75" />
+                        </a>
+                    {% endif  %}
+                    
+                {% else %}
+                    <img src="{% static 'img/no_calculator.png' %}"    class="img_size_square_75" />
+                {% endif  %} 
+                </div>
+
+                {% comment %}
+                <div class="situation">
+                    <a href="#" id="open_draft"><img src="{% static 'img/draft.png' %}"  class="img_size_square_75"  /></a> </br>
+                </div>
+                {% endcomment %}
+
+                <div class="situation">
+                    {% if relation.duration == 5 %}
+                      <img src="{% static 'img/horloge5.png' %}"   class="img_size_square_75" />
+                    {% elif relation.duration == 10 %}
+                      <img src="{% static 'img/horloge10.png' %}"   class="img_size_square_75" />
+                    {% elif relation.duration == 15 %}
+                      <img src="{% static 'img/horloge15.png' %}"   class="img_size_square_75" />
+                    {% elif relation.duration == 20 %}
+                      <img src="{% static 'img/horloge20.png' %}"   class="img_size_square_75"  />
+                    {% elif relation.duration == 25 %}
+                      <img src="{% static 'img/horloge25.png' %}"   class="img_size_square_75"  />
+                    {% elif relation.duration == 30 %}
+                      <img src="{% static 'img/horloge30.png' %}"   class="img_size_square_75" />
+                    {% elif relation.duration == 35 %}
+                      <img src="{% static 'img/horloge35.png' %}"    class="img_size_square_75" />
+                    {% elif relation.duration == 40 %}
+                      <img src="{% static 'img/horloge40.png' %}"   class="img_size_square_75"/>
+                    {% elif relation.duration == 45 %}
+                      <img src="{% static 'img/horloge45.png' %}"    class="img_size_square_75" />
+                    {% elif relation.duration == 50 %}
+                      <img src="{% static 'img/horloge50.png' %}"   class="img_size_square_75" />
+                    {% elif relation.duration == 55 %}
+                      <img src="{% static 'img/horloge55.png' %}"   class="img_size_square_75" />
+                    {% elif relation.duration == 60 %}
+                      <img src="{% static 'img/horloge60.png' %}"   class="img_size_square_75" />
+                    {% else %}
+                      <img src="{% static 'img/horloge15.png' %}"   class="img_size_square_75" />
+                    {% endif  %} 
+                    <p> {{ relation.duration }} minute{{ relation.duration|pluralize }}</p>
+                </div>
+                <div class="situation">
+                     <i class="fa fa-refresh refresh_5x" style="color : #5d4391"></i>
+                    <p>{{ relation.situation }} situation{{ relation.situation|pluralize }}</p>
+                </div>
+                <div class="situation" > 
+                  {% if  parcours.maxexo > -1 %}
+                      {% with nb_attempt=parcours_available.nbleft  %}
+
+                          <div class="available_attempt" id="attempt" style="font-weight:800" >
+                                {{ nb_attempt }} 
+                          </div>
+                          <p>Tentative{{ nb_attempt|pluralize  }} <span class="left_attempt">restante{{ nb_attempt|pluralize  }}</span></p>
+                      {% endwith %}
+                  {% else %}
+                      {% if  relation.maxexo > -1 %}
+                          {% with nb_attempt=available.nbleft  %}
+                            <div class="available_attempt" id="attempt" style="font-weight:800" >
+                               {{ nb_attempt }}   
+                            </div>
+                            <p>Tentative{{ nb_attempt|pluralize  }} <span class="left_attempt">restante{{ nb_attempt|pluralize  }}</span></p>
+                          {% endwith %}
+                      {% else  %} 
+                          <div class="available_infinite" id="attempt" style="font-weight:800" > 
+                             &infin;  
+                          </div>                  
+                          {% with nb_attempt=available.nbleft  %}
+                          <p>Tentative{{ nb_attempt|pluralize  }} <span class="left_attempt">restante{{ nb_attempt|pluralize  }}</span></p>
+                          {% endwith %}
+                      {% endif  %} 
+                  {% endif %}
+                </div>
+
+                <div class="situation coefficient_small" style="text-align: center">
+                    <div style="font-weight:800;font-size: 25px;" >{{ relation.coefficient }}</div>
+                    <p class="coefficient_small_label">Coefficient</p>
+                </div>
+
+                <div class="situation left_attempt">
+                    <i class="fa fa-barcode fa-4x"></i>
+                    <p>{{ relation.exercise.supportfile.code }}</p>
+                </div>
+            </div> 
+            {% endif %}
+            <div class="col-sm-12 col-md-12 col-lg-9" align="center">
+
+                {% if relation.relationship_remediation.all|length > 0 %}
+                <span class="pull-right">
+                    <label>Aides : </label>
+                      {% for remediation in customexercise.customexercise_remediation.all %}
+                          <a href="#" data-target="#remediation_viewer" data-remediation_id="{{ remediation.id }}" data-is_custom="1"  data-url="0" data-toggle='modal' class="white remediation_viewer btn btn-default">
+                                {% include 'qcm/remediation_choices.html' %}
+                          </a>
+                      {% endfor  %} 
+                </span>
+                {% endif %}
+
+                <div id="body_zone_exercise" class="border_exercise" style="border:thick double {{ supportfile.theme.subject.color }};{% if supportfile.theme.image %}background-image: url({{ supportfile.theme.image.url  }}){% endif %}">
+                <!-- ======================================================================= -->   
+                <!-- ================== Zone d'enregistrement ===============================--> 
+                <!-- ======================================================================= -->                     
+                    <div class="row">
+                        <div class="col-sm-2 col-md-1 col-lg-1" align="left">
+                            <img src="{% static 'img/sacadoA1.png' %}" height="30px"/>
+                        </div>
+                        <div class="col-sm-6 col-md-8 col-lg-9" align="left">
+                            {% if supportfile.title %}
+                            <div class="custom_title" style="border: 2px solid {{ supportfile.theme.subject.color }};color: {{ supportfile.theme.subject.color }}"><label>{{ supportfile.title }}</label></div>
+                            {% endif %}
+                        </div>
+                        <div class="col-sm-4 col-md-3 col-lg-2"  >
+                        {% if request.user.is_student %}
+                          {% if relation.score_display %}
+                                  <div class="custom_score" style="border: 2px solid {{ supportfile.theme.subject.color }};color: {{ supportfile.theme.subject.color }}"><label>Score : <span id="score_span">0</span>/<span id="numexo_span">{% if numexo < 0 %} 0 {% else %}{{ numexo }}{% endif %}</span></label></div>
+                          {% endif %}
+                        {% else %}
+                                <div class="custom_score" style="border: 2px solid {{ supportfile.theme.subject.color }};color: {{ supportfile.theme.subject.color }}"><label>Score : <span id="score_span">0</span>/<span id="numexo_span">{{ numexo }}</span></label></div>
+                        {% endif %}
+                        </div>
+                    </div>
+                    {% for v in supportfile.supportvariables.all %}
+                    <input type="hidden" class="customvars" name="customvars" value="{{ v.name }}" />
+                    {% endfor %}    
+                    <input type="hidden" id="nb_variables" value="{{ supportfile.supportvariables.count }}" />
+                    <div class="wrapper_this_slider">   
+                    <!-- Wrapper for slides -->
+                        <div class="this_slider no_visu_on_load">
+                            <ul>
+                              <!-- ======================================================================= -->   
+                              <!-- =======================  Type d'exercice  ==============================--> 
+                              <!-- ======================================================================= -->
+                              {% block answer_all_type_template %}
+
+
+                              {% endblock %}
+                              <!-- ======================================================================= -->   
+                              <!-- ======================================================================= -->
+                              <!-- ======================================================================= -->
+                            </ul>
+                        </div>
+                    </div>
+                </div> 
+                <input id="relation" name="relation_id"  type="hidden" value="{{ relation.id }}"/>
+                <input id="start_time" name="start_time"  type="hidden" value="{{ start_time }}"/>
+                <input id="score"  name="score"  type="hidden" value=0  />
+                <input id="numexo" name="numexo"  type="hidden" value={{ numexo }}  />
+                <input id="situation" name="situation"  type="hidden" value="{{ relation.situation }}"/> 
+                <input id="parcours_id" name="parcours_id"  type="hidden" value="{{ relation.parcours.id }}"/>
+                <!-- ======================================================================= -->   
+                <!-- ============================ Fin de Zone ===============================--> 
+                <!-- ======================================================================= -->
+
+                <div class="col-sm-12 col-md-12" align="left" style="margin:30px 50px">
+                  <!-- Retour aux exercices du parcours -->
+                  {% if parcours.is_evaluation %}
+                      {% if  parcours.is_exit %}
+                        <a href="{% url 'show_parcours_student' parcours.id %}"  class="btn btn-default" >  Revenir aux exercices   </a>
+                      {% endif %}
+                  {% else %}
+                    <a href="javascript:history.back()"><input type="button" value="Revenir aux exercices" class="btn btn-default "/></a>
+                  {% endif %}
+                </div>
+            </div>  
+            <div class="col-sm-12 md-12 col-lg-2">
+               {% include 'qcm/signal_exercise_peda_live.html' %}  
+
+               {% if supportfile.qtype == 10 %}
+                   {% for c in supportfile.supportchoices.all %}
+                     <label>Image à reproduire</label><br/>
+                     <img src="{{ c.imageanswer.url }}" height='300px'>
+                   {% endfor %}
+               {% endif %}
+
+                <div class="form_card zoom_in"  style="margin-top: 20px;">           
+                      <label>Compétences visées :</label>
+                      {% if relation.skills %}
+                        {% for skill in relation.skills.all %}
+                            <li class="sans_puce">{{skill}} </li>
+                        {% endfor %}
+                      {% else %}
+                        {% for skill in supportfile.skills.all %}
+                            <li class="sans_puce">{{skill}} </li>
+                        {% endfor %}
+                      {% endif %}
+                </div>
+
+                <div class="form_card"  style="margin-top: 20px;">  
+                  <label for="customRange" class="btn-darkblue zoom_in">Taille de police</label><input type="range" value="0" class="form-range" min="0" max="5" step="1" id="customRange" style="width:150px">
+                </div>
+
+
+            </div>
+        </div> 
+      {% endwith %}
+    </form>
+
+
+
+    {% if data.positionnement  %}
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            <form action="" method="POST" enctype='multipart/form-data'>                  
+                <table class='table'>
+                    <tr>
+                        <td>Critères de réussite</td><td>NE</td><td>Insuffisant</td><td>Fragile</td><td>Bonne Maitrise</td><td>Très bonne maitrise</td>
+                    </tr>
+                    {% for c in customexercise.criterions.all %}
+                    <tr>
+                        <td>{{ c.label }} <span id="auto_eval{{ c.id }}"></span></td>
+                        <td>
+                            <input  type="radio"  data-customexercise_id="{{customexercise.id}}" data-criterion_id="{{c.id}}"
+                                    data-parcours_id="{{  parcours.id }}" name="criterion{{ c.id }}" value="0" data-student_id="{{student.user.id}}" class="auto_evaluate" />                               
+                        </td>
+                        <td>
+                            <input  type="radio" data-customexercise_id="{{customexercise.id}}"  data-criterion_id="{{c.id}}" 
+                                    data-parcours_id="{{  parcours.id }}" name="criterion{{ c.id }}" value="1" data-student_id="{{student.user.id}}" class="auto_evaluate" />                               
+                        </td>
+                        <td>
+                            <input  type="radio"   data-customexercise_id="{{customexercise.id}}"  data-criterion_id="{{c.id}}" 
+                                    data-parcours_id="{{  parcours.id }}" name="criterion{{ c.id }}" value="2" data-student_id="{{student.user.id}}" class="auto_evaluate" />
+                        </td>
+                        <td>
+                            <input type="radio"   data-customexercise_id="{{customexercise.id}}"  data-criterion_id="{{c.id}}"
+                                   data-parcours_id="{{  parcours.id }}"  name="criterion{{ c.id }}" value="3" data-student_id="{{student.user.id}}" class="auto_evaluate" />
+                        </td>
+                        <td>
+                            <input type="radio"  data-customexercise_id="{{customexercise.id}}"  data-criterion_id="{{c.id}}"  
+                                   data-parcours_id="{{  parcours.id }}" name="criterion{{ c.id }}" value="4"  data-student_id="{{student.user.id}}" class="auto_evaluate" />
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </form> 
+        </div>
+    </div>
+    {% endif  %}        
+</section>
+
+
+ 
+ 
+
+
+<div class="modal fade" id="correction" tabindex="-1" role="dialog" aria-labelledby="correction">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class='thin' style="width:100%" >Corrigé :   <a href="#" data-dismiss="modal" class="pull-right" ><i class="fa fa-times"></i> </a> </h2>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                      <div class="col-xs-12 col-md-12" > 
+                          {% if  supportfile.correction  %}
+                          <pre>{{ supportfile.correction |safe }}</pre>
+                          {% endif %}
+                      </div>
+                </div>  
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+function sendExercise(){
+	prod=document.getElementById("cke_1_contents").childNodes[1].contentDocument.body.innerHTML;
+	console.log("on envoie au prof : ",prod);
+    socket.send(JSON.stringify({
+		"command":"sendExercise",
+		"dest":"p",
+	    "ide":"{{ customexercise.id }}",
+        "typexo":"tapu",
+		"payload": prod}));
+   } 
+   
+	
+     var ws_scheme = window.location.protocol == "https:" ? "wss" : "ws";
+     var ws_path = ws_scheme + '://' + window.location.host + "/qcm/tableau/";
+     window.socket = new WebSocket(ws_path); // window pour rendre globale la variable
+     socket.onopen = function () {
+	     console.log("exo:{{ customexercise.id }}");
+         socket.send(JSON.stringify({
+            "command":"connexionEleve", 
+            "dest":"c",         
+            "parcours":"{{ parcours.id }}",
+            "ide":"{{ customexercise.id }}",
+            "user":"{{user.id}}",
+            "typexo":"tapu"}));
+     };
+		        
+           // Handle incoming messages
+ socket.onmessage = function (message) {
+        var data = JSON.parse(message.data);
+        console.log("commande recue, type=",data.type);
+        if (data.error) {alert(data.error);return;}
+   if (data.type=='messageProf' || data.type=='messageProfGeneral'){
+       console.log("message recu : ", data.payload);
+     var t=document.getElementById("chat");
+     if (t!=null) {
+	     t.innerHTML = t.innerHTML + "<div class='this_chat_block'># "+
+			  data.from+"<br/>"+ data.payload+"</div>";
+     }
+   }; 
+   if (data.type=='requestProd'){
+	   console.log("requestProd");
+	   prod=document.getElementById("cke_1_contents").childNodes[1].contentDocument.body.innerHTML;
+	   console.log("le prof demande",prod);
+	   if (prod!="") {
+		   socket.send(JSON.stringify({
+			   "command":"sendProd",
+			   "dest":"p",
+			   "ide":"{{ customexercise.id }}",
+               "typexo":"tapu",
+			   "payload": prod}));
+	   } 
+   }
+   if (data.type=='connexionProf'){
+	  console.log("connexion prof");
+	  //$('#peda_set_live').removeClass("pull-right btn btn-default");
+ 	  //$('#peda_set_live').addClass("pull-right btn btn-danger");
+	  //$('#form_peda_set_live').removeClass("hidden");
+	  
+      };
+      if (data.type=='deconnexionProf'){
+		  console.log("deconnexion prof");
+	      $('#peda_set_live').removeClass("pull-right btn btn-danger");  
+	      $('#peda_set_live').addClass("pull-right btn btn-default");
+	      $('#form_peda_set_live').addClass("hidden");
+      };
+   }
+   function PostMessage(text){
+   console.log("entree dans PostMessage"); 
+   window.socket.send(JSON.stringify(
+      {"command":"messageEleve",
+	   "dest":"p",
+       "payload": text}
+   ));
+   console.log("message envoyé :"+text);
+   };
+
+   chat=document.getElementById("entreechat");
+   if (chat!=null) {
+	    chat.addEventListener("change",function () {
+        console.log("message à envoyer :"+chat.value);
+        PostMessage(chat.value);
+        chat.value="";
+	})
+   };
+   window.onbeforeunload=function(){
+	  console.log("deconnexion");
+	  window.socket.close();
+  };
+   
+
+
+MathJax = {
+  tex: {packages: {'[+]': ['input']} ,   inlineMath: [['$', '$']] , displayMath: [['$$', '$$'], ["\\[", "\\]"]],  },
+  startup: {
+    ready() {
+      const Configuration = MathJax._.input.tex.Configuration.Configuration;
+      const CommandMap = MathJax._.input.tex.SymbolMap.CommandMap;
+      const TEXCLASS = MathJax._.core.MmlTree.MmlNode.TEXCLASS;
+      
+      new CommandMap('input', {input: 'Input'}, {
+        Input(parser, name) {
+          const xml = parser.create('node', 'XML');
+          const id = parser.GetBrackets(name, '');
+          const w = parser.GetBrackets(name, '5em');
+          const classe = parser.GetBrackets(name, 'input_latex');
+          const value = parser.GetArgument(name);
+          xml.setXML(MathJax.startup.adaptor.node('input', {
+            id: id, name: id, value: value, class: classe , style: {width: w}
+             }), MathJax.startup.adaptor);
+          xml.getSerializedXML = function () {
+            return this.adaptor.outerHTML(this.xml) + '</input>';
+          }
+          parser.Push(
+            parser.create('node', 'TeXAtom', [
+              parser.create('node', 'semantics', [
+                parser.create('node', 'annotation-xml', [
+                  xml
+                ], {encoding: 'application/xhtml+xml'})
+              ])
+            ], {texClass: TEXCLASS.ORD})
+          );
+        }
+      });
+      Configuration.create('input', {handler: {macro: ['input']}});
+
+      MathJax.startup.defaultReady();
+    }
+  }
+};
+</script>
+<script id="MathJax-script" defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+
+
+{% endblock %} 
+
+
+
+ 

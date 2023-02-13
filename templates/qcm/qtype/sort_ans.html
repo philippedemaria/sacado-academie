@@ -1,0 +1,69 @@
+{% extends 'qcm/qtype/form_answer_all_types.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+
+{% block require %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common4.js' %}"></script>
+    <script>
+        require(['script/ajax-check_sort','script/slider_answer_box']);
+    </script> 
+{% endblock %}
+
+{% block answer_all_type_template %}
+
+
+	{% for annoncement in annoncements %} 
+        <li class="this_slide" id="this_slide{{ forloop.counter }}">
+
+
+            {% include 'qcm/qtype/_annoncement_instruction.html' %}
+
+		    <div class="row" align="left" style="margin:20px 0px;">
+		        <div class="col-sm-12 col-lg-12 quizz_item_choice" id="sortable{{ forloop.counter }}"  style="max-height:300px;padding:10px"> 
+		        	<input class="answers" name='answers' type='hidden' value="{{this_solution|index:forloop.counter0}} " />       
+					{% for choice in shufflesubchoices|index:forloop.counter0 %}
+						<div class="item_sortable zoom_in" align='center' data-loop="{{ forloop.parentloop.counter }}" data-value="{{ choice.answer }}">
+							{% if choice.imageanswer  %}<img src="{{ choice.imageanswer.url }}" height="80px" />{% endif %} {{ choice.answer  }} 
+						</div>
+					{% endfor %}      
+		        </div>
+		        <div class="legend_answer text-green_index zoom_in"> Glisser/déposer les éléments horizontalement.</div>  
+		    </div>
+		    <div class="row validation">
+		    	<div class="col-sm-12 col-md-3" align="center"  >
+		            <a  href="#" class="btn btn-primary show_sort_correction" data-supportfile_id="{{ supportfile.id }}"   
+		            	id="nav_start{{ forloop.counter }}" data-loop="{{ forloop.counter }}"><i class="fa fa-caret-right"></i> Valider </a>
+		        </div>
+		    </div>
+			{% include 'qcm/qtype/_correction_div.html' %}
+        </li> 
+    {% endfor %}
+
+	{% include 'qcm/qtype/_last_slide.html' %}
+
+
+{% endblock %}	
+
+
+[
+	[
+	{'id': 108, 'answer': '$3$', 'imageanswer': <ImageFieldFile: None>, 'retroaction': '', 'label': '', 'is_correct': False}, 
+	{'id': 107, 'answer': '$8$', 'imageanswer': <ImageFieldFile: None>, 'retroaction': '', 'label': '', 'is_correct': False}
+	], 
+	[
+	{'id': 107, 'answer': '$2$', 'imageanswer': <ImageFieldFile: None>, 'retroaction': '', 'label': '', 'is_correct': False}, 
+	{'id': 108, 'answer': '$7$', 'imageanswer': <ImageFieldFile: None>, 'retroaction': '', 'label': '', 'is_correct': False}
+	], 
+	[{'id': 107, 'answer': '$6$', 'imageanswer': <ImageFieldFile: None>, 'retroaction': '', 'label': '', 'is_correct': False}, 
+	{'id': 108, 'answer': '$10$', 'imageanswer': <ImageFieldFile: None>, 'retroaction': '', 'label': '', 'is_correct': False}
+	], 
+	[
+	{'id': 108, 'answer': '$6$', 'imageanswer': <ImageFieldFile: None>, 'retroaction': '', 'label': '', 'is_correct': False}, 
+	{'id': 107, 'answer': '$9$', 'imageanswer': <ImageFieldFile: None>, 'retroaction': '', 'label': '', 'is_correct': False}
+	], 
+	[
+	{'id': 108, 'answer': '$3$', 'imageanswer': <ImageFieldFile: None>, 'retroaction': '', 'label': '', 'is_correct': False}, 
+	{'id': 107, 'answer': '$7$', 'imageanswer': <ImageFieldFile: None>, 'retroaction': '', 'label': '', 'is_correct': False}
+	]
+]

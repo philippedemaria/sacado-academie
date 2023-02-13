@@ -1,0 +1,60 @@
+{% extends 'tool/form_question.html' %} 
+
+{% load static %}
+{% load widget_tweaks %}
+{% load item_tags %}
+
+
+
+
+
+
+{% block title_type_of_question %} 
+    {{ qtype.title }} 
+{% endblock %} 
+
+
+
+{% block type_of_choices %}                 
+<input id="qtype" value="{{ qtype }}" name="qtype" type="hidden" />
+<div class="row" > 
+    <div class="col-sm-6 col-md-6 quizz_line_answer">  
+        <div class="row quizz_box_answer bgcolorBlue" id="answer1_div">
+            <div class="col-sm-2 col-md-1"> 
+            </div>
+            <div class="col-sm-8 col-md-9" > 
+                <h1 class="quizz_font30 quizz_answer white padding20"> VRAI</h1>
+            </div>
+            <div class="col-sm-2 col-md-2 checking_zone" id="vf_zone1"> 
+                <span class="noCheck" id="noCheck1">
+                    <i class="fa fa-circle fa-3x white"></i>
+                </span>
+                <span class="check" id="check1" data-qtype="vf">
+                    <i class="fa fa-check-circle fa-3x white"></i>
+                </span>
+            </div>
+
+        </div> 
+    </div>
+
+    <div class="col-sm-6 col-md-6 quizz_line_answer">  
+        <div class="row quizz_box_answer bgcolorRed" id="answer2_div">
+            <div class="col-sm-2 col-md-1"> 
+            </div>
+            <div class="col-sm-8 col-md-9" > 
+                <h1 class="quizz_font30 quizz_answer white padding20"> FAUX</h1>
+            </div>
+            <div class="col-sm-2 col-md-2 checking_zone" id="vf_zone2"> 
+                <span class="noCheck" id="noCheck2" data-qtype="vf">
+                    <i class="fa fa-circle fa-3x white"></i>
+                </span>
+                <span class="check" id="check2">
+                    <i class="fa fa-check-circle fa-3x white"></i>
+                </span>
+            </div>
+
+        </div> 
+    </div>
+ </div>
+ {{ form.is_correct|attr:"style:display:none"}}
+{% endblock %} 

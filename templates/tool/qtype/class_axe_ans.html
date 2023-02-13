@@ -1,0 +1,76 @@
+{% extends 'qcm/qtype/form_answer_all_types.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+
+{% block require %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common4.js' %}"></script>
+    <script>
+        require(['script/ajax-check_axe','script/slider_answer_box']);
+    </script> 
+{% endblock %}
+
+
+
+
+{% block answer_all_type_template %}
+
+	{% for annoncement in annoncements %} 
+        <li class="this_slide" id="this_slide{{ forloop.counter }}">
+
+			{% if detail_vars   %}
+	 	      	{% for detail_var in detail_vars|index:forloop.counter0 %}
+	        		<input type="hidden" id="{{ detail_var.name }}{{ forloop.parentloop.counter }}" name="{{ detail_var.name }}" value="{{detail_var.val}}" />
+	        	{% endfor %}
+	    	{% endif %}
+
+
+		    {% include 'qcm/qtype/_annoncement_instruction.html' %}
+
+
+		    <div class="row" align="center" style="margin:20px 0px;">
+		        <div class="col-sm-12 col-lg-12"> 
+		        	<div id="tableau{{ forloop.counter0 }}" class="tableau dropzone{{ forloop.counter0 }}"  >	
+						<div id="axe{{ forloop.counter0 }}" class="axe"></div>
+						{% with choice=shufflechoices|index:forloop.counter0 %} 
+							{% for subchoice in  shufflesubchoices|index:forloop.counter0 %}
+						  	<div class="carte droppable{{ forloop.parentloop.counter0 }}" id="carte{{ forloop.parentloop.counter0 }}_{{ forloop.counter0 }}" data-loop="{{ forloop.parentloop.counter0 }}"
+						  		data-identifiant="{{ forloop.parentloop.counter0 }}_{{ forloop.counter0 }}">
+						  		<p>{% if subchoice.imageanswer  %}
+						  			<img src="{{ subchoice.imageanswer.url }}" height="150px" />
+						  			{% endif %}
+						  			{{ subchoice.answer }}
+						  		</p>
+						  		<p id="valeur{{ forloop.counter0 }}"></p>
+						  		<input type="hidden" id="abscisse{{ forloop.parentloop.counter0 }}_{{ forloop.counter0 }}" name="answers{{ forloop.parentloop.counter0 }}">
+						  		<input type="hidden" name="subchoice_id{{ forloop.parentloop.counter0 }}" value="{{ subchoice.id }}"  />
+						  		<input type="hidden" name="aleas{{ forloop.parentloop.counter0 }}" value="{{ subchoice.answer }}"  />
+						  	</div>
+						  	{% endfor %}
+
+						  	<input type="hidden" name="choice_id{{ forloop.counter0 }}" value="{{ choice.id }}"  />
+						    <input type="hidden" id="xmin{{ forloop.counter0 }}" name="xmin{{ forloop.counter0 }}" value={{ choice.xmin }} />
+						    <input type="hidden" id="xmax{{ forloop.counter0 }}" name="xmax{{ forloop.counter0 }}" value={{ choice.xmax }} />
+						    <input type="hidden" id="tick{{ forloop.counter0 }}" name="tick{{ forloop.counter0 }}" value={{ choice.tick }} />
+						    <input type="hidden" id="subtick{{ forloop.counter0 }}" name="subtick{{ forloop.counter0 }}" value={{ choice.subtick }} />
+						    <input type="hidden" id="width_axe{{ forloop.counter0 }}" name="width_axe{{ forloop.counter0 }}"   />
+						{% endwith %}
+					</div>         
+		        </div>
+		    </div>
+		    <div class="row validation">
+		    	<div class="col-sm-12 col-md-3" align="center"  >
+		            <a  href="#" class="btn btn-primary show_axe_correction" data-supportfile_id="{{ supportfile.id }}"   
+		            	id="nav_start{{ forloop.counter }}" data-loop="{{ forloop.counter }}"><i class="fa fa-caret-right"></i> Valider </a>
+		        </div>
+		    </div>
+			{% include 'qcm/qtype/_correction_div.html' %}
+        </li> 
+    {% endfor %}
+
+
+	{% include 'qcm/qtype/_last_slide.html' %}
+
+        
+
+{% endblock %}

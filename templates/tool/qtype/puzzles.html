@@ -1,0 +1,563 @@
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+<div class="row">
+    <div class="col-sm-12 col-md-6">
+        <div class="form_card" style="margin-top:20px;">
+            <label>Titre </label>
+            {{ form.title|add_class:"form-control"   }}
+            {{ form.title.errors }}<br/>
+            <label>Enoncé :</label>
+            {{ form.instruction |add_class:"form-control"|attr:"rows:3" }}
+            {{ form.instruction.errors } 
+        </div>                                       
+    </div>
+    <div class="col-sm-12 col-md-6">
+        <div class="row" style="margin-top:20px">    
+            <div class="col-sm-12 col-md-12">
+                {% include 'modes.html' %}
+            </div>
+        </div>
+
+ 
+        <div class="row"> 
+            <div class="col-sm-12 col-md-6 no_visu" style="margin-top:20px">
+                {% include 'qcm/qtype/0_config_middle.html' %}
+            </div>
+            <div class="col-sm-12 col-md-6 no_visu" style="margin-top:20px">
+                {% include 'qcm/qtype/0_config_right.html' %}
+            </div>
+        </div>
+    </div>       
+</div>
+
+
+<div class="row">
+    <div class="col-sm-12 col-md-12">
+        <div class="form_card" style="margin-top:20px;">
+
+            <div class="row" style="margin-bottom:20px;">
+                <div class="col-sm-5 col-md-3"> <label>Les puzzles et leurs images</label>
+                    <a href="javascript:void();" id="show_pseudorandomize_zone" class="btn btn-sacado">
+                                    <label>Exercice pseudo-aléatoire ? <span class="helper_tip"> <i class="fa fa-question-circle"></i> 
+                                                                <div class="helper_tip_text" >
+                                                                    Nombre de mots <br/>
+                                                                    proposés parmi les mots<br/> 
+                                                                    enregistrés. Ex : Si vous<br/> 
+                                                                    enregistrez 20 mots<br/>
+                                                                    possibles et que vous<br/>
+                                                                    inscrivez 5, 5 mots<br/> 
+                                                                    seront aléatoirement choisis<br/>
+                                                                    parmi les 20.
+                                                                    </div>
+                                                            </span>
+                        </label>
+                    </a>
+                </div>
+                <div class="col-sm-7 col-md-9">
+                    <span class="row no_visu_on_load btn-sacado" id="pseudorandomize_zone">
+                        {{ form.pseudoalea_nb }} <label>puzzles à proposer parmi les <span id="nb_pseudo_aleatoire">2</span> enregistrés ci-dessous. Si 0, les puzzles sont tous proposés.</label>
+                    </span>                                    
+                </div>
+            </div>
+
+
+
+
+     
+            <script id="rowToClone" type="text/template">
+                <div id="duplicate">
+                    <div class="col-sm-12">
+                        <div class="row quizz_line_answer quizz_box_answer multiple_quizz_box_answer quizz_box_answer_left">
+                            <div class="col-sm-6 col-md-2">
+                                <h1>Puzzle <span id="nb_puzzle"></span> </h1>
+                                <a href="javascript:void();" class="remove_more edit text-danger"><i class="bi bi-trash"></i> Supprimer</a>
+                            </div>
+                            <div class="col-sm-6 col-md-4">
+                                <p>Image entière</p>
+                                <div class="row ">
+                                    <input type="hidden" name="subloop__prefix__" id="subloop__prefix__" />
+                                    <div class="col-sm-4 col-md-3 get_image"  align="center" id="imager"> 
+                                        <i class="fa fa-file-image-o answer_margin10 fa-2x" id="file-image"></i>
+                                        {{ form_ans.empty_form.imageanswer|add_class:"choose_imageanswer" }}
+                                        <img  height="90px" class="choose_imageanswer preview" id="preview"> 
+                                    </div>
+                                    <div class="col-sm-2 col-md-3"  align="center">   
+                                        {{ form_ans.empty_form.answer|attr:"cols:30"|attr:"placeholder:Taille 3x3"  }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-6" id="subformsetZone">
+                                <p><a href="javascript:void();"  class="add_sub_more edit" id="data_loop" >Images. Format carré 100px x 100px<i class="bi bi-plus-circle"></i> Ajouter une image </a><br/> </p>
+                                {% for form_sub in form_sub_ans %} 
+                                    {{ form_sub.id }}
+                                    <div class="col-sm-6 col-md-4">
+                                        <div class="row quizz_line_answer quizz_box_answer multiple_quizz_box_answer quizz_box_answer_left" >  
+                                            <div class="col-sm-10 get_image"  align="center" id="imagersub"> 
+                                                <i class="fa fa-file-image-o answer_margin10 fa-2x" id="file-imagesub"></i>
+                                                {{ form_sub.imageanswer|add_class:"choose_imageanswersub to-data-loop" }}
+                                                <img src="{% if form_sub.imageanswer.url %}{{ form_sub.imageanswer.url }}{% endif %}" height="90px" class="choose_imageanswersub preview" id="previewsub"> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>         
+                        </div>
+                    </div>
+                </div>
+            </script> 
+            <script id="subToClone" type="text/template">    
+                <div id="subduplicate">
+                    <div class="col-sm-6 col-md-4">
+                        <div class="row quizz_line_answer quizz_box_answer multiple_quizz_box_answer quizz_box_answer_left" >  
+                            <div class="col-sm-10 get_image"  align="center" id="imagersub"> 
+                                <i class="fa fa-file-image-o answer_margin10 fa-2x" id="file-imagesub"></i>
+                                {{ form_sub_ans.empty_form.imageanswer|add_class:"choose_imageanswersub to-data-loop" }}
+                                <img src="{% if form_sub.imageanswer.url %}{{ form_sub.imageanswer.url }}{% endif %}" height="90px" class="choose_imageanswersub preview" id="previewsub"> 
+                            </div>
+                            <div class="col-sm-1">
+                                <span class="text-danger remove_sub_more"><i class="fa fa-times"></i></span>
+                            </div>    
+                        </div>
+                    </div>
+                </div>
+            </script> 
+
+            
+
+            {{ form_ans.management_form }}
+            {{ form_sub_ans.management_form }}
+            <div id="formsetZone">
+            <input id="qtype" value="{{ qtype }}" name="qtype" type="hidden" />
+            {% for form in form_ans %} 
+                {{ form.id }}
+                <div class="col-sm-12">
+                    <div class="row quizz_line_answer quizz_box_answer multiple_quizz_box_answer quizz_box_answer_left">
+                        <div class="col-sm-6 col-md-2" id="nb_puzzle{{ forloop.counter0 }}" >
+                            <h1>Puzzle {{ forloop.counter }}</h1>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <p>Image entière. La taille en nbre de pièces <small>Long.x larg.</small></p>
+                            <div class="row ">
+                                <input type="hidden" name="subloop{{ forloop.counter0 }}" id="subloop{{ forloop.counter0 }}" value="1" />
+                                <div class="col-sm-4 col-md-3 get_image"  align="center" id="imager{{ forloop.counter0 }}"> 
+                                    <i class="fa fa-file-image-o answer_margin10 fa-2x" id="file-image{{ forloop.counter0 }}"></i>
+                                    {{ form.imageanswer|add_class:"choose_imageanswer" }}
+                                    <img src="{% if form.imageanswer.url %}{{ form.imageanswer.url }}{% endif %}" height="100px" width="100px" class="choose_imageanswer preview" id="preview{{ forloop.counter0 }}"> 
+                                </div>
+                                <div class="col-sm-2 col-md-3"  align="center">   
+                                    {{ form.answer|attr:"cols:30"|attr:"placeholder:Taille 3x3"  }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6" id="subformsetZone{{ forloop.counter0 }}">                            
+                            <p>Images. Format carré 100px x 100px <a href="javascript:void();"  class="add_sub_more edit" data_loop="{{ forloop.counter0 }}" ><i class="bi bi-plus-circle"></i> Ajouter une image</a></p>
+                            {% for form_sub in form_sub_ans %} 
+                                {{ form_sub.id }}
+                                <div class="col-sm-6 col-md-4">
+                                    <div class="row quizz_line_answer quizz_box_answer multiple_quizz_box_answer quizz_box_answer_left" >  
+                                        <div class="col-sm-12 get_image"  align="center" id="imagersub{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}"> 
+                                            <i class="fa fa-file-image-o answer_margin10 fa-2x" id="file-imagesub{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}"></i>
+                                            {{ form_sub.imageanswer|add_class:"choose_imageanswersub to-data-loop" }}
+                                            <img src="{% if form_sub.imageanswer.url %}{{ form_sub.imageanswer.url }}{% endif %}" height="90px" class="choose_imageanswersub preview" id="previewsub{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}"> 
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+
+
+
+
+
+            <div class="row">
+                <div class="col-sm-12 col-md-12" >
+                    <a href="javascript:void();"  class="add_more btn btn-sacado" ><i class="bi bi-plus-circle"></i> Ajouter un puzzle</a><br/><br/>
+                </div>                            
+            </div>
+        </div>                                                         
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common4.js' %}"></script>  
+<script>    
+    $("#id_title").val("Retrouver l'image proposée.");
+    CKEDITOR.replace('instruction', {
+            height: '200px',
+            width : '700px',
+            toolbar:    
+                [  
+                    { name: 'clipboard',  items: [ 'Source', '-','Copy', 'Paste', 'PasteText' ] },
+                    { name: 'paragraph',  items: [ 'NumberedList', 'BulletedList', '-',   'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] }, 
+                    { name: 'basicstyles',  items: [ 'Bold', 'Italic', 'Underline',  ] },
+                    { name: 'insert', items: ['Image', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar','Iframe']},
+                ] ,
+        });
+
+ 
+ //*************************************************************************************************************  
+        // Gestion des thèmes
+        //************************************************************************************************************* 
+
+        $(document).on('click', '.add_more', function (event) {
+
+                var customchoices       = $('#id_customchoices-TOTAL_FORMS') ;
+                var total_customchoices = parseInt( customchoices.val() ) ;
+                $("#nb_pseudo_aleatoire").html("").html(total_customchoices+1);
+                var thisClone = $('#rowToClone');
+                rowToClone = thisClone.html() ;
+
+                $('#formsetZone').append(rowToClone);
+
+                $('#duplicate').attr("id","duplicate"+total_customchoices) ;
+                $('#cloningZone').attr("id","cloningZone"+total_customchoices) ;
+                $('#imager').attr("id","imager"+total_customchoices) ;
+                $('#file-image').attr("id","file-image"+total_customchoices) ;
+                $('#feed_back').attr("id","feed_back"+total_customchoices)  ;       
+                $('#div_feed_back').attr("id","div_feed_back"+total_customchoices)  ;
+                $('#delete_img').attr("id","delete_img"+total_customchoices)  ;
+                $('#data_loop').attr("data_loop", total_customchoices)  ;
+                $('#data_loop').attr("id","data_loop"+total_customchoices)  ;
+
+
+                if( $('#imagerbis').length ) { 
+                    $('#imagerbis').attr("id","imagerbis"+total_customchoices) ; 
+                    $('#file-imagebis').attr("id","file-imagebis"+total_customchoices) ;
+                    $('#preview_bis').attr("id","preview_bis"+total_customchoices) ;
+                    $('#delete_imgbis').attr("id","delete_imgbis"+total_customchoices)  ;
+                } 
+
+
+                if( $('#imagersub').length ) { 
+
+                    $('#subformsetZone').attr("id","subformsetZone"+total_customchoices)  ;
+                    l_items = $("#subformsetZone"+total_customchoices+" .get_image").length ; 
+                    for(var i = 0;i<l_items;i++ ){
+                        var suf = "-"+total_customchoices+'_'+i ; 
+                        $('#imagersub').attr("id","imagersub"+suf) ;
+                        $('#file-imagesub').attr("id","file-imagesub"+suf) ;
+                        $('#previewsub').attr("id","previewsub"+suf) ;
+                        $('#delete_subimg').attr("id","delete_subimg"+suf)  ;
+                    }
+
+                    this_selector = $("#subformsetZone"+total_customchoices+" input"); 
+                    new_attr_id = this_selector.attr("id")+suf  ;
+                    new_attr_nm = this_selector.attr("name")+suf  ;
+                    this_selector.attr("data-loop",suf);                        
+                    this_selector.attr("id",new_attr_id);
+                    this_selector.attr("name",new_attr_nm);
+
+                    this_answer = $("#subformsetZone"+total_customchoices+" textarea"); 
+                    new_attr_id = this_answer.attr("id")+suf  ;
+                    new_attr_nm = this_answer.attr("name")+suf  ;
+                    this_answer.attr("data-loop",suf);                        
+                    this_answer.attr("id",new_attr_id);
+                    this_answer.attr("name",new_attr_nm);
+                } 
+                
+                $("#customchoices-"+total_customchoices+"-is_correct").prop("checked", false); 
+
+                $("#duplicate"+total_customchoices+" input").each(function(index){ 
+                    $(this).attr('id',$(this).attr('id').replace('__prefix__',total_customchoices));
+                    $(this).attr('name',$(this).attr('name').replace('__prefix__',total_customchoices));
+                });
+
+                $('#duplicate'+total_customchoices).find("input[type='checkbox']").bootstrapToggle();
+ 
+                $("#duplicate"+total_customchoices+" textarea").each(function(){ 
+                    $(this).attr('id',$(this).attr('id').replace('__prefix__',total_customchoices));
+                    $(this).attr('name',$(this).attr('name').replace('__prefix__',total_customchoices));
+                });
+ 
+
+                $('#spanner').attr("id","spanner"+total_customchoices) ;
+                $('#preview').attr("id","preview"+total_customchoices) ;
+
+                $('#subloop'+total_customchoices).val(2) ;
+
+                customchoices.val(total_customchoices+1);
+            });
+
+
+
+        $(document).on('click', '.remove_more', function () {
+            
+            var customchoices = $('#id_customchoices-TOTAL_FORMS') ;
+            var total_customchoices = parseInt( customchoices.val() )-1  ;
+
+            $('#duplicate'+total_customchoices).remove();
+            customchoices.val(total_customchoices);
+            $("#nb_pseudo_aleatoire").html("").html(total_customchoices);
+        });
+
+
+        //*************************************************************************************************************  
+        // Gestion des images des thèmes
+        //************************************************************************************************************* 
+
+        $('body').on('change', '.choose_imageanswer' , function (event) {
+            var suffix = this.id.match(/\d+/); 
+            previewFile(suffix) ;
+         });  
+
+
+        $('body').on('click', '.delete_img' , function (event) { 
+                var suffix = this.id.match(/\d+/); 
+                noPreviewFile(suffix) ;
+                $(this).remove(); 
+            });  
+
+
+        function noPreviewFile(nb) {  
+            $("#id_customchoices-"+nb+"-imageanswer").attr("src", "" );
+            $("#preview"+nb).val("") ;  
+            $("#file-image"+nb).removeClass("preview") ;
+            $("#preview"+nb).addClass("preview") ; 
+            $("#id_customchoices"+nb+"-imageanswer").removeClass("preview") ;
+            $("#id_customchoices-"+nb+"-answer").removeClass("preview") ;
+            $("#imager"+nb).addClass("col-sm-2 col-md-1").removeClass("col-sm-4 col-md-3");
+            $("#imager"+nb).next().addClass("col-sm-10 col-md-11").removeClass("col-sm-8 col-md-9");
+
+          }
+
+        function previewFile(nb) {
+
+            const preview = $('#preview'+nb);
+            const file = $('#id_customchoices-'+nb+'-imageanswer')[0].files[0];
+            const reader = new FileReader();
+            $("#file-image"+nb).addClass("preview") ;
+            $("#preview"+nb).val("") ;  
+            $("#id_customchoices-"+nb+"-answer").addClass("preview") ;
+            $("#preview"+nb).removeClass("preview") ; 
+            $("#delete_img"+nb).removeClass("preview") ; 
+            $("#imager"+nb).removeClass("col-sm-2 col-md-1").addClass("col-sm-4 col-md-3");
+            $("#imager"+nb).next().removeClass("col-sm-10 col-md-11").addClass("col-sm-8 col-md-9");
+
+            reader.addEventListener("load", function (e) {
+                                                var image = e.target.result ; 
+                                                $("#preview"+nb).attr("src", image );
+                                            }) ;
+
+            if (file) { reader.readAsDataURL(file);}            
+
+          }
+
+
+
+        //*************************************************************************************************************  
+        // Gestion des sous thèmes
+        //************************************************************************************************************* 
+
+
+        var ntotal_form = $('#id_customsubchoices-TOTAL_FORMS') ;
+        var ntotalForms = parseInt(ntotal_form.val())  ;
+
+        for (n=0;n<ntotalForms;n++){
+
+            $('#subformsetZone'+n+" .to-data-loop").each( function( index ) {
+                      $(this).attr('data-loop',n+"-"+index);
+                      $(this).attr('id',$(this).attr('id')+"-"+n+"_"+index);
+                      $(this).attr('name',$(this).attr('name')+"-"+n+"_"+index);
+                    });
+
+            $("#subformsetZone"+n+" textarea").each(function(index){ 
+                $(this).attr('name',$(this).attr('name')+"-"+n+"_"+index);
+                $(this).attr('id',$(this).attr('id')+"-"+n+"_"+index);
+            });
+        }
+ 
+
+        $(document).on('click', '.add_sub_more', function (event) {
+
+                var thisClone = $('#subToClone');
+                subToClone = thisClone.html() ;
+
+                loop = $(this).attr("data_loop");
+                subloop = $('#subloop'+loop).val()
+                var suffixe = "-"+loop+"_"+subloop ;
+
+                $('#subformsetZone'+loop).append(subToClone);
+
+                $('#subduplicate').attr("id","subduplicate"+suffixe) ;
+                $('#imagersub').attr("id","imagersub"+suffixe)    ;
+                $('#file-imagesub').attr("id","file-imagesub"+suffixe);
+                $('#delete_subimg').attr("id","delete-subimg"+suffixe);
+
+                $("#subduplicate"+suffixe+" input").each(function(){                  
+                    $(this).attr('id',$(this).attr('id').replace('__prefix__',subloop));
+                    $(this).attr('name',$(this).attr('name').replace('__prefix__',subloop));
+                    $(this).attr('data-loop', suffixe) ;
+                    $(this).attr('id',$(this).attr('id')+suffixe);
+                    $(this).attr('name',$(this).attr('name')+suffixe);
+                });
+
+                $("#subduplicate"+suffixe+" textarea").each(function(){ 
+                    $(this).attr('id',$(this).attr('id').replace('__prefix__',subloop));
+                    $(this).attr('name',$(this).attr('name').replace('__prefix__',subloop));
+                    $(this).attr('name',$(this).attr('name')+suffixe);
+                    $(this).attr('id',$(this).attr('id')+suffixe);
+                });
+
+                $('#spanner').attr("id","spanner"+suffixe) ;
+                $('#previewsub').attr("id","previewsub"+suffixe) ;
+
+                var subloop_int = parseInt( subloop )  ;  
+
+                $('#subloop'+loop).val( subloop_int + 1 );  
+                $("#subduplicate"+suffixe).find("span").attr('data-suffixe',suffixe)
+
+            });
+
+
+
+        $(document).on('click', '.remove_sub_more', function () {
+ 
+            suffixe = $(this).data("suffixe") ; 
+            loop = suffixe.split("_")[0]
+            $('#subloop'+loop).val(    parseInt($('#subloop'+loop).val())-1 );
+            $('#subduplicate'+suffixe).remove();
+
+        });
+
+
+        $(document).on('click', '.automatic_insertion' , function (event) {  
+            var feed_back = $(this).attr('id');
+            $("#div_"+feed_back).toggle(500);
+         });
+
+
+
+        //*************************************************************************************************************  
+        // Gestion des images des sous thèmes
+        //*************************************************************************************************************  
+        $('body').on('change', '.choose_imageanswersub' , function (event) {
+            var suffix = this.id.match(/\d+/);
+            var loop   = $(this).data("loop");
+            SubpreviewFile(suffix,loop) ;
+         });  
+
+
+        $('body').on('click', '.delete_subimg' , function (event) { 
+                var suffix = this.id.match(/\d+/); 
+                var loop   = $(this).attr('id').substring(13); 
+                SubnoPreviewFile(suffix,loop) ;
+                $(this).remove(); 
+            });  
+
+
+        function SubnoPreviewFile(nb,loop) { 
+            $("#id_customsubchoices-"+nb+"-imageanswer"+loop).attr("src", "" );
+            $("#previewsub"+loop).val("") ;  
+            $("#file-imagesub"+loop).removeClass("preview") ;
+            $("#previewsub"+loop).addClass("preview") ; 
+            $("#delete_subimg"+loop).addClass("preview") ;
+            $("#id_customsubchoices"+nb+"-imageanswer"+loop).removeClass("preview") ;
+            $("#id_customsubchoices-"+nb+"-answer"+loop).removeClass("preview") ;
+            $("#imagersub"+loop).addClass("col-sm-2 col-md-1").removeClass("col-sm-4 col-md-3");
+            $("#imagersub"+loop).next().addClass("col-sm-10 col-md-11").removeClass("col-sm-8 col-md-9");
+          }
+
+        function SubpreviewFile(nb,loop) {
+
+            const file = $('#id_customsubchoices-'+nb+'-imageanswer'+loop)[0].files[0];
+            const reader = new FileReader();
+            $("#file-imagesub"+loop).addClass("preview") ;
+            $("#previewsub"+loop).val("") ;  
+            $("#id_customsubchoices-"+nb+"-answer"+loop).addClass("preview") ;
+            $("#previewsub"+loop).removeClass("preview") ; 
+            $("#delete_subimg"+loop).removeClass("preview") ; 
+            $("#imagersub"+loop).removeClass("col-sm-2 col-md-1").addClass("col-sm-4 col-md-3");
+            $("#imagersub"+loop).next().removeClass("col-sm-10 col-md-11").addClass("col-sm-8 col-md-9");
+
+            reader.addEventListener("load", function (e) {
+                                                var image = e.target.result ; 
+                                                $("#previewsub"+loop).attr("src", image );
+                                            }) ;
+
+            if (file) { reader.readAsDataURL(file);}            
+
+          }
+        //*************************************************************************************************************  
+        //*************************************************************************************************************  
+
+
+
+
+
+
+
+    $('.no_visu').hide();
+    $('[type=checkbox]').prop('checked', false);            
+    $('#selector_student').prop('checked', true);
+    $('.selected_student').prop('checked', true);
+    $('#id_is_publish').prop('checked', true);
+    $('#id_is_ggbfile').prop('checked', true); 
+    $('#on_mark').hide(); 
+    $("#publication_div").hide(); 
+    $('body').find("input[type='checkbox']").bootstrapToggle();
+    // Gère l'affichage de la div des notes.
+    if ($("#id_is_mark").is(":checked")) {$("#on_mark").show();} else { $("#on_mark").hide(); } 
+
+    clickDivAppear( "#show_latex_formula" , $("#latex_formula"));
+ 
+
+    function clickDivAppear(toggle, $item) {
+        $(document).on('click', toggle , function () {
+                    $(".no_display").hide();        
+                    $item.toggle(500);
+            });
+        }
+
+    $(document).on('click', "#support_audio_image" , function () {
+                    $(".no_display").hide();
+                    $("#drop_zone_image").toggle(500);
+                    $("#audio_div").toggle(500);            
+                });
+
+
+    makeDivDisappear( "#id_is_publish" , $("#publication_div"));
+    makeDivAppear( "#id_is_mark" , $("#on_mark"));
+    function makeDivAppear(toggle, $item) {
+        $(document).on('change', toggle , function () {
+                if ($(toggle).is(":checked")) {
+                    $item.show(500);
+                } else {
+                    $item.hide(500);
+                }
+            });
+        }
+    function makeDivDisappear(toggle, $item) {
+        $(document).on('change', toggle , function () {
+                if ($(toggle).is(":checked")) {
+                    $item.hide(500);
+                } else {
+                    $item.show(500);
+                }
+            });
+        }
+
+    $('.datetimepicker').datetimepicker({
+            language: "fr",
+            todayHighlight: true,
+            format: "yyyy-mm-dd hh:ii"
+         });
+
+</script>   
+
+
+
+                
+ 

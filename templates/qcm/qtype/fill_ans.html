@@ -1,0 +1,94 @@
+{% extends 'qcm/qtype/form_answer_all_types.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+
+
+{% block require %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common4.js' %}"></script>
+    <script>
+        require(['script/ajax-check_fill','script/slider_answer_box']);
+    </script> 
+{% endblock %}
+
+{% block answer_all_type_template %}
+
+	<!------------------------------ Slides de type d'exercice --------------------------------------------->	
+
+	{% for annoncement in annoncements %} 
+	    <li class="this_slide" id="this_slide{{ forloop.counter }}"> 
+
+			{% if detail_vars   %}
+	 	      	{% for detail_var in detail_vars|index:forloop.counter0 %}
+	        		<input type="hidden" id="{{ detail_var.name }}{{ forloop.parentloop.counter }}" name="{{ detail_var.name }}" value="{{detail_var.val}}" />
+	        	{% endfor %}
+	    	{% endif %}
+
+			{% if  'input' in  annoncement %}
+				<div class="row" style="margin-top:20px;padding: 10px">		
+					<div class="col-sm-12"> 
+						<div class="consigne" align="left"> 
+			 				{{  annoncement|safe }} 
+			 			</div> 
+			 			<div class="legend_answer text-green_index zoom_in" align="left">Écrire la réponse dans les pointillés</div>
+					</div>
+				</div>
+
+				<div class="row" style="margin:20px">		
+					<div class="col-sm-12"> 
+			 			
+					</div>
+				</div>
+			    <div class="row">
+			    	<div class="col-sm-12 col-md-3" align="center"  >
+			            <a href="#" class="btn btn-primary show_these_inputs_correction" 
+			               data-supportfile_id='{{ supportfile.id }}' data-loop='{{ forloop.counter }}' data-choice_id=0><i class="fa fa-caret-right"></i> Valider </a>
+			        </div>
+			    </div>
+			{% else %}	
+				<div class="row" style="padding-top: 10px;">  
+					{% with choice=shufflechoices|index:forloop.counter0 %}
+						{% if choice.answer %}
+							<div class="col-sm-12" align='left'> 
+								<div class="consigne custom_content zoom_in">
+					 				{{  annoncement|safe }}<br/>
+			
+									<div class="zoom_in" align='center'> 
+										{{ choice.answer|safe }}
+									</div>							
+								</div>
+								<div class="legend_answer text-green_index zoom_in" align="left">Ecrire la réponse dans les pointillés</div>	
+								<div class="zoom_in"  align='center'> 
+									<input type="text" name="answers" class="answer_student_box" style="text-align:center; border : solid 2px {{ supportfile.theme.subject.color }}"/>
+								</div>
+							</div>
+						{% else %}
+							<div class="col-sm-12" align='left'>
+								<div class="consigne zoom_in"> 
+					 				{{  annoncement|safe }}
+					 			</div>
+								<div class="legend_answer text-green_index zoom_in" align="left">Ecrire la réponse dans les pointillés</div>					 			
+							</div>
+							<div class="zoom_in" align='center'>
+								<input type="text" name="answers" class="answer_student_box" style="text-align:center; border : solid 2px {{ supportfile.theme.subject.color }}"/>
+							</div>
+						{% endif %}
+					    <div class="row validation"   style="margin:100px 0px;">
+					    	<div class="col-sm-12 col-md-3" align="center"  >
+					            <a href="#" class="btn btn-primary show_these_inputs_correction" 
+					               data-supportfile_id='{{ supportfile.id }}' data-loop='{{ forloop.counter }}' 
+					               data-choice_id='{{ choice.id }}'><i class="fa fa-caret-right"></i> Valider </a>
+					        </div>
+					    </div>	
+					{% endwith %}   
+				</div>
+			{% endif %} 
+				{% include 'qcm/qtype/_correction_div.html' %}
+	    </li> 
+	{% endfor %}
+
+	{% include 'qcm/qtype/_last_slide.html' %}
+
+
+{% endblock %}
+

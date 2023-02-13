@@ -1,0 +1,50 @@
+{% extends 'qcm/qtype/form_answer_all_types.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+
+{% block require %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common4.js' %}"></script>
+    <script>
+        require(['script/ajax-check_grid','script/slider_answer_box']);
+    </script> 
+{% endblock %}
+
+{% block answer_all_type_template %}
+
+
+ 
+    <li class="this_slide" id="this_slide">
+
+	    <div class="row"  align="left" style="margin-top:10px">
+	        {% if supportfile.annoncement %}
+	            <div class="col-sm-12 col-lg-12 custom_content" 
+	                 style="max-height:80px">{{ annoncement|safe }}
+	            </div>
+	        {% endif %}
+	    </div> 
+
+	    <div class="row">
+	        <div class="col-sm-8" align='center'>
+	            {{ supportfile.grid|safe }}
+	        </div>
+	        <div class="col-sm-4"  align='left'><label>Les mots à trouver :</label>
+	            {% for choice in supportchoices %}
+	                <div>{{forloop.counter}}. <span style="font-weight: bold;">{{ choice|upper }}</span> <span id="check{{forloop.counter0 }}"></span>
+	            		<input type="hidden" id="word{{forloop.counter0 }}" value="{{ choice|upper }}" class="these_words"   /> 
+	            	</div>
+	            {% endfor %}
+	        </div>
+	        
+	    </div>
+
+		<input type="hidden" id="encodeur"  value=0 /> 
+
+    </li> 
+ 
+
+	{% include 'qcm/qtype/_save.html' %}
+
+        
+
+{% endblock %}

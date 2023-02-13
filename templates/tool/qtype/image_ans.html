@@ -1,0 +1,81 @@
+{% extends 'qcm/qtype/form_answer_all_types.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+
+{% block require %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common4.js' %}"></script>
+    <script>
+        require(['script/ajax-check_image','script/ajax-check_image','script/slider_answer_box']);
+    </script> 
+{% endblock %}
+
+{% block answer_all_type_template %}
+
+
+	{% for annoncement in annoncements %} 
+        <li class="this_slide" id="this_slide{{ forloop.counter }}">
+		    <div class="row"  align="left" style="margin-top:10px">
+		        {% if annoncement %}
+		            <div class="col-sm-12 col-lg-12 custom_content" style="max-height:90px">
+		            	{{ annoncement|safe }}
+		            </div>
+		        {% endif %}
+		    </div> 
+
+		    {% if not supportfile.is_written %}
+			<div class="row"> 
+				<div class="col-sm-12 col-sm-12" align='center'>
+				{% for choice in shufflesubchoices|index:forloop.counter0 %}
+					<span class="quizz_choice draggable"  data-loop="{{ forloop.counter0 }}" style="cursor: move;;z-index:99" >
+						{% if choice.imageanswer  %}<img src="{{ choice.imageanswer.url }}" height="80px" />{% endif %} {{  choice.label }}
+					</span>
+				{% endfor %}
+				</div>	 
+			</div>
+			{% endif %}
+
+
+		    {% with choice=shufflechoices|index:forloop.counter0 %}
+		    	{% with this_choice=choice|index:0 %}
+					<div class="row" style="padding: 10px; font-size:18px">  
+						<div align='center'>
+							<div style="width:{{ this_choice.imageanswer.width  }}px;height:{{ this_choice.imageanswer.height  }}px;background-image: url({{ this_choice.imageanswer.url }});background-repeat: no-repeat;background-size : cover;position:relative">
+								{% for choice in shufflesubchoices|index:forloop.counter0 %}
+									{% if supportfile.is_written %}
+									    {% with details=choice.answer|marker_details_answer %}
+                                        	<input name="answers{{ forloop.parentloop.counter0 }}" class="answer_box_small border-{{ details.classe }} drag_x" style="position:absolute;{{ details.coordonnees }};z-index:51;" />
+                                    	{% endwith %}
+                                    {% else %}
+									    {% with details=choice.answer|marker_details_answer %}
+                                        	<div class="droppable{{ forloop.parentloop.counter0 }} answer_input_box border-{{ details.classe }} drag_x" style="position:absolute;{{ details.coordonnees }};z-index:51;" ></div>						    
+                                        	<input type= "hidden" name="answers{{ forloop.parentloop.counter0 }}" class="droppable{{ forloop.parentloop.counter0 }} answer_box_small border-{{ details.classe }}" data-subchoice_id="{{ choice.id }}"  />
+                                    	{% endwith %}
+                                    {% endif %} 
+                                    <input type="hidden" name="choice_ids{{ forloop.parentloop.counter0 }}"  value="{{ choice.id }}" />
+                                    {% with details=choice.answer|marker_details %}
+                                        <i class="fa fa-map-marker fa-2x text-{{ details.classe }}" style="position:absolute;{{ details.coordonnees }};z-index:50"></i>
+                                    {% endwith %} 
+									
+								{% endfor %}
+							</div>
+							<small class="text-success"><b>Aide :</b> Cliquer sur la boite/glisser à droite ou à gauche pour voir l'image.</small>
+						</div>	 
+					</div>
+				{% endwith %}	
+			{% endwith %}
+		    <div class="row validation">
+		    	<div class="col-sm-12 col-md-3" align="center"  >
+		            <a  href="#" class="nav_start btn btn-primary show_image_correction" data-supportfile_id="{{ supportfile.id }}"   
+		            	id="nav_start{{ forloop.counter }}" data-loop="{{ forloop.counter }}"><i class="fa fa-caret-right"></i> Valider </a>
+		        </div>
+		    </div>
+			{% include 'qcm/qtype/_correction_div.html' %}
+        </li> 
+    {% endfor %}
+
+	{% include 'qcm/qtype/_last_slide.html' %}
+
+        
+
+{% endblock %}

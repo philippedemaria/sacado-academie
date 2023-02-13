@@ -1,0 +1,66 @@
+{% extends 'qcm/qtype/form_answer_all_types.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+
+{% block require %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common4.js' %}"></script>
+    <script>
+        require(['script/ajax-anagrams','script/slider_answer_box']);
+    </script> 
+{% endblock %}
+
+{% block answer_all_type_template %}
+
+    {% for choice in shufflechoices %} 
+        <li class="this_slide">
+
+            {% include 'qcm/qtype/_annoncement_instruction.html' %}
+            <div class="legend_answer text-green_index zoom_in" align="left">Écrire l'anagramme du mot bleu dans les pointillés</div> 
+
+ 
+            <div class="row"> 
+                <div class="col-sm-12 col-md-5 anagram zoom_in">
+                    {{ choice.answer|safe }} <i class="fa fa-caret-right pull-right"></i>  
+                </div>
+
+
+
+                <div class="col-sm-12 col-md-6 text-green_index " align='left'>
+                    <input type="text" name="answers" class="answer_student_box zoom_in" data-choice_id='{{ choice.id }}' data-loop="{{ forloop.counter }}" style="text-align:center; border : solid 2px {{ supportfile.theme.subject.color }}" /> 
+                </div>
+            </div>
+ 
+ 
+
+            <div class="row validation">
+                <div class="col-sm-12 col-md-3" align="center"  >
+                    <a  href="#" class="btn btn-primary show_anagrams_correction" data-supportfile_id="{{ supportfile.id }}" data-choice_id='{{ choice.id }}'  
+                        id="nav_start{{ forloop.counter }}" data-loop="{{ forloop.counter }}"><i class="fa fa-caret-right"></i> Valider 
+                    </a>
+                </div>
+            </div>
+            {% include 'qcm/qtype/_correction_div.html' %}
+
+
+        </li>
+
+
+
+        {% include 'qcm/qtype/_correction_div.html' %}        
+    {% endfor %}
+
+
+
+
+
+
+
+
+ 
+
+    {% include 'qcm/qtype/_last_slide.html' %}
+
+{% endblock %}
+
+ 

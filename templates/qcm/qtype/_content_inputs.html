@@ -1,0 +1,22 @@
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+ 
+<a href="javascript:void();" id="show_latex_formula" class="btn btn-sacado"><label><img src="{% static 'img/tex.png' %}" width="15px" /> Inclure les champs de réponse directement dans l'énoncé  ? </label> </a> 
+  
+<div class="row no_visu_on_load" id="latex_formula" > 
+    <div class="col-sm-12 col-md-12">
+        <span style="line-height: 1.7em"><small>Utiliser 
+            <span class="formula">\input[name][3em]{valeur par défaut}</span> 
+            pour placer le champ à compléter. <br/>
+            <span class="formula">$\frac{\input[num][3em]{}}{\input[deno][3em]{2}}$</span> 
+            affiche :  <img src="{% static 'img/formula.png' %}"/> et utilise les 2 variables <span class="formula_answer">num</span> et <span class="formula_answer">deno</span>.
+            <br/>
+            Pour les champs de réponse dans l'énoncé, écrire dans "réponse attendue" (ci-dessous) les réponses au format <span class="formula_answer">name=reponse</span>.  <span class="formula">num=4</span> signifie que la réponse du champ <span class="formula_answer">num</span> est 4. Ajouter autant de réponses que de variables déclarées.
+            <br/>
+            Si la variable <span class="formula_answer">name</span> est le résultat du calcul des variables numériques aléatoires <span class="formula_answer">a</span> et <span class="formula_answer">b</span>, écrire : <span class="formula">num=$?!{a} + {b} ?!$</span> dans "réponse attendue" (ci-dessous).
+            </small>
+            <br/> <small>Pour inclure une formule, utiliser les délimiteurs simple Dollar $ et pour inclure une figure, utiliser TiKZ</small>
+        </span>
+    </div>
+</div> 

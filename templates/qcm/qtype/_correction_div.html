@@ -1,0 +1,36 @@
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+
+
+<div class="show_correction no_visu_on_load" id="show_correction{{ forloop.counter }}" align='left'>
+
+
+	{% if supportfile.is_display_correction %}
+	    <p id='message_correction{{ forloop.counter }}' ></p>
+
+		<label class="this_correction_label">Correction ou éléments de correction</label>
+		<div class="exercise_body_shared this_correction_text zoom_in">	
+			{% if choice.retroaction %}
+					<div style="margin-bottom: 20px;">
+					{{ choice.retroaction }}
+					</div> 
+			{% endif %}
+			<div id="this_correction_text{{ forloop.counter }}"></div>
+		</div>
+	{% else %}
+		<label class="this_correction_label">Confirmation</label>
+		<div class="this_correction_text">	
+			Ta réponse est bien validée.
+		</div>
+	{% endif  %}
+
+
+
+	{% if supportfile.qtype == 9 %}
+        {% include 'qcm/qtype/_save.html' %}
+	{% else %}
+		<a href="#" class="nav_start btn btn-primary" data-dismiss="modal" aria-label="Close"><i class="fa fa-caret-right"></i> Suivant</a>
+	{% endif  %}
+
+</div>

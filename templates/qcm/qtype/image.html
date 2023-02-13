@@ -1,0 +1,313 @@
+{% extends 'qcm/form_supportfile.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+
+
+
+{% block body_qtype %}
+<div class="row">
+    <div class="col-sm-12 col-md-6">
+        <div class="form_card" style="margin-top:20px;">
+            <label>Titre </label>
+            {{ form.title|add_class:"form-control"   }}
+            {{ form.title.errors }}
+            <div class="form-group">
+            <label>Enoncé :</label>
+            {{ form.annoncement |add_class:"form-control"}}
+            {{ form.annoncement.errors }}
+            </div>  
+            <div class="form-group">
+            <label>Format de l'exercice</label>
+            {{ form.is_written  |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:L'élève écrit dans les étiquettes ?"|attr:"data-off:L'élève déplace les étiquettes ?"|attr:"data-width:250px"}}
+            {{ form.is_written.errors }}
+            </div>         
+        </div>                                             
+    </div>
+    <div class="col-sm-12 col-md-6">
+        <div class="form_card" style="margin-top:20px">    
+            {% include 'qcm/qtype/0_config_middle.html' %}
+        </div>
+    </div>       
+</div>
+
+
+<div class="row">
+    <div class="col-sm-12 col-md-12">
+        <div class="form_card" style="margin-top:20px;">
+        <span class="btn btn-sacado_active"> Images étiquetées</span> <span class="label label-sacado">1</span> Choisir une image , <span class="label label-sacado">2</span> Choisir un marqueur <i class="fa fa-map-marker text-muted" ></i> et cliquer sur l'image pour le faire apparaitre  <span class="label label-sacado">3</span>  Ecrire sa légende pour les associer  <br/><br/>
+
+
+            <label> 
+               Les images à légender doivent avoir une largeur max de 1000px.
+            </label> 
+
+
+            {{ form_ans.management_form }}
+            {{ form_ans.non_form_errors }} 
+
+            <div id="formsetZone">
+            <input id="qtype" value="{{ qtype }}" name="qtype" type="hidden" />
+            {% for form in form_ans %}  
+                {{ form.id }}
+                <div class="col-sm-12">
+                    <div class="row quizz_line_answer quizz_box_answer multiple_quizz_box_answer quizz_box_answer_left" >  
+                        <div class="col-sm-6">
+                            <div class="row ">
+                                <div class="col-sm-1 col-md-1 get_image"  align="center" id="imager{{ forloop.counter0 }}">
+                                    <svg width="40" height="40" fill="currentColor" class="bi bi-image answer_margin5" viewBox="0 0 20 15" id="file-image{{ forloop.counter0 }}">
+                                      <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                                      <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/>
+                                    </svg>
+                                    {% if supportfile %}
+                                        {{ form.imageanswer|add_class:"choose_imageanswer" }}
+                                    {% else %}
+                                        {{ form.imageanswer|add_class:"choose_imageanswer"|attr:"required" }}
+                                    {% endif %}
+                                    <div style="margin:10px 0px"><span class="label label-sacado">1</span></div> <span class="legend_choice">Ajout d'une image </span>                                
+                                </div>
+                                <div class="col-sm-11 col-md-11" id="div_canvas{{ forloop.counter0 }}" > 
+                                    {% if supportfile %}
+                                        {% with choice=supportfile.supportchoices.all|index:forloop.counter0 %}  
+                                            <canvas width="650" height="650" id="canvas{{ forloop.counter0 }}" class="image_canvas" data-loop="{{ forloop.counter0 }}" style="background-image:url({{ choice.imageanswer.url }}) "> 
+                                            </canvas>
+                                            {% for subchoice in choice.supportsubchoices.all %}
+                                                {% with details=subchoice.answer|marker_details %}
+                                                    <i class="fa fa-map-marker fa-2x text-{{ details.classe }}" style="position:absolute;{{ details.coordonnees }};z-index:99"></i>
+                                                {% endwith %}   
+                                            {% endfor %}
+                                        {% endwith %}
+                                    {% else %}
+                                    <canvas width="650" height="650" id="canvas{{ forloop.counter0 }}" class="image_canvas" data-loop="{{ forloop.counter0 }}"> </canvas>
+                                    {% endif %}
+                                </div>
+                            </div> 
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12" >
+                                    <a href="javascript:void()" class="automatic_insertion"   id="feed_back{{ forloop.counter0 }}"><i class="bi bi-arrow-return-right"></i> Afficher un feedback. </a>
+                                    <div id="div_feed_back{{ forloop.counter0 }}" {% if not form.retroaction.value   %} class="checkbox_no_display"{% endif %}>
+                                    {{ form.retroaction|add_class:"form-control"|attr:"rows:3"|attr:"placeholder:Ecrire le feedback" }}
+                                    </div>
+                                </div>
+                            </div>  
+                        </div>
+                        <div class="col-sm-6"> 
+                            <div id="subformsetZone{{ forloop.counter0 }}">
+                                <div class="row">
+
+                                    <div class="col-sm-12">
+                                        <div class="row">
+                                           <div class="col-sm-3 col-md-3 map-marker"  align="center"><span class="label label-sacado">2</span></div>
+                                           <div class="col-sm-5 col-md-5 map-marker" >  <span class="label label-sacado">3</span> </div> 
+                                        </div>
+                                    </div>
+                                </div>
+                  
+       
+                                {% if supportfile %}
+                                    {{ form.nested.management_form }}
+                                    {{ form.nested.non_form_errors }}
+ 
+                                    {% with choice=supportfile.supportchoices.all|index:forloop.counter0 %}  
+                                        {% for form_sub in form.nested.forms %} 
+                                            {{ form_sub.id }}
+                                            {% with subchoice=choice.supportsubchoices.all|index:forloop.counter0 %}
+                                                {% with dets=subchoice.answer|marker_details %} 
+                                                <div class="col-sm-12">
+                                                    <div class="row quizz_line_answer quizz_box_answer multiple_quizz_box_answer quizz_box_answer_left border-{{dets.classe}}" >  
+                                                        <div class="col-sm-12">
+                                                            <div class="row">
+                                                                <div class="col-sm-2 col-md-2 map-marker"  align="center"><span class="label label-sacado">2</span>
+                                                                        <a href="javascript:void()" id="this_danger-{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}" class="get_color this_subloop{{ forloop.counter0 }}" data-classe="danger" data-loop="{{ forloop.parentloop.counter0 }}" data-subloop="{{ forloop.counter0 }}">
+                                                                            <i class="fa fa-map-marker text-danger {% if dets.classe == 'danger' %}fa-2x{% endif %}" ></i>  
+                                                                        </a>
+                                                                        <a href="javascript:void()" id="this_warning-{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}" class="get_color this_subloop{{ forloop.counter0 }}" data-classe="warning"   data-loop="{{ forloop.parentloop.counter0 }}" data-subloop="{{ forloop.counter0 }}">
+                                                                            <i class="fa fa-map-marker text-warning {% if dets.classe == 'warning' %} fa-2x {% endif %}" ></i></a>
+                                                                        <a href="javascript:void()" id="this_rose-{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}" class="get_color this_subloop{{ forloop.counter0 }}" data-classe="rose" data-loop="{{ forloop.parentloop.counter0 }}" data-subloop="{{ forloop.counter0 }}">
+                                                                            <i class="fa fa-map-marker text-rose {% if dets.classe == 'rose' %} fa-2x {% endif %}" ></i></a>
+                                                                        <a href="javascript:void()" id="this_white-{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}" class="get_color this_subloop{{ forloop.counter0 }}" data-classe="white" data-loop="{{ forloop.parentloop.counter0 }}" data-subloop="{{ forloop.counter0 }}">
+                                                                            <i class="fa fa-map-marker text-white {% if dets.classe == 'white' %}fa-2x{% endif %}" ></i></a>
+                                                                        <a href="javascript:void()" id="this_light-{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}" class="get_color this_subloop{{ forloop.counter0 }}" data-classe="light" data-loop="{{ forloop.parentloop.counter0 }}" data-subloop="{{ forloop.counter0 }}">
+                                                                            <i class="fa fa-map-marker text-light {% if dets.classe == 'light' %}fa-2x{% endif %}"></i></a>
+                                                                        <a href="javascript:void()" id="this_success-{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}" class="get_color this_subloop{{ forloop.counter0 }}" data-classe="success" data-loop="{{ forloop.parentloop.counter0 }}" data-subloop="{{ forloop.counter0 }}">
+                                                                            <i class="fa fa-map-marker text-success {% if dets.classe == 'success' %}fa-2x{% endif %}"></i></a>
+                                                                        <a href="javascript:void()" id="this_info-{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}" class="get_color this_subloop{{ forloop.counter0 }}" data-classe="info" data-loop="{{ forloop.parentloop.counter0 }}" data-subloop="{{ forloop.counter0 }}">
+                                                                            <i class="fa fa-map-marker text-info {% if dets.classe == 'info' %}fa-2x{% endif %}"></i></a>
+                                                                        <a href="javascript:void()" id="this_navy-{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}" class="get_color this_subloop{{ forloop.counter0 }}" data-classe="navy" data-loop="{{ forloop.parentloop.counter0 }}" data-subloop="{{ forloop.counter0 }}">
+                                                                            <i class="fa fa-map-markertext-navy {% if dets.classe == 'navy' %}fa-2x{% endif %}"></i></a>
+                                                                        <a href="javascript:void()" id="this_muted-{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}" class="get_color this_subloop{{ forloop.counter0 }}" data-classe="muted" data-loop="{{ forloop.parentloop.counter0 }}" data-subloop="{{ forloop.counter0 }}">
+                                                                            <i class="fa fa-map-marker text-muted {% if dets.classe == 'muted' %}fa-2x{% endif %}"></i></a>
+                                                                </div>
+                                                                <div class="col-sm-5 col-md-5 get_image"  align="center" id="imagersub{{ forloop.parentloop.counter0 }}_{{ forloop.counter0 }}"  style="display: none"> 
+                                                                    <i class="fa fa-file-image-o answer_margin10 fa-2x" ></i>
+                                                                    {{ form_sub.imageanswer|add_class:"choose_imageanswersub to-data-loop" }}
+                                                                    <img src="{% if form_sub.imageanswer.url %}{{ form_sub.imageanswer.url }}{% endif %}" height="90px" class="choose_imageanswersub preview" id="previewsub{{ forloop.parentloop.counter0 }}_{{ forloop.counter0 }}"> 
+                                                                </div>
+                                                                <div class="col-sm-7 col-md-7" ><span class="label label-sacado">3</span>  
+                                                                    {{ form_sub.label|attr:"placeholder:Ecrire une légende"|add_class:"quizz_answer"|attr:"style:height:65px;border:1px solid #CCC"  }}
+                                                                </div>
+                                                                <div style="display: none" > 
+                                                                    {{ form_sub.answer  }}
+                                                                </div>
+                                                            </div>
+                                                        </div>  
+                                                    </div>
+                                                </div>
+                                                {% endwith %}
+                                            {% endwith %}
+                                        {% endfor %}
+                                    {% endwith %}
+                                {% else %}
+                                    {{ form.nested.management_form }}
+                                    {{ form.nested.non_form_errors }}
+
+                                    {% for form_sub in form.nested.forms %} 
+                                        {{ form_sub.id }}
+                                        <div class="col-sm-12">
+                                            <div class="row quizz_line_answer quizz_box_answer multiple_quizz_box_answer quizz_box_answer_left" >  
+                                                <div class="col-sm-12">
+                                                    <div class="row">
+                                                        <div class="col-sm-2 col-md-2 map-marker"  align="center"> 
+                                                                <a href="javascript:void()" id="this_danger-{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}" class="get_color this_subloop{{ forloop.counter0 }}" data-classe="danger" data-loop="{{ forloop.parentloop.counter0 }}" data-subloop="{{ forloop.counter0 }}"><i class="fa fa-map-marker text-danger" ></i></a>
+                                                                <a href="javascript:void()" id="this_warning-{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}" class="get_color this_subloop{{ forloop.counter0 }}" data-classe="warning" data-loop="{{ forloop.parentloop.counter0 }}" data-subloop="{{ forloop.counter0 }}"><i class="fa fa-map-marker text-warning" ></i></a>
+                                                                <a href="javascript:void()" id="this_rose-{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}" class="get_color this_subloop{{ forloop.counter0 }}" data-classe="rose" data-loop="{{ forloop.parentloop.counter0 }}" data-subloop="{{ forloop.counter0 }}"><i class="fa fa-map-marker text-rose"></i></a>
+                                                                <a href="javascript:void()" id="this_white-{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}" class="get_color this_subloop{{ forloop.counter0 }}" data-classe="white" data-loop="{{ forloop.parentloop.counter0 }}" data-subloop="{{ forloop.counter0 }}"><i class="fa fa-map-marker text-white"></i></a>
+                                                                <a href="javascript:void()" id="this_light-{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}" class="get_color this_subloop{{ forloop.counter0 }}" data-classe="light" data-loop="{{ forloop.parentloop.counter0 }}" data-subloop="{{ forloop.counter0 }}"><i class="fa fa-map-marker text-light"></i></a>
+                                                                <a href="javascript:void()" id="this_success-{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}" class="get_color this_subloop{{ forloop.counter0 }}" data-classe="success" data-loop="{{ forloop.parentloop.counter0 }}" data-subloop="{{ forloop.counter0 }}"><i class="fa fa-map-marker text-success"></i></a>
+                                                                <a href="javascript:void()" id="this_info-{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}" class="get_color this_subloop{{ forloop.counter0 }}" data-classe="info" data-loop="{{ forloop.parentloop.counter0 }}" data-subloop="{{ forloop.counter0 }}"><i class="fa fa-map-marker text-info"></i></a>
+                                                                <a href="javascript:void()" id="this_navy-{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}" class="get_color this_subloop{{ forloop.counter0 }}" data-classe="navy" data-loop="{{ forloop.parentloop.counter0 }}" data-subloop="{{ forloop.counter0 }}"><i class="fa fa-map-markertext-navy"></i></a>
+                                                                <a href="javascript:void()" id="this_muted-{{ forloop.parentloop.counter0 }}-{{ forloop.counter0 }}" class="get_color this_subloop{{ forloop.counter0 }}" data-classe="muted" data-loop="{{ forloop.parentloop.counter0 }}" data-subloop="{{ forloop.counter0 }}"><i class="fa fa-map-marker text-muted"></i></a>
+                                                        </div>
+                                                        <div class="col-sm-5 col-md-5 get_image"  align="center" id="imagersub{{ forloop.parentloop.counter0 }}_{{ forloop.counter0 }}" style="display: none"> 
+                                                            <i class="fa fa-file-image-o answer_margin10 fa-2x" ></i>
+                                                            {{ form_sub.imageanswer|add_class:"choose_imageanswersub to-data-loop" }}
+                                                            <img src="{% if form_sub.imageanswer.url %}{{ form_sub.imageanswer.url }}{% endif %}" height="90px" class="choose_imageanswersub preview" id="previewsub{{ forloop.parentloop.counter0 }}_{{ forloop.counter0 }}"> 
+                                                        </div>
+                                                        <div class="col-sm-5 col-md-5" >                                                             
+                                                            {{ form_sub.label|attr:"placeholder:Ecrire une légende"|add_class:"quizz_answer"|attr:"style:height:65px;border:1px solid #CCC"  }}
+                                                        </div>
+                                                        <div style="display: none" > 
+                                                            {{ form_sub.answer  }}
+                                                        </div>
+                                                    </div>
+                                                </div>  
+                                            </div>
+                                        </div>
+
+                                    {% endfor %}
+                                {% endif %}
+
+
+                                <script id="subToClone" type="text/template">   
+                                    <div class="col-sm-12">
+                                        <div class="row quizz_line_answer quizz_box_answer multiple_quizz_box_answer quizz_box_answer_left" >  
+                                            <div class="col-sm-11">
+                                                <div class="row">
+                                                    <div class="col-sm-2 col-md-2 map-marker"  align="center">
+                                                            <a href="javascript:void()" id="this_danger" class="get_color" data-classe="danger"><i class="fa fa-map-marker text-danger"></i></a>
+                                                            <a href="javascript:void()" id="this_warning" class="get_color" data-classe="warning"><i class="fa fa-map-marker text-warning"></i></a>
+                                                            <a href="javascript:void()" id="this_rose" class="get_color" data-classe="rose"><i class="fa fa-map-marker text-rose"></i></a>
+                                                            <a href="javascript:void()" id="this_white" class="get_color" data-classe="white"><i class="fa fa-map-marker text-white"></i></a>
+                                                            <a href="javascript:void()" id="this_light" class="get_color" data-classe="light"><i class="fa fa-map-marker text-light"></i></a>
+                                                            <a href="javascript:void()" id="this_success" class="get_color" data-classe="success"><i class="fa fa-map-marker text-success"></i></a>
+                                                            <a href="javascript:void()" id="this_info" class="get_color" data-classe="info"><i class="fa fa-map-marker text-info"></i></a>
+                                                            <a href="javascript:void()" id="this_navy" class="get_color" data-classe="navy"><i class="fa fa-map-markertext-navy"></i></a>
+                                                            <a href="javascript:void()" id="this_muted" class="get_color" data-classe="muted"><i class="fa fa-map-marker text-muted"></i></a>
+                                                    </div>
+                                                    <div class="col-sm-5 col-md-5 get_image"  align="center" id="imagersub"  style="display: none"> 
+                                                        <i class="fa fa-file-image-o answer_margin10 fa-2x" ></i>
+                                                        {{ form.nested.empty_form.imageanswer|add_class:"choose_imageanswersub to-data-loop" }}
+                                                    </div>
+                                                    <div class="col-sm-5 col-md-5" >  
+                                                        {{ form.nested.empty_form.label|attr:"placeholder:Ecrire une légende"|add_class:"quizz_answer"|attr:"style:height:65px;border:1px solid #CCC"  }}
+                                                    </div>
+                                                    <div style='display:none'> 
+                                                        {{ form.nested.empty_form.answer  }}
+                                                    </div>
+                                                </div>
+                                            </div>  
+
+                                            <div class="col-sm-1">
+                                                <span class="btn btn-danger remove_sub_more"><i class="bi bi-trash"></i></span>
+                                            </div>  
+                                        </div>
+                                    </div>
+                                </script>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12" ><br/><br/>
+                                    <a href="javascript:void();"  class="add_sub_more btn btn-sacado" data-loop="{{ forloop.counter0 }}" ><i class="bi bi-plus-circle"></i> Ajouter une légende/étiquette</a>
+                                    <input type="hidden" name="subloop{{ forloop.counter0 }}" id="subloop{{ forloop.counter0 }}" value="2" /> <br/><br/>                             
+                                </div>                            
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12 col-md-12" >
+                    <a href="javascript:void();"  class="add_more btn btn-sacado_active" ><i class="bi bi-plus-circle"></i> Ajouter une nouvelle image</a><br/><br/>
+                </div>                            
+            </div>
+
+        </div>                                                         
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12 col-md-12">
+        <div class="form_card" style="margin-top:20px;">
+            {% include 'qcm/qtype/_content_correction.html' %} 
+        </div>  
+    </div>
+</div>
+
+
+<script id="rowToClone" type="text/template">
+    <div id="duplicate">
+        <div class="col-sm-12">
+            <div class="row quizz_line_answer quizz_box_answer multiple_quizz_box_answer quizz_box_answer_left" >  
+                <div class="col-sm-6">
+                    <div class="row ">
+                        <div class="col-sm-2 col-md-1 get_image"  align="center" id="imager"> 
+                            <svg width="40" height="40" fill="currentColor" class="bi bi-image answer_margin5" viewBox="0 0 20 15" id="file-image">
+                              <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                              <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/>
+                            </svg>
+                            {{ form_ans.empty_form.imageanswer|add_class:"choose_imageanswer"|attr:"required" }}
+                        </div>
+                        <div class="col-sm-10 col-md-11" id="div_canvas"> 
+                            <canvas width="650" height="650" id="canvas" class="image_canvas"> 
+                            </canvas>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12" >
+                            <div class="form-group">
+                                <a href="javascript:void()" class="automatic_insertion"   id="feed_back"><i class="bi bi-arrow-return-right"></i> Afficher un feedback </a>
+                                <div id="div_feed_back" {% if not form.retroaction.value   %} class="checkbox_no_display"{% endif %}>
+                                {{ form_ans.empty_form.retroaction|add_class:"form-control"|attr:"rows:3"|attr:"placeholder:Ecrire le feedback" }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>   
+                </div>
+
+                <div class="col-sm-6">
+                    <div id="subformsetZone">
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12" ><br/>
+                            <a href="javascript:void();"  class="add_sub_more btn btn-sacado" id="data_loop" ><i class="bi bi-plus-circle"></i> Ajouter une légende/étiquette</a> 
+                            <input type="hidden" name="subloop__prefix__" id="subloop__prefix__" />                         
+                        </div> 
+                    </div>                          
+                </div>         
+            </div>
+        </div>
+    </div>
+</script> 
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends 'qcm/qtype/form_answer_all_types.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+
+{% block require %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common4.js' %}"></script>
+    <script>
+        require(['script/ajax-check_memory','script/slider_answer_box']);
+    </script> 
+{% endblock %}
+
+{% block answer_all_type_template %}
+
+	{% for annoncement in annoncements %} 
+		<li class="this_slide">
+
+			{% if detail_vars   %}
+	 	      	{% for detail_var in detail_vars|index:forloop.counter0 %}
+	        		<input type="hidden" id="{{ detail_var.name }}{{ forloop.parentloop.counter }}" name="{{ detail_var.name }}" value="{{detail_var.val}}" />
+	        	{% endfor %}
+	    	{% endif %}
+
+
+		    <div class="row"  align="left">
+		        {% if annoncement %}
+		            <div class="col-sm-12 col-lg-12 custom_content" 
+		                 style="max-height:80px">{{ annoncement|safe }}
+		            </div>
+		        {% endif %}
+		    </div>  
+
+
+	 		<input id="length" type="hidden" value="{{ length }}"  />
+	 		<div class="row" align="left">
+	 			<div class="col-sm-12">
+	 				<label>Vous devez regrouper les cartes mémo par groupe de {{ length }}. <small>SACADO vous offre un coup d'essai <i class="bi bi-emoji-smile"></i>.</small></label>
+	 			</div>
+
+	 		<div class="row">
+			{% for subchoice in shufflesubchoices|index:forloop.counter0 %}
+				<div class="scene scene--card">
+				      <div class="card" data-id="{{ subchoice.id }}">
+				        <div class="memo_card">
+				          <img src="{% static 'img/sacado_memo.jpg' %}" width="100px" height="100px" />
+				        </div>
+				        <div class="memo_card memo_card_back">
+				          {% if subchoice.imageanswer  %}<img src="{{ subchoice.imageanswer.url }}" width="100px" height="100px" />{% else %}<br/> {% endif %} {{  subchoice.answer|title }}
+				        </div>
+				      </div>
+				</div>
+			{% endfor %}
+
+	 		</div>
+
+		    <div class="row validation" style="margin-top:60px"> 
+		    	<div class="col-sm-12 col-md-3" align="center"  >
+		            <a  href="#" class="nav_start btn btn-primary show_these_pairs_correction" data-supportfile_id="{{ supportfile.id }}"   
+		            	id="nav_start{{ forloop.counter }}" data-loop="{{ forloop.counter }}"><i class="fa fa-caret-right"></i> Valider </a>
+		        </div>
+		    </div>
+			{% include 'qcm/qtype/_correction_div.html' %}
+		</li>        	
+	{% endfor %}
+
+
+	{% include 'qcm/qtype/_last_slide.html' %}
+
+{% endblock %}

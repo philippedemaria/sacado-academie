@@ -1,0 +1,13 @@
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+
+<li class="this_slide">
+	<div align="center" style="padding-top:30px;">
+
+			Tu as fini toutes les situations. Enregistre tes résultats.
+
+			<img src="{% static 'img/finish.jpg' %}" />
+
+      {% include 'qcm/qtype/_save.html' %}
+</li>

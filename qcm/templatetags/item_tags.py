@@ -8,16 +8,53 @@ import re
 
 
 @register.filter
+def add_parameters(arg, index):
+    '''Modifie les paramètres aléatoires pour les questions flash'''
+    tab = arg.split(";")
+    if 'abscisse' in tab[0]:
+        mini,maxi,step = tab[1].split(",")
+        a = random.randint(int(mini),int(maxi))*int(step)
+        b = a+int(tab[2])
+        arg = arg.replace("x",str(a))
+        string = arg.replace("y",str(b))
+        new_str = string[:-1]+","+str(index)+")"
+        new_str = new_str.split(";")[0]
+        new_str = new_str[:-1]+","+str(index)+")"
+
+    elif 'pizza' in tab[0] or 'chocolat' in tab[0] :
+        mini,maxi = tab[1].split(",")
+        a = random.randint(int(mini),int(maxi))
+        arg = arg.replace("n",str(a))
+        if len(tab)>1:
+            minim,maxim = tab[2].split(",")
+            b = random.randint(int(minim),int(maxim))
+            string = arg.replace("d",str(b))
+        new_str = string[:-1]+","+str(index)+")"
+        new_str = new_str.split(";")[0]
+        new_str = new_str[:-1]+","+str(index)+")"
+    else :
+        new_str = arg[:-1]+","+str(index)+")"
+    return new_str
+
+
+
+@register.filter
+def is_checked(arg):
+    '''input est-il checked ?'''
+    return 'checked' in str(arg)
+
+
+
+@register.filter
 def no_iframe(arg):
     '''HTML entity decode'''
-    arg = arg.replace('<iframe','___###___')
-    arg = arg.replace('</iframe>','___###___')
-    tab_arg = arg.split('___###___')
+    arg = arg.replace('<iframe','___#iframe#___')
+    arg = arg.replace('</iframe>','___#iframe#___')
+    tab_arg = arg.split('___#iframe#___')
     string = ""
     for i in range(0,len(tab_arg),2) :
         string += tab_arg[i]
     return string.strip()
-
 
 @register.filter
 def close_div(arg):
@@ -55,18 +92,89 @@ def no_table(arg):
 
 
 
+@register.filter
+def splitter(arg):
+    '''HTML entity decode'''
+    new= []
+    for a in arg.split('##') :
+        try :
+            new.append(int(a))
+        except :
+            pass
+    return new
+
 
 @register.filter
-def bgcolor(arg):
-    '''HTML entity decode'''
-    if arg < 40 :
-        return '#b5322b'
-    elif arg < 65 :
-        return  '#b5a32b'
-    elif arg < 90 :
-        return  '#62d85a'
-    else :
-        return '#1d6718'
+def filltheblanks_safe(arg):
+    '''HTML entity filltheblanks_safe'''
+    arg = arg.replace('<strong>','####')
+    arg = arg.replace('</strong>','####')
+    tab = arg.split('####')
+
+    string = ""
+    for i in range(len(tab)) :
+        
+        if i%2==1:
+            if  int(len(tab[i]))  < 4 : ln = "30"
+            elif  int(len(tab[i]))  < 10 : ln = "100"
+            else : ln = str(int(len(tab[i]))*10)
+            st = " <input type='text' style='border:1px solid #CCC; width:"+ln+"px;border-radius:4px;text-align:center' value='"+tab[i]+"'   />"
+        else :
+            st = tab[i] 
+        string += st
+    return string
+
+
+
+
+@register.filter
+def insert_input(arg,loop):
+    '''HTML entity filltheblanks_safe'''
+    arg = arg.replace('<strong>','####')
+    arg = arg.replace('</strong>','####')
+    tab = arg.split('####')
+
+    string = ""
+    j=1
+    for i in range(len(tab)) :
+        if i%2==1:
+            if  int(len(tab[i]))  < 4 : ln = "30"
+            elif  int(len(tab[i]))  < 10 : ln = "100"
+            else : ln = str(int(len(tab[i]))*10)
+            st = "<input type='hidden' name='answers"+str(loop)+"' id='loop_"+str(loop)+"-"+str(j)+"' /><div class='input_droppable droppable"+str(loop)+"' data-subloop='"+str(j)+"'></div>"
+            j+=1
+        else :
+            st = tab[i] 
+        string += st
+    return string
+
+
+
+@register.filter
+def insert_only_input(arg,loop):
+    '''HTML entity filltheblanks_safe'''
+    arg = arg.replace('<strong>','####')
+    arg = arg.replace('</strong>','####')
+    tab = arg.split('####')
+
+    string = ""
+    for i in range(len(tab)) :
+        if i%2==1:
+            st = "<input type='text' name='answers"+str(loop)+"' style='width:"+str(int(len(tab[i]))*14)+"px;'  class='answer_the_blanks answer_fill_the_blanks'  />"
+        else :
+            st = tab[i] 
+        string += st
+    return string
+
+
+
+
+@register.filter
+def shuffle(arg):
+    my_list = list(arg)
+    random.shuffle(my_list)
+    return my_list   
+ 
  
 
 @register.filter
@@ -74,9 +182,7 @@ def decode(arg):
     '''HTML entity decode'''
     string = html.unescape(arg)
     return string
-
-
-
+ 
 
 @register.filter
 def keep_point(arg):
@@ -138,6 +244,29 @@ def abreviation(raw_html): #nettoie le code des balises HTML
         return raw_html
 
 
+@register.filter
+def marker_details(string): #marker_coordonnees pour les exercices de placement sur image
+    data = {}
+    try :
+        classe,abscisse,ordonnee = string.split("|")
+        data['coordonnees'] = "left:{}px;top:{}px".format(abscisse, ordonnee)
+        data['classe'] = classe
+    except :
+        pass
+    return data
+
+
+@register.filter
+def marker_details_answer(string): #marker_coordonnees pour les exercices de placement sur image
+    data = {}
+    try :
+        classe,abscisse,ordonnee = string.split("|")
+        ordonnee = int(ordonnee)-25 
+        data['coordonnees'] = "left:{}px;top:{}px".format(abscisse, ordonnee)
+        data['classe'] = classe
+    except :
+        pass
+    return data
 
 
 @register.filter
@@ -525,6 +654,17 @@ def get_relationship(obj,parcours):
 def get_used_in_parcours(obj,teacher): 
     return obj.used_in_parcours(teacher) 
 
+@register.simple_tag  
+def get_parcourses_from_level(obj,teacher): 
+    return obj.parcourses_from_level(teacher) 
+
+@register.simple_tag  
+def get_folders_from_level(obj,teacher): 
+    return obj.folders_from_level(teacher) 
+
+@register.simple_tag  
+def get_question_is_already_used(obj,teacher): 
+    return obj.is_already_used(teacher) 
  
 @register.simple_tag  
 def get_scorek(obj,student): 
@@ -549,6 +689,26 @@ def get_exercises_by_knowledge(obj,student,group):
 @register.simple_tag  
 def get_only_students(obj,group):
     return obj.only_students(group)
+
+
+
+
+@register.simple_tag  
+def get_used_in_group(obj,group): 
+    """
+    Si un objet est utilisé dans un groupe
+    """
+    return obj.used_in_group(group) 
+
+ 
+
+
+@register.simple_tag  
+def get_my_relationships(obj,parcourses): 
+    """
+    Récupère les relationships utilisées dans un groupe à partir d'un obj  (waiting et knowledge) 
+    """
+    return obj.my_relationships(parcourses) 
 
 
 
@@ -1070,9 +1230,3 @@ def is_inside_my_lesson(obj,student):
     """
     return obj.student_in_my_lesson(student) 
 
-@register.simple_tag
-def get_percent_to_parcours(obj,student): 
-    """
-    retourne  le pourcentage des réponses pour un quizz et des exercices GGB d'un parcours.
-    """
-    return obj.is_percent_to_parcours(student) 

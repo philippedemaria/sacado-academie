@@ -1,0 +1,207 @@
+{% extends 'qcm/form_supportfile.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+
+
+
+{% block body_qtype %}
+<div class="row">
+    <div class="col-sm-12 col-md-6">
+        <div class="form_card" style="margin-top:20px;">
+            <label>Titre </label>
+            {{ form.title|add_class:"form-control"   }}
+            {{ form.title.errors }}
+            <label>Enoncé :</label>
+            {{ form.annoncement |add_class:"form-control"|attr:"rows:3" }}
+            {{ form.annoncement.errors }}<br/>
+        </div>                                             
+    </div>
+    <div class="col-sm-12 col-md-6">
+        <div class="form_card" style="margin-top:20px">    
+            {% include 'qcm/qtype/0_config_middle.html' %}
+        </div>
+    </div>   
+</div>
+
+
+<div class="row">
+    <div class="col-sm-12 col-md-12">
+        <div class="form_card" style="margin-top:20px;">
+            <label  class="add_more btn btn-sacado_active" >Les thèmes de correspondance</label>  <span class="label label-sacado">1</span> Renseigner le thème <span class="label label-sacado">2</span> Compléter les correspondances  <br/><br/>
+            {{ form_ans.management_form }}
+            {{ form_ans.non_form_errors }} 
+
+            <div id="formsetZone">
+            <input id="qtype" value="{{ qtype }}" name="qtype" type="hidden" />
+            {% for form in form_ans %} 
+                {{ form.id }}
+                <div class="col-sm-12 col-md-6">
+                    <span class="label label-sacado">1</span> <label>Le thème</label> 
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <span class="label label-sacado" style="margin-left:15px">2</span> <label>Les correspondances</label> 
+                </div>
+                <div class="col-sm-12">
+                    <div class="row quizz_line_answer quizz_box_answer multiple_quizz_box_answer quizz_box_answer_left answer_box_light_purple"  id="principal{{ forloop.counter0 }}">  
+                        <div class="col-sm-6">
+                            <div class="row  border-radius">
+                                <div class="col-sm-9 col-md-4 get_image"  align="center" id="imager{{ forloop.counter0 }}">
+                                    <svg width="60" height="40" fill="currentColor" class="bi bi-image answer_margin5" viewBox="0 0 15 15" id="file-image{{ forloop.counter0 }}">
+                                      <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                                      <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/>
+                                    </svg>
+                                    {{ form.imageanswer|add_class:"choose_imageanswer" }}
+                                    <img src="{% if form.imageanswer.url %}{{ form.imageanswer.url }}{% endif %}" width="150px" class="choose_imageanswer preview" id="preview{{ forloop.counter0 }}">
+                                </div>
+                                <div class="col-sm-1 col-md-1" ></div>
+                                <div class="col-sm-12 col-md-7  answer_box_no_border quizz_box_answer_small" >
+                                    {{ form.answer|attr:"placeholder:Ajouter du texte (Mer)"|add_class:"quizz_font30 quizz_answer"  }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12" >
+                                    <input type="hidden" name="subloop{{ forloop.counter0 }}" id="subloop{{ forloop.counter0 }}" value="2" /> <br/><br/><br/>                               
+                                </div>                            
+                            </div> 
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12" >
+                                    <a href="javascript:void()" class="automatic_insertion"   id="feed_back{{ forloop.counter0 }}"><i class="bi bi-arrow-return-right"></i> Écrire une rétroaction ou des éléments de correction</a>
+                                    <div id="div_feed_back{{ forloop.counter0 }}" {% if not form.retroaction.value   %} class="checkbox_no_display"{% endif %}>
+                                    {{ form.retroaction|add_class:"form-control"|attr:"rows:3"|attr:"placeholder:Ajouter du texte" }}
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
+                        <div class="col-sm-6">
+                            <div id="subformsetZone{{ forloop.counter0 }}">
+                                    {{ form.nested.management_form }}
+                                    {{ form.nested.non_form_errors }}
+
+                                    {% for form_sub in form.nested.forms %} 
+                                    {{ form_sub.id }}
+                                    <div class="col-sm-12">
+                                        <div class="row quizz_line_answer quizz_box_answer quizz_box_answer_left" >  
+                                            <div class="col-sm-12">
+                                                <div class="row answer_box_light_purple">
+                                                    <div class="col-sm-6 col-md-4 get_image"  align="center" id="imagersub{{ forloop.parentloop.counter0 }}_{{ forloop.counter0 }}"> 
+                                                        <svg width="60" height="40" fill="currentColor" class="bi bi-image answer_margin5" viewBox="0 0 15 15" id="file-imagesub{{ forloop.parentloop.counter0 }}_{{ forloop.counter0 }}">
+                                                          <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                                                          <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/>
+                                                        </svg>
+                                                        {{ form_sub.imageanswer|add_class:"choose_imageanswersub to-data-loop" }}
+                                                        <img src="{% if form_sub.imageanswer.url %}{{ form_sub.imageanswer.url }}{% endif %}" width="150px" class="choose_imageanswersub preview" id="previewsub{{ forloop.parentloop.counter0 }}_{{ forloop.counter0 }}"> 
+                                                    </div>
+                                                    <div class="col-sm-1 col-md-1" ></div>
+                                                    <div class="col-sm-5 col-md-7  answer_box_no_border quizz_box_answer_small" > 
+                                                        <a href="javascript:void()" id="delete_subimg{{ forloop.parentloop.counter0 }}_{{ forloop.counter0 }}" class="preview delete_subimg"><i class="fa fa-trash"></i></a>
+                                                        {{ form_sub.answer|attr:"placeholder:Ajouter du texte (dauphin, mérou, sar,...)"|add_class:"quizz_answer"  }}
+                                                    </div>
+                                                </div>
+                                            </div>  
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                <script id="subToClone" type="text/template">    
+                                    <div class="col-sm-12">
+                                        <div class="row quizz_line_answer quizz_box_answer_left" >  
+                                            <div class="col-sm-11">
+                                                <div class="row answer_box_light_purple">
+                                                    <div class="col-sm-6 col-md-4 get_image" align="center" id="imagersub"> 
+                                                        <svg width="60" height="40" fill="currentColor" class="bi bi-image answer_margin5" viewBox="0 0 15 15" id="file-imagesub">
+                                                          <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                                                          <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/>
+                                                        </svg>
+                                                        {{ form.nested.empty_form.imageanswer|add_class:"choose_imageanswersub to-data-loop" }}
+                                                        <img src=""  width="150px"  class="choose_imageanswersub preview" id="previewsub"> 
+                                                    </div>
+                                                    <div class="col-sm-1 col-md-1" ></div>
+                                                    <div class="col-sm-5 col-md-7  answer_box_no_border quizz_box_answer_small" > 
+                                                        <a href="javascript:void()" id="delete_subimg" class="preview delete_subimg"><i class="fa fa-trash"></i></a>
+                                                        {{ form.nested.empty_form.answer|attr:"placeholder:Ajouter du texte"|add_class:"quizz_answer"  }}
+                                                    </div>
+                                                </div>
+                                            </div>  
+                                            <div class="col-sm-1">
+                                                <span class="btn btn-danger remove_sub_more"><i class="bi bi-trash"></i></span>
+                                            </div>    
+                                        </div>
+                                    </div>
+                                </script>
+                            </div> 
+                            <div class="col-sm-12 col-md-12" >
+                                <a href="javascript:void();"  class="add_sub_more btn btn-sacado" data-loop="{{ forloop.counter0 }}" id="data_loop0"><i class="bi bi-plus-circle"></i> Ajouter une correspondance</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12 col-md-12" >
+                    <a href="javascript:void();"  class="add_more btn btn-sacado_active" ><i class="bi bi-plus-circle"></i> Ajouter un thème de correspondance</a><br/><br/>
+                </div>                            
+            </div>
+
+        </div>                                                         
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12 col-md-12">
+        <div class="form_card" style="margin-top:20px;">
+            {% include 'qcm/qtype/_content_correction.html' %} 
+        </div>  
+    </div>
+</div>
+ 
+<script id="rowToClone" type="text/template">
+    <div id="duplicate">
+        <div class="col-sm-12"><div style="position:absolute;left:-23px;top:10px"><span class="btn btn-danger btn-xs remove_more"><i class="bi bi-trash"></i></span></div>
+            <div class="row quizz_line_answer quizz_box_answer multiple_quizz_box_answer quizz_box_answer_left answer_box_light_purple"  id="principal">
+                <div class="col-sm-6">
+                    <div class="row  border-radius">
+                        <div class="col-sm-9 col-md-4 get_image"  align="center" id="imager"><input type="hidden" name="subloop" id="subloop" value="2" />
+                            <svg width="60" height="40" fill="currentColor" class="bi bi-image answer_margin5" viewBox="0 0 15 15" id="file-image">
+                              <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                              <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/>
+                            </svg>
+                            {{ form_ans.empty_form.imageanswer|add_class:"choose_imageanswer" }}
+                            <img src="{% if form.imageanswer.url %}{{ form.imageanswer.url }}{% endif %}" width="150px"  class="choose_imageanswer preview" id="preview">
+                            <input type="hidden" name="subloop__prefix__" id="subloop__prefix__" />
+                        </div>
+                        <div class="col-sm-1 col-md-1" >
+                        </div>
+                        <div class="col-sm-12 col-md-7 answer_box_no_border quizz_box_answer_small" >
+                            {{ form_ans.empty_form.answer|attr:"placeholder:Ajouter du texte (Mer)"|add_class:"quizz_font30 quizz_answer"  }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-3" >
+                            
+                        </div>                         
+                    </div> 
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12" >
+                                <a href="javascript:void()" class="automatic_insertion" id="feed_back"><i class="bi bi-arrow-return-right"></i> Afficher un feedback </a>
+                                <div id="div_feed_back" {% if not form.retroaction.value   %} class="checkbox_no_display"{% endif %}>
+                                {{ form_ans.empty_form.retroaction|add_class:"form-control"|attr:"rows:3"|attr:"placeholder:Ecrire le feedback" }}
+                                </div>
+                        </div>
+                    </div> 
+                </div>
+                <div class="col-sm-6">
+                    <div id="subformsetZone">
+                    </div>                        
+                    <div class="col-sm-12 col-md-12" >
+                        <a href="javascript:void();" class="add_sub_more btn btn-sacado_active" id="data_loop" ><i class="bi bi-plus-circle"></i> Ajouter une correspondance à ce thème</a> 
+                    </div> 
+                </div>         
+            </div>
+        </div>
+    </div>
+</script> 
+
+
+{% endblock %}

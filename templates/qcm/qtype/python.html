@@ -1,0 +1,37 @@
+{% extends 'qcm/form_supportfile.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+
+{% block body_qtype %}
+<div class="row">
+    <div class="col-sm-12 col-md-6">
+        <div class="form_card" style="margin-top:20px;">
+
+            <label>Titre :</label>
+            {{ form.title|add_class:"form-control"   }}
+            {{ form.title.errors }}
+
+            <div class="form-group">
+                <label>Enoncé </label><br>
+                {{ form.annoncement |add_class:"form-control"|attr:"rows:3" }}
+                {{ form.annoncement.errors }}
+            </div> 
+        </div>           
+        <div class="form_card" style="margin-top:20px;">
+            {% include 'qcm/qtype/_content_correction.html' %} 
+        </div>            
+    </div> 
+
+    <input id="id_qtype" value="19" name="qtype" type="hidden" />
+
+
+    <div class="col-sm-12 col-md-6">
+        <div class="form_card" style="margin-top:20px">    
+                {% include 'qcm/qtype/0_config_middle.html' %}
+        </div>
+    </div>       
+</div>
+
+ 
+{% endblock %}

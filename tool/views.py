@@ -6,8 +6,8 @@ from django.template.loader import render_to_string
 from django.contrib import messages
 from django.core.mail import send_mail
  
-from tool.models import Tool , Question  , Choice  , Quizz , Diaporama  , Slide ,Qrandom ,Variable , VariableImage , Answerplayer , Display_question ,  Videocopy , Positionnement #, Generate_quizz , Generate_qr
-from tool.forms import ToolForm ,  QuestionForm ,  ChoiceForm , QuizzForm,  DiaporamaForm , SlideForm, QrandomForm, VariableForm , AnswerplayerForm,  VideocopyForm , PositionnementForm , QuestionPositionnementForm
+from tool.models import *
+from tool.forms import *
 from group.models import Group 
 from socle.models import Level, Waiting , Theme , Knowledge
 from qcm.models import  Parcours, Exercise , Folder , Relationship
@@ -1264,11 +1264,11 @@ def create_question_positionnement(request,idp,qtype):
     request.session["tdb"] = False # permet l'activation du surlignage de l'icone dans le menu gauche 
     positionnement = Positionnement.objects.get(pk = idp)
     questions = positionnement.questions.order_by("ranking")
-    
+
     form = QuestionPositionnementForm(request.POST or None, request.FILES or None, positionnement = positionnement)
     all_questions = Question.objects.filter(is_publish=1)
 
-    formSet = inlineformset_factory( Question , Choice , fields=('answer','imageanswer','is_correct','retroaction') , extra=2)
+    formSet = inlineformset_factory( Question , Choice , fields=('answer','imageanswer','is_correct','retroaction','imageanswerbis','answerbis') , extra=2)
     form_ans = formSet(request.POST or None,  request.FILES or None)
   
     if request.method == "POST"  :
@@ -1295,7 +1295,8 @@ def create_question_positionnement(request,idp,qtype):
  
     #Choix des questions
     if qtype == 0 :
-        context.update( {  'title_type_of_question' : "Choisir un type de question"   })
+        qtypes = Qtype.objects.order_by("ranking")
+        context.update( {  'title_type_of_question' : "Choisir un type de question" , 'qtypes' : qtypes  })
         template = 'tool/choice_type_of_question_positionnement.html'
 
     #Vrai/Faux
@@ -1313,6 +1314,11 @@ def create_question_positionnement(request,idp,qtype):
  
         context.update( {  'bgcolors' : bgcolors  ,  'title_type_of_question' : "QCM" , 'form_ans' : form_ans   })
         template = 'tool/question_qcm_numeric_positionnement.html'
+
+    else :
+        qt = Qtype.objects.get(pk=qtype)
+        context.update( {  'bgcolors' : bgcolors  ,  'title_type_of_question' : qt.title , 'form_ans' : form_ans   })
+        template =  "tool/qtype/"+qt.custom+".html"
 
     return render(request, template , context)
 

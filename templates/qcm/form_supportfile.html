@@ -4,347 +4,163 @@
 {% load item_tags %}
 
 {% block require %}
- 
-    {% if supportfile %}
-    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common3.js' %}"></script>
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common3_withoutMathJax.js' %}"></script>
+    
+    {% if  qtype == 15 or qtype == 18 %}
+        <script>
+            require(['script/ajax-support_creator_canvas']);
+        </script> 
+    {% elif qt.is_sub %}
+        <script>
+            require(['script/ajax-support_creator_sub']);
+        </script> 
     {% else %}
-    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common2.js' %}"></script>
+        <script>
+            require(['script/ajax-support_creator']);
+        </script>    
     {% endif %}
 
-    <script>
-        require(['script/ajax-exercise']);
-    </script> 
     {% if not supportfile %}
-    <script>
-        require(['script/ajax-exercise-complement']);
-    </script> 
+        <script>
+            require(['script/ajax-support_creator_create']);
+        </script> 
     {% endif %}
-
 {% endblock %}
 
- 
-
 {% block page_title %}
-<div id="new_style">
-    <img src="{% static 'img/ggb.png' %}" width="25px"> Fichier GGB 
+<div id="new_style"><img src="{{ qt.imagefile.url }}" width="100px" class="qtype_logo_img" /> 
+    <small> 
+    {% if supportfile %}  
+        {{ supportfile.qtype_title }} <img src="{% static 'img/angle-right.png' %}" width="25px"/> <b>{{ qt.title}}</b>
+    {% else %} 
+        Création d'exercice  <img src="{% static 'img/angle-right.png' %}" width="25px"/> <b>{{ qt.title}}</b>
+    {% endif %}
     {% if knowledge  %}
-    <small>         
         {{ knowledge.level.shortname }}, {{ knowledge.theme.name }},  {{ knowledge.name|truncatechars:"80" }}
+    {% endif %}     
     </small>  
-    {% endif %} 
 </div>
 {% endblock %}
 
 
 {% block page_menu_right %}
- 
+
+    {% for qt in qtypes %}
+        <a href="{% url 'create_supportfile' qt.id 0  %}" class="no_underline">
+            <img src="{{ qt.imagefile.url }}" width="40px" class="qtype_logo_img" title="{{ qt.title }}" />
+        </a>
+    {% endfor %}
+
+
 {% endblock %}
 
 
+
 {% block body %}
-<style>
-ul#id_skills li{
-    list-style: none;
-}
-</style>
 
 <div class="content_main">
+
     <div class="col-xs-12 col-md-12">
         <form action="" method="POST" enctype='multipart/form-data'>
             {% csrf_token %}
             <div class="row" id="standard_layer">
-                {% if not supportfile %}
-                        <input value="{{ knowledge.level.id }}" name="level" id="id_level" type="hidden" />
-                        <input value="{{ knowledge.theme.id }}" name="theme" id="id_theme" type="hidden" />
-                        <input value="{{ knowledge.id }}" name="knowledge" id="id_knowledge" type="hidden" />
-                {% else %}  
-                <div class="row">
-                    <div class="col-sm-12 col-md-2">
-                        <div class="form-group">
-                            {{ form.level.label_tag }}
-                            {{ form.level |add_class:"form-control select2" }}
-                            {{ form.level.errors }}
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-md-2">
-                        <div class="form-group">
-                            {{ form.theme.label_tag }}
-                            {{ form.theme |add_class:"form-control select2" }}
-                            {{ form.theme.errors }}
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-md-8">
-                        <div class="form-group">
-                            <label>Savoir faire :</label><br>
-                            {{ form.knowledge |add_class:"form-control select2" }}
-                            {{ form.knowledge.errors }}
-                        </div>
-                    </div>
-                </div> 
-                {% endif %}  
-                <div class="row">
-                    <div class="col-sm-12 col-md-6">
+                {% if knowledge and not supportfile %}
+                    <input value="{{ knowledge.level.id }}" name="level" id="id_level" type="hidden" />
+                    <input value="{{ knowledge.theme.id }}" name="theme" id="id_theme" type="hidden" />
+                    <input value="{{ knowledge.id }}" name="knowledge" id="id_knowledge" type="hidden" />
+                    <div class="form_card">
                         <div class="row">
-                        <div class="col-sm-12 col-md-12">
-                            <div class="form-group">
-                                {{ form.title.label_tag }} <small><em>A privilégier</em></small>
-                                {{ form.title |add_class:"form-control"  }}
-                                {{ form.title.errors }}
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-md-12">
-                            <div class="form-group">
-                                {{ form.annoncement.label_tag }}
-                                {{ form.annoncement  }}
-                                {{ form.annoncement.errors }}
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-md-7">
-                            <div class="form-group">
-                                {{ form.imagefile.label_tag }}
-                                {{ form.imagefile |add_class:"btn btn-default" }}
-                                {{ form.imagefile.errors }}
-                                <font style="font-size:12px;color:#c70000">largeur : 750px - hauteur : 550px.</font>
-                            </div>
-
-                        <div class="form-group">
-                            {{ form.is_ggbfile.label_tag }}
-                            {{ form.is_ggbfile |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:GGB"|attr:"data-off:Réponse rédigée"}}
-                            {{ form.is_ggbfile.errors }}
-                        </div>
-
-                            <div class="form-group setup_ggb">
-                                {{ form.ggbfile.label_tag }} 
-                                {{ form.ggbfile |add_class:"btn btn-default" }}
-                                {{ form.ggbfile.errors }}
-                                <font style="font-size:12px;color:#c70000">Le nom du fichier ne doit comporter ni accent, ni espace.</font>
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-md-5">
-                            <div class="form-group">
-                                Compétences ciblées<br>
-                                {{ form.skills|add_class:"form-control select2" }}
+                            <div class="col-sm-12 col-md-12">
+                                <label>Compétences ciblées : </label>
+                                {{ form.skills |add_class:"form-control select2" }}
                                 {{ form.skills.errors }}
                             </div>
                         </div>
+                    </div>
+                {% else %} 
+
+
+                <div class="form_card">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-4  col-lg-3">
+                            <label>Enseignement :</label>
+                            <select id="id_subject" name="subject" class="form-control select2"> 
+                                <option value="">---------</option>
+                                {% for s in subjects %}
+                                <option value="{{ s.id }}" {% if supportfile.knowledge.theme.subject.id == s.id  %}selected{% endif %}>{{ s.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>   
+                        <div class="col-sm-12 col-md-4  col-lg-5">
+                                {{ form.theme.label_tag }}
+                                {{ form.theme |add_class:"form-control select2 knowledge_skills" }}
+                                {{ form.theme.errors }}
+                        </div>
+                        <div class="col-sm-12 col-md-4  col-lg-4">
+                            <label>Compétences ciblées : </label>
+                            {{ form.skills |add_class:"form-control select2" }}
+                            {{ form.skills.errors }}
                         </div>
                     </div>
-                    <div class="col-sm-12 col-md-3">
-                        <div class="form-group">
-                            {{ form.duration.label_tag }}
-                            {{ form.duration |add_class:"form-control" }}
-                            {{ form.duration.errors }}
-                        </div>
-                        <div class="form-group setup_ggb">
-                            {{ form.situation.label_tag }}
-                            {{ form.situation |add_class:"form-control" }}
-                            {{ form.situation.errors }}
-                        </div>
-                        <div class="row setup_ggb">
-                            <div class="col-sm-12 col-md-6">
-                                <div class="form-group">
-                                    {{ form.width.label_tag }}
-                                    {{ form.width |add_class:"form-control" }}
-                                    {{ form.width.errors }}
-                                    <font style="font-size:12px;">Largeur : 750px.</font>
-                                </div>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-4  col-lg-3">
+                            <div class="form-group">
+                                <label>Niveau :</label>
+                                {{ form.level |add_class:"form-control select2 knowledge_skills" }}
+                                {{ form.level.errors }}
                             </div>
-                            <div class="col-sm-12 col-md-6">
-                                <div class="form-group">
-                                    {{ form.height.label_tag }}
-                                    {{ form.height |add_class:"form-control" }}
-                                    {{ form.height.errors }}
-                                    <font style="font-size:12px;">hauteur : 550px.</font>
-                                </div>
+                        </div>    
+                        <div class="col-sm-12 col-md-8 col-lg-9">
+                            <div class="form-group">
+                                <label>Savoir faire :</label><br>
+                                {{ form.knowledge |add_class:"form-control select2 knowledge_skills" }}
+                                {{ form.knowledge.errors }}
                             </div>
                         </div>
-
-                        <div class="form-group">
-                            {{ form.calculator.label_tag }}
-                            {{ form.calculator |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}
-                            {{ form.calculator.errors }}
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-md-3 setup_ggb">
-                        <h4 class="thin"><i class="fa fa-cog"></i> Configuration du fichier ggb</h4><hr/>
-                        <div class="row">
-                            <div class="col-sm-12 col-md-8">
-                                <div class="form-group">
-                                    Barre d'outils ?
-                                </div>
-                            </div>
-                            <div class="col-sm-12 col-md-4">
-                                <div class="form-group">
-                                    {{ form.toolBar |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}
-                                    {{ form.toolBar.errors }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12 col-md-8">
-                                <div class="form-group">
-                                   Barre de menu ?
-                                </div>
-                            </div>
-                            <div class="col-sm-12 col-md-4">
-                                <div class="form-group">
-                                    {{ form.menuBar |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}
-                                    {{ form.menuBar.errors }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12 col-md-8">
-                                <div class="form-group">
-                                    Multi-fenêtres ?
-                                </div>
-                            </div>
-                            <div class="col-sm-12 col-md-4">
-                                <div class="form-group">
-                                    {{ form.algebraInput |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}
-                                    {{ form.algebraInput.errors }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12 col-md-8">
-                                <div class="form-group">
-                                    Bouton Reset ?
-                                </div>
-                            </div>
-                            <div class="col-sm-12 col-md-4">
-                                <div class="form-group">
-                                    {{ form.resetIcon |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}
-                                    {{ form.resetIcon.errors }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12 col-md-8">
-                                <div class="form-group">
-                                    Zoom/déplacement ?
-                                </div>
-                            </div>
-                            <div class="col-sm-12 col-md-4">
-                                <div class="form-group">
-                                    {{ form.dragZoom |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}
-                                    {{ form.dragZoom.errors }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-md-3 setup_no_ggb">
-                        <h4 class="thin"><i class="fa fa-cog"></i> Format de réponse non autocorrigée</h4><hr/>
-                        <div class="row">
-                            <div class="col-sm-12 col-md-8">
-                                <div class="form-group">
-                                   Python ?
-                                </div>
-                            </div>
-                            <div class="col-sm-12 col-md-4">
-                                <div class="form-group">
-                                    {{ form.is_python |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}
-                                    {{ form.is_python.errors }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12 col-md-8">
-                                <div class="form-group">
-                                   Scratch ?
-                                </div>
-                            </div>
-                            <div class="col-sm-12 col-md-4">
-                                <div class="form-group">
-                                    {{ form.is_scratch |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}
-                                    {{ form.is_scratch.errors }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12 col-md-8">
-                                <div class="form-group">
-                                    Fichier pdf/doc/.. ?
-                                </div>
-                            </div>
-                            <div class="col-sm-12 col-md-4">
-                                <div class="form-group">
-                                    {{ form.is_file |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}
-                                    {{ form.is_file.errors }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12 col-md-8">
-                                <div class="form-group">
-                                    Image ?
-                                </div>
-                            </div>
-                            <div class="col-sm-12 col-md-4">
-                                <div class="form-group">
-                                    {{ form.is_image |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}
-                                    {{ form.is_image.errors }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12 col-md-8">
-                                <div class="form-group">
-                                    Texte en ligne ?
-                                </div>
-                            </div>
-                            <div class="col-sm-12 col-md-4">
-                                <div class="form-group">
-                                    {{ form.is_text |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}
-                                    {{ form.is_text.errors }}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-sm-12 col-md-12">
-                                <div class="form-group">
-                                    {{ form.correction.label_tag }}
-                                    {{ form.correction}}
-                                    {{ form.correction.errors }}
-                                </div>
-                            </div>
-                        </div>
-
-
-
-
                     </div>
                 </div>
+
+                {% endif %}  
+  
+
+                {% block body_qtype %}
+    
+                {% endblock %}
+
+
+
+
                 <div class="row">
-                    <div class="col-sm-12 col-md-12">
+                    <div class="col-sm-4 col-md-2" >
                         <div class="form-group">
                             <input value="Enregistrer" type="submit" class="btn btn-primary" id="click_button" />
+                        </div>
+                    </div>
+                    <div class="col-sm-4 col-md-2">
+                        <div class="form-group">
                             <a href="javascript:history.back()"><input type="button" value="Annuler" class="btn btn-default "/></a>
                         </div>
                     </div>
-                </div>
-                {% if supportfile %}
-                    {% if supportfile.levels_used|length > 0  %}
-                    <div class="row">
-                        <div class="col-sm-12 col-md-12">                                             
-                            <a href="#" class="btn btn-danger" style="margin-left:5px" disabled > 
-                                <i class="fa fa-trash"> </i>   Suppression impossible - support utilisé
-                            </a>
+                    {% if supportfile %}
+                    <div class="col-sm-4 col-md-3">
+                        <div class="form-group">
+                            {% if supportfile.all_parcourses.count  %}            
+                                <a href="#" class="btn btn-info" disabled > 
+                                    Suppression impossible. Exercice utilisé dans un parcours.
+                                </a>
+                            {% else %}                                         
+                                <a href="{% url 'delete_supportfile' supportfile.id   %}" class="btn btn-danger" onclick="return TestDelete('cet exercice')" > 
+                                    <i class="fa fa-trash"> </i>   Supprimer
+                                </a>
+                            {% endif %}
                         </div>
                     </div>
-                    {% else %}
-                    <div class="row">
-                        <div class="col-sm-12 col-md-12">                                             
-                            <a href="{% url 'delete_supportfile' supportfile.id   %}" class="btn btn-danger" style="margin-left:5px" onclick="return TestDelete('ce support GGB')" > 
-                                <i class="fa fa-trash"> </i>   Supprimer
-                            </a>
-                        </div>
-                    </div>
-                    {% endif %}
-                {% endif %}
+                    {% endif %}                    
+                </div>   
             </div>
         </form>
     </div>
+    {% endblock %}
+
 </div>
-{% endblock %}
+

@@ -1,0 +1,59 @@
+{% extends 'qcm/qtype/form_answer_all_types.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+
+{% block require %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common4.js' %}"></script>
+    <script>
+        require(['script/ajax-check_pairs','script/slider_answer_box']);
+    </script> 
+{% endblock %}
+
+{% block answer_all_type_template %}
+
+	{% for annoncement in annoncements %} 
+		<li class="this_slide">
+
+			{% if detail_vars   %}
+	 	      	{% for detail_var in detail_vars|index:forloop.counter0 %}
+	        		<input type="hidden" id="{{ detail_var.name }}{{ forloop.parentloop.counter }}" name="{{ detail_var.name }}" value="{{detail_var.val}}" />
+	        	{% endfor %}
+	    	{% endif %}
+
+
+		    {% include 'qcm/qtype/_annoncement_instruction.html' %}
+		    <div class="legend_answer text-green_index zoom_in" align="left">Glisser/déposer les étiquettes pour former les paires</div>  
+
+
+			<div class="select_items" align="left">
+				{% for choice in choices|index:forloop.counter0 %}
+					<span class="quizz_choice draggable"  data-loop="{{ forloop.parentloop.counter }}" style="cursor: move;" data-subchoice="{% if choice.imageanswerbis  %}{{ choice.imageanswerbis }}{% else %}{{ choice.answerbis }}{% endif %}" >
+						{% if choice.imageanswerbis  %}<img src="{{ choice.imageanswerbis.url }}" height="80px" />{% endif %} {{  choice.answerbis }}
+					</span>
+					<input type="hidden" name="choice_ids"  value="{{ choice.id }}" />
+				{% endfor %}
+			</div>	
+ 
+			<div class="dropzone{{ forloop.counter }}">
+			{% for choice in shufflechoices|index:forloop.counter0 %}
+			<div class="quizz_choice_answer droppable{{ forloop.parentloop.counter }}" align="left">
+				<span class="quizz_droppable" style="border : 0px;">{% if choice.imageanswer  %}<img src="{{ choice.imageanswer.url }}" height="80px" />{% endif %} {{ choice.answer }}</span>
+				<input type="hidden" class="answers{{ forloop.parentloop.counter }}" name="answers{{ forloop.parentloop.counter }}"  value="{% if choice.imageanswer  %}{{ choice.imageanswer }}{% else %}{{ choice.answer }}{% endif %}====" />
+			</div>
+			{% endfor %}
+			</div>
+		    <div class="row validation">
+		    	<div class="col-sm-12 col-md-3" align="center"  >
+		            <a  href="#" class="btn btn-primary show_these_pairs_correction" data-supportfile_id="{{ supportfile.id }}"   
+		            	id="nav_start{{ forloop.counter }}" data-loop="{{ forloop.counter }}"><i class="fa fa-caret-right"></i> Valider </a>
+		        </div>
+		    </div>
+			{% include 'qcm/qtype/_correction_div.html' %}
+		</li>        	
+	{% endfor %}
+
+
+	{% include 'qcm/qtype/_last_slide.html' %}
+
+{% endblock %}

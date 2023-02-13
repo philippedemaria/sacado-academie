@@ -274,13 +274,41 @@ class Choice(models.Model):
     """
 
     imageanswer = models.ImageField(upload_to=choice_directory_path,  null=True,  blank=True, verbose_name="Image", default="")
-    answer      = models.TextField(max_length=255, default='', null=True,  blank=True, verbose_name="Réponse écrite")
-    retroaction = models.TextField(max_length=255, default='', null=True,  blank=True, verbose_name="Rétroaction")
+    answer      = models.TextField(default='', null=True,  blank=True, verbose_name="Réponse écrite")
+    retroaction = models.TextField(default='', null=True,  blank=True, verbose_name="Rétroaction")
+    audioanswer = models.FileField(upload_to=choice_directory_path,  null=True,  blank=True, verbose_name="Audio", default="")
 
-    is_correct  = models.BooleanField(default=0, verbose_name="Réponse correcte ?")
+    imageanswerbis = models.ImageField(upload_to=choice_directory_path,  null=True,  blank=True, verbose_name="Image par paire", default="")
+    answerbis      = models.TextField(max_length=255, default='', null=True,  blank=True, verbose_name="Réponse par paire")
+    audioanswerbis = models.FileField(upload_to=choice_directory_path,  null=True,  blank=True, verbose_name="Audio", default="")
+
+    is_correct  = models.BooleanField(default=0, blank=True, verbose_name="Réponse correcte ?")
     question    = models.ForeignKey(Question, related_name="choices", blank=True, null = True,  on_delete=models.CASCADE)
+
+    ####  Cas spécifique axe gradué
+    xmin       = models.FloatField( null = True,   blank=True, verbose_name="x min ")
+    xmax       = models.FloatField( null = True,   blank=True, verbose_name="x max ")
+    tick       = models.FloatField( null = True,   blank=True, verbose_name="Graduation principale")
+    subtick    = models.FloatField( null = True,   blank=True, verbose_name="Graduation")
+    precision  = models.FloatField( null = True,   blank=True, verbose_name="Précision") 
+    ####  Cas spécifique texte à trous
+    is_written = models.BooleanField(default=0, blank=True,  verbose_name="Mots à écrire ?") # ou à glisser déposer
+
+
+
+class Subchoice(models.Model):
+    """
+    Modèle représentant un associé.
+    """
+    imageanswer   = models.ImageField(upload_to= choice_directory_path,  null=True,  blank=True, verbose_name="Image", default="")
+    answer        = models.TextField(default='', null=True,  blank=True, verbose_name="Réponse écrite")
+    retroaction   = models.TextField(default='', null=True,  blank=True, verbose_name="Rétroaction")
+    label         = models.CharField(max_length=255, default='', null=True,  blank=True, verbose_name="Label")#pour les position sur images
+    is_correct    = models.BooleanField(default=0, verbose_name="Réponse correcte ?")
+    supportchoice = models.ForeignKey(Choice, related_name="subchoices", blank=True, null = True,  on_delete=models.CASCADE)
     def __str__(self):
         return self.answer 
+
 
 
 class Quizz(ModelWithCode):

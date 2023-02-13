@@ -1,0 +1,135 @@
+{% load static %}
+{% load widget_tweaks %}
+{% load item_tags %}
+
+<label>Titre </label>
+{{ form.title|add_class:"form-control"   }}
+{{ form.title.errors }}
+
+<div class="row">
+    <div class="col-sm-12 col-md-12">                        
+        <div class="form-group"> 
+        <label>Enoncé :</label>
+        <a href="javascript:void();" id="show_randomize_zone" class="btn btn-sacado">
+            <label>Variables numériques aléatoires ? 
+                <span class="helper_tip"> <i class="fa fa-question-circle"></i> 
+                    <div class="helper_tip_text" >Placer des variables aléatoires<br/> dans l'énoncé et les réponses.</div>
+                </span>
+            </label>
+        </a>
+        <div class="row no_visu_on_load" id="randomize_zone">
+            <div class="col-sm-12 col-md-12 alert alert-sacado">
+         
+
+                <div class="row">                      
+                    <div class="col-sm-12 col-md-6 controls">
+                         <small>Déclaration des variables aléatoires</small> <a href="javascript:void();" id="new_item" class="btn btn-sacado add_more_question" >+ variable</a>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                          <small>Nombre de situations proposées {{ form.pseudoalea_nb  }} </small>
+                    </div>   
+                </div>
+         
+                {{ form_var.management_form }} 
+                <script id="rowToClone_question" type="text/template">
+                    <div id="duplicate_variables">  
+                        <div class="col-sm-12 col-md-6 qrandom">
+                                <div class="col-sm-4 col-md-4"> 
+                                        <label>Nom : </label>  <br/>{{ form_var.empty_form.name|add_class:"form-control"|attr:"placeholder:a" }} 
+                                </div>
+
+                                <div class="col-sm-4 col-md-4" > 
+                                        <label>Nb entier ?</label> <br/>
+                                        {{ form_var.empty_form.is_integer|attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non" }} 
+                                </div>
+                                <div class="col-sm-4 col-md-4" > 
+                                            <label>0 exclus ?</label> <br/> 
+                                            {{ form_var.empty_form.is_notnull|attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non" }} 
+                                </div>
+                                <div class="col-sm-4 col-md-4" > 
+                                            <label>Min.</label> <br/> 
+                                            {{ form_var.empty_form.minimum|add_class:"form-control" }} 
+                                </div>
+                                <div class="col-sm-4 col-md-4" > 
+                                        <label>Max.</label>  <br/>
+                                        {{ form_var.empty_form.maximum|add_class:"form-control" }} 
+                                </div>
+                                <div class="col-sm-4 col-md-4"><br/>
+                                    <div class="delete_button_question"></div>
+                                </div>                                 
+                        </div>
+                    </div>
+                </script>                            
+                <div id="formsetZone_variables">  
+                </div>
+            </div>  
+            <div class="alert alert-danger">
+                <div class="col-sm-12 col-md-12">
+                    <small><i class="fa fa-warning"></i> Ne pas utiliser dans votre énoncé et réponses les noms de vos variables pour désigner autre chose que vos variables.</small> 
+                </div>
+            </div>
+        </div> 
+
+        {{ form.annoncement |add_class:"form-control"|attr:"rows:3" }}
+        {{ form.annoncement.errors }}
+        </div>
+    </div>
+</div>
+<img src="{% static 'img/tex.png' %}" height="15px"/> <small>Pour inclure une formule, utiliser les délimiteurs dollar $ et pour une figure, utiliser TiKZ</small>
+<div class="row" > 
+    <div class="col-sm-12 col-md-12 form-group">
+        <a href="javascript:void();" id="show_latex_formula" class="btn btn-sacado"><label><img src="{% static 'img/tex.png' %}" width="15px" /> Inclure les champs de réponse dans l'énoncé  ? </label> </a> 
+    </div>
+</div> 
+<div class="row no_visu_on_load" id="latex_formula" > 
+    <div class="col-sm-12 col-md-12">
+        <span style="line-height: 1.7em"><small>Utiliser 
+            <span class="formula">\input[name][3em]{valeur par défaut}</span> 
+            pour placer le champ à compléter. <br/>
+            <span class="formula">$\frac{\input[num][3em]{}}{\input[deno][3em]{2}}$</span> 
+            affiche :  <img src="{% static 'img/formula.png' %}"/>
+            <br/>
+            Pour les champs de réponse dans l'énoncé, écrire dans "réponses attendues" (ci-dessous) les réponses au format <span class="formula_answer">name=reponse</span> séparées par <span class="formula">_##_</span>.  <span class="formula">num=4_##_deno=-5</span> signifie que la réponse du champ <span class="formula_answer">num</span> est 4 et la réponse du champ <span class="formula_answer">deno</span> est -5.
+            </small>
+        </span>
+    </div>
+</div> 
+
+<!-- <script>
+            $(document).on('click', '.add_more_question', function (event) { 
+
+                var total_form = $('#id_customvariables-TOTAL_FORMS') ;
+                var totalForms = parseInt(total_form.val())  ;
+
+                var thisClone = $('#rowToClone_question');
+                rowToClone = thisClone.html() ;
+
+                console.log(totalForms) ; 
+
+                $('#formsetZone_variables').append(rowToClone);
+
+                $('#duplicate_variables').attr("id","duplicate_variables"+totalForms) 
+                //$('#cloningZone').attr("id","cloningZone"+totalForms) 
+
+                $('#duplicate_variables'+totalForms).find('.delete_button_question').html('<a href="javascript:void(0)" class="btn btn-danger remove_more_question" ><i class="fa fa-trash"></i></a>'); 
+                $('#duplicate_variables'+totalForms).find("input[type='checkbox']").bootstrapToggle();
+
+                $("#duplicate_variables"+totalForms+" input").each(function(){ 
+                    $(this).attr('id',$(this).attr('id').replace('__prefix__',totalForms));
+                    $(this).attr('name',$(this).attr('name').replace('__prefix__',totalForms));
+                });
+                total_form.val(totalForms+1);
+
+            });
+
+
+        $(document).on('click', '.remove_more_question', function () {
+            var total_form = $('#id_customvariables-TOTAL_FORMS') ;
+            var totalForms = parseInt(total_form.val())-1  ;
+
+            $('#duplicate_variables'+totalForms).remove();
+            total_form.val(totalForms)
+        });
+
+
+</script> -->

@@ -1,0 +1,169 @@
+{% extends 'qcm/form_supportfile.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+
+{% block body_qtype %}
+<div class="row">
+    <div class="col-sm-12 col-md-6 col-lg-6">
+        <div class="form_card" style="margin-top:20px;">
+            <div class="row">
+                <div class="col-sm-12 col-md-12">
+                        {{ form.title.label_tag }}
+                        {{ form.title |add_class:"form-control"  }}
+                        {{ form.title.errors }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-md-12">
+                    <div class="form-group">
+                        {{ form.annoncement.label_tag }}<br/>
+                        {{ form.annoncement  }}
+                        {{ form.annoncement.errors }}
+                    </div>
+                </div>
+            </div>    
+            <div class="row">
+                <div class="col-sm-12 col-md-12">
+                    <div class="form-group">
+                        {{ form.imagefile.label_tag }}
+                        {{ form.imagefile |add_class:"btn btn-default" }}
+                        {{ form.imagefile.errors }}
+                        <font style="font-size:12px;color:#c70000">largeur : 750px - hauteur : 550px.</font>
+                    </div>
+                    <div class="form-group no_visu_on_load">
+                        {{ form.is_ggbfile.label_tag }}
+                        {{ form.is_ggbfile |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:GGB"|attr:"data-off:Réponse rédigée"}}
+                        {{ form.is_ggbfile.errors }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.ggbfile.label_tag }} 
+                        {{ form.ggbfile |add_class:"btn btn-default" }}
+                        {{ form.ggbfile.errors }}
+                        <font style="font-size:12px;color:#c70000">Le nom du fichier ne doit comporter ni accent, ni espace.</font>
+                    </div>
+                </div>                    
+            </div>
+        </div>
+    </div>
+
+
+     <input id="id_qtype" value="{{ qtype }}" name="qtype" type="hidden" />
+
+    <div class="col-sm-12 col-md-6 col-lg-3">
+
+        <div class="form_card" style="margin-top:20px;">
+            Compétences ciblées<br>
+            {{ form.skills|add_class:"form-control select2" }}
+            {{ form.skills.errors }}
+        </div>
+
+        <div class="form_card" style="margin-top:20px;">
+            <div class="form-group">
+                {{ form.duration.label_tag }}
+                {{ form.duration |add_class:"form-control" }}
+                {{ form.duration.errors }}
+            </div>
+            <div class="form-group">
+                {{ form.situation.label_tag }} 
+                {{ form.situation |add_class:"form-control" }}
+                {{ form.situation.errors }}
+            </div>
+            <div class="row setup_ggb">
+                <div class="col-sm-12 col-md-6">
+                    <div class="form-group">
+                        {{ form.width.label_tag }}
+                        {{ form.width |add_class:"form-control" }}
+                        {{ form.width.errors }}
+                        <font style="font-size:12px;">Largeur : 750px.</font>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <div class="form-group">
+                        {{ form.height.label_tag }}
+                        {{ form.height |add_class:"form-control" }}
+                        {{ form.height.errors }}
+                        <font style="font-size:12px;">hauteur : 550px.</font>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                {{ form.calculator.label_tag }}
+                {{ form.calculator |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}
+                {{ form.calculator.errors }}
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-6 col-lg-3">
+        <div class="form_card" style="margin-top:20px;">
+            <div class="row">
+                <div class="col-sm-12 col-md-8">
+                    <div class="form-group">
+                        <label>Barre d'outils ?</label>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-4">
+                    <div class="form-group">
+                        {{ form.toolBar |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}
+                        {{ form.toolBar.errors }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-md-8">
+                    <div class="form-group">
+                       <label>Barre de menu ?</label>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-4">
+                    <div class="form-group">
+                        {{ form.menuBar |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}
+                        {{ form.menuBar.errors }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-md-8">
+                    <div class="form-group">
+                        <label>Multi-fenêtres ?</label>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-4">
+                    <div class="form-group">
+                        {{ form.algebraInput |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}
+                        {{ form.algebraInput.errors }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-md-8">
+                    <div class="form-group">
+                        <label>Bouton Reset ?</label>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-4">
+                    <div class="form-group">
+                        {{ form.resetIcon |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}
+                        {{ form.resetIcon.errors }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-md-8">
+                    <div class="form-group">
+                        <label>Zoom/déplacement ?</label>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-md-4">
+                    <div class="form-group">
+                        {{ form.dragZoom |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}
+                        {{ form.dragZoom.errors }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+   
+{% endblock %}

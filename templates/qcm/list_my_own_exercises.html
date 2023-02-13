@@ -1,0 +1,192 @@
+{% extends 'dashboard.html' %}
+
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+
+
+   
+{% block require %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common2.js' %}"></script>
+    <script>
+        require(['script/ajax-list_my_customexercise']);
+    </script>    
+{% endblock %} 
+
+  
+{% block page_title %}
+    <i class="bi bi-explicit sacado_color_text"></i>  {% include 'qcm/breadcrumb.html' %}  Mes 15 derniers exercices  
+    <a href="#" id="show_exercises_search_div" class="btn btn-new loupe"> <i class="bi bi-search"></i> </a>
+
+    <span class="btn btn-new xs_no_display" id="show_all_proposed_exercises" style="margin-left:20px"> Nouvel exercice</span>
+
+    <div id="all_proposed_exercises">
+            {% for qt in qtypes %}
+                {% if request.user.is_superuser %}
+                <a href="{% url 'create_supportfile' qt.id 0  %}" class="all_proposed_types_exercises">
+                    <div style="margin:10px;float:left">
+                        <span class="helper_tip">
+                          {% if qt.imagefile %} 
+                          <img src="{{ qt.imagefile.url }}" width='50px' style="border-radius:5px; border:2px solid #CCC;"/>
+                          {% endif %}
+                          <div class="helper_tip_text_right" ><b>{{ qt.title }}</b><br/>{{ qt.html|safe }}</div>
+                        </span>
+                    </div>
+                </a>
+                {% elif qt.id == 19 or qt.id == 20  %} 
+                <a href="{% url 'create_supportfile' qt.id 0  %}" class="all_proposed_types_exercises">
+                    <div style="margin:10px;float:left">
+                        <span class="helper_tip"> <img src="{{ qt.imagefile.url }}" width='50px' style="border-radius:5px; border:2px solid #CCC;"/>
+                          <div class="helper_tip_text_right" ><b>{{ qt.title }}</b><br/>{{ qt.html|safe }}</div>
+                        </span>
+                    </div>
+                </a>
+                {% endif %} 
+ 
+
+            {% endfor %}
+    </div>
+
+
+
+
+
+
+{% endblock %}
+
+
+
+
+{% block page_menu_right %}
+    
+
+{% endblock %}
+
+
+{% block body %}
+<section class="content_main">
+<form method="POST"> 
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="row no_visu_on_load" id="exercises_search_div" >
+                <div class="col-sm-12 col-md-4">
+                    <div class="form_card">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <label>Enseignements : </label> 
+                                <select name="subjects" multiple class="form-control select2 subjects_levels" id="id_subjects" required>
+                                    {% for s in subjects %}
+                                    <option value="{{ s.id }}">{{ s.shortname }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-sm-12 col-md-6">
+                                <label>Niveaux concernés : </label>
+                                <select name="levels" multiple class="form-control select2 subjects_levels" id="id_levels">
+                                    {% for l in levels %}
+                                    <option value="{{ l.id }}">{{ l.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12">
+                                <div class="form-group">
+                                    <label>Compétences évaluées :</label><br>
+                                    <select name="skills" multiple class="form-control select2" id="id_skills">
+                                        {% for s in skills %}
+                                        <option value="{{ s.id }}">{{ s.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>  
+                </div>
+                <div class="col-sm-12 col-md-8">
+                    <div class="form_card">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12">
+                                <label>Thèmes ciblés : </label>
+                                <select name="themes" multiple class="form-control select2 all_discriminants" id="id_themes">
+                                    {% for t in themes %}
+                                    <option value="{{ t.id }}">{{ t.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <div class="form-group">
+                                    <label>Savoir faire évalués : </label>
+                                    <select name="knowledges" multiple class="form-control select2 all_discriminants" id="id_knowledges">
+                                        {% for k in knowledges %}
+                                        <option value="{{ k.id }}">{{ k.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="loading_spin"></div>
+
+
+
+    <div id="result_div">
+
+        {% include 'qcm/ajax_list_customexercises.html' %}
+    </div>
+
+</form>     
+</section>
+
+
+
+
+
+<script>
+MathJax = {
+  tex: {packages: {'[+]': ['input']} ,   inlineMath: [['$', '$']] , displayMath: [['$$', '$$'], ["\\[", "\\]"]],  },
+  startup: {
+    ready() {
+      const Configuration = MathJax._.input.tex.Configuration.Configuration;
+      const CommandMap = MathJax._.input.tex.SymbolMap.CommandMap;
+      const TEXCLASS = MathJax._.core.MmlTree.MmlNode.TEXCLASS;
+      
+      new CommandMap('input', {input: 'Input'}, {
+        Input(parser, name) {
+          const xml = parser.create('node', 'XML');
+          const id = parser.GetBrackets(name, '');
+          const w = parser.GetBrackets(name, '5em');
+          const classe = parser.GetBrackets(name, 'input_latex');
+          const value = parser.GetArgument(name);
+          xml.setXML(MathJax.startup.adaptor.node('input', {
+            id: id, name: id, value: value, class: classe , style: {width: w}
+             }), MathJax.startup.adaptor);
+          xml.getSerializedXML = function () {
+            return this.adaptor.outerHTML(this.xml) + '</input>';
+          }
+          parser.Push(
+            parser.create('node', 'TeXAtom', [
+              parser.create('node', 'semantics', [
+                parser.create('node', 'annotation-xml', [
+                  xml
+                ], {encoding: 'application/xhtml+xml'})
+              ])
+            ], {texClass: TEXCLASS.ORD})
+          );
+        }
+      });
+      Configuration.create('input', {handler: {macro: ['input']}});
+
+      MathJax.startup.defaultReady();
+    }
+  }
+};
+</script>
+<script id="MathJax-script" defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+{% endblock %}
+ 

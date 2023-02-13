@@ -1,0 +1,110 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% load item_tags %}
+
+
+{% block require %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common4.js' %}"></script>
+    <script>
+        require(['script/ajax-parcours','script/writting-form']);
+    </script> 
+{% endblock %}
+
+ 
+
+{% block page_title %}
+    <img src="{{ supportfile.qtype_logo.url }}" width="40px" class="qtype_logo_img" title="{{ qt.title }}" /> {{ supportfile.title }}
+{% endblock %}
+
+
+{% block page_menu_right %}
+    {{  supportfile.knowledge  }}
+{% endblock %}
+
+
+
+
+{% block css_files %}
+{% endblock %}
+
+
+{% block body %}
+<section class="content_main"> 
+
+
+    <form action="" method="POST" enctype='multipart/form-data'>
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-8">
+                {% if relationship.instruction or supportfile.annoncement  %}  
+                    <a href="#" id='show_consigne_div' class="btn btn-sacado_active">Lire la consigne <i class="fa fa-caret-down"></i></a> 
+
+                    <div id="consigne_div" class="no_visu_on_load">
+                        {% include 'qcm/qtype/_annoncement_instruction.html' %} 
+                    </div>
+
+                {% endif  %}
+
+                {% if supportfile.is_display_correction %}  
+                    <a href="#" data-toggle='modal' data-target='#correction' class="btn btn-blue">Voir le corrigé</a><br/>
+                {% endif  %}
+
+
+                {% if supportfile.is_image   or  supportfile.is_file  %}   
+                <div class="form-group">
+                    <label>
+                        {% if supportfile.is_image   and   supportfile.is_file  %} Fichier, image (PNG/JPG) ou image scannée
+                        {% elif supportfile.is_image %} Image (PNG/JPG) ou image scannée
+                        {% elif supportfile.is_file %} Fichier {% endif %}
+                    </label><br>
+                    {{ form.imagefile|add_class:"btn btn-default"   }}
+                    {{ form.imagefile.errors }} <br>
+                </div> 
+                {% endif %}
+ 
+                {% if supportfile.is_text   %} 
+                <div class="form-group">
+                    {{ form.answer }}
+                    {{ form.answer.errors }} <br>
+                </div>
+                {% endif %}
+
+                <div class="row">
+                    <div class="col-sm-12 col-lg-8">
+                        <div class="form-group">                           
+                            <input value="Remettre le travail" disabled class="btn btn-primary"/>     
+                            <input type="button" value="Annuler" class="btn btn-default" onclick="javascript:history.back()"/>
+                        </div>
+                    </div>
+ 
+                </div>
+            </div>
+            <div class="col-sm-12 col-lg-4 form_card">
+                Cette vue ne prend pas en charge les éventuelles aides. Elle est dédié à l'auteur du sujet.
+            </div>
+        </div>
+    </form>  
+</section>
+
+<div class="modal fade" id="correction" tabindex="-1" role="dialog" aria-labelledby="correction">
+    <div class="modal-dialog" role="document"  style="width:70%">
+        <div class="modal-content" style="padding-top :0px;">
+            <div class="modal-header">
+                <h3 class="text-blue"> Corrigé :     
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button> 
+                </h3>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12 col-xs-12 zoom_in">   
+                        {{ supportfile.correction|safe }}                  
+                    </div>   
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

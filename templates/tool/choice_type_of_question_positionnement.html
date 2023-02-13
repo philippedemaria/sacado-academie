@@ -27,49 +27,30 @@
 
 
 {% block type_of_question %}
-        <div class="row">
-            <div class="col-sm-12 col-md-6" align="center"> 
-                <a href="{% url 'create_question_positionnement' positionnement.id 1 %}" class="selector_question" >
-                    <div class="quizz_card">
-                        <h1>Vrai / Faux</h1>
-                        <i class="fa fa-check text-success fa-2x"></i>                
-                        <i class="fa fa-times text-danger fa-2x"></i>
-                    </div>
-                </a>
-            </div>    
-            <div class="col-sm-12 col-md-6" align="center">
-                <a href="{% url 'create_question_positionnement' positionnement.id 2 %}" class="selector_question">
-                    <div class="quizz_card">
-                        <h1>Réponse rédigée</h1>
-                        <i class="fa fa-edit fa-5x"></i>
-                    </div>
-                </a>
-            </div> 
-        </div>
-        <div class="row">
-            <div class="col-sm-12 col-md-6" align="center"> 
-                <a href="{% url 'create_question_positionnement' positionnement.id 3 %}" class="selector_question">
-                    <div class="quizz_card">
-                        <h1>QCM</h1>
-                        <i class="fa fa-check text-success"></i> -------- <br/> 
-                        <i class="fa fa-check text-success"></i> -------- <br/>               
-                        <i class="fa fa-times text-danger"></i> -------- <br/>
-                        <i class="fa fa-times text-danger"></i> -------- <br/>
-                    </div>
-                </a>
-            </div>    
-            <div class="col-sm-12 col-md-6" align="center"> 
-                <a href="{% url 'create_question_positionnement' positionnement.id 4 %}" class="selector_question">
-                    <div class="quizz_card">
-                        <h1>QCS</h1>
-                        <i class="fa fa-times text-danger"></i> -------- <br/>
-                        <i class="fa fa-check text-success"></i> -------- <br/>               
-                        <i class="fa fa-times text-danger"></i> -------- <br/>
-                        <i class="fa fa-times text-danger"></i> -------- <br/>
-                    </div>
-                </a>
-            </div>  
-        </div>
- 
 
-{% endblock %}
+
+    {% for qt in qtypes %}
+
+    <div class="col-xs-6 col-sm-4 col-md-3" align='left'>
+        <div class="qtypes_choice qtypes_choice_square" style="background-image: url({{ qt.imagefile.url }});background-color: white; background-size: contain;background-repeat: no-repeat;height:100px;width:100%">
+            <a href="{% url 'create_question_positionnement'  positionnement.id qt.id  %}">
+                <div style="height:98px;width:97px;float:left " />
+                </div>
+                <div style="padding:10px;float:left;width:150px;">
+                    <label>{{ qt.title }}</label> 
+                    {% if qt.is_alea %}<span class="helper_tip"> <img src="{% static 'img/shuffle.png' %}" width="15px" style="vertical-align: baseline;" />
+                    <div class="helper_tip_text" ><label>Aléatoire.</label> SACADO gère les variables dynamiques aléatoires déclarées à la création de l'exercice.</div>
+                        </span>
+                    {% endif %}
+                    {% if qt.is_pseudo %}<span class="helper_tip"> <img src="{% static 'img/pseudo_shuffle.png' %}" width="15px" style="vertical-align: baseline;" />
+                    <div class="helper_tip_text" ><label>Pseudo aléatoire.</label> SACADO crée un exercice en choisissant aléatoirement des situations parmi vos choix enregistrés.</div>
+                        </span>{% endif %}<br/>
+                        {{ qt.html }}
+                    
+                </div>
+            </a>  
+        </div>
+    </div>
+    {% endfor %}  
+
+{% endblock %} 

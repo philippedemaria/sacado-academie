@@ -1,0 +1,74 @@
+{% extends 'qcm/qtype/form_answer_all_types.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+
+
+
+{% block require %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common4.js' %}"></script>
+    <script>
+        require(['script/ajax-check_vf','script/slider_answer_box']);
+    </script> 
+{% endblock %}
+
+
+{% block answer_all_type_template %}
+
+	<!------------------------------ Slides de type d'exercice --------------------------------------------->	
+	{% for choice in shufflechoices %} 
+	    <li class="this_slide" id="this_slide{{ forloop.counter }}">  
+
+			{% if detail_vars   %}
+	 	      	{% for detail_var in detail_vars|index:forloop.counter0 %}
+	        		<input type="hidden" id="{{ detail_var.name }}{{ forloop.parentloop.counter }}" name="{{ detail_var.name }}" value="{{detail_var.val}}" />
+	        	{% endfor %}
+	    	{% endif %}
+
+		    {% include 'qcm/qtype/_annoncement_instruction.html' %}
+
+			<div align="left">
+				 
+					<div class="vf_answer zoom_in"> 
+						<div class="proposition">
+						{% if choice.imageanswer  %}<img src="{{ choice.imageanswer.url }}" height="80px" />{% endif %} {{ choice.answer  }} 
+						</div>  	 
+					</div>  	 
+			 
+
+				<label class="legend_answer text-green_index zoom_in">Cliquer sur la bonne réponse.</label>
+
+
+
+				<div style="padding: 10px; font-size:18px"> 
+					<div class="col-sm-6" align='center'>
+						<label class="btn btn-lg btn-true">VRAI 
+							<input type="radio" name="answers" value="{{ choice.id }}" data-supportfile_id="{{ supportfile.id }}" data-choice_id="{{ choice.id }}"  
+							        data-is_correct=1 data-loop="{{ forloop.counter }}"class="selected_answer no_visu_on_load"  />
+						</label>
+					</div>  	 
+					<div class="col-sm-6" align='center'>
+						<label class="btn btn-lg btn-false">FAUX 
+							<input type="radio" name="answers" value="{{ choice.id }}" data-supportfile_id="{{ supportfile.id }}" data-choice_id="{{ choice.id }}" 
+								    data-is_correct=0 data-loop="{{ forloop.counter }}" class="selected_answer no_visu_on_load"  />
+						</label>
+					</div>
+				</div>
+
+		    </div>
+		    <div class="row validation"  style="position:absolute; bottom:0px;">
+		    	<div class="col-sm-12 col-md-3" align="center"  >
+		            <a href="#"  data-loop='{{ forloop.counter }}'  data-supportfile_id="{{ supportfile.id }}" class="btn btn-lg btn-primary show_this_vf_correction" id="nav_start{{ forloop.counter }}">
+		            	<i class="fa fa-caret-right"></i> Valider 
+		            </a>
+		        </div>
+		    </div>	
+				{% include 'qcm/qtype/_correction_div.html' %}
+
+	    </li> 
+	{% endfor %}
+
+	{% include 'qcm/qtype/_last_slide.html' %}
+
+{% endblock %}
+

@@ -1,23 +1,25 @@
 import datetime
 from django import forms
-from .models import *
-from account.models import Student , Teacher
-from socle.models import Knowledge, Skill
-from group.models import Group
-from bootstrap_datepicker_plus import DatePickerInput, DateTimePickerInput
-
+from django.conf import settings 
 from django.template.defaultfilters import filesizeformat
-from django.conf import settings
+from django.forms.models import inlineformset_factory, BaseInlineFormSet , ModelChoiceIterator, ModelChoiceField, ModelMultipleChoiceField
 
+
+from .models import  *
+from account.models import Student , Teacher
+from group.models import Group
+from socle.models import Knowledge, Skill
+
+
+from bootstrap_datepicker_plus import DatePickerInput, DateTimePickerInput
 from itertools import groupby
-from django.forms.models import ModelChoiceIterator, ModelChoiceField, ModelMultipleChoiceField
 from general_fonctions import *
 
 def validation_file(content):
     if content :
 	    content_type = content.content_type.split('/')[0]
 	    if content_type in settings.CONTENT_TYPES:
-	        if content._size > settings.MAX_UPLOAD_SIZE:
+	        if content._size > settings.MAX_UPLOAD_SIZE: 
 	            raise forms.ValidationError("Taille max : {}. Taille trop volumineuse {}".format(filesizeformat(settings.MAX_UPLOAD_SIZE), filesizeformat(content._size)))
 	    else:
 	        raise forms.ValidationError("Type de fichier non accepté")
@@ -41,26 +43,27 @@ class ParcoursForm(forms.ModelForm):
 		if teacher:
 
 			try : 
-				shared_groups = teacher.teacher_group.filter(group_folders=folder, level = group.level, subject = group.subject)
+				#shared_groups = teacher.teacher_group.filter(group_folders=folder, level = group.level, subject = group.subject)
+				shared_groups = teacher.teacher_group.filter(group_folders=folder, level = group.level,is_hidden=0)
 			except :
-				shared_groups = teacher.teacher_group.all()
+				shared_groups = teacher.teacher_group.filter(is_hidden=0)
 			
 			if folder and group :
 				all_folders = group.group_folders.filter(level = group.level, subject = group.subject,is_trash=0)				
-				groups      = folder.groups.filter(level=folder.level,group_folders=folder)
+				groups      = folder.groups.filter(level=folder.level,group_folders=folder,is_hidden=0)
  
 			elif folder :
 
 				all_folders = teacher.teacher_folders.filter(level = folder.level, subject = folder.subject,is_trash=0)				
-				groups      = folder.groups.filter(level=folder.level,group_folders=folder)
+				groups      = folder.groups.filter(level=folder.level,group_folders=folder,is_hidden=0)
 
 			elif group :
 				all_folders = group.group_folders.filter(level = group.level, subject = group.subject,is_trash=0)		
-				groups      = teacher.groups.filter(level=group.level )
+				groups      = teacher.groups.filter(level=group.level,is_hidden=0 )
 
 			else :
-				all_folders = teacher.teacher_folders.filter(is_trash=0)		
-				groups      = teacher.groups.all()
+				all_folders = teacher.teacher_folders.filter(is_trash=0)	
+				groups      = teacher.groups.filter(is_hidden=0 )
 
 
 			these_groups  = groups|shared_groups
@@ -68,7 +71,7 @@ class ParcoursForm(forms.ModelForm):
 
 			self.fields['groups']  = forms.ModelMultipleChoiceField(queryset=all_groups.order_by("level","name"), widget=forms.CheckboxSelectMultiple,  required=False)
 			self.fields['subject'] = forms.ModelChoiceField(queryset=teacher.subjects.all(),  required=False)
-			self.fields['level']   = forms.ModelChoiceField(queryset=teacher.levels.order_by("ranking"),  required=False)
+			self.fields['level']   = forms.ModelChoiceField(queryset=teacher.levels.exclude(pk=13).order_by("ranking"),  required=False)
 			self.fields['folders'] = forms.ModelMultipleChoiceField(queryset=all_folders.order_by("level","title"), widget=forms.CheckboxSelectMultiple,  required=False)
 
 	def clean(self):
@@ -84,9 +87,6 @@ class ParcoursForm(forms.ModelForm):
 		except:
 			pass
 
-
- 
-
 class Parcours_GroupForm(forms.ModelForm):
 
 	class Meta:
@@ -99,15 +99,12 @@ class Parcours_GroupForm(forms.ModelForm):
 		super(Parcours_GroupForm, self).__init__(*args, **kwargs)
  
 		if teacher:
-			groups        = teacher.groups.all()
-			shared_groups = teacher.teacher_group.all()
+			groups        = teacher.groups.filter(is_hidden=0 )
+			shared_groups = teacher.teacher_group.filter(is_hidden=0)
 			these_groups  = groups|shared_groups
 			all_groups    = these_groups.order_by("teachers")
 			self.fields['groups']	     = forms.ModelMultipleChoiceField(queryset=all_groups, widget=forms.CheckboxSelectMultiple, required=False)
  
-			
-
-
 class FolderForm(forms.ModelForm):
 
 	class Meta:
@@ -121,25 +118,29 @@ class FolderForm(forms.ModelForm):
 		super(FolderForm, self).__init__(*args, **kwargs)
 		self.fields['stop'].required = False
 		if teacher and level and subject:
-			groups        = teacher.groups.filter(level = level , subject = subject)
-			shared_groups = teacher.teacher_group.filter(level = level , subject = subject)
+			groups        = teacher.groups.filter(level = level , subject = subject,is_hidden=0)
+			shared_groups = teacher.teacher_group.filter(level = level , subject = subject,is_hidden=0 )
 			these_groups  = groups|shared_groups
 			all_groups    = these_groups.order_by("teacher")
 		else :
-			groups        = teacher.groups.all()
-			shared_groups = teacher.teacher_group.all()
+			groups        = teacher.groups.filter( is_hidden=0 ) 
+			shared_groups = teacher.teacher_group.filter( is_hidden=0 )
 			these_groups  = groups|shared_groups
 			all_groups    = these_groups.order_by("teacher")
 		
 
 		coteachers    = Teacher.objects.filter(user__school=teacher.user.school).order_by("user__last_name")
 
-		self.fields['groups']	     = forms.ModelMultipleChoiceField(queryset=all_groups, widget=forms.CheckboxSelectMultiple, required=False)
-		self.fields['coteachers']    = forms.ModelMultipleChoiceField(queryset=coteachers,  required=False)
+		self.fields['groups']	  = forms.ModelMultipleChoiceField(queryset=all_groups, widget=forms.CheckboxSelectMultiple, required=False)
+		self.fields['coteachers'] = forms.ModelMultipleChoiceField(queryset=coteachers,  required=False)
+		
 
+		self.fields['level']    = forms.ModelChoiceField(queryset=teacher.levels.exclude(pk=13).order_by("ranking"),  required=False)
+		self.fields['subject']  = forms.ModelChoiceField(queryset=teacher.subjects.filter(is_active=1),  required=False)
 		if subject and level :
 			parcours                = teacher.teacher_parcours.filter(subject=subject,level=level,is_trash=0,is_archive=0).order_by("title")
 			self.fields['parcours'] = forms.ModelMultipleChoiceField(queryset=parcours, widget=forms.CheckboxSelectMultiple, required=False)
+
 		else :
 			parcours                = teacher.teacher_parcours.filter(is_trash=0,is_archive=0).order_by("title")
 			self.fields['parcours'] = forms.ModelMultipleChoiceField(queryset=parcours, widget=forms.CheckboxSelectMultiple, required=False)
@@ -156,7 +157,6 @@ class FolderForm(forms.ModelForm):
 		except:
 			pass
 
-
 class AudioForm(forms.ModelForm):
 	class Meta:
 		model = Exercise
@@ -165,9 +165,6 @@ class AudioForm(forms.ModelForm):
 	def clean_content(self):
 		audiofile = self.cleaned_data['audiofile']
 		validation_file(audiofile)
-
-
-
 
 class RelationshipForm(forms.ModelForm):
 	class Meta:
@@ -207,6 +204,7 @@ class RemediationcustomForm(forms.ModelForm):
 		content = self.cleaned_data['mediation']
 		validation_file(content)
 
+
 class SupportfileForm(forms.ModelForm):
 	class Meta:
 		model = Supportfile
@@ -220,7 +218,16 @@ class SupportfileForm(forms.ModelForm):
 		subjects = teacher.subjects.all()
 		knowledges = Knowledge.objects.filter(theme__subject__in= subjects)
 		self.fields['knowledge'] = forms.ModelChoiceField(queryset=knowledges) 
-		self.fields['skills']  =  forms.ModelMultipleChoiceField(queryset= Skill.objects.filter(subject= subject), required=False)
+		self.fields['skills']    =  forms.ModelMultipleChoiceField(queryset= Skill.objects.filter(subject__in= subjects))
+		self.fields['level']     =  forms.ModelChoiceField(queryset= teacher.levels.exclude(pk= 13).order_by('ranking'))
+
+	def clean_content(self):
+		content = self.cleaned_data['imagefile']
+		validation_file(content)
+		attach_file = self.cleaned_data['attach_file'] 
+		validation_file(attach_file)
+		
+
 
 class SupportfileKForm(forms.ModelForm):
 	class Meta:
@@ -234,8 +241,15 @@ class SupportfileKForm(forms.ModelForm):
 		subject = knowledge.theme.subject 
 		knowledges = Knowledge.objects.filter(theme__subject= subject)
 		self.fields['knowledge'] = forms.ModelChoiceField(queryset=knowledges) 
-		self.fields['skills']  =  forms.ModelMultipleChoiceField(queryset= Skill.objects.filter(subject= subject), required=False)
+		self.fields['skills']    =  forms.ModelMultipleChoiceField(queryset= Skill.objects.filter(subject= subject))
+ 
+	def clean_content(self):
+		content = self.cleaned_data['imagefile']
+		validation_file(content)
+		attach_file = self.cleaned_data['attach_file'] 
+		validation_file(attach_file)
 
+ 
 class UpdateSupportfileForm(forms.ModelForm):
 
 	class Meta:
@@ -252,17 +266,134 @@ class UpdateSupportfileForm(forms.ModelForm):
 		self.fields['knowledge'] = forms.ModelChoiceField(queryset=knowledges) 
 		self.fields['skills']  = forms.ModelMultipleChoiceField(queryset=Skill.objects.filter(subject=subject), required=False)
 
+	def clean_content(self):
+		content = self.cleaned_data['imagefile']
+		validation_file(content)
+		attach_file = self.cleaned_data['attach_file'] 
+		validation_file(attach_file)
+#################################################################################################################################################################################
+###################################        FORMULAIRES GROUPES ET SOUS FORMULAIRES       ########################################################################################
+#################################################################################################################################################################################
+def is_empty_form(form):
+    if form.is_valid() and not form.cleaned_data:
+        return True
+    else:
+        return False
+
+
+def is_form_persisted(form):
+    if form.instance and not form.instance._state.adding:
+        return True
+    else:
+        return False
+
+class BaseSupportchoiceFormset(BaseInlineFormSet):
+
+    def add_fields(self, form, index):
+        super().add_fields(form, index)
+        # save the formset in the 'nested' property
+        form.nested = formSubSet(
+                        instance=form.instance,
+                        data=form.data if form.is_bound else None,
+                        files=form.files if form.is_bound else None,
+                        prefix='supportchoice-{}-subchoice'.format( form.prefix ) )
+
+    def is_valid(self):
+        result = super(BaseSupportchoiceFormset, self).is_valid()
+        if self.is_bound:
+            for form in self.forms:
+                if hasattr(form, 'nested'):
+                    result = result and form.nested.is_valid()
+        return result
+
+    def clean(self):
+        super(BaseSupportchoiceFormset, self).clean()
+        for form in self.forms:
+            if not hasattr(form, "nested") or self._should_delete_form(form):
+                continue
+
+            if self._is_adding_nested_inlines_to_empty_form(form):
+                form.add_error(
+                    field=None,
+                    error=_(
+                        "You are trying to add image(s) to a book which "
+                        "does not yet exist. Please add information "
+                        "about the book and choose the image file(s) again."
+                    ),
+                )
+
+    def save(self, commit=True):
+        result = super(BaseSupportchoiceFormset, self).save(commit=commit)
+        for form in self.forms:
+            if hasattr(form, 'nested'):
+                if not self._should_delete_form(form):
+                    form.nested.save(commit=commit)
+        return result
+
+
+    def _is_adding_nested_inlines_to_empty_form(self, form):
+        if not hasattr(form, "nested"):
+            return False
+
+        if is_form_persisted(form):
+            return False
+
+        if not is_empty_form(form):
+            return False
+
+        non_deleted_forms = set(form.nested.forms).difference(set(form.nested.deleted_forms))
+
+        return any(not is_empty_form(nested_form) for nested_form in non_deleted_forms)
+
+
+formSetNested = inlineformset_factory(Supportfile, Supportchoice, fields=('answer','imageanswer','answerbis','imageanswerbis','is_correct','retroaction','xmin','xmax','tick','subtick','precision','is_written') , formset=BaseSupportchoiceFormset,   extra=1)
+formSubSet    = inlineformset_factory(Supportchoice, Supportsubchoice, fields=('answer','imageanswer','label','is_correct','retroaction') , extra=2)
+
+class BaseSupportchoiceUpdateFormset(BaseInlineFormSet):
+
+    def add_fields(self, form, index):
+        super().add_fields(form, index)
+        # save the formset in the 'nested' property
+        form.nested = formSubSetUpdate(
+                        instance=form.instance,
+                        data=form.data if form.is_bound else None,
+                        files=form.files if form.is_bound else None,
+                        prefix='supportchoice-{}-subchoice'.format( form.prefix ) )
+
+    def is_valid(self):
+        result = super().is_valid()
+        if self.is_bound:
+            for form in self.forms:
+                if hasattr(form, 'nested'):
+                    result = result and form.nested.is_valid()
+        return result
+
+
+    def save(self, commit=True):
+        result = super().save(commit=commit)
+        for form in self.forms:
+            if hasattr(form, 'nested'):
+                if not self._should_delete_form(form):
+                    form.nested.save(commit=commit)
+
+        return result
+
+
+formSetUpdateNested = inlineformset_factory(Supportfile, Supportchoice, fields=('answer','imageanswer','answerbis','imageanswerbis','is_correct','retroaction','xmin','xmax','tick','subtick','precision','is_written')  , formset=BaseSupportchoiceUpdateFormset,   extra=0)
+formSubSetUpdate    = inlineformset_factory(Supportchoice, Supportsubchoice, fields=('answer','imageanswer','label','is_correct','retroaction') , extra=0)
+#################################################################################################################################################################################
+###################################    UPDATE FORMULAIRES GROUPES ET SOUS FORMULAIRES       #####################################################################################
+#################################################################################################################################################################################
+
 class AttachForm(forms.ModelForm):
 	class Meta:
 		model = Supportfile
 		fields = ('attach_file','title','is_subtitle')
  
-
 class CourseForm(forms.ModelForm):
 	class Meta:
 		model = Course
 		fields = '__all__'
-
 
 	def __init__(self, *args, **kwargs):
 		parcours = kwargs.pop('parcours')
@@ -281,14 +412,16 @@ class CourseNPForm(forms.ModelForm):
 		teacher = kwargs.pop('teacher')
 		super(CourseNPForm, self).__init__(*args, **kwargs)
  
-		self.fields['level']   = forms.ModelChoiceField(queryset=teacher.levels.all(), required=False )
-		self.fields['subject'] = forms.ModelChoiceField(queryset=teacher.subjects.all(), required=False )
+		self.fields['level']    = forms.ModelChoiceField(queryset=teacher.levels.exclude(pk=13).order_by("ranking"), required=False )
+		self.fields['subject']  = forms.ModelChoiceField(queryset=teacher.subjects.all(), required=False )
+		self.fields['parcours'] = forms.ModelChoiceField(queryset=teacher.teacher_parcours.all(), required=False )
 
 
 class DemandForm(forms.ModelForm):
 	class Meta:
 		model = Demand
 		fields = '__all__'
+
 
 class MasteringForm (forms.ModelForm):
 	class Meta:
@@ -299,14 +432,18 @@ class MasteringForm (forms.ModelForm):
 	def __init__(self, *args, **kwargs):
 		relationship = kwargs.pop('relationship')
 		super(MasteringForm, self).__init__(*args, **kwargs)
-		relations = Relationship.objects.filter(exercise__supportfile__is_title = 0, parcours=relationship.parcours)
+		#relations = Relationship.objects.filter(exercise__supportfile__is_title = 0, parcours=relationship.parcours)
 		courses = Course.objects.filter(parcours=relationship.parcours)
-		self.fields['courses'] = forms.ModelMultipleChoiceField(queryset=courses, widget=forms.CheckboxSelectMultiple,   required=False )
+		self.fields['courses']   = forms.ModelMultipleChoiceField(queryset=courses, widget=forms.CheckboxSelectMultiple,   required=False )
+		#self.fields['practices'] = forms.ModelMultipleChoiceField(queryset=relations, widget=forms.CheckboxSelectMultiple,   required=False )
+
  
 class MasteringDoneForm (forms.ModelForm):
 	class Meta:
 		model = Mastering_done
 		fields = ('writing',)
+
+
 
 class MasteringcustomForm (forms.ModelForm):
 	class Meta:
@@ -316,10 +453,12 @@ class MasteringcustomForm (forms.ModelForm):
 	def __init__(self, *args, **kwargs):
 		customexercise = kwargs.pop('customexercise')
 		super(MasteringcustomForm, self).__init__(*args, **kwargs)
-		relations = Relationship.objects.filter(exercise__supportfile__is_title = 0, parcours__in=customexercise.parcourses.filter(is_publish=1))
+		#relations = Relationship.objects.filter(exercise__supportfile__is_title = 0, parcours__in=customexercise.parcourses.filter(is_publish=1))
 		courses = Course.objects.filter(parcours__in=customexercise.parcourses.filter(is_publish=1))
-		self.fields['courses'] = forms.ModelMultipleChoiceField(queryset=courses, widget=forms.CheckboxSelectMultiple,   required=False )
+		self.fields['courses']   = forms.ModelMultipleChoiceField(queryset=courses, widget=forms.CheckboxSelectMultiple,   required=False )
+		#self.fields['practices'] = forms.ModelMultipleChoiceField(queryset=relations, widget=forms.CheckboxSelectMultiple,   required=False )
  
+
 class MasteringcustomDoneForm (forms.ModelForm):
 	class Meta:
 		model = Masteringcustom_done
@@ -347,6 +486,7 @@ class CustomanswerimageForm (forms.ModelForm):
 	def clean_content(self):
 		content = self.cleaned_data['image']
 		validation_file(content)
+
 
 class CustomexerciseForm (forms.ModelForm):
 	
@@ -386,12 +526,34 @@ class CustomexerciseNPForm (forms.ModelForm):
 		custom = kwargs.pop('custom')
 		super(CustomexerciseNPForm, self).__init__(*args, **kwargs)
 		skills = Skill.objects.filter(subject__in = teacher.subjects.all())
-		knowledges = Knowledge.objects.filter(theme__subject__in = teacher.subjects.all(), level__in = teacher.levels.order_by("ranking"))
+		knowledges = Knowledge.objects.filter(theme__subject__in = teacher.subjects.all(), level__in = teacher.levels.exclude(pk=13))
 		students = custom.students.all() 
 		self.fields['skills'] = forms.ModelMultipleChoiceField(queryset=skills,    required=False )
 		self.fields['knowledges'] = forms.ModelMultipleChoiceField(queryset=knowledges,  required=False ) 
 		self.fields['students'] = forms.ModelMultipleChoiceField(queryset=students, widget=forms.CheckboxSelectMultiple,   required=False )
 		
+
+class CustomexerciseOnlyForm (forms.ModelForm):
+
+	class Meta:
+		model = Customexercise
+		fields = '__all__'
+	
+	def __init__(self, *args, **kwargs):
+		teacher = kwargs.pop('teacher')
+		super(CustomexerciseOnlyForm, self).__init__(*args, **kwargs)
+		subjects   = teacher.subjects.all()
+		skills     = Skill.objects.filter(subject__in = subjects )
+		knowledges = Knowledge.objects.filter(theme__subject__in = subjects , level__in = teacher.levels.exclude(pk=13)) 
+		parcourses = teacher.teacher_parcours.order_by("subject","level")
+
+		self.fields['subject']    = forms.ModelChoiceField(queryset=subjects,    required=True )
+		self.fields['levels']     = forms.ModelMultipleChoiceField(queryset=teacher.levels.exclude(pk=13), required=True )
+		self.fields['skills']     = forms.ModelMultipleChoiceField(queryset=skills,    required=True )
+		self.fields['knowledges'] = forms.ModelMultipleChoiceField(queryset=knowledges,  required=True ) 
+		self.fields['parcourses'] = forms.ModelMultipleChoiceField(queryset=parcourses,  required=False ) 
+		
+
 
 class WAnswerAudioForm (forms.ModelForm):
 	class Meta:
@@ -462,14 +624,28 @@ class CriterionForm (forms.ModelForm):
 		self.fields['knowledge'] = forms.ModelChoiceField(queryset=knowledges,  required=False ) 
  
 
-########################################################################################################################################### 
-########################################################################################################################################### 
-######################################################      Prep_eval             ######################################################### 
-########################################################################################################################################### 
-########################################################################################################################################### 
 
-class PrepevalForm (forms.ModelForm):
+
+class CriterionOnlyForm (forms.ModelForm):
 
 	class Meta:
-		model = Prepeval
-		fields = ("date",)
+		model = Criterion
+		fields = '__all__'
+
+	def __init__(self, *args, **kwargs):
+		teacher = kwargs.pop('teacher')
+		super().__init__(*args, **kwargs)
+
+		self.fields['label'] = forms.CharField(widget=forms.Textarea(attrs={
+		"placeholder": "Description du critère",
+		"rows": 6,
+		"cols": 50
+		}))
+
+		subjects = teacher.subjects.all()
+		skills     = Skill.objects.filter(subject__in = subjects )
+		knowledges = Knowledge.objects.filter(theme__subject__in =  subjects , level__in  = teacher.levels.exclude(pk=13))
+
+		self.fields['skill'] = forms.ModelChoiceField(queryset=skills,    required=False )
+		self.fields['knowledge'] = forms.ModelChoiceField(queryset=knowledges,  required=False ) 
+

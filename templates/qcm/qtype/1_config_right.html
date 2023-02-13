@@ -1,0 +1,65 @@
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}      
+
+ 
+
+
+
+<table class="table table-sacado borderless">
+ 
+        <tr>
+            <td>
+                <label>Remise tapuscrite</label>  <span class="helper_tip"> <i class="fa fa-question-circle"></i>
+                <div class="helper_tip_text">Ecriture au clavier. Espace de saisie identique à celui de la consigne ci-contre.</div>
+                </span>
+            </td>
+            <td>{{ form.is_text |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}</td>
+            <td>{{ form.is_text.errors }}</td>
+
+
+            <td>
+                <label>Remise par image <small>(jpg,png) <span style="font-size:12px;color:#c70000">max. 500ko</span></small></label>  
+                <span class="helper_tip"> <i class="fa fa-question-circle"></i>
+                <div class="helper_tip_text">
+                    La remise du travail est une image. Les élèves téléversent leurs images et l'enseignant les récupère dans sa console.
+                </div>
+                </span>
+            </td>
+            <td>{{ form.is_image |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}</td>
+            <td>{{ form.is_image.errors }}</td>
+
+        </tr>
+        <tr class="publication_div">
+            <td>
+                <label>Remise par fichier <small>(pdf,doc,...)</small></label> <span class="helper_tip"> <i class="fa fa-question-circle"></i> 
+                <div class="helper_tip_text">La remise du travail est un fichier. Les élèves téléversent leurs rendus et l'enseignant le récupère dans sa console.</div>
+                </span>
+            </td>
+            <td>{% if  sacado_asso %}
+                    {{ form.is_file |add_class:"on_check" |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}
+                {% else %}
+                    <span class="text-danger">Nécessite la version Etablissement.</span>
+                {% endif %}
+                </td>
+            <td>{{ form.is_file.errors }}</td>
+
+
+            <td> 
+                <label>Notation ?</label> 
+            </td>
+            <td>{{ form.is_mark|attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}</td>
+            <td>{{ form.is_mark.errors }}</td>
+        </tr>
+        <tr  id="on_mark">
+            <td></td>
+            <td></td>
+            <td></td>
+
+            <td> <label>Sur ?</label></td>
+            <td style="width:30px">{{ form.mark|add_class:"form-control" }}</td>
+            <td>{{ form.mark.errors }}</td>
+        </tr>
+
+
+</table>

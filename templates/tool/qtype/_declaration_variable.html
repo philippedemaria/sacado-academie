@@ -1,0 +1,70 @@
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}    
+
+ 
+        <div class="row {% if not supportfile.supportvariables.count %}no_visu_on_load{% endif %}" id="randomize_zone">
+            <div class="col-sm-12 col-md-12 alert alert-sacado" style="padding:0px">
+                {{ form_var.management_form }} 
+                <script id="rowToClone_question" type="text/template">
+                    <div id="duplicate_variables">  
+                        <div class="col-sm-12 col-md-6 qrandom">
+                                <div class="col-sm-4 col-md-4"> 
+                                        <label>Nom : </label>  <br/>{{ form_var.empty_form.name|add_class:"form-control this_variable"|attr:"placeholder:a" }} 
+                                </div>
+
+                                <div class="col-sm-4 col-md-4" > 
+                                        <label>Nb entier ?</label> <br/>
+                                        {{ form_var.empty_form.is_integer|attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non" }} 
+                                </div>
+                                <div class="col-sm-4 col-md-4" > 
+                                            <label>0 exclus ?</label> <br/> 
+                                            {{ form_var.empty_form.is_notnull|attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non" }} 
+                                </div>
+                                <div class="col-sm-4 col-md-4" > 
+                                            <label>Min.</label> <br/> 
+                                            {{ form_var.empty_form.minimum|add_class:"form-control this_variable" }} 
+                                </div>
+                                <div class="col-sm-4 col-md-4" > 
+                                        <label>Max.</label>  <br/>
+                                        {{ form_var.empty_form.maximum|add_class:"form-control this_variable" }} 
+                                </div>
+                                <div class="col-sm-4 col-md-4"><br/>
+                                    <div class="delete_button_question"></div>
+                                </div>                                 
+                        </div>
+                    </div>
+                </script>  
+
+
+                {% for form in form_var %} 
+                    {{ form.id }}
+                    <div id="duplicate_variables">  
+                        <div class="col-sm-12 col-md-6 qrandom">
+                            <div class="col-sm-4 col-md-4"> 
+                                    <label>Nom : </label>  <br/>{{ form.name|add_class:"form-control this_variable"|attr:"placeholder:a" }} 
+                            </div>
+                            <div class="col-sm-4 col-md-4" > 
+                                    <label>Nb entier ?</label> <br/>
+                                    {{ form.is_integer|attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non" }} 
+                            </div>
+                            <div class="col-sm-4 col-md-4" > 
+                                        <label>0 exclus ?</label> <br/> 
+                                        {{ form.is_notnull|attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non" }} 
+                            </div>
+                            <div class="col-sm-4 col-md-4" > 
+                                        <label>Min.</label> <br/> 
+                                        {{ form.minimum|add_class:"form-control" }} 
+                            </div>
+                            <div class="col-sm-4 col-md-4" > 
+                                    <label>Max.</label>  <br/>
+                                    {{ form.maximum|add_class:"form-control" }} 
+                            </div>                              
+                        </div>
+                    </div>
+                {% endfor %}
+                <div id="formsetZone_variables">
+                </div>
+            </div>  
+        </div> 
+ 
