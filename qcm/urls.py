@@ -248,7 +248,8 @@ urlpatterns = [
     path('change_knowledge', change_knowledge, name='change_knowledge'), 
 
     path('show_this_exercise/<int:id>/', show_this_exercise, name='show_this_exercise'),  #from dashboard 
-
+    path('show_this_index_exercise/<int:id>/', show_this_index_exercise, name='show_this_index_exercise'), # depuis la page d'accueil
+    
     path('show_this_exercise_test/<int:id>/', show_this_exercise_test, name='show_this_exercise_test'),  #from dashboard 
 
 
