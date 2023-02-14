@@ -39,6 +39,11 @@ def decryptage(code):
 
 
 def events_json(request):
+
+
+    request.session["tdb"] = "Lesson"
+    request.session["subtdb"] = ""
+
     user =  request.user 
     if user.time_zone :
         tz=pytz.timezone(user.time_zone)
@@ -77,6 +82,11 @@ def events_json(request):
 
 
 def events_my_teacher(request,idt):
+
+
+    request.session["tdb"] = "Lesson"
+    request.session["subtdb"] = ""
+
     if request.user.time_zone :
         tz=pytz.timezone(request.user.time_zone)
     else :
@@ -105,6 +115,10 @@ def events_my_teacher(request,idt):
 
 
 def calendar_show(request,id=0):
+
+    request.session["tdb"] = "Lesson"
+    request.session["subtdb"] = ""
+
     hours=[ "{:02d}:{:02d}".format(m//60,m%60) for m in range(8*60,20*60,15)]
     user      = request.user
     form      = EventForm(user, request.POST or None)
@@ -117,6 +131,8 @@ def calendar_show(request,id=0):
 
 def create_event(request): # CREATION PAR LE PROF
 
+    request.session["tdb"] = "Lesson"
+    request.session["subtdb"] = ""
     user   =  request.user  
     form   = EventForm(user, request.POST or None)
     form_s = SlotForm(user, request.POST or None)

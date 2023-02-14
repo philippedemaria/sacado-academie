@@ -514,6 +514,7 @@
 </div>
 
 
+
 {%  if request.user.is_teacher %} 
 <div class="notification-container dismiss" id="notification-documents">
     <div class="row">
@@ -524,29 +525,38 @@
     </div>
     <hr/>
     <div class="row">
-        <div class="col-lg-12 col-xs-12">
-            <a href="{% url 'folders' %}"><i class="fa fa-folder-open" ></i> Dossiers </a>
+        <div class="col-lg-12 col-xs-12 inside_volet_show_submenu">
+            <a href="{% url 'folders' %}" title="Voir la liste de mes dossiers" {% if request.session.subtdb == 'Folders' %} class="active_selected"{% endif %}><i class="fa fa-folder-open" ></i> Dossiers</a>    
+            <a href="{% url 'folders_archives' %}" class="inside_volet pull-right" title="Mes dossiers archivés"><i class="bi bi-archive"></i></a>
+            <a href="{% url 'create_folder' 0 %}" class="inside_volet pull-right" title="Créer un nouveau dossier"><i class="bi bi-plus-circle"></i></a>
         </div>
     </div>
     <hr/>
-    {% if request.user.is_sacado_member %}
+    {% if request.user.is_superuser %}
     <div class="row">
-        <div class="col-lg-12 col-xs-12">
-            <a href="{% url 'sequences' %}"><i class="bi bi-ladder" ></i> Séquences </a>
+        <div class="col-lg-12 col-xs-12 inside_volet_show_submenu">
+            <a href="{% url 'sequences' %}"  title="Voir la liste de mes séquences" {% if request.session.subtdb == 'Sequences' %} class="active_selected"{% endif %}><i class="bi bi-ladder" ></i> Séquences<sup class="text-danger">Nouveauté</sup> </a>    
+            <a href="{% url 'sequences_archives' %}" class="inside_volet pull-right" title="Mes séquences archivés"><i class="bi bi-archive"></i></a>
+            <a href="{% url 'create_sequence' 0 %}" class="inside_volet pull-right" title="Créer une nouvelle séquence"><i class="bi bi-plus-circle"></i></a>
         </div>
     </div>
     <hr/>
     {% endif %}
     <div class="row">
-        <div class="col-lg-12 col-xs-12">
-            <a href="{% url 'parcours' %}"><i class="fa fa-th" ></i> Parcours </a>
+        <div class="col-lg-12 col-xs-12 inside_volet_show_submenu">
+            <a href="{% url 'parcours' %}" {% if request.session.subtdb == 'Parcours' %} class="active_selected"{% endif %} title="Voir la liste de mes parcours"><i class="fa fa-th" ></i> Parcours </a>  
+            <a href="{% url 'archives' %}" class="inside_volet pull-right" title="Mes parcours archivés"><i class="bi bi-archive"></i></a>
+            <a href="{% url 'create_parcours' 0 %}" class="inside_volet pull-right" title="Créer un nouveau parcours"><i class="bi bi-plus-circle"></i></a>
         </div>
     </div>
     <hr/>
     <div class="row">
-        <div class="col-lg-12 col-xs-12">
+        <div class="col-lg-12 col-xs-12 inside_volet_show_submenu">
             {% if sacado_asso %}
-            <a href="{% url 'evaluations' %}"> <i class="fa fa-trophy" ></i> Evaluations</a>
+            <a href="{% url 'evaluations' %}" {% if request.session.subtdb == 'Evaluations' %} class="active_selected"{% endif %} title="Voir la liste de mes évaluations"> <i class="fa fa-trophy" ></i> Evaluations</a>    
+            <a href="{% url 'evaluations_archives' %}" class="inside_volet pull-right" title="Mes évaluations archivées"><i class="bi bi-archive"></i></a>
+            <a href="{% url 'create_evaluation' 0 %}" class="inside_volet pull-right" title="Créer une nouvelle évaluation"><i class="bi bi-plus-circle"></i></a>
+
             {% else %}
             <a href="#" style="cursor:not-allowed" title="Version établissement requise."> <i class="fa fa-trophy" ></i> Evaluations</a>
             {% endif %}
@@ -554,40 +564,92 @@
     </div>
     <hr/>
     <div class="row">
-        <div class="col-lg-12 col-xs-12">
-            <a href="{% url 'courses' %}"><i class="fa fa-desktop" ></i> Cours </a>
+        <div class="col-lg-12 col-xs-12 inside_volet_show_submenu">
+            {% if sacado_asso %}
+                <a href="{% url 'courses' %}" {% if request.session.subtdb == 'Courses' %} class="active_selected"{% endif %} title="Voir la liste de mes cours">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-c-square" viewBox="0 0 16 16">
+                        <path d="M8.146 4.992c-1.212 0-1.927.92-1.927 2.502v1.06c0 1.571.703 2.462 1.927 2.462.979 0 1.641-.586 1.729-1.418h1.295v.093c-.1 1.448-1.354 2.467-3.03 2.467-2.091 0-3.269-1.336-3.269-3.603V7.482c0-2.261 1.201-3.638 3.27-3.638 1.681 0 2.935 1.054 3.029 2.572v.088H9.875c-.088-.879-.768-1.512-1.729-1.512Z"/>
+                        <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2Zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2Z"/>
+                    </svg>
+                    Cours
+                </a>
+                {%  if request.user.is_superuser %}     
+                <a href="{% url 'courses_archives' %}" class="inside_volet pull-right" title="Mes cours archivés"><i class="bi bi-archive"></i></a>
+                <a href="{% url 'only_create_course'%}" class="inside_volet pull-right" title="Créer un nouveau cours"><i class="bi bi-plus-circle"></i></a>
+                {% endif %}
+            {% else %}
+                <a href="#" style="cursor:not-allowed" title="Version établissement requise.">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-c-square" viewBox="0 0 16 16">
+                        <path d="M8.146 4.992c-1.212 0-1.927.92-1.927 2.502v1.06c0 1.571.703 2.462 1.927 2.462.979 0 1.641-.586 1.729-1.418h1.295v.093c-.1 1.448-1.354 2.467-3.03 2.467-2.091 0-3.269-1.336-3.269-3.603V7.482c0-2.261 1.201-3.638 3.27-3.638 1.681 0 2.935 1.054 3.029 2.572v.088H9.875c-.088-.879-.768-1.512-1.729-1.512Z"/>
+                        <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2Zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2Z"/>
+                    </svg>
+                Cours</a>
+            {% endif %}
         </div>
     </div>
     <hr/>
     <div class="row">
-        <div class="col-lg-12 col-xs-12">
-            <a href="{% url 'list_quizzes' %}"><i class="bi bi-aspect-ratio" ></i> Quizz & rituels  </a>
-            <a href="#" data-toggle='modal' data-helper_text='quizz' data-target='#helper_div' class="pull-right edit helper_div_text"><i class="fa fa-question-circle"></i></a>
+        <div class="col-lg-12 col-xs-12 inside_volet_show_submenu">
+            <a href="{% url 'my_own_exercises' %}"   {% if request.session.subtdb == 'Exercises' %} class="active_selected"{% endif %}  title="Voir la liste de mes exercices"><i class="bi bi-explicit"></i> Exercices<sup class="text-danger">Nouveauté</sup> </a> 
+            
+            <a href="#" data-toggle='modal' data-helper_text='custom_exercises'   data-target='#helper_div' class="pull-right edit helper_div_text"><i class="fa fa-question-circle"></i></a> 
+            <a href="{% url 'supportfile_creator' 0  %}" class="inside_volet pull-right" title="Créer une nouvel exercice perso"><i class="bi bi-plus-circle"></i></a>
+
+
         </div>
     </div>
     <hr/>
     <div class="row">
-        <div class="col-lg-12 col-xs-12">
-            <a href="{% url 'my_bibliotexs' %}"><i class="bi bi-bootstrap" ></i>  BiblioTex </a> 
+        <div class="col-lg-12 col-xs-12 inside_volet_show_submenu">
+            {% if sacado_asso %}
+                <a href="{% url 'list_quizzes' %}" {% if request.session.subtdb == 'Quizz' %} class="active_selected"{% endif %} title="Voir la liste de mes quizz"><i class="bi bi-aspect-ratio" ></i>  Quizz  </a>
+                <a href="#" data-toggle='modal' data-helper_text='quizz' data-target='#helper_div' class="pull-right edit helper_div_text"><i class="fa fa-question-circle"></i></a>
+        
+                <a href="{% url 'all_quizzes_archived' %}" class="inside_volet pull-right" title="Mes quizz archivés"><i class="bi bi-archive"></i></a>
+                <a href="{% url 'create_quizz'%}" class="inside_volet pull-right" title="Créer un nouveau quizz"><i class="bi bi-plus-circle"></i></a>
+            {% else %}
+                <a href="#" style="cursor:not-allowed" title="Version établissement requise."> <i class="bi bi-aspect-ratio" ></i> Quizz & rituels</a>
+            {% endif %}
+        </div>
+    </div>
+    <hr/>
+    <div class="row">
+        <div class="col-lg-12 col-xs-12 inside_volet_show_submenu">
+            <a href="{% url 'my_bibliotexs' %}" {% if request.session.subtdb == 'Bibliotex' %} class="active_selected"{% endif %} title="Voir la liste de mes Bibliotex"><i class="bi bi-bootstrap" ></i>  BiblioTex </a>
             <a href="#" data-toggle='modal' data-helper_text='bibliotex'  data-target='#helper_div' class="pull-right edit helper_div_text"><i class="fa fa-question-circle"></i></a> 
+   
+            <a href="{% url 'my_bibliotex_archives' %}" class="inside_volet pull-right" title="Mes bibliotexs archivés"><i class="bi bi-archive"></i></a>
+            <a href="{% url 'create_bibliotex' 0 %}" class="inside_volet pull-right" title="Créer une nouvelle bibliotex"><i class="bi bi-plus-circle"></i></a>
+
         </div>
     </div>
     <hr/>
     <div class="row">
-        <div class="col-lg-12 col-xs-12">
-            <a href="{% url 'my_flashpacks' %}"><i class="bi bi-stack" ></i> Flashpack   </a> 
+        <div class="col-lg-12 col-xs-12 inside_volet_show_submenu">            
+            {% if sacado_asso %}
+            <a href="{% url 'my_flashpacks' %}" {% if request.session.subtdb == 'Flashpack' %} class="active_selected"{% endif %} title="Voir la liste de mes flashpacks"><i class="bi bi-stack" ></i> Flashpacks   </a> 
             <a href="#" data-toggle='modal' data-helper_text='flashpack'  data-target='#helper_div' class="pull-right edit helper_div_text"><i class="fa fa-question-circle"></i></a> 
+    
+            <a href="{% url 'my_flashpack_archives' %}" class="inside_volet pull-right" title="Mes flashpack archivés"><i class="bi bi-archive"></i></a>
+            <a href="{% url 'create_flashpack' 0 %}" class="inside_volet pull-right" title="Créer un nouveau flashpack"><i class="bi bi-plus-circle"></i></a>
+            {% else %}
+                <a href="#" style="cursor:not-allowed" title="Version établissement requise."> <i class="bi bi-stack" ></i> Flashpacks</a>
+            {% endif %}
         </div>
-    </div>
-    {% comment %}
+    </div>    
     <hr/>
     <div class="row">
-        <div class="col-lg-12 col-xs-12">
-            <a href="{% url 'courses' %}"><i class="fa fa-copyright" ></i> Exercices personnalisés </a> <a href="#" data-toggle='modal' data-target='#helper_div' class="pull-right edit"><i class="fa fa-question-circle"></i></a> 
+        <div class="col-lg-12 col-xs-12 inside_volet_show_submenu">
+            <a href="{% url 'exercises' %}" {% if request.session.subtdb == 'Consulting' %} class="active_selected"{% endif %}   title="Voir la liste des exercices proposés"><i class="bi bi-explicit-fill"></i> Consulter les exercices</a> 
         </div>
     </div>
-    {% endcomment %}
+
+
 </div>
+
+
+
+
 {% endif %}
 
 

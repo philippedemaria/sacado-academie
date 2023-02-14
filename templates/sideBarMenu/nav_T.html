@@ -32,7 +32,7 @@
 
 
 
-<li class="dropdown {% if '/account' in request.path and not 'admin' in    request.path %}active{% endif %}">
+<li class="dropdown {% if  request.session.tdb == 'Account' %}active{% endif %}">
     <a href="#" class="main"  id="account">
 
         {% if request.user.avatar and sacado_asso  %}
@@ -55,12 +55,9 @@
 </li>
 
 
+ 
 
-
-
-
-
-<li class="dropdown {% if  request.session.tdb and 'parcours_group' in request.path %}active{% endif %}">
+<li class="dropdown {% if  request.session.tdb == 'Groups' %}active{% endif %}">
     <a href="{% url 'index' %}" class="main closer_notification" >
         <i class="bi bi-people icon_size" ></i> 
         <div class="captionmenu">Groupes</div>
@@ -74,7 +71,7 @@
 {% if request.user.is_superuser  or request.user.teacher.is_lesson   %}
 
 
-<li  class="dropdown  {% if not request.session.tdb and 'lesson' in request.path %}  active{% endif %}">
+<li  class="dropdown  {% if  request.session.tdb == 'Lesson' %}active{% endif %}">
     <a href="{% url 'calendar_show' 0 %}" class="main" >
         <i class="bi bi-camera-video icon_size"></i> 
         <div class="captionmenu">Leçons</div>
@@ -84,7 +81,7 @@
 
  
 
-<li  class="dropdown {% if not request.session.tdb and 'qcm' in request.path  or 'bibliotex' in request.path  %}active{% endif %}">
+<li  class="dropdown {% if  request.session.tdb == 'Documents' %}active{% endif %}">
     <a href="#" class="main"  id="documents" style="cursor: grab;">
         <i class="bi bi-folder icon_size"></i> 
         <div class="captionmenu">Documents</div>
@@ -92,7 +89,7 @@
 </li>
 
  
-<li  class="dropdown {% if not request.session.tdb and '/exercise' in request.path  %}active{% endif %}">
+<li  class="dropdown {% if  request.session.tdb == 'Exercises' %}active{% endif %}">
     <a href="{% url 'exercises' %}" class="main closer_notification" >
         <i class="bi bi-explicit icon_size" aria-hidden="true"></i> 
         <div class="captionmenu">Exercices</div>
@@ -101,7 +98,7 @@
  
  
  
-<li class="dropdown {% if not request.session.tdb and '/tool' in request.path and not 'admin' in    request.path %}active{% endif %}">
+<li class="dropdown {% if  request.session.tdb == 'Tools' %}active{% endif %}">
     <a href="#" class="main"  id="tools">
         <i class="bi bi-webcam icon_size"></i> 
         <div class="captionmenu">Outils péda.</div>
@@ -110,7 +107,7 @@
  
 
 
-<li  class="dropdown  {% if not request.session.tdb and '/sendmail' in request.path %} active{% endif %}">
+<li  class="dropdown  {% if  request.session.tdb == 'Communications' %}active{% endif %}">
 
     {% if sacado_asso %}
     <a href="{% url 'emails' %}" class="main closer_notification" >
@@ -155,7 +152,7 @@
 
     {% if request.user.is_superuser or request.user.is_extra  %}
 
-    <li  class="dropdown  {% if not request.session.tdb and 'admin' in request.path  or 'school' in request.path  %} active{% endif %}">
+    <li  class="dropdown {% if  request.session.tdb == 'Admin' %}active{% endif %}">
         <a href="#"   id="admin" class="main">
             <i class="bi bi-cloud icon_size"></i> 
             {% if not renew_propose %}

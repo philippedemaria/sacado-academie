@@ -106,6 +106,9 @@ def index(request):
         index_tdb = True  # Permet l'affichage des tutos Youtube dans le dashboard
   
         today = time_zone_user(request.user)
+        
+        request.session["tdb"] = "Groups"
+        if request.session.has_key("subtdb"): del request.session["subtdb"]
 
         ############################################################################################
         #### Mise à jour et affichage des publications  
@@ -155,8 +158,6 @@ def index(request):
             communications = Communication.objects.values('id', 'subject', 'texte', 'today').filter(active=1).order_by("-id")
 
             connexion_lessons = ConnexionEleve.objects.filter(event__user=this_user, is_done = 0)
-
-            request.session["tdb"] = True
 
             webinaire = Webinaire.objects.filter(date_time__gte=today,is_publish=1).first()
  

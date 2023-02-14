@@ -82,10 +82,28 @@
 .navbarLeft-nav > .active > a, 
 .navbarLeft-nav > .active > a:focus, 
 .navbarLeft-nav > .active > a:hover{
-    color: #5d4391!important ;
+    color: #ffb914!important ;
     background-color: #FFF  !important; 
     border-radius: 0px;
 }
+
+
+a.active_selected {
+    color: #ffb914!important;
+    background-color: #FFF !important;
+    border-radius: 0px;
+}
+
+a.inside_volet{
+    margin-right: 5px;
+    font-size: 1.1em;
+}
+
+a.inside_volet:hover {
+    text-decoration: none;
+    color: #ffb914;
+}
+
 
  
 body{
