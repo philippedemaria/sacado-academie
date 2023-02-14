@@ -158,9 +158,6 @@ class Qtype(models.Model):
         return self.title
 
 
-
-
-
 class Question(models.Model):
     """
     Modèle représentant un associé.
@@ -328,7 +325,7 @@ class Subchoice(models.Model):
     retroaction   = models.TextField(default='', null=True,  blank=True, verbose_name="Rétroaction")
     label         = models.CharField(max_length=255, default='', null=True,  blank=True, verbose_name="Label")#pour les position sur images
     is_correct    = models.BooleanField(default=0, verbose_name="Réponse correcte ?")
-    supportchoice = models.ForeignKey(Choice, related_name="subchoices", blank=True, null = True,  on_delete=models.CASCADE)
+    choice        = models.ForeignKey(Choice, related_name="subchoices", blank=True, null = True,  on_delete=models.CASCADE)
     def __str__(self):
         return self.answer 
 

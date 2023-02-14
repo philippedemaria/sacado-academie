@@ -1291,13 +1291,6 @@ def create_question_positionnement(request,idp,qtype):
             form.save_m2m() 
             positionnement.questions.add(nf)
 
-            if qt.is_alea :
-                form_var = formSetvar(request.POST or None,  instance = nf) 
-                for form_v in form_var :
-                    if form_v.is_valid():
-                        var = form_v.save()
-                    else :
-                        print(form_v.errors)
 
             if qtype < 19 :
                 if qt.is_sub == 0  :
@@ -1321,7 +1314,7 @@ def create_question_positionnement(request,idp,qtype):
 
     #Choix des questions
     if qtype == 0 :
-        qtypes = Qtype.objects.filter(is_online=1).order_by("ranking")
+        qtypes = Qtype.objects.filter(is_online=1 , pk__lt=19).order_by("ranking")
         context.update( {  'title_type_of_question' : "Choisir un type de question" , 'qtypes' : qtypes  })
         template = 'tool/choice_type_of_question_positionnement.html'
 
@@ -1429,13 +1422,6 @@ def update_question_positionnement(request,id,idp,qtype):
      
             is_sub = qto.is_sub
             extra  = qto.extra
-            if qto.is_alea :
-                for form_v in form_var :
-                    if form_v.is_valid():
-                        var = form_v.save()
-                    else :
-                        print(form_v.errors)
-
 
             if qtype < 19 :
                 if is_sub == 0  :
@@ -2654,11 +2640,11 @@ def remove_question(request,id,idq):
 def remove_question_positionnement(request,id,idp):
     
     request.session["tdb"] = False # permet l'activation du surlignage de l'icone dans le menu gauche 
-    positionement = Positionement.objects.get(pk = idp)
-    if positionement.teacher == request.user.teacher :
+    positionnement = Positionnement.objects.get(pk = idp)
+    if positionnement.teacher == request.user.teacher or request.user.is_superuser :
         question = Question.objects.get(pk = id)
-        positionement.questions.remove(question)
-    return redirect ('create_question_positionement', idp, 0)
+        positionnement.questions.remove(question)
+    return redirect ('create_question_positionnement', idp, 0)
 
  
 def show_question(request,id):
