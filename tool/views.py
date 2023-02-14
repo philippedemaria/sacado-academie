@@ -1271,11 +1271,16 @@ def create_question_positionnement(request,idp,qtype):
     if qtype == 9 : extra = 1
     elif qtype == 8 : extra = 1
     else : extra = 2
-    qt = Qtype.objects.get(pk=qtype)
-    if qt.is_sub == 0 : 
-        formSet  = inlineformset_factory( Question , Choice , fields=('answer','imageanswer','answerbis','imageanswerbis','is_correct','retroaction')  , extra =  extra)
+
+    if qtype > 0 :
+        qt = Qtype.objects.get(pk=qtype)
+        if qt.is_sub == 0 : 
+            formSet  = inlineformset_factory( Question , Choice , fields=('answer','imageanswer','answerbis','imageanswerbis','is_correct','retroaction')  , extra =  extra)
+        else :
+            formSet = formSetNested() 
     else :
-        formSet = formSetNested()
+        qt = None
+
 
     if request.method == "POST"  :
         if form.is_valid():
