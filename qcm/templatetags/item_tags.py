@@ -7,6 +7,7 @@ from sendmail.models import Communication
 import re
 
 
+
 @register.filter
 def add_parameters(arg, index):
     '''Modifie les paramètres aléatoires pour les questions flash'''
@@ -136,6 +137,7 @@ def insert_input(arg,loop):
 
     string = ""
     j=1
+
     for i in range(len(tab)) :
         if i%2==1:
             if  int(len(tab[i]))  < 4 : ln = "30"
@@ -173,7 +175,7 @@ def insert_only_input(arg,loop):
 def shuffle(arg):
     my_list = list(arg)
     random.shuffle(my_list)
-    return my_list   
+    return my_list    
  
  
 

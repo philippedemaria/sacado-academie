@@ -65,7 +65,10 @@
                           <td >
                              {{ positionnement.questions.count }} <a href="{% url 'create_question_positionnement' positionnement.id 0 %}"><i class="bi bi-plus-circle"></i> </a> 
 
+                             <a href="{% url 'goto_positionnement_numeric' positionnement.id %}"><i class="bi bi-play-btn"></i> </a>
+
                              <a href="{% url 'show_positionnement' positionnement.id %}"><i class="bi bi-eye"></i> </a>
+
 
                             <a href="#" data-toggle='modal' data-target='#div_help' data-positionnemnet_id="{{ positionnement.id }}" class="this_csv_file" >CSV</a>
 

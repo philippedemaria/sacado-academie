@@ -83,7 +83,7 @@
                     {% block type_of_question %} 
 
                             <div class="row" >
-                                <div class="col-sm-10 col-md-10" >  
+                                <div class="col-sm-10 col-md-10" > <label>Enoncé</label><br/> 
                                     {{ form.title|add_class:"quizz_box quizz_font40" |attr:"placeholder:Ecrire votre question ici" |attr:"rows:3"|attr:"required"  }}
                                 </div>
                                 <div class="col-sm-2 col-md-2" > 
@@ -215,7 +215,7 @@
                         <div class="col-sm-12 col-md-12">
                             <div class="form-group"> 
                                 <input value="Enregistrer" type="submit" class="btn btn-primary  btn-lg" id="click_button" />
-                                <a href="{% url 'create_question_positionnement'  positionnement.id  0 %}" class="btn btn-default btn-lg"> Changer de type de question </a> 
+                                <a href="{% url 'create_question_positionnement'  positionnement.id  0 %}" class="btn btn-default btn-lg"> Changer de forme </a> 
                             </div>                            
                         </div>
                     </div>

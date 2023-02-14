@@ -1,6 +1,6 @@
 import datetime
 from django import forms
-from .models import Tool , Question  , Choice  , Quizz , Diaporama , Slide , Qrandom ,Variable , Answerplayer, Videocopy, Positionnement
+from .models import  *
 from account.models import Student , Teacher
 from socle.models import Knowledge, Skill , Level
 from group.models import Group
@@ -10,8 +10,7 @@ from django.template.defaultfilters import filesizeformat
 from django.conf import settings
 
 from itertools import groupby
-from django.forms.models import ModelChoiceIterator, ModelChoiceField, ModelMultipleChoiceField
-
+from django.forms.models import inlineformset_factory, BaseInlineFormSet , ModelChoiceIterator, ModelChoiceField, ModelMultipleChoiceField
 
 
 def validation_file(content):
@@ -103,7 +102,119 @@ class QuestionPositionnementForm(forms.ModelForm):
 			self.fields['knowledge'] = forms.ModelChoiceField(queryset=knowledges, required=False)
 
 
+#################################################################################################################################################################################
+###################################        FORMULAIRES GROUPES ET SOUS FORMULAIRES       ########################################################################################
+#################################################################################################################################################################################
+def is_empty_form(form):
+    if form.is_valid() and not form.cleaned_data:
+        return True
+    else:
+        return False
 
+
+def is_form_persisted(form):
+    if form.instance and not form.instance._state.adding:
+        return True
+    else:
+        return False
+
+class BaseSupportchoiceFormset(BaseInlineFormSet):
+
+    def add_fields(self, form, index):
+        super().add_fields(form, index)
+        # save the formset in the 'nested' property
+        form.nested = formSubSet(
+                        instance=form.instance,
+                        data=form.data if form.is_bound else None,
+                        files=form.files if form.is_bound else None,
+                        prefix='choice-{}-subchoice'.format( form.prefix ) )
+
+    def is_valid(self):
+        result = super(BaseSupportchoiceFormset, self).is_valid()
+        if self.is_bound:
+            for form in self.forms:
+                if hasattr(form, 'nested'):
+                    result = result and form.nested.is_valid()
+        return result
+
+    def clean(self):
+        super(BaseSupportchoiceFormset, self).clean()
+        for form in self.forms:
+            if not hasattr(form, "nested") or self._should_delete_form(form):
+                continue
+
+            if self._is_adding_nested_inlines_to_empty_form(form):
+                form.add_error(
+                    field=None,
+                    error=_(
+                        "You are trying to add image(s) to a book which "
+                        "does not yet exist. Please add information "
+                        "about the book and choose the image file(s) again."
+                    ),
+                )
+
+    def save(self, commit=True):
+        result = super(BaseSupportchoiceFormset, self).save(commit=commit)
+        for form in self.forms:
+            if hasattr(form, 'nested'):
+                if not self._should_delete_form(form):
+                    form.nested.save(commit=commit)
+        return result
+
+
+    def _is_adding_nested_inlines_to_empty_form(self, form):
+        if not hasattr(form, "nested"):
+            return False
+
+        if is_form_persisted(form):
+            return False
+
+        if not is_empty_form(form):
+            return False
+
+        non_deleted_forms = set(form.nested.forms).difference(set(form.nested.deleted_forms))
+
+        return any(not is_empty_form(nested_form) for nested_form in non_deleted_forms)
+
+
+formSetNested = inlineformset_factory(Question, Choice, fields=('answer','imageanswer','answerbis','imageanswerbis','is_correct','retroaction','xmin','xmax','tick','subtick','precision','is_written') , formset=BaseSupportchoiceFormset,   extra=1)
+formSubSet    = inlineformset_factory(Choice, Subchoice, fields=('answer','imageanswer','label','is_correct','retroaction') , extra=2)
+
+class BaseSupportchoiceUpdateFormset(BaseInlineFormSet):
+
+    def add_fields(self, form, index):
+        super().add_fields(form, index)
+        # save the formset in the 'nested' property
+        form.nested = formSubSetUpdate(
+                        instance=form.instance,
+                        data=form.data if form.is_bound else None,
+                        files=form.files if form.is_bound else None,
+                        prefix='choice-{}-subchoice'.format( form.prefix ) )
+
+    def is_valid(self):
+        result = super().is_valid()
+        if self.is_bound:
+            for form in self.forms:
+                if hasattr(form, 'nested'):
+                    result = result and form.nested.is_valid()
+        return result
+
+
+    def save(self, commit=True):
+        result = super().save(commit=commit)
+        for form in self.forms:
+            if hasattr(form, 'nested'):
+                if not self._should_delete_form(form):
+                    form.nested.save(commit=commit)
+
+        return result
+
+
+formSetUpdateNested = inlineformset_factory(Question, Choice, fields=('answer','imageanswer','answerbis','imageanswerbis','is_correct','retroaction','xmin','xmax','tick','subtick','precision','is_written')  , formset=BaseSupportchoiceUpdateFormset,   extra=0)
+formSubSetUpdate    = inlineformset_factory(Choice, Subchoice, fields=('answer','imageanswer','label','is_correct','retroaction') , extra=0)
+#################################################################################################################################################################################
+###################################    UPDATE FORMULAIRES GROUPES ET SOUS FORMULAIRES       #####################################################################################
+#################################################################################################################################################################################
 
 
 

@@ -1269,11 +1269,14 @@ def create_question_positionnement(request,idp,qtype):
     all_questions = Question.objects.filter(is_publish=1)
 
     if qtype == 9 : extra = 1
+    elif qtype == 8 : extra = 1
     else : extra = 2
+    qt = Qtype.objects.get(pk=qtype)
+    if qt.is_sub == 0 : 
+        formSet  = inlineformset_factory( Question , Choice , fields=('answer','imageanswer','answerbis','imageanswerbis','is_correct','retroaction')  , extra =  extra)
+    else :
+        formSet = formSetNested()
 
-    formSet = inlineformset_factory( Question , Choice , fields=('answer','imageanswer','is_correct','retroaction','imageanswerbis','answerbis') , extra=extra)
-    form_ans = formSet(request.POST or None,  request.FILES or None)
-  
     if request.method == "POST"  :
         if form.is_valid():
             nf         = form.save(commit=False) 
@@ -1282,20 +1285,35 @@ def create_question_positionnement(request,idp,qtype):
             nf.save()
             form.save_m2m() 
             positionnement.questions.add(nf)
-            if qtype > 2 :
-                form_ans = formSet(request.POST or None,  request.FILES or None, instance = nf)
-                for form_answer in form_ans :
-                    if form_answer.is_valid():
-                        form_answer.save()
+
+            if qt.is_alea :
+                form_var = formSetvar(request.POST or None,  instance = nf) 
+                for form_v in form_var :
+                    if form_v.is_valid():
+                        var = form_v.save()
+                    else :
+                        print(form_v.errors)
+
+            if qtype < 19 :
+                if qt.is_sub == 0  :
+                    form_ans = formSet(request.POST or None,  request.FILES or None, instance = nf)
+                    for form_answer in form_ans :
+                        if form_answer.is_valid():
+                            form_answer.save()
+ 
+                else :
+                    formset = formSetNested(request.POST or None,  request.FILES or None, instance=nf)
+                    if formset.is_valid():
+                        formset.save()
+                    else :
+                        print( formset.errors )
 
             return redirect('create_question_positionnement' , idp,0)
 
  
     bgcolors = ["bgcolorRed", "bgcolorBlue","bgcolorOrange", "bgcolorGreen"] 
-    context = { 'positionnement': positionnement, 'questions': questions,  'form' : form, 'qtype' : qtype , 'all_questions' : all_questions , "positionnement_id" : positionnement.id , "question" : None     }
+    context = { 'positionnement': positionnement,'qt' : qt , 'questions': questions,  'form' : form, 'qtype' : qtype , 'all_questions' : all_questions , "positionnement_id" : positionnement.id , "question" : None     }
 
- 
- 
     #Choix des questions
     if qtype == 0 :
         qtypes = Qtype.objects.filter(is_online=1).order_by("ranking")
@@ -1315,12 +1333,11 @@ def create_question_positionnement(request,idp,qtype):
     #QCM ou QCS
     elif qtype == 3 or qtype == 4  :
  
-        context.update( {  'bgcolors' : bgcolors  ,  'title_type_of_question' : "QCM" , 'form_ans' : form_ans   })
+        context.update( {  'bgcolors' : bgcolors  ,  'title_type_of_question' : "QCM" , 'form_ans' : formSet   })
         template = 'tool/question_qcm_numeric_positionnement.html'
 
     else :
-        qt = Qtype.objects.get(pk=qtype)
-        context.update( {  'bgcolors' : bgcolors  ,  'title_type_of_question' : qt.title , 'form_ans' : form_ans   })
+        context.update( {  'bgcolors' : bgcolors  ,  'title_type_of_question' : qt.title , 'form_ans' : formSet   })
         template =  "tool/qtype/"+qt.custom+".html"
 
     return render(request, template , context)
@@ -1330,7 +1347,6 @@ def create_question_positionnement(request,idp,qtype):
 
 def create_question_csv_positionnement(request):
  
-
     idp = request.POST.get("positionnement_id",None)
     if not idp :
         return redirect('list_positionnements' )
@@ -1390,9 +1406,13 @@ def update_question_positionnement(request,id,idp,qtype):
     form     = QuestionPositionnementForm(request.POST or None, request.FILES or None, instance = question, positionnement = positionnement)
  
 
-    if qtype > 2 :
-        formSet = inlineformset_factory( Question , Choice , fields=('answer','imageanswer','is_correct','retroaction') , extra=0)
-        form_ans = formSet(request.POST or None,  request.FILES or None, instance = question)
+    qto  = Qtype.objects.get(pk=qtype)
+
+    if qto.is_sub == 0 : 
+        formSet  = inlineformset_factory( Question , Choice , fields=('answer','imageanswer','answerbis','imageanswerbis','is_correct','retroaction')  , extra =  0)
+        form_ans = formSet(request.POST or None, request.FILES or None , instance = question)
+    else :
+        form_ans = formSetUpdateNested(instance = question)
 
     if request.method == "POST"  :  
         if form.is_valid():
@@ -1401,16 +1421,33 @@ def update_question_positionnement(request,id,idp,qtype):
             nf.qtype   = qtype
             nf.save()
             form.save_m2m() 
-            if qtype > 2 :
-                for form_answer in form_ans :
-                    if form_answer.is_valid():
-                        form_answer.save()
+     
+            is_sub = qto.is_sub
+            extra  = qto.extra
+            if qto.is_alea :
+                for form_v in form_var :
+                    if form_v.is_valid():
+                        var = form_v.save()
+                    else :
+                        print(form_v.errors)
+
+
+            if qtype < 19 :
+                if is_sub == 0  :
+                    form_ans = formSet(request.POST or None,  request.FILES or None, instance = nf)
+                    for form_answer in form_ans :
+                        if form_answer.is_valid():
+                            form_answer.save()
+                else :
+                    formset = formSetNested(request.POST or None,  request.FILES or None, instance=nf)
+                    if formset.is_valid():
+                        formset.save()
 
             return redirect('create_question_positionnement' , idp,0)
 
  
     bgcolors = ["bgcolorRed","bgcolorBlue","bgcolorOrange","bgcolorGreen"] 
-    context = { 'positionnement': positionnement, 'questions': questions,  'form' : form, 'qtype' : qtype , "question" : question   }
+    context = { 'positionnement': positionnement, 'questions': questions,'qt' : qt,  'form' : form, 'qtype' : qtype , "question" : question   }
 
     #Choix des questions
     if qtype == 1 :
@@ -1427,6 +1464,12 @@ def update_question_positionnement(request,id,idp,qtype):
  
         context.update( {  'bgcolors' : bgcolors  ,  'title_type_of_question' : "QCM" , 'form_ans' : form_ans   })
         template = 'tool/question_qcm_numeric_positionnement.html'
+    
+    else :
+        qt = Qtype.objects.get(pk=qtype)
+        context.update( {  'bgcolors' : bgcolors  ,  'title_type_of_question' : qt.title , 'form_ans' : form_ans   })
+        template =  "tool/qtype/"+qt.custom+".html"
+
 
     return render(request, template , context)
 

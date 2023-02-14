@@ -7,27 +7,34 @@
 
 
 {% block require %}
-    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common3_withoutMathJax.js' %}"></script>
-    
+    {% if question %}
+        <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common4_withoutMathJax.js' %}"></script>
+    {% else %}
+        <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common3_withoutMathJax.js' %}"></script>
+        <script>
+            require(['script/ajax-question_creator_create','script/ajax-finder']);
+        </script> 
+    {% endif %}
+ 
+
     {% if  qtype == 15 or qtype == 18 %}
         <script>
-            require(['script/ajax-support_creator_canvas']);
+            require(['script/ajax-question_creator_canvas']);
         </script> 
     {% elif qt.is_sub %}
         <script>
-            require(['script/ajax-support_creator_sub']);
+            require(['script/ajax-question_creator_sub']);
         </script> 
     {% else %}
         <script>
-            require(['script/ajax-support_creator']);
+            require(['script/ajax-question_creator']);
         </script>    
     {% endif %}
+    <script>
+        require(['script/ajax-quizz']);
+        require(['script/ajax-finder']);
+    </script> 
 
-    {% if not supportfile %}
-        <script>
-            require(['script/ajax-support_creator_create','script/ajax-finder']);
-        </script> 
-    {% endif %}
 {% endblock %}
 
 

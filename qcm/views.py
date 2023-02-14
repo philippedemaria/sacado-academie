@@ -6387,22 +6387,8 @@ def create_supportfile(request,qtype,ids):
                     form_ans = formSet(request.POST or None,  request.FILES or None, instance = nf)
                     for form_answer in form_ans :
                         if form_answer.is_valid():
-                            fa = form_answer.save()
-                            # if nf.qtype==10:
-                            #     ##### A tester lors de la création
-                            #     name, ext = os.path.splitext(fa.imageanswer)
-                            #     img = Image.open(os.path.join(dir_in, filename))
-                            #     w, h = img.size
-                                
-                            #     grid = product(range(0, h-h%d, d), range(0, w-w%d, d))
-                            #     for i, j in grid:
-                            #         box = (j, i, j+d, i+d)
-                            #         out = os.path.join(dir_in, f'{name}_{i}_{j}{ext}')
-                            #         img.crop(box).save(out)
-
-                            #         my_c = Supportsubchoice( { 'imageanswer' : f'{name}_{i}_{j}{ext}' , 'answer' : "" ,'retroaction' : "" , 'is_correct' : 0 , 'supportchoice' : fa , 'label' : 0 } )
-                            #         my_c.save()
-                                ####################################
+                            form_answer.save()
+ 
                 else :
                     formset = formSetNested(request.POST or None,  request.FILES or None, instance=nf)
                     if formset.is_valid():
@@ -6433,9 +6419,6 @@ def create_supportfile(request,qtype,ids):
 
 
     return render(request, template , context)
-
-
-
 
 
 
@@ -6509,22 +6492,8 @@ def update_supportfile(request, id, redirection=0):
                     form_ans = formSet(request.POST or None,  request.FILES or None, instance = nf)
                     for form_answer in form_ans :
                         if form_answer.is_valid():
-                            fa = form_answer.save()
-                            # if nf.qtype==10:
-                            #     ##### A tester lors de la création
-                            #     name, ext = os.path.splitext(fa.imageanswer)
-                            #     img = Image.open(os.path.join(dir_in, filename))
-                            #     w, h = img.size
-                                
-                            #     grid = product(range(0, h-h%d, d), range(0, w-w%d, d))
-                            #     for i, j in grid:
-                            #         box = (j, i, j+d, i+d)
-                            #         out = os.path.join(dir_in, f'{name}_{i}_{j}{ext}')
-                            #         img.crop(box).save(out)
+                            form_answer.save()
 
-                            #         my_c = Supportsubchoice( { 'imageanswer' : f'{name}_{i}_{j}{ext}' , 'answer' : "" ,'retroaction' : "" , 'is_correct' : 0 , 'supportchoice' : fa , 'label' : 0 } )
-                            #         my_c.save()
-                                ####################################
                 else :
                     formset = formSetNested(request.POST or None,  request.FILES or None, instance=nf)
                     if formset.is_valid():

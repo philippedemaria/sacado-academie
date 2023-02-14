@@ -1,32 +1,48 @@
-{% extends 'qcm/form_supportfile.html' %}
+{% extends 'tool/form_question_positionnement.html' %}
 {% load widget_tweaks %}
 {% load static %}
 {% load item_tags %}
 
+ 
+
+{% block require %}
+    {% if question %}
+        <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common4_withoutMathJax.js' %}"></script>
+    {% else %}
+        <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common3_withoutMathJax.js' %}"></script>
+        <script>
+            require(['script/ajax-question_creator_create','script/ajax-finder']);
+        </script> 
+    {% endif %}
+ 
+
+    {% if  qtype == 15 or qtype == 18 %}
+        <script>
+            require(['script/ajax-question_creator_canvas']);
+        </script> 
+    {% elif qt.is_sub %}
+        <script>
+            require(['script/ajax-question_creator_sub']);
+        </script> 
+    {% else %}
+        <script>
+            require(['script/ajax-question_creator']);
+        </script>    
+    {% endif %}
+    <script>
+        require(['script/ajax-quizz','script/ajax-finder']);
+    </script> 
+
+{% endblock %}
 
 
-{% block body_qtype %}
-<div class="row">
-    <div class="col-sm-12 col-md-6">
-        <div class="form_card" style="margin-top:20px;">
-            <label>Titre </label>
-            {{ form.title|add_class:"form-control"   }}
-            {{ form.title.errors }}
-            <div class="form-group">
-            <label>Enoncé :</label>
-            {{ form.annoncement |add_class:"form-control"}}
-            {{ form.annoncement.errors }}
-            </div>        
-        </div>                                             
-    </div>
-    <div class="col-sm-12 col-md-6">
-        <div class="form_card" style="margin-top:20px">    
-            {% include 'qcm/qtype/0_config_middle.html' %}
-        </div>
-    </div>       
-</div>
 
 
+{% block details %}
+{% endblock %}
+
+
+{% block type_of_choices %}
 <div class="row">
     <div class="col-sm-12 col-md-12">
         <div class="form_card" style="margin-top:20px;">
@@ -304,13 +320,6 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-sm-12 col-md-12">
-        <div class="form_card" style="margin-top:20px;">
-            {% include 'qcm/qtype/_content_correction.html' %} 
-        </div>  
-    </div>
-</div>
 
 
 <script id="rowToClone" type="text/template">

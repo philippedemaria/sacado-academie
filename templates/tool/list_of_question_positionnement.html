@@ -8,8 +8,12 @@
 <li class="sorted_list{% if question %}{% if not question.is_publish %} no_published{% endif %}{% endif %}">
 	<input type="hidden" value="{{ question.id }}" class="sorted_question_id"   />
     <div class="row"> 
-        <div class="col-xs-12 col-md-12">
-            <label>{% if from_ajax %}{{ nbq }}{% else %}{{ forloop.counter }}{% endif %}. {{ question.title|truncatechars_html:"20"|safe}} {% if question %}{% if not question.is_publish %} <i class="fa fa-eye-slash"></i> {% endif %}{% endif %}</label>
+        <div class="col-xs-1 col-md-1">
+            <label>{% if from_ajax %}{{ nbq }}{% else %}{{ forloop.counter }}{% endif %}.</label>
+
+        </div>
+        <div class="col-xs-10 col-md-10">
+            {{ question.title|truncatechars_html:"20"|safe}} {% if question %}{% if not question.is_publish %} <i class="fa fa-eye-slash"></i> {% endif %}{% endif %}
         </div>
     </div>
     <div class="row"> 
@@ -21,15 +25,9 @@
             <a href="{% url 'remove_question_positionnement' question.id positionnement.id %}"  class="delete_question" onclick="return TestDelete('cette question')" title="Supprimer"> <i class="fa fa-trash"></i></a>
 
         </div>
-        <div class="col-xs-10 col-md-10">
-            {% if question.qtype == 1 %}
-                <img src="{% static 'img/quizz_vf.png' %}" width="90%" />
-            {% elif question.qtype == 2 %}
-                <img src="{% static 'img/quizz_typing.png' %}" width="90%" />
-            {% elif question.qtype == 3 %}
-                <img src="{% static 'img/quizz_qcm.png' %}" width="90%" />
-            {% elif question.qtype == 4 %} 
-                <img src="{% static 'img/quizz_qcs.png' %}" width="90%" />
+        <div class="col-xs-10 col-md-10"> 
+            {% if question.qtype_obj.imagefile %}
+                <img src="{{ question.qtype_obj.imagefile.url }}" />
             {% endif   %}  
         </div>
     </div>

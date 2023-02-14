@@ -166,7 +166,7 @@ class Question(models.Model):
     Modèle représentant un associé.
     """
 
-    title         = RichTextUploadingField( default='',  blank=True, verbose_name="Réponse écrite")
+    title         = models.TextField( default='',  blank=True, verbose_name="Réponse écrite")
     calculator    = models.BooleanField(default=0, verbose_name="Calculatrice ?")
     date_modified = models.DateTimeField(auto_now=True)
     ####  type de question
@@ -219,8 +219,6 @@ class Question(models.Model):
             test = True
         return test
 
-
-
     def real_ans_for_this_question (self,quizz, student):
         """
         retourne  la réponse de 'élève pour un quizz avec une question sous forme du choix proposé.
@@ -255,7 +253,6 @@ class Question(models.Model):
         this_answer["is_correct"] =   is_correct  
         return this_answer
 
-
     def success_percent (self,quizz):
         data_set = Answerplayer.objects.filter(question = self, quizz = quizz )
         good_answerplayers = data_set.filter(is_correct = 1 ).count()
@@ -266,6 +263,32 @@ class Question(models.Model):
             percent = "Non traité"
  
         return percent
+
+    def qtype_obj(self):        
+        return Qtype.objects.get(pk=self.qtype)
+
+
+    def qtype_title(self):
+        qt = Qtype.objects.get(pk=self.qtype)
+        return qt.title
+
+
+    def qtype_logo(self):        
+        logo = Qtype.objects.get(pk=self.qtype).imagefile
+        return logo
+
+
+    def this_template(self):
+        qt = Qtype.objects.get(pk=self.qtype)
+        return 'qcm/qtype/ans_'+qt.custom+'.html'
+
+
+    def is_alea(self):
+        test = False
+        supportchoice = self.supportchoices.first()
+        if supportchoice.precision : test = True
+        return test
+
 
 
 class Choice(models.Model):
