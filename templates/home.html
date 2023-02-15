@@ -111,19 +111,17 @@ Intro Section -
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content" >
                 <div class="modal-header">
-                    <h2 class="font_sacado">Choisir votre exercice</h2>
+                    <h2 class="font_sacado">Choisir votre niveau</h2>
                 </div>
                 <div class="modal-body modal_level">
-                    {% for data in dataset %}
-                    <div class="modal_title_level">{{ data.level.name }}</div>
                     <div class="row" align="center">
-                        {% for exercise in data.exercises %}
+                    {% for data in dataset %}
                         <div class="col-xs-4 col-md-4">
-                            <a href="{% url 'show_this_index_exercise' exercise.id %}">{% if  exercise.supportfile.imagefile %} <img src="{{ exercise.supportfile.imagefile.url }}"  width="150px" /> {% endif %}</a>
+                            <div class="modal_title_level">{{ data.level.name }}</div>
+                            <a href="{% url 'show_this_index_exercise' data.exercise.id %}">{% if  data.exercise.supportfile.imagefile %} <img src="{{ data.exercise.supportfile.imagefile.url }}"  width="150px" /> {% endif %}</a>
                         </div>
-                        {% endfor %}
+                    {% endfor %}                        
                     </div>
-                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -228,7 +226,7 @@ Intro Section -
                         <p class="card-text">  <a href="#" data-toggle='modal' data-target='#accompagnement'  class="detail_index"><i class="bi bi-cursor"></i>  Plus de détails <i class="bi bi-question-circle"></i></a>  </p>
                     </div>
                     <div class="card-block plus">
-                        <a href="{% url 'choice_menu' 3 %}" class="btn btn-asso">Choisir ce menu</a>
+                        <a href="{% url 'choice_menu' 4 %}" class="btn btn-asso">Choisir ce menu</a>
                     </div>
                 </div>
             </div>

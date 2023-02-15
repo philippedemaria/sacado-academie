@@ -210,12 +210,14 @@ def index(request):
 
         levels = Level.objects.exclude(pk=13).exclude(pk=17).order_by("ranking")
         dataset = list()
+        pk_ids = [6107, 1762,1651,1427,984,2489,2035,4842,8087,5802,1120,3891,3233]
+        i = 0
         for level in levels :
             dico = {}
             dico["level"] = level
-            exercises = Exercise.objects.filter(level=level)[:3]
-            dico["exercises"] = exercises
+            dico["exercise"] = Exercise.objects.get(pk=pk_ids[i])
             dataset.append(dico)
+            i+=1
 
         context = { 'nb_exercises' : nb_exercises , 'form' : form , 'np_form' : np_form , 'levels' : levels , 'nb_students' : nb_students , 'formules'  :  formules , 'image_accueil' : image_accueil , 'dataset' : dataset }
  
