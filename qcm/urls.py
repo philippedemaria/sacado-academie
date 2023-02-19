@@ -527,4 +527,13 @@ urlpatterns = [
     path('ajax_add_criterion', ajax_add_criterion, name='ajax_add_criterion'),
     path('ajax_auto_evaluation', ajax_auto_evaluation, name='ajax_auto_evaluation'), 
 
+
+    ######################################################################################################################################################
+    ##############################    Préparation aux évaluations         ################################################################################
+    ######################################################################################################################################################
+    path('prep_eval/<int:id>', prep_eval, name='prep_eval'), 
+    path('show_prepeval/<int:idp>', show_prepeval, name='show_prepeval'), 
+    path('delete_prepeval/<int:ids>/<int:idp>', delete_prepeval, name='delete_prepeval'), 
+
+
  ]
