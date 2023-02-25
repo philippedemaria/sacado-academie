@@ -16,11 +16,8 @@
     {% endif %}
  
 
-    {% if  qtype == 15 or qtype == 18 %}
-        <script>
-            require(['script/ajax-question_creator_canvas']);
-        </script> 
-    {% elif qt.is_sub %}
+ 
+    {% if qt.is_sub %}
         <script>
             require(['script/ajax-question_creator_sub']);
         </script> 

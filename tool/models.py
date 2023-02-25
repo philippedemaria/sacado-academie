@@ -193,7 +193,7 @@ class Question(models.Model):
     ranking    = models.PositiveIntegerField(  default=0,  blank=True, null=True, editable=False)
     students   = models.ManyToManyField(Student, blank=True, through="Answerplayer", related_name="questions",   editable=False)
 
-    size       = models.PositiveIntegerField(default=32, choices=POLICES,  verbose_name="Taille de police")
+    size       = models.PositiveIntegerField(default=32, blank=True, choices=POLICES,  verbose_name="Taille de police")
     theme      = models.BooleanField(default=1, verbose_name="Thème ?")
 
     def __str__(self):

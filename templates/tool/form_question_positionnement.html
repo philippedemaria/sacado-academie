@@ -87,8 +87,6 @@
                                     {{ form.title|add_class:"quizz_box quizz_font40" |attr:"placeholder:Ecrire votre question ici" |attr:"rows:3"|attr:"required"  }}
                                 </div>
                                 <div class="col-sm-2 col-md-2" > 
-                                        <label>Taille de police</label><br/>
-                                    {{ form.size|add_class:"form-control select2"  }}
  
                                     <div class="quizz_assets" align="center">
                                         <label>Durée</label><br/>
@@ -101,7 +99,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+
+ 
+                            <div class="row no_visu_on_load">
      
                                 <div class="col-sm-12 col-md-1" align="center" >
                                     <div class="quizz_assets" style="height:110px">
@@ -150,6 +150,8 @@
                                     </div>
                                 </div> 
                             </div>
+ 
+
 
                             <div class="row" >
                                 <div class="col-sm-12 col-md-12" >

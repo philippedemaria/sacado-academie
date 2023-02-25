@@ -10,26 +10,35 @@
     {{ title_type_of_question }} 
 {% endblock %} 
 
-{% block require %}
-    {% if question %}
-    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common5.js' %}"></script>
-    <script>
-        require(['script/ajax-quizz-update']);
-    </script> 
-    {% else %}
-    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common4.js' %}"></script>
-    <script>
-        require(['script/ajax-quizz-complement']);
-    </script> 
-    {% endif %}
-
-    <script>
-        require(['script/ajax-quizz_numeric']);
-        require(['script/ajax-finder']);
-    </script> 
-{% endblock %}
+ 
  
 
+{% block require %}
+    {% if question %}
+        <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common4_withoutMathJax.js' %}"></script>
+    {% else %}
+        <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common3_withoutMathJax.js' %}"></script>
+        <script>
+            require(['script/ajax-question_creator_create','script/ajax-finder']);
+        </script> 
+    {% endif %}
+ 
+
+ 
+    {% if qt.is_sub %}
+        <script>
+            require(['script/ajax-question_creator_sub']);
+        </script> 
+    {% else %}
+        <script>
+            require(['script/ajax-question_creator']);
+        </script>    
+    {% endif %}
+    <script>
+        require(['script/ajax-quizz','script/ajax-finder']);
+    </script> 
+
+{% endblock %}
 
 
 
