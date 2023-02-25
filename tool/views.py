@@ -1592,7 +1592,7 @@ def goto_positionnement_student(request,id):
     question_ids = list(positionnement.questions.values_list("id",flat=True).order_by("ranking"))
     quizz_id     = request.session.get("quizz_id",None) 
 
-    if not quizz_id :
+    if not positionnement :
         positionnement_id                    = positionnement.id
         request.session["positionnement_id"] = positionnement_id
 
@@ -1614,7 +1614,6 @@ def goto_positionnement_student(request,id):
     if positionnement.is_back :
         is_back = True
 
-    print(question_ids)
     #####################################################################################
     ######## Navigation dans le quizz
     #####################################################################################
@@ -1684,7 +1683,6 @@ def store_positionnement_solution( request ,positionnement_id,student,q_id, solu
 
             a = ""
             if int(ans) in choices :
-                print("ici corrects == len(choices)")
                 corrects += 1
 
             if corrects == len(choices):
@@ -1748,7 +1746,14 @@ def my_results(request):
 
 
     for t in subtheme_tab :
-        theme_tab.append({ "theme" : t["theme"] , "score" : int(t["score"]//t["total"])  })
+
+        this_score = int(t["score"]//t["total"]) 
+        if this_score > 90 : color = "darkgreen"
+        elif this_score > 65 : color = "green"
+        elif this_score > 40 : color = "orange"
+        else : color = "red"
+        theme_tab.append({ "theme" : t["theme"] , "score" : this_score , 'color' : color })
+
 
     context = { 'results' : results , 'theme_tab' : theme_tab , 'skill_tab' : skill_tab   }
     return render(request, 'tool/positionnement_results.html', context)

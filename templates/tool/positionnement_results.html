@@ -94,7 +94,7 @@
                                     <li class="sanspuce">
                                         <label>{{ data.theme }}</label> <br/>    
                                         <div class="progress">
-                                          <div class="progress-bar" role="progressbar" style="width: {{ data.score }}%;background-color:{{ data.score|bgcolor }}" aria-valuenow='{{ data.score }}' aria-valuemin="0" aria-valuemax="100">{{ data.score }}%</div>
+                                          <div class="progress-bar" role="progressbar" style="width: {{ data.score }}%;background-color:{{ data.color }}" aria-valuenow='{{ data.score }}' aria-valuemin="0" aria-valuemax="100">{{ data.score }}%</div>
                                         </div>
                                     </li>
                                 {% endfor %}
@@ -105,7 +105,7 @@
                                     <li class="sanspuce">
                                         <label>{{ data.skill }}</label>  <br/>    
                                         <div class="progress">
-                                          <div class="progress-bar {{ data.score|bgcolor }}" role="progressbar" style="width: {{ data.score }}%; background-color: {{ data.score|bgcolor }}" aria-valuenow='{{ data.score }}' aria-valuemin="0" aria-valuemax="100">{{ data.score }}%</div>
+                                          <div class="progress-bar" role="progressbar" style="width: {{ data.score }}%; background-color: {{ data.color }}" aria-valuenow='{{ data.score }}' aria-valuemin="0" aria-valuemax="100">{{ data.score }}%</div>
                                         </div>
                                     </li>
                                 {% endfor %}
@@ -187,7 +187,7 @@
                                         {% if not forloop.last %}<br/>{% endif %}
                                     {% endfor %}
                                     <hr/>
-                                    {% if result.is_correct %}<span class="text-success">Réponse juste</span>{% else %}<span class="text-danger">Réponse juste</span>{% endif %}
+                                    {% if result.is_correct %}<span class="text-success">Réponse juste</span>{% else %}<span class="text-danger">Réponse fausse</span>{% endif %}
 
                                 </td>
               

@@ -43,23 +43,6 @@
 
 
 {% block type_of_choices %}
-<div class="row">
-    <div class="col-sm-12 col-md-6">
-        <div class="form_card" style="margin-top:20px;">
-            <label>Titre </label>
-            {{ form.title|add_class:"form-control"   }}
-            {{ form.title.errors }}
-            <label>Enoncé :</label>
-            {{ form.annoncement |add_class:"form-control"|attr:"rows:3" }}
-            {{ form.annoncement.errors }}<br/>
-        </div>                                             
-    </div>
-    <div class="col-sm-12 col-md-6">
-        <div class="form_card" style="margin-top:20px">    
-            {% include 'qcm/qtype/0_config_middle.html' %}
-        </div>
-    </div>   
-</div>
 
 
 <div class="row">

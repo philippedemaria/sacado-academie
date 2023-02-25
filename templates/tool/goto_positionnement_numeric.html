@@ -233,20 +233,34 @@
 
     {% elif question.qtype == 9 %}
      
-
-        <label>Mots à placer</label>
-        <div class="quizz_item select_items">
-            {% for word in words %}
-                <span class="word_choice word_draggable" style="cursor: move;" data-word="{{ word }}" >
-                    {{  word }}
-                </span>
-            {% endfor %}
-        </div>  
         {% for choice in question.choices.all %}
-        <div class="quizz_item answer_area dropzone"> 
-             {{  choice.answer|insert_input:"0"|safe }}
-        </div>
+
+
+            {% if choice.is_written %}
+                <div class="text_fill_the_blanks" align="left">
+                    {{ choice.answer|insert_only_input:forloop.counter|safe }}
+                </div>
+                <input name="choice_id" type='hidden' value="{{ choice.id }}"/>
+            {% else %}
+
+                <div class="select_items droppable{{forloop.counter }}" align="left">
+                    {% for word in shufflechoices|index:forloop.counter0 %}
+                        <span class="draggable word_choice"  data-word="{{ word }}"  data-loop="{{ forloop.parentloop.counter }}" style="cursor: move;" >
+                             {{  word }}
+                        </span>
+                    {% endfor %}
+                    <a href="javascript:void();" data-loop="{{ forloop.counter }}"  class="eraser btn btn-danger btn-xs pull-right">Ré initialiser</a>
+                </div>  
+                    <div class="text_fill_the_blanks dropzone{{forloop.counter }}" align="left">
+                        {{ choice.answer|insert_input:forloop.counter|safe }}
+                    </div>
+                    <input name="choice_id" type='hidden' value="{{ choice.id }}"/>
+
+
+            {% endif %}
+
         {% endfor %}
+
     {% elif question.qtype == 10 %}
 
      
