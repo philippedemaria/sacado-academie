@@ -1636,7 +1636,7 @@ def goto_positionnement_student(request,id):
 
         is_correct = store_positionnement_solution(request ,positionnement_id,student,q_id, solutions,timer)
     
-    print( q_id , quizz_nav , is_correct )
+        print( q_id , quizz_nav , is_correct )
 
     if quizz_nav == len(question_ids) :
         end_of_quizz = True
@@ -1675,12 +1675,18 @@ def store_positionnement_solution( request ,positionnement_id,student,q_id, solu
                 score      = question.point
             answ = ans
         elif question.qtype == 2 :
-            choices = question.choices.all()
-            for choice in choices :
-                if ans in choice.answer :
-                    is_correct = 1
-                    score      = question.point
+            if ans in question.answer.split("____"):
+                is_correct = 1
+                score      = question.point
             answ = ans
+            # choices = question.choices.all()
+            # for choice in choices :
+            #     if ans in choice.answer :
+            #         is_correct = 1
+            #         score      = question.point
+            # answ = ans
+
+
         else :
             choices  = question.choices.values_list('id',flat=True).filter(is_correct=1)
 
