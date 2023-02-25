@@ -1424,7 +1424,7 @@ def update_question_positionnement(request,id,idp,qtype):
             is_sub = qt.is_sub
             extra  = qt.extra
 
-            if qtype < 19 :
+            if 2<qtype < 19 :
                 if is_sub == 0  :
                     form_ans = formSet(request.POST or None,  request.FILES or None, instance = nf)
                     for form_answer in form_ans :
