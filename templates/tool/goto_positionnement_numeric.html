@@ -84,12 +84,12 @@
                     <b>Ecrire la bonne réponse</b>.
                 {% elif question.qtype == 3 %}
                     <b> Choisir  la ou les bonnes réponses</b>. 
-                {% else %}
+                {% elif question.qtype == 4 %}
                     <b> Choisir la seule bonne réponse</b>. 
                 {% endif %}
         </div>
     </div> 
-    <div class="row" align="center"  style="width:80%;padding:10px ; margin-right: auto; margin-left:auto; background-color: #f1eef7 ;">  
+    <div class="row" align="center"  style="width:80%;padding:10px ; margin-right: auto; margin-left:auto; background-color: #FFF ;">  
         <div class="col-sm-12 col-md-12"align="center">
             <h1 style="font-size:2.5em"  >  {{ question.title|safe }}   </h1>
         </div>
@@ -111,311 +111,312 @@
         </div> 
     {% endif %}
 
+    <div class="row" style="width:80%;padding:10px ; margin-right: auto; margin-left:auto; background-color: #FFF ;"> 
+        {% if question.qtype == 1 %}
+            <div class="row"> 
+                <div class="col-sm-12 col-md-6 bgcolorBlue white"  align="center" style="border-radius : 10px ">
+                    <label style="font-size:3.5em" class="thin">
+                        VRAI <input type="radio" name="solution" value="1" {% if 1 in this_answer.answer  %}checked{% endif %}    class="answer_quizz_vf">
+                    </label>  
+                </div> 
 
-    {% if question.qtype == 1 %}
-        <div class="row"> 
-            <div class="col-sm-12 col-md-6 bgcolorBlue white"  align="center" style="border-radius : 10px ">
-                <label style="font-size:3.5em" class="thin">
-                    VRAI <input type="radio" name="solution" value="1" {% if 1 in this_answer.answer  %}checked{% endif %}    class="answer_quizz_vf">
-                </label>  
+                <div class="col-sm-12 col-md-6 bgcolorRed white"  align="center" style="border-radius : 10px ">
+                    <label style="font-size:3.5em" class="thin">FAUX <input type="radio" name="solution" value="0"  {% if 0 in this_answer.answer    %}checked{% endif %}  class="answer_quizz_vf"></label>  
+                </div> 
             </div> 
-
-            <div class="col-sm-12 col-md-6 bgcolorRed white"  align="center" style="border-radius : 10px ">
-                <label style="font-size:3.5em" class="thin">FAUX <input type="radio" name="solution" value="0"  {% if 0 in this_answer.answer    %}checked{% endif %}  class="answer_quizz_vf"></label>  
-            </div> 
-        </div> 
-    
-    {% elif question.qtype == 2 %}
         
-        <div class="row"> 
-            <div class="col-sm-12 col-md-12"  align="center" style="border-radius : 10px ">
-                <input type="text" name="solution" id="solution" required class="quizz_box_answer quizz_font40"  value="{{ this_answer.answer }}" >
+        {% elif question.qtype == 2 %}
+            
+            <div class="row"> 
+                <div class="col-sm-12 col-md-12"  align="center" style="border-radius : 10px ">
+                    <input type="text" name="solution" id="solution" required class="quizz_box_answer quizz_font40"  value="{{ this_answer.answer }}" style="width:300px">
+                </div> 
             </div> 
-        </div> 
 
-    {% elif question.qtype == 3 or question.qtype == 4 %}
+        {% elif question.qtype == 3 or question.qtype == 4 %}
 
-        {% for choice in question.choices.all %}
- 
-            {% cycle 'A' 'B' 'C' 'D'  as choice_letter silent %}
-            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-6" style="margin-bottom: 5px ; font-size:1.2em; border-radius : 10px;background-color: #f1eef7 ;">
-                <div class="row" >
-
-                    <div class="col-sm-12 col-md-12  col-lg-12 col-xl-6 {{ rowcolor }}"  
-                         style="color:#5d4391;  padding: 5px; font-size : 1.5em">  
-                         <input type="{% if question.qtype == 4 %}checkbox{% else %}radio{% endif %}" name="solution" value="{{ choice.id }}"  class="answer_quizz"> 
-                         {{ choice.answer }}
-                        
-                         {% if choice.imageanswer %}
-                         <img src="{{ choice.imageanswer.url }}" height="200px" />
-                         {% endif %}
-
-                    </div>
-                </div>  
-            </div> 
-        {% endfor %}
-        {% resetcycle %}
-
-    {% elif question.qtype == 5 %}
-        <label>Eléments</label>
-        <div class="quizz_item select_items">
             {% for choice in question.choices.all %}
-                <span class="quizz_choice draggable" style="cursor: move;" data-subchoice="{{ choice.id }}" data-loop="0">
-                    {% if choice.imageanswerbis  %}<img src="{{ choice.imageanswerbis.url }}" height="80px" />{% endif %} {{  choice.answerbis }}
-                </span>
-            {% endfor %}
-        </div>  
-        <label>à appairer avec </label>
-        <div class="dropzone">
-        {% for customchoice in question.choices.all|shuffle %}
-        <div class="quizz_item droppable0" data-choice="{{ customchoice.id }}" >
-            <span class="quizz_choice">{% if customchoice.imageanswer  %}<img src="{{ customchoice.imageanswer.url }}" height="80px" />{% endif %} {{  customchoice.answer }}</span>
-            <input type="hidden" name="answers" value="{{ customchoice.id }}=" />
-        </div>
-        {% endfor %}
-        </div>
-    {% elif question.qtype == 6 %}
-
-        <label>Eléments</label>
-        <div class="quizz_item select_items">
-            {% for subchoice in subchoices %}
-                <span class="quizz_choice draggable" style="cursor: move;" data-subchoice="{{ subchoice.id }}">
-                    {% if subchoice.imageanswer  %}<img src="{{ subchoice.imageanswer.url }}" height="80px" />{% endif %} {{  subchoice.answer }}
-                </span>
-            {% endfor %}
-        </div>  
-        <label>avec les thèmes  </label>
-        <div class="dropzone">
-        {% for supportfile in supportfile.supportchoices.all %}
-        <div class="quizz_item droppable" data-choice="{{ customchoice.id }}" >
-            <span class="quizz_choice">{% if customchoice.imageanswer  %}<img src="{{ customchoice.imageanswer.url }}" height="80px" />{% endif %} {{  customchoice.answer }}</span>
-            <input type="hidden" name="answers" value="{{ customchoice.id }}=" />
-        </div>
-        {% endfor %}
-        </div>
-
-    {% elif question.qtype == 7 %}
-        
      
-        <div class="row" style="margin-top:20px"> 
-            <div class="col-sm-12 col-md-12" >
-                Vous devez trouver {{ choices|length }} mots donc les anagrammes sont ci-dessous.   
-            </div>
-        </div>
+                {% cycle 'A' 'B' 'C' 'D'  as choice_letter silent %}
+                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-6" style="margin-bottom: 5px ; font-size:1.2em; border-radius : 10px;background-color: #f1eef7 ;">
+                    <div class="row" >
 
-        {% for choice in choices %}
-        <div class="row"> 
-            <div class="col-sm-6 col-md-4" align='right'>
-            <h2>{{ choice.word }} <i class="fa fa-caret-right"></i> </h2>
-            </div>
-            <div class="col-sm-6 col-md-8" align='left'>
-                <h2><input type="text" name="answer{{ choice.id }}" class="answer_box"   /> </h2>
-            </div>
-        </div>
-        {% endfor %}
+                        <div class="col-sm-12 col-md-12  col-lg-12 col-xl-6 {{ rowcolor }}"  
+                             style="color:#5d4391;  padding: 5px; font-size : 1.5em">  
+                             <input type="{% if question.qtype == 4 %}checkbox{% else %}radio{% endif %}" name="solution" value="{{ choice.id }}"  class="answer_quizz"> 
+                             {{ choice.answer }}
+                            
+                             {% if choice.imageanswer %}
+                             <img src="{{ choice.imageanswer.url }}" height="200px" />
+                             {% endif %}
 
-    {% elif question.qtype == 8 %}
-
-        <label>Eléments</label>
-        <div class="quizz_item select_items">
-            {% for choice in shufflechoices %}
-                <span class="quizz_choice draggable" style="cursor: move;" data-subchoice="{{ choice.id }}" >
-                    {% if choice.imageanswer  %}<img src="{{ choice.imageanswer.url }}" height="80px" />{% endif %} {{  choice.answer }}
-                </span>
+                        </div>
+                    </div>  
+                </div> 
             {% endfor %}
-        </div>  
-        <label>Classement   </label>
-        <div class="dropzone">
-            <div class="quizz_item droppable" style="min-height:50px" >
-                <input type="hidden" name="answers" value="" />
+            {% resetcycle %}
+
+        {% elif question.qtype == 5 %}
+            <label>Eléments</label>
+            <div class="quizz_item select_items">
+                {% for choice in question.choices.all %}
+                    <span class="quizz_choice draggable" style="cursor: move;" data-subchoice="{{ choice.id }}" data-loop="0">
+                        {% if choice.imageanswerbis  %}<img src="{{ choice.imageanswerbis.url }}" height="80px" />{% endif %} {{  choice.answerbis }}
+                    </span>
+                {% endfor %}
+            </div>  
+            <label>à appairer avec </label>
+            <div class="dropzone">
+            {% for customchoice in question.choices.all|shuffle %}
+            <div class="quizz_item droppable0" data-choice="{{ customchoice.id }}" >
+                <span class="quizz_choice">{% if customchoice.imageanswer  %}<img src="{{ customchoice.imageanswer.url }}" height="80px" />{% endif %} {{  customchoice.answer }}</span>
+                <input type="hidden" name="answers" value="{{ customchoice.id }}=" />
             </div>
-        </div>
+            {% endfor %}
+            </div>
+        {% elif question.qtype == 6 %}
 
-    {% elif question.qtype == 9 %}
-     
-        {% for choice in question.choices.all %}
+            <label>Eléments</label>
+            <div class="quizz_item select_items">
+                {% for subchoice in subchoices %}
+                    <span class="quizz_choice draggable" style="cursor: move;" data-subchoice="{{ subchoice.id }}">
+                        {% if subchoice.imageanswer  %}<img src="{{ subchoice.imageanswer.url }}" height="80px" />{% endif %} {{  subchoice.answer }}
+                    </span>
+                {% endfor %}
+            </div>  
+            <label>avec les thèmes  </label>
+            <div class="dropzone">
+            {% for supportfile in supportfile.supportchoices.all %}
+            <div class="quizz_item droppable" data-choice="{{ customchoice.id }}" >
+                <span class="quizz_choice">{% if customchoice.imageanswer  %}<img src="{{ customchoice.imageanswer.url }}" height="80px" />{% endif %} {{  customchoice.answer }}</span>
+                <input type="hidden" name="answers" value="{{ customchoice.id }}=" />
+            </div>
+            {% endfor %}
+            </div>
 
-
-            {% if choice.is_written %}
-                <div class="text_fill_the_blanks" align="left">
-                    {{ choice.answer|insert_only_input:forloop.counter|safe }}
+        {% elif question.qtype == 7 %}
+            
+         
+            <div class="row" style="margin-top:20px"> 
+                <div class="col-sm-12 col-md-12" >
+                    Vous devez trouver {{ choices|length }} mots donc les anagrammes sont ci-dessous.   
                 </div>
-                <input name="choice_id" type='hidden' value="{{ choice.id }}"/>
-            {% else %}
+            </div>
 
-                <div class="select_items droppable{{forloop.counter }}" align="left">
-                    {% for word in shufflechoices|index:forloop.counter0 %}
-                        <span class="draggable word_choice"  data-word="{{ word }}"  data-loop="{{ forloop.parentloop.counter }}" style="cursor: move;" >
-                             {{  word }}
-                        </span>
-                    {% endfor %}
-                    <a href="javascript:void();" data-loop="{{ forloop.counter }}"  class="eraser btn btn-danger btn-xs pull-right">Ré initialiser</a>
-                </div>  
-                    <div class="text_fill_the_blanks dropzone{{forloop.counter }}" align="left">
-                        {{ choice.answer|insert_input:forloop.counter|safe }}
+            {% for choice in choices %}
+            <div class="row"> 
+                <div class="col-sm-6 col-md-4" align='right'>
+                <h2>{{ choice.word }} <i class="fa fa-caret-right"></i> </h2>
+                </div>
+                <div class="col-sm-6 col-md-8" align='left'>
+                    <h2><input type="text" name="answer{{ choice.id }}" class="answer_box"   /> </h2>
+                </div>
+            </div>
+            {% endfor %}
+
+        {% elif question.qtype == 8 %}
+
+            <label>Eléments</label>
+            <div class="quizz_item select_items">
+                {% for choice in shufflechoices %}
+                    <span class="quizz_choice draggable" style="cursor: move;" data-subchoice="{{ choice.id }}" >
+                        {% if choice.imageanswer  %}<img src="{{ choice.imageanswer.url }}" height="80px" />{% endif %} {{  choice.answer }}
+                    </span>
+                {% endfor %}
+            </div>  
+            <label>Classement   </label>
+            <div class="dropzone">
+                <div class="quizz_item droppable" style="min-height:50px" >
+                    <input type="hidden" name="answers" value="" />
+                </div>
+            </div>
+
+        {% elif question.qtype == 9 %}
+         
+            {% for choice in question.choices.all %}
+
+
+                {% if choice.is_written %}
+                    <div class="text_fill_the_blanks" align="left">
+                        {{ choice.answer|insert_only_input:forloop.counter|safe }}
                     </div>
                     <input name="choice_id" type='hidden' value="{{ choice.id }}"/>
+                {% else %}
+
+                    <div class="select_items droppable{{forloop.counter }}" align="left">
+                        {% for word in shufflechoices|index:forloop.counter0 %}
+                            <span class="draggable word_choice"  data-word="{{ word }}"  data-loop="{{ forloop.parentloop.counter }}" style="cursor: move;" >
+                                 {{  word }}
+                            </span>
+                        {% endfor %}
+                        <a href="javascript:void();" data-loop="{{ forloop.counter }}"  class="eraser btn btn-danger btn-xs pull-right">Ré initialiser</a>
+                    </div>  
+                        <div class="text_fill_the_blanks dropzone{{forloop.counter }}" align="left">
+                            {{ choice.answer|insert_input:forloop.counter|safe }}
+                        </div>
+                        <input name="choice_id" type='hidden' value="{{ choice.id }}"/>
 
 
-            {% endif %}
+                {% endif %}
 
-        {% endfor %}
+            {% endfor %}
 
-    {% elif question.qtype == 10 %}
+        {% elif question.qtype == 10 %}
 
-     
-        {% for puzzle in shufflechoices %}
-        <div class="row">
-            <div class="col-sm-5">
-                {% for choice in puzzle.shufflesubchoices %}
-                <span class="draggable" style="cursor: move;" data-subchoice="{{ choice.id }}" >
-                    <img src="{{ choice.imageanswer.url }}" height="100px" width="100px" />
-                </span>
-                {% endfor %}
-            </div>
-            <div class="col-sm-7" align="center">
-                <table class="dropzone puzzle">
-                {% with range=''|center:puzzle.customchoice.answerbis %}
-                {% for _ in range %}
-                        <tr>
-                            {% with rang=''|center:puzzle.customchoice.answer  %}
-                            {% for _ in rang %}
-                                <td class="droppable"></td>
-                            {% endfor %}
-                            {% endwith %}
-                        </tr>
-                {% endfor %}
-                {% endwith %}
-                </table>
-            </div>
-        </div>
-        {% endfor %}
-     
-    {% elif question.qtype == 11 %}
-
-        <div class="rquiz-crossword" >
-        <h2 id="rquiz-crossword">Crossword Quiz</h2>
-        <p>Click on a numer in the grid to be given a hint and the possibility to enter a solution!</p>
-        </div>
-
-    {% elif question.qtype == 12 %}
-        
-        <div class="row">
-            <div class="col-sm-8" align='center'>
-                {{ supportfile.grid|safe }}
-            </div>
-            <div class="col-sm-4"><label>Les mots à trouver :</label>
-                {% for choice in supportfile.customchoices.all %}
-                    <li class="sanspuce">{{forloop.counter}}. <span style="font-weight: bold;">{{ choice|upper }}</span> <span id="check{{forloop.counter0 }}"></span></li>
-                     <input type="hidden" id="word{{forloop.counter0 }}" value="{{ choice|upper }}" class="these_words"  /> 
-                {% endfor %}
-            </div>
-            
-        </div>
-
-    {% elif question.qtype == 13 %}
-
-
-
-        <div class="row" style="padding: 10px; font-size:18px"> 
-            <div class="col-sm-12 col-sm-6" align='center'>
-                <div id="new_word">
-                {% for c in secretword.answer %}
-                    <input class="secret_letter" id="secret_letter{{ forloop.counter0}}" data-word_id="{{ secretword.id }}" data-index="{{ forloop.counter0}}"  />
-                {% endfor %}
-                </div>
-                <div id="used_letter" align='left' style="font-weight: bold;color:blue"></div>
-                <input id="nb_tries" type="hidden" value="10" />
-                <input id="word_id_used" type="hidden"   />
-                <input id="position" type="hidden" value="200"  />
-                <input id="word_length" type="hidden" value="{{ secretword.answer|length }}"  />
-                <input id="word_length_i" type="hidden" value="{{ secretword.answer|length }}"  />
-                <input id="shuffle_ids" type="hidden" value="{{ shuffle_ids }}"  />
-                <div class="row" id="wordguess-counter" style="margin-top:20px;height:200px;width:166px;background-position: 0 200px;background-image:url({% static 'img/wordguess-counter.png' %})" title="Vous avez 10 essais"> </div>
-
-            </div>   
-            <div class="col-sm-12 col-sm-6" >   
-                <label>Vous devez trouver <span id='word_left'>{{ shufflechoices|length }}</span> mots.</label>
-                {% for choice in shufflechoices %}
-                    <li class="sanspuce">{{ forloop.counter }}. <input name="answers" readonly  id="answer{{ forloop.counter }}" class ="answer_box" style="background-color: #FAFAFA" /> </li>
-                {% endfor %}
-            </div>
-        </div>
-
-    {% elif question.qtype == 14 %}
-     
-            <input id="length" type="hidden" value="{{ length }}"  />
+         
+            {% for puzzle in shufflechoices %}
             <div class="row">
-                <div class="col-sm-12">
-                    Vous devez regrouper les cartes mémo par groupe de {{ length }}.
+                <div class="col-sm-5">
+                    {% for choice in puzzle.shufflesubchoices %}
+                    <span class="draggable" style="cursor: move;" data-subchoice="{{ choice.id }}" >
+                        <img src="{{ choice.imageanswer.url }}" height="100px" width="100px" />
+                    </span>
+                    {% endfor %}
+                </div>
+                <div class="col-sm-7" align="center">
+                    <table class="dropzone puzzle">
+                    {% with range=''|center:puzzle.customchoice.answerbis %}
+                    {% for _ in range %}
+                            <tr>
+                                {% with rang=''|center:puzzle.customchoice.answer  %}
+                                {% for _ in rang %}
+                                    <td class="droppable"></td>
+                                {% endfor %}
+                                {% endwith %}
+                            </tr>
+                    {% endfor %}
+                    {% endwith %}
+                    </table>
                 </div>
             </div>
-            {% for subchoice in subchoices %}
-                <div class="scene scene--card">
-                      <div class="card" data-id="{{ subchoice.id }}">
-                        <div class="memo_card">
-                          <img src="{% static 'img/sacado_memo.jpg' %}" width="100px" height="100px" />
-                        </div>
-                        <div class="memo_card memo_card_back">
-                          {% if subchoice.imageanswer  %}<img src="{{ subchoice.imageanswer.url }}" width="100px" height="100px" />{% else %}<br/> {% endif %} {{  subchoice.answer|title }}
-                        </div>
-                      </div>
-                </div>
             {% endfor %}
          
-    {% elif question.qtype == 20 %}
-     
-        {% for l in loops %} 
+        {% elif question.qtype == 11 %}
 
-            <li class="this_slide" id="this_slide{{ forloop.counter }}">
-                <div class="row"  align="left" style="margin-top:10px">
-                    {% if supportfile.annoncement %}
-                        <div class="col-sm-12 col-lg-12 custom_content" 
-                             style="max-height:80px">{{ supportfile.annoncement|safe }}
-                        </div>
-                    {% endif %}
-                </div>  
-                <div class="row" align="left" style="margin:20px 0px;">
-                    <div class="col-sm-12 col-lg-12 custom_all_answers"  style="max-height:300px;padding:10px">        
-                        
-                        {% for choice in shufflechoices %}
-                        <div class="row quizz_item" style="padding: 10px; font-size:18px;"> 
-                            <div class="col-sm-11 proposition" align='left'>
-                            {% if choice.imageanswer  %}<img src="{{ choice.imageanswer.url }}" height="80px" />{% endif %} {{ choice.answer  }} 
-                            </div>       
-                            <div class="col-sm-1" align='left'>
-                                <input type="{% if customexercise.qtype == 3  %}radio{% else %}checkbox{% endif %}" 
-                                        name="answers" value="{{ choice.id }}" data-customexercise_id="{{ customexercise.id }}" 
-                                        data-loop="{{ forloop.parentloop.counter }}"
-                                        class="selected_answer"  />
-                            </div>
-                        </div>
-                        {% endfor %}            
+            <div class="rquiz-crossword" >
+            <h2 id="rquiz-crossword">Crossword Quiz</h2>
+            <p>Click on a numer in the grid to be given a hint and the possibility to enter a solution!</p>
+            </div>
+
+        {% elif question.qtype == 12 %}
+            
+            <div class="row">
+                <div class="col-sm-8" align='center'>
+                    {{ supportfile.grid|safe }}
+                </div>
+                <div class="col-sm-4"><label>Les mots à trouver :</label>
+                    {% for choice in supportfile.customchoices.all %}
+                        <li class="sanspuce">{{forloop.counter}}. <span style="font-weight: bold;">{{ choice|upper }}</span> <span id="check{{forloop.counter0 }}"></span></li>
+                         <input type="hidden" id="word{{forloop.counter0 }}" value="{{ choice|upper }}" class="these_words"  /> 
+                    {% endfor %}
+                </div>
+                
+            </div>
+
+        {% elif question.qtype == 13 %}
+
+
+
+            <div class="row" style="padding: 10px; font-size:18px"> 
+                <div class="col-sm-12 col-sm-6" align='center'>
+                    <div id="new_word">
+                    {% for c in secretword.answer %}
+                        <input class="secret_letter" id="secret_letter{{ forloop.counter0}}" data-word_id="{{ secretword.id }}" data-index="{{ forloop.counter0}}"  />
+                    {% endfor %}
+                    </div>
+                    <div id="used_letter" align='left' style="font-weight: bold;color:blue"></div>
+                    <input id="nb_tries" type="hidden" value="10" />
+                    <input id="word_id_used" type="hidden"   />
+                    <input id="position" type="hidden" value="200"  />
+                    <input id="word_length" type="hidden" value="{{ secretword.answer|length }}"  />
+                    <input id="word_length_i" type="hidden" value="{{ secretword.answer|length }}"  />
+                    <input id="shuffle_ids" type="hidden" value="{{ shuffle_ids }}"  />
+                    <div class="row" id="wordguess-counter" style="margin-top:20px;height:200px;width:166px;background-position: 0 200px;background-image:url({% static 'img/wordguess-counter.png' %})" title="Vous avez 10 essais"> </div>
+
+                </div>   
+                <div class="col-sm-12 col-sm-6" >   
+                    <label>Vous devez trouver <span id='word_left'>{{ shufflechoices|length }}</span> mots.</label>
+                    {% for choice in shufflechoices %}
+                        <li class="sanspuce">{{ forloop.counter }}. <input name="answers" readonly  id="answer{{ forloop.counter }}" class ="answer_box" style="background-color: #FAFAFA" /> </li>
+                    {% endfor %}
+                </div>
+            </div>
+
+        {% elif question.qtype == 14 %}
+         
+                <input id="length" type="hidden" value="{{ length }}"  />
+                <div class="row">
+                    <div class="col-sm-12">
+                        Vous devez regrouper les cartes mémo par groupe de {{ length }}.
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-sm-12 col-md-3" align="center"  >
-                        <a href="#" data-toggle='modal' data-target='#this_qcm_correction' class="btn btn-primary show_this_qcm_correction" id="nav_start{{ forloop.counter }}"><i class="fa fa-caret-right"></i> Valider </a>
+                {% for subchoice in subchoices %}
+                    <div class="scene scene--card">
+                          <div class="card" data-id="{{ subchoice.id }}">
+                            <div class="memo_card">
+                              <img src="{% static 'img/sacado_memo.jpg' %}" width="100px" height="100px" />
+                            </div>
+                            <div class="memo_card memo_card_back">
+                              {% if subchoice.imageanswer  %}<img src="{{ subchoice.imageanswer.url }}" width="100px" height="100px" />{% else %}<br/> {% endif %} {{  subchoice.answer|title }}
+                            </div>
+                          </div>
                     </div>
-                </div>  
-            </li> 
-        {% endfor %}
+                {% endfor %}
+             
+        {% elif question.qtype == 20 %}
+         
+            {% for l in loops %} 
 
-    {% endif %}
+                <li class="this_slide" id="this_slide{{ forloop.counter }}">
+                    <div class="row"  align="left" style="margin-top:10px">
+                        {% if supportfile.annoncement %}
+                            <div class="col-sm-12 col-lg-12 custom_content" 
+                                 style="max-height:80px">{{ supportfile.annoncement|safe }}
+                            </div>
+                        {% endif %}
+                    </div>  
+                    <div class="row" align="left" style="margin:20px 0px;">
+                        <div class="col-sm-12 col-lg-12 custom_all_answers"  style="max-height:300px;padding:10px">        
+                            
+                            {% for choice in shufflechoices %}
+                            <div class="row quizz_item" style="padding: 10px; font-size:18px;"> 
+                                <div class="col-sm-11 proposition" align='left'>
+                                {% if choice.imageanswer  %}<img src="{{ choice.imageanswer.url }}" height="80px" />{% endif %} {{ choice.answer  }} 
+                                </div>       
+                                <div class="col-sm-1" align='left'>
+                                    <input type="{% if customexercise.qtype == 3  %}radio{% else %}checkbox{% endif %}" 
+                                            name="answers" value="{{ choice.id }}" data-customexercise_id="{{ customexercise.id }}" 
+                                            data-loop="{{ forloop.parentloop.counter }}"
+                                            class="selected_answer"  />
+                                </div>
+                            </div>
+                            {% endfor %}            
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-3" align="center"  >
+                            <a href="#" data-toggle='modal' data-target='#this_qcm_correction' class="btn btn-primary show_this_qcm_correction" id="nav_start{{ forloop.counter }}"><i class="fa fa-caret-right"></i> Valider </a>
+                        </div>
+                    </div>  
+                </li> 
+            {% endfor %}
 
-    <div class="row" align="center" style="margin-top:40px" > 
-        <div class="col-sm-6 col-md-9" align="center"  ></div>
-        <div class="col-sm-6 col-md-3" align="center"  >
-            {% if positionnement.is_back and positionnement_nav_prev > 0 %}
-                <a href="{% url 'goto_positionnement_numeric' positionnement.id %}" class="btn btn-default"><i class="fa fa-caret-left"></i> Précedent</a>
-            {% endif %}  
-        </div>
-    </div> 
-    <div class="row" > 
-        <div class="col-sm-12 col-md-12" >
-            <button type="submit" class="btn btn-primary"><i class="fa fa-caret-right"></i> Enregistrement de la réponse</button>
-        </div>
-    </div> 
+        {% endif %}
+
+        <div class="row" align="center" style="margin-top:40px" > 
+            <div class="col-sm-6 col-md-9" align="center"  ></div>
+            <div class="col-sm-6 col-md-3" align="center"  >
+                {% if positionnement.is_back and positionnement_nav_prev > 0 %}
+                    <a href="{% url 'goto_positionnement_numeric' positionnement.id %}" class="btn btn-default"><i class="fa fa-caret-left"></i> Précedent</a>
+                {% endif %}  
+            </div>
+        </div> 
+        <div class="row" align="left" > 
+            <div class="col-sm-12 col-md-12" >
+                <button type="submit" class="btn btn-primary btn-lg" style="width:300px"><i class="fa fa-caret-right"></i> Enregistrement de la réponse</button>
+            </div>
+        </div> 
+    </div>        
 {% else %}
 
     <div class="row consigne_diapo"  align="center">  

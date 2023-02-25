@@ -1515,7 +1515,7 @@ input:invalid:focus {
   border-radius: 5px;
 }
 
-.card {
+.card_memo {
   width: 100%;
   height: 100%;
   transition: transform 1s;
@@ -1524,11 +1524,16 @@ input:invalid:focus {
   position: relative;
 }
 
-.card.is-flipped {
+
+
+
+
+
+.card_memo.is-flipped {
   transform: rotateY(180deg);
 }
 
-.card__face {
+.card_memo__face {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -1543,7 +1548,7 @@ input:invalid:focus {
   border: 1px solid #eeeeee;  
 }
 
-.card__face--back {
+.card_memo__face--back {
   transform: rotateY(180deg);
 }
 
@@ -1558,19 +1563,12 @@ input:invalid:focus {
   border-radius:5px;
 }
 
-.card {
-  width: 100%;
-  height: 100%;
-  transition: transform 1s;
-  transform-style: preserve-3d;
-  cursor: pointer;
-  position: relative;
-}
 
-.card.is-flipped {
+
+.card_memo.is-flipped {
   transform: rotateY(180deg);
 }
-.card_open{
+.card_memo_open{
     background-color: #e0ffde!important;
 }
 

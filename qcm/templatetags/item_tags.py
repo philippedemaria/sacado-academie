@@ -140,9 +140,6 @@ def insert_input(arg,loop):
 
     for i in range(len(tab)) :
         if i%2==1:
-            if  int(len(tab[i]))  < 4 : ln = "30"
-            elif  int(len(tab[i]))  < 10 : ln = "100"
-            else : ln = str(int(len(tab[i]))*10)
             st = "<input type='hidden' name='answers"+str(loop)+"' id='loop_"+str(loop)+"-"+str(j)+"' /><div class='input_droppable droppable"+str(loop)+"' data-subloop='"+str(j)+"'></div>"
             j+=1
         else :
@@ -162,7 +159,10 @@ def insert_only_input(arg,loop):
     string = ""
     for i in range(len(tab)) :
         if i%2==1:
-            st = "<input type='text' name='answers"+str(loop)+"' style='width:"+str(int(len(tab[i]))*14)+"px;'  class='answer_the_blanks answer_fill_the_blanks'  />"
+            if  int(len(tab[i]))  < 4 : ln = "60"
+            elif  int(len(tab[i]))  < 10 : ln = "200"
+            else : ln = str(int(len(tab[i]))*10)
+            st = "<input type='text' name='answers"+str(loop)+"' style='width:"+str(ln)+"px;'  class='answer_the_blanks answer_fill_the_blanks'  />"
         else :
             st = tab[i] 
         string += st

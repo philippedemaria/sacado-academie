@@ -1170,6 +1170,7 @@ def update_positionnement(request,id):
     positionnement = Positionnement.objects.get(pk= id)
     form = PositionnementForm(request.POST or None, request.FILES or None , instance = positionnement  )
     request.session["tdb"] = False # permet l'activation du surlignage de l'icone dans le menu gauche
+    
     if form.is_valid():
         nf = form.save(commit = False)
         nf.teacher = teacher
@@ -1404,9 +1405,9 @@ def update_question_positionnement(request,id,idp,qtype):
     form     = QuestionPositionnementForm(request.POST or None, request.FILES or None, instance = question, positionnement = positionnement)
  
 
-    qto  = Qtype.objects.get(pk=qtype)
+    qt  = Qtype.objects.get(pk=qtype)
 
-    if qto.is_sub == 0 : 
+    if qt.is_sub == 0 : 
         formSet  = inlineformset_factory( Question , Choice , fields=('answer','imageanswer','answerbis','imageanswerbis','is_correct','retroaction')  , extra =  0)
         form_ans = formSet(request.POST or None, request.FILES or None , instance = question)
     else :
@@ -1420,8 +1421,8 @@ def update_question_positionnement(request,id,idp,qtype):
             nf.save()
             form.save_m2m() 
      
-            is_sub = qto.is_sub
-            extra  = qto.extra
+            is_sub = qt.is_sub
+            extra  = qt.extra
 
             if qtype < 19 :
                 if is_sub == 0  :
@@ -1592,7 +1593,9 @@ def goto_positionnement_student(request,id):
     question_ids = list(positionnement.questions.values_list("id",flat=True).order_by("ranking"))
     quizz_id     = request.session.get("quizz_id",None) 
 
-    if not positionnement :
+    positionnement_id = request.session.get("positionnement_id",None)
+
+    if not positionnement_id :
         positionnement_id                    = positionnement.id
         request.session["positionnement_id"] = positionnement_id
 
@@ -1601,7 +1604,6 @@ def goto_positionnement_student(request,id):
         
         request.session["question_ids"] = question_ids
     else :
-        positionnement_id = request.session.get("positionnement_id")
         question_ids      = request.session.get("question_ids")
 
     #Génération des réponses 
@@ -1632,8 +1634,9 @@ def goto_positionnement_student(request,id):
         timer =  stop_time - start_time
         today = time_zone_user(positionnement.teacher.user)
 
-        store_positionnement_solution(request ,positionnement_id,student,q_id, solutions,timer)
-
+        is_correct = store_positionnement_solution(request ,positionnement_id,student,q_id, solutions,timer)
+    
+    print( q_id , quizz_nav , is_correct )
 
     if quizz_nav == len(question_ids) :
         end_of_quizz = True
@@ -1700,6 +1703,8 @@ def store_positionnement_solution( request ,positionnement_id,student,q_id, solu
     timer = int(t)
     themes = [ question.knowledge.theme.name ,  score ]
     request.session.get("answerpositionnement").append (  (positionnement_id  , student, q_id ,   answer,   score,   timer,   is_correct , themes  ))
+
+    return is_correct
 
 
 
