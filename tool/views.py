@@ -2761,10 +2761,12 @@ def clone_question(request,id,idq,qtype):
     
     request.session["tdb"] = False # permet l'activation du surlignage de l'icone dans le menu gauche 
     quizz = Quizz.objects.get(pk = idq)
-    question = Question.objects.get(pk = id)
+    question = Question.objects.get(pk = id)    
+    skills = question.skills.all()
     answer_choices = question.choices.all()
     question.pk = None
     question.save()
+    question.skills.set(skills)
     quizz.questions.add(question)
 
     if qtype > 2 :
@@ -2781,9 +2783,11 @@ def clone_question_positionnement(request,id,idp,qtype):
     request.session["tdb"] = False # permet l'activation du surlignage de l'icone dans le menu gauche 
     positionnement = Positionnement.objects.get(pk = idp)
     question = Question.objects.get(pk = id)
+    skills = question.skills.all()
     answer_choices = question.choices.all()
     question.pk = None
     question.save()
+    question.skills.set(skills)
     positionnement.questions.add(question)
 
     if qtype > 2 :
