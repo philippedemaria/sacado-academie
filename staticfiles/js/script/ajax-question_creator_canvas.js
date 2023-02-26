@@ -15,8 +15,8 @@ define(['jquery', 'bootstrap', 'ui','ckeditor'], function ($) {
 
         CKEDITOR.replace('title', {
                 height: '100px' ,
-                filebrowserBrowseUrl : '/ressources/browse.php',
-                filebrowserUploadUrl : '/ressources/upload.php',   
+                filebrowserBrowseUrl : '/ckeditor/browse/',
+                filebrowserUploadUrl : '/ckeditor/browse/',    
                 toolbar:    
                     [  
                         { name: 'paragraph',  items: [ 'NumberedList', 'BulletedList', '-',   'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] }, 
