@@ -2548,11 +2548,13 @@ def create_question(request,idq,qtype):
     form = QuestionForm(request.POST or None, request.FILES or None, quizz = quizz)
     all_questions = Question.objects.filter(is_publish=1)
 
-    qt = Qtype.objects.get(pk=qtype) 
-    if qt.is_sub == 0 : 
-        formSet  = inlineformset_factory( Question , Choice , fields=('answer','imageanswer','answerbis','imageanswerbis','is_correct','retroaction')  , extra =  2)
-    else :
-        formSet = formSetNested()
+    qt = Qtype.objects.get(pk=qtype)
+
+    if 2 < qtype < 19 :
+        if qt.is_sub == 0 : 
+            formSet  = inlineformset_factory( Question , Choice , fields=('answer','imageanswer','answerbis','imageanswerbis','is_correct','retroaction')  , extra =  2)
+        else :
+            formSet = formSetNested()
 
  
     if request.method == "POST"  :
@@ -2632,13 +2634,14 @@ def update_question(request,id,idq,qtype):
     else :
         parcours = None
 
-
     qt = Qtype.objects.get(pk=qtype) 
-    if qt.is_sub == 0 : 
-        formSet  = inlineformset_factory( Question , Choice , fields=('answer','imageanswer','answerbis','imageanswerbis','is_correct','retroaction')  , extra =  2)
-        form_ans = formSet(request.POST or None,  request.FILES or None, instance = question)
-    else :
-        formSet = formSetNested()
+    
+    if 2 < qtype < 19 :    
+        if qt.is_sub == 0 : 
+            formSet  = inlineformset_factory( Question , Choice , fields=('answer','imageanswer','answerbis','imageanswerbis','is_correct','retroaction')  , extra =  2)
+            form_ans = formSet(request.POST or None,  request.FILES or None, instance = question)
+        else :
+            formSet = formSetNested()
 
 
     if request.method == "POST"  :  
