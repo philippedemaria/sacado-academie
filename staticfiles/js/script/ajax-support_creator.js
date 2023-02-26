@@ -29,8 +29,8 @@ define(['jquery', 'bootstrap', 'ui', 'ui_sortable','ckeditor'], function ($) {
 
         CKEDITOR.replace('annoncement', {
                 height: cke_height ,
-                filebrowserBrowseUrl : '/browser/browse.php',
-                filebrowserUploadUrl : '/uploader/upload.php',   
+                filebrowserBrowseUrl : '/ressources/browse.php',
+                filebrowserUploadUrl : '/ressources/upload.php', 
                 toolbar:    
                     [  
                         { name: 'paragraph',  items: [ 'NumberedList', 'BulletedList', '-',   'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] }, 
@@ -41,8 +41,8 @@ define(['jquery', 'bootstrap', 'ui', 'ui_sortable','ckeditor'], function ($) {
 
         CKEDITOR.replace('correction', {
                 height: cke_height,
-                filebrowserBrowseUrl : '/browser/browse.php',
-                filebrowserUploadUrl : '/uploader/upload.php',   
+                filebrowserBrowseUrl : '/ressources/browse.php',
+                filebrowserUploadUrl : '/ressources/upload.php',  
                 toolbar:    
                     [  
                         { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-',   'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] }, 

@@ -23,8 +23,8 @@ define(['jquery', 'bootstrap', 'ui', 'ui_sortable','ckeditor'], function ($) {
 
         CKEDITOR.replace('title', {
                 height: '100px' ,
-                filebrowserBrowseUrl : '/browser/browse.php',
-                filebrowserUploadUrl : '/uploader/upload.php',   
+                filebrowserBrowseUrl : '/ressources/browse.php',
+                filebrowserUploadUrl : '/ressources/upload.php',
                 toolbar:    
                     [  
                         { name: 'paragraph',  items: [ 'NumberedList', 'BulletedList', '-',   'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] }, 
