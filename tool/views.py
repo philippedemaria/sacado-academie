@@ -1293,7 +1293,7 @@ def create_question_positionnement(request,idp,qtype):
             positionnement.questions.add(nf)
 
 
-            if 2<qtype < 19 :
+            if 2 < qtype < 19 :
                 if qt.is_sub == 0  :
                     form_ans = formSet(request.POST or None,  request.FILES or None, instance = nf)
                     for form_answer in form_ans :
