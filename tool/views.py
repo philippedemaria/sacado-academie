@@ -2779,7 +2779,7 @@ def clone_question(request,id,idq,qtype):
 def clone_question_positionnement(request,id,idp,qtype):
     
     request.session["tdb"] = False # permet l'activation du surlignage de l'icone dans le menu gauche 
-    positionnement = Positionnement.objects.get(pk = idq)
+    positionnement = Positionnement.objects.get(pk = idp)
     question = Question.objects.get(pk = id)
     answer_choices = question.choices.all()
     question.pk = None
