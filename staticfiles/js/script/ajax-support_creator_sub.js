@@ -23,8 +23,8 @@ define(['jquery', 'bootstrap', 'ui', 'ui_sortable','ckeditor'], function ($) {
 
         CKEDITOR.replace('annoncement', {
                 height: '100px' ,
-                filebrowserBrowseUrl : '/ressources/browse.php',
-                filebrowserUploadUrl : '/ressources/upload.php',  
+                filebrowserBrowseUrl : '/ckeditor/browse/',
+                filebrowserUploadUrl : '/ckeditor/browse/', 
                 toolbar:    
                     [  
                         { name: 'paragraph',  items: [ 'NumberedList', 'BulletedList', '-',   'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] }, 
@@ -35,8 +35,8 @@ define(['jquery', 'bootstrap', 'ui', 'ui_sortable','ckeditor'], function ($) {
 
         CKEDITOR.replace('correction', {
                 height: '100px' ,
-                filebrowserBrowseUrl : '/ressources/browse.php',
-                filebrowserUploadUrl : '/ressources/upload.php', 
+                filebrowserBrowseUrl : '/ckeditor/browse/',
+                filebrowserUploadUrl : '/ckeditor/browse/',  
                 toolbar:    
                     [  
                         { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-',   'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] }, 
