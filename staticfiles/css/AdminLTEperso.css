@@ -6504,6 +6504,11 @@ li .list_no_indent{
 .progress-bar-primary {
   background-color: #00A65A;
 }
+.progress-bar-darkgreen{
+  background-color: #1d6718;
+}
+
+
 
 .progress-striped .progress-bar-light-blue,
 .progress-striped .progress-bar-primary {

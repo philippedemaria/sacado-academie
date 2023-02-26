@@ -171,6 +171,50 @@ def insert_only_input(arg,loop):
 
 
 
+
+
+@register.filter
+def question_input(arg):
+    '''HTML entity filltheblanks_safe'''
+    arg = arg.replace('<strong>','####')
+    arg = arg.replace('</strong>','####')
+    tab = arg.split('####')
+
+    string = ""
+    j=1
+
+    for i in range(len(tab)) :
+        if i%2==1:
+            st = "<input type='hidden' name='solution' id='loop_"+str(loop)+"-"+str(j)+"' /><div class='input_droppable droppable"+str(loop)+"' data-subloop='"+str(j)+"'></div>"
+            j+=1
+        else :
+            st = tab[i] 
+        string += st
+    return string
+
+
+
+@register.filter
+def question_only_input(arg):
+    '''HTML entity filltheblanks_safe'''
+    arg = arg.replace('<strong>','####')
+    arg = arg.replace('</strong>','####')
+    tab = arg.split('####')
+
+    string = ""
+    for i in range(len(tab)) :
+        if i%2==1:
+            if  int(len(tab[i]))  < 4 : ln = "60"
+            elif  int(len(tab[i]))  < 10 : ln = "200"
+            else : ln = str(int(len(tab[i]))*10)
+            st = "<input type='text' name='solution' style='width:"+str(ln)+"px;'  class='answer_the_blanks answer_fill_the_blanks'  />"
+        else :
+            st = tab[i] 
+        string += st
+    return string
+
+
+
 @register.filter
 def shuffle(arg):
     my_list = list(arg)

@@ -9,7 +9,7 @@ define(['jquery', 'bootstrap', 'ui', 'ui_sortable'], function ($) {
 //===========================================================================================  
 
     $( document ).on('mouseover', ".draggable" , function () { 
-        var loop = $(this).data('loop');
+        var loop = $(this).data('loop'); 
         $( this ).draggable({
                 containment: ".dropzone"+loop ,
                 appendTo : '.droppable'+loop , 
@@ -17,13 +17,13 @@ define(['jquery', 'bootstrap', 'ui', 'ui_sortable'], function ($) {
             });
 
         $( ".droppable"+loop ).droppable({
-                drop: function( event, ui ) {
+                drop: function( event, ui ) { console.log(loop); 
 
                     $(this).append( $(ui.draggable[0])  );
-                    this_answer = $(ui.draggable[0]).data("subchoice") ;
+                    this_answer = $(ui.draggable[0]).data("subchoice") ; console.log(this_answer); 
                     old_list = $(this).find('input').val()  ;  
                     var new_list = [];
-                    var new_str  = old_list +this_answer+"----";
+                    var new_str  = old_list +this_answer;
                     $(this).find('input').val(new_str);
                     $('.quizz_item').css('border', '1px solid #E0E0E0');
                 },
@@ -35,7 +35,7 @@ define(['jquery', 'bootstrap', 'ui', 'ui_sortable'], function ($) {
                     this_answer = $(ui.draggable[0]).data("subchoice") ;
                     old_list = $(this).find('input').val()  ;  
                     var new_list = [];
-                    var new_str  = old_list.replace(this_answer+"----", "");
+                    var new_str  = old_list.replace(this_answer, "");
                     $(this).find('input').val(new_str);
                      $(this).css('border', '1px solid #E0E0E0');
                 }

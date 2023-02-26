@@ -1625,7 +1625,7 @@ def goto_positionnement_student(request,id):
     end_of_quizz   = False
 
     solutions  = request.POST.getlist("solution", None)
- 
+
     stop_time  = time.time()
     if solutions and len(solutions) > 0 :
         q_id    = request.POST.get("question_id")
@@ -1685,9 +1685,7 @@ def store_positionnement_solution( request ,positionnement_id,student,q_id, solu
             #         is_correct = 1
             #         score      = question.point
             # answ = ans
-
-
-        else :
+        elif question.qtype == 3 or question.qtype == 4:
             choices  = question.choices.values_list('id',flat=True).filter(is_correct=1)
 
             a = ""
@@ -1699,15 +1697,56 @@ def store_positionnement_solution( request ,positionnement_id,student,q_id, solu
                 score      = question.point
             aw = Choice.objects.get(pk=ans)
             if aw.imageanswer !="":
-                answ = aw.imageanswer 
+                answ = str(aw.imageanswer)
             else :
-                answ = aw.answer 
+                answ = aw.answer
+
+        elif question.qtype == 5 :
+
+            choices  = question.choices.all()
+            for solution in solutions :
+                sol = solution.split("=")
+                try : 
+                    if str(sol[0]) == str(sol[1]) :
+                        corrects += 1
+                except : pass
+            if corrects == len(choices) :
+                is_correct = 1
+                score      = question.point
+            answ = ""
+            for choice in choices :
+                if choice.imageanswer and choice.imageanswerbis :
+                    answ +=  "<img src="+str(choice.imageanswer)+" width='80px'/> = <img src="+str(choice.imageanswerbis)+" width='80px'/> ; "
+                elif choice.answer and choice.imageanswerbis :
+                    answ +=  str(choice.answer)+" = <img src="+str(choice.imageanswerbis)+" width='80px'/> ; "
+                elif choice.imageanswer and choice.imageanswerbis :
+                    answ +=  "<img src="+str(choice.imageanswer)+" width='80px'/> "+str(choice.answer)+ " ; "
+                else :
+                    answ += str(choice.answer)+" = "+str(choice.answerbis)+" ; " 
+
+
+        elif question.qtype == 9 :
+
+            choice_id = request.POST.get("choice_id")
+            choice  = Choice.objects.get(pk=choice_id)
+            answerchoice  = choice.answer.replace("<strong>","####")
+            answerchoice  = answerchoice.replace("</strong>","####")
+            answers = answerchoice.split("####")
+            this_answers = list()
+            for i in range(len(answers)) :
+                if i%2==1 : this_answers.append(answers[i])
+
+            if this_answers == solutions :
+                is_correct = 1
+                score      = question.point
+            answ = choice.answer
 
         answer.append(answ)
         i +=1
  
     timer = int(t)
-    themes = [ question.knowledge.theme.name ,  score ]
+    try    : themes = [ question.knowledge.theme.name ,  score ]
+    except : themes = [ "sans thème" ,  score ]
     request.session.get("answerpositionnement").append (  (positionnement_id  , student, q_id ,   answer,   score,   timer,   is_correct , themes  ))
 
     return is_correct
@@ -1740,7 +1779,12 @@ def my_results(request):
                 subskill_tab[idx]["total"] += 1
 
     for s in subskill_tab :
-        skill_tab.append({ "skill" : s["skill"] , "score" : int(s["score"]//s["total"])  })
+        score = int(s["score"]//s["total"])
+        if score > 90 : color = "darkgreen"
+        elif score > 65 : color = "green"
+        elif score > 40 : color = "orange"
+        else : color = "red"
+        skill_tab.append({ "skill" : s["skill"] , "score" : score , 'color' : color  })
 
 
 

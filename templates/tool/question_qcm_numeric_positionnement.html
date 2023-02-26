@@ -35,7 +35,7 @@
         </script>    
     {% endif %}
     <script>
-        require(['script/ajax-quizz','script/ajax-finder']);
+        require(['script/ajax-finder']);
     </script> 
 
 {% endblock %}
@@ -61,8 +61,8 @@
                     <div class="col-sm-9 col-md-10" > 
                         {{ form_ans.empty_form.answer|attr:"placeholder:Ecrire votre réponse ici"|add_class:"quizz_font30 quizz_answer"  }}
                     </div>
-                    <div class="col-sm-1 col-md-1" align="center"><label>Réponse correcte ?</label><br/> 
-                        {{ form_ans.empty_form.is_correct|add_class:"checker" }}
+                    <div class="col-sm-1 col-md-1" align="center"><label>Correct ?</label><br/> 
+                        {{ form_ans.empty_form.is_correct|add_class:"checker"|attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}
                     </div>
                 </div>
                 <div class="row">
@@ -102,8 +102,8 @@
                     <div class="col-sm-9 col-md-10" > 
                         {{ form.answer|attr:"placeholder:Ecrire votre réponse ici"|add_class:"quizz_font30 quizz_answer"  }}
                     </div>
-                    <div class="col-sm-1 col-md-1" align="center"><label>Réponse correcte ?</label><br/> 
-                        {{ form.is_correct|add_class:"checker" }}
+                    <div class="col-sm-1 col-md-1" align="center"><label>Correct ?</label><br/> 
+                        {{ form.is_correct|add_class:"checker"|attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}
                     </div>
                 </div>
                 <div class="row">

@@ -8,7 +8,9 @@
     <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common3.js' %}"></script>
     <script>
         require(['script/ajax-pass_quizz_student']);
-    </script> 
+        require(['script/ajax-check_anagrams','script/ajax-check_axe','script/ajax-check_fill','script/ajax-check_filltheblanks','script/ajax-check_grid','script/ajax-check_image', 'script/ajax-check_memory', ]);
+        require(['script/ajax-check_pairs','script/ajax-check_qcm_numeric','script/ajax-check_regroup','script/ajax-check_secretword','script/ajax-check_sort','script/ajax-check_vf', ]); 
+    </script>
 {% endblock %}
 
 
@@ -86,9 +88,9 @@
                 {% elif question.qtype == 2 %}
                     <b>Ecrire la bonne réponse</b>.
                 {% elif question.qtype == 3 %}
-                    <b> Choisir  la ou les bonnes réponses</b>. 
+                    <b> Choisir la seule bonne réponse </b>. 
                 {% elif question.qtype == 4 %}
-                    <b> Choisir la seule bonne réponse</b>. 
+                    <b> Choisir la ou les bonnes réponses</b>. 
                 {% endif %}
             </span>
             </div>
@@ -98,7 +100,7 @@
     <div class="card card_passation">
         <div class="row"   style="padding:10px ;  ">  
             <div class="col-sm-12 col-md-12" >
-                <h1 style="font-size:1.5em"  > #{{ question.id }}. {{ question.title|safe }}  </h1>
+                <h1 style="font-size:1.5em"  > {{ question.title|safe }}  </h1>
             </div>
 
      
@@ -173,7 +175,7 @@
             {% for customchoice in question.choices.all|shuffle %}
             <div class="quizz_item droppable0" data-choice="{{ customchoice.id }}" >
                 <span class="quizz_choice">{% if customchoice.imageanswer  %}<img src="{{ customchoice.imageanswer.url }}" height="80px" />{% endif %} {{  customchoice.answer }}</span>
-                <input type="hidden" name="answers" value="{{ customchoice.id }}=" />
+                <input type="hidden" name="solution" value="{{ customchoice.id }}=" />
             </div>
             {% endfor %}
             </div>
@@ -241,7 +243,7 @@
 
                 {% if choice.is_written %}
                     <div class="text_fill_the_blanks" align="left">
-                        {{ choice.answer|insert_only_input:forloop.counter|safe }}
+                        {{ choice.answer|question_only_input|safe }}
                     </div>
                     <input name="choice_id" type='hidden' value="{{ choice.id }}"/>
                 {% else %}
@@ -255,7 +257,7 @@
                         <a href="javascript:void();" data-loop="{{ forloop.counter }}"  class="eraser btn btn-danger btn-xs pull-right">Ré initialiser</a>
                     </div>  
                         <div class="text_fill_the_blanks dropzone{{forloop.counter }}" align="left">
-                            {{ choice.answer|insert_input:forloop.counter|safe }}
+                            {{ choice.answer|question_input|safe }}
                         </div>
                         <input name="choice_id" type='hidden' value="{{ choice.id }}"/>
 
