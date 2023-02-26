@@ -11,7 +11,7 @@ define(['jquery', 'bootstrap', 'ui', 'ui_sortable'], function ($) {
         }
         $('#on_mark').hide();
 
-
+        $('#id_is_publish').prop('checked', true); 
 });
 
 });

@@ -7,22 +7,31 @@
 
 {% block require %}
     {% if question %}
-    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common5.js' %}"></script>
-    <script>
-        require(['script/ajax-quizz-update']);
-    </script> 
+        <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common4_withoutMathJax.js' %}"></script>
     {% else %}
-    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common4.js' %}"></script>
-    <script>
-        require(['script/ajax-quizz-complement']);
-    </script> 
+        <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common3_withoutMathJax.js' %}"></script>
+        <script>
+            require(['script/ajax-question_creator_create','script/ajax-finder']);
+        </script> 
     {% endif %}
+ 
 
+ 
+    {% if qt.is_sub %}
+        <script>
+            require(['script/ajax-question_creator_sub']);
+        </script> 
+    {% else %}
+        <script>
+            require(['script/ajax-question_creator']);
+        </script>    
+    {% endif %}
     <script>
-        require(['script/ajax-quizz']);
         require(['script/ajax-finder']);
     </script> 
+
 {% endblock %}
+
  
 
 
@@ -172,31 +181,16 @@
 
 
 
-                    {% if qtype > 2 %}
-                    {% block details %}
-                    <div class="row" style="margin-top:30px" >
-                        <div class="col-sm-12 col-md-12">
-                            <div class="form-group">                       
-                                {{ form.knowledge|add_class:"form-control select2 quizz_box"  }} 
-                            </div>                            
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12 col-md-12">
-                            <div class="form-group">                       
-                                <label><em>Couleur de fond des choix possibles</em></label> {{ form.theme |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Coloré"|attr:"data-off:Blanc"}}
-                                <label><em>Lors de la création des choix de réponse, le fond reste coloré.</em></label>
-                            </div>                            
-                        </div>
-                    </div>
-                    {% endblock %}
-                    {% endif %} 
 
+                    {% block details %}
+
+                    {% endblock %}
+       
 
 
                     {% block type_of_choices %}
                         {% if qtype > 0 %}
-                            <div class="row" > 
+                            <div class="row" style="margin-top: 20px;" > 
                                 <div class="col-sm-12 col-md-12">  
                                         {{ form.answer|add_class:"quizz_box quizz_font40" |attr:"placeholder:Réponse.s attendue.s" |attr:"rows:1"  }}
                                         <small><em>Si plusieurs réponses, le séparateur est ____ (4 tirets - underscore) sans espace entre les réponses. Exemple :</em> motA____motB____motC <em>sont trois réponses possibles.</em></small>
@@ -204,8 +198,6 @@
                             </div>
                         {% endif %}  
                     {% endblock %}
-
-
 
 
                     {% block add_more %} 

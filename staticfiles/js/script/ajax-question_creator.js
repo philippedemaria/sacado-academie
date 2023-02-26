@@ -425,7 +425,7 @@ define(['jquery', 'bootstrap', 'ui', 'ui_sortable','ckeditor'], function ($) {
 
         $(document).on('click', '.add_more', function (event) { 
 
-                var total_form = $('#id_supportchoices-TOTAL_FORMS') ;
+                var total_form = $('#id_choices-TOTAL_FORMS') ;
                 var totalForms = parseInt(total_form.val())  ;
 
                 var thisClone = $('#rowToClone');
@@ -493,7 +493,7 @@ define(['jquery', 'bootstrap', 'ui', 'ui_sortable','ckeditor'], function ($) {
 
 
         $(document).on('click', '.remove_more', function () { 
-            var total_form = $('#id_supportchoices-TOTAL_FORMS') ;
+            var total_form = $('#id_choices-TOTAL_FORMS') ;
             var totalForms = parseInt(total_form.val())-1  ;
 
             $('#duplicate'+totalForms).remove();
@@ -521,8 +521,8 @@ define(['jquery', 'bootstrap', 'ui', 'ui_sortable','ckeditor'], function ($) {
 
 
         function noPreviewFile(nb) { 
-            $("#id_supportchoices-"+nb+"-imageanswer").val("");
-            $("#id_supportchoices-"+nb+"-imageanswer").attr("src", "" );
+            $("#id_choices-"+nb+"-imageanswer").val("");
+            $("#id_choices-"+nb+"-imageanswer").attr("src", "" );
             $("#preview"+nb).val("") ; 
             $("#file-image"+nb).removeClass("preview") ;
             $("#preview"+nb).addClass("preview") ; 
@@ -535,7 +535,7 @@ define(['jquery', 'bootstrap', 'ui', 'ui_sortable','ckeditor'], function ($) {
         function previewFile(nb) {
 
             const preview = $('#preview'+nb);
-            const file = $('#id_supportchoices-'+nb+'-imageanswer')[0].files[0];
+            const file = $('#id_choices-'+nb+'-imageanswer')[0].files[0];
             const reader = new FileReader();
             $("#file-image"+nb).addClass("preview") ; 
             $("#preview"+nb).removeClass("preview") ; 
@@ -558,7 +558,7 @@ define(['jquery', 'bootstrap', 'ui', 'ui_sortable','ckeditor'], function ($) {
         $('body').on('change', '.choose_imageanswerbis' , function (event) {  
 
             var nb = this.id.match(/\d+/); 
-            const file = $('#id_supportchoices-'+nb+'-imageanswerbis')[0].files[0];
+            const file = $('#id_choices-'+nb+'-imageanswerbis')[0].files[0];
             const reader = new FileReader();
             $(this).parent().find('svg').addClass("preview") ;
             $(this).parent().next().append('<a href="javascript:void()" id="delete_imgbis'+nb+'" class="delete_imgbis"><i class="fa fa-trash"></i></a>');
@@ -576,12 +576,12 @@ define(['jquery', 'bootstrap', 'ui', 'ui_sortable','ckeditor'], function ($) {
 
         $('body').on('click', '.delete_imgbis' , function (event) { 
                 var nb = this.id.match(/\d+/); 
-                $("#id_supportchoices-"+nb+"-imageanswerbis").val("");
-                $("#id_supportchoices-"+nb+"-imageanswerbis").attr("src", "" );
+                $("#id_choices-"+nb+"-imageanswerbis").val("");
+                $("#id_choices-"+nb+"-imageanswerbis").attr("src", "" );
                 $("#previewbis"+nb).val("") ; 
                 $("#file-imagebis"+nb).removeClass("preview") ;
                 $("#previewbis"+nb).addClass("preview") ; 
-                $("#id_supportchoices"+nb+"-imageanswerbis").removeClass("preview") ;
+                $("#id_choices"+nb+"-imageanswerbis").removeClass("preview") ;
                 $(this).remove() ;
                 $("#imagerbis"+nb).parent().removeClass('answer_box_active') ;
           });

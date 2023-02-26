@@ -7,20 +7,31 @@
 
 {% block require %}
     {% if question %}
-    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common5.js' %}"></script>
-    <script>
-        require(['script/ajax-quizz-update']);
-    </script> 
+        <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common4_withoutMathJax.js' %}"></script>
     {% else %}
-    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common4.js' %}"></script>
-    <script>
-        require(['script/ajax-quizz-complement']);
-    </script>
+        <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common3_withoutMathJax.js' %}"></script>
+        <script>
+            require(['script/ajax-question_creator_create','script/ajax-finder']);
+        </script> 
+    {% endif %}
+ 
+
+ 
+    {% if qt.is_sub %}
+        <script>
+            require(['script/ajax-question_creator_sub']);
+        </script> 
+    {% else %}
+        <script>
+            require(['script/ajax-question_creator']);
+        </script>    
     {% endif %}
     <script>
-        require(['script/ajax-quizz']);
-    </script>  
+        require(['script/ajax-finder']);
+    </script> 
+
 {% endblock %}
+
 
 
 
@@ -31,6 +42,23 @@
 
 
 {% block type_of_choices %} 
+
+
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12">
+                            <div class="form-group">                       
+                                <label><em>Couleur de fond des choix possibles</em></label> {{ form.theme |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Coloré"|attr:"data-off:Blanc"}}
+                                <label><em>Lors de la création des choix de réponse, le fond reste coloré.</em></label>
+                            </div>                            
+                        </div>
+                    </div>
+
+
+
+
+
+
+
                 {{ form_ans.management_form }}
 
                 <input id="qtype" value="{{ qtype }}" name="qtype" type="hidden" />
