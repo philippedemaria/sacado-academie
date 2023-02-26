@@ -1293,7 +1293,7 @@ def create_question_positionnement(request,idp,qtype):
             positionnement.questions.add(nf)
 
 
-            if qtype < 19 :
+            if 2<qtype < 19 :
                 if qt.is_sub == 0  :
                     form_ans = formSet(request.POST or None,  request.FILES or None, instance = nf)
                     for form_answer in form_ans :
@@ -2598,12 +2598,12 @@ def create_question(request,idq,qtype):
 
     #Vrai/Faux
     elif qtype == 1 :
-        context.update( {   'title_type_of_question' : "Vrai / faux"   })
+        context.update( {   'title_type_of_question' : "Vrai / faux"   , 'form_ans' : form_ans })
         template = 'tool/question_vf.html'
 
     #Réponse rédigée
     elif qtype == 2 :
-        context.update( {    'title_type_of_question' : "Réponse rédigée"   })
+        context.update( {    'title_type_of_question' : "Réponse rédigée"   , 'form_ans' : form_ans })
         template = 'tool/form_question.html'
 
     #QCM ou QCS
@@ -2614,6 +2614,10 @@ def create_question(request,idq,qtype):
             template = 'tool/question_qcm_numeric.html'
         else :
             template = 'tool/question_qcm.html'
+
+    else :
+        context.update( {  'bgcolors' : bgcolors  ,  'title_type_of_question' : "QCM" , 'form_ans' : form_ans   })
+        template = "qcm/qtype/"+qt.custom+".html"        
 
 
     return render(request, template , context)
@@ -2635,7 +2639,7 @@ def update_question(request,id,idq,qtype):
         parcours = None
 
     qt = Qtype.objects.get(pk=qtype) 
-    
+
     if 2 < qtype < 19 :    
         if qt.is_sub == 0 : 
             formSet  = inlineformset_factory( Question , Choice , fields=('answer','imageanswer','answerbis','imageanswerbis','is_correct','retroaction')  , extra =  2)
