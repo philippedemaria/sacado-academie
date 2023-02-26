@@ -2547,14 +2547,14 @@ def create_question(request,idq,qtype):
  
     form = QuestionForm(request.POST or None, request.FILES or None, quizz = quizz)
     all_questions = Question.objects.filter(is_publish=1)
-    
-    if qtype > 2 :
-        if quizz.is_numeric :
-            extra = 2
-        else :
-            extra = 4
-        formSet = inlineformset_factory( Question , Choice , fields=('answer','imageanswer','is_correct','retroaction') , extra=extra)
-        form_ans = formSet(request.POST or None,  request.FILES or None)
+
+    qt = Qtype.objects.get(pk=qtype) 
+    if qt.is_sub == 0 : 
+        formSet  = inlineformset_factory( Question , Choice , fields=('answer','imageanswer','answerbis','imageanswerbis','is_correct','retroaction')  , extra =  2)
+    else :
+        formSet = formSetNested()
+
+ 
     if request.method == "POST"  :
         if form.is_valid():
             nf         = form.save(commit=False) 
@@ -2563,15 +2563,23 @@ def create_question(request,idq,qtype):
             nf.save()
             form.save_m2m() 
             quizz.questions.add(nf)
-            if qtype > 2 :
-                form_ans = formSet(request.POST or None,  request.FILES or None, instance = nf)
-                for form_answer in form_ans :
-                    if form_answer.is_valid():
-                        form_answer.save()
+            if 2 < qtype < 19 :           
+                if qt.is_sub == 0  :
+                    form_ans = formSet(request.POST or None,  request.FILES or None, instance = nf)
+                    for form_answer in form_ans :
+                        if form_answer.is_valid():
+                            form_answer.save()
+
+                else :
+                    formset = formSetNested(request.POST or None,  request.FILES or None, instance=nf)
+                    if formset.is_valid():
+                        formset.save()
+                    else :
+                        print( formset.errors )
 
             return redirect('create_question' , idq,0)
 
- 
+
     bgcolors = ["bgcolorRed", "bgcolorBlue","bgcolorOrange", "bgcolorGreen"] 
     context = { 'quizz': quizz, 'questions': questions,  'form' : form, 'qtype' : qtype , 'all_questions' : all_questions , "quizz_id" : quizz.id , "question" : None  , "parcours" : parcours   }
 
@@ -2624,9 +2632,14 @@ def update_question(request,id,idq,qtype):
     else :
         parcours = None
 
-    if qtype > 2 :
-        formSet = inlineformset_factory( Question , Choice , fields=('answer','imageanswer','is_correct','retroaction') , extra=0)
+
+    qt = Qtype.objects.get(pk=qtype) 
+    if qt.is_sub == 0 : 
+        formSet  = inlineformset_factory( Question , Choice , fields=('answer','imageanswer','answerbis','imageanswerbis','is_correct','retroaction')  , extra =  2)
         form_ans = formSet(request.POST or None,  request.FILES or None, instance = question)
+    else :
+        formSet = formSetNested()
+
 
     if request.method == "POST"  :  
         if form.is_valid():
@@ -2635,10 +2648,19 @@ def update_question(request,id,idq,qtype):
             nf.qtype   = qtype
             nf.save()
             form.save_m2m() 
-            if qtype > 2 :
-                for form_answer in form_ans :
-                    if form_answer.is_valid():
-                        form_answer.save()
+            if 2 < qtype < 19 :           
+                if qt.is_sub == 0  :
+                    form_ans = formSet(request.POST or None,  request.FILES or None, instance = nf)
+                    for form_answer in form_ans :
+                        if form_answer.is_valid():
+                            form_answer.save()
+
+                else :
+                    formset = formSetNested(request.POST or None,  request.FILES or None, instance=nf)
+                    if formset.is_valid():
+                        formset.save()
+                    else :
+                        print( formset.errors )
 
             return redirect('create_question' , idq,0)
 
