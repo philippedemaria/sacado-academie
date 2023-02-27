@@ -53,29 +53,23 @@
                         {% for positionnement in positionnements %}
                         <tr> 
                           <td>
-                             <a href="{% url 'update_positionnement' positionnement.id %}">{{ positionnement.title }} de {{ positionnement.level.name }}</a> 
+                              <a href="{% url 'update_positionnement' positionnement.id %}">{{ positionnement.title }} de {{ positionnement.level.name }}</a> 
                               <a href="{% url 'delete_positionnement' positionnement.id %}"  onclick="return TestDelete('ce test de positionnement')"><i class='fa fa-trash pull-right'></i></a>
                           </td>
                           <td >
-                             {{ positionnement.subject.name }}
+                              {{ positionnement.subject.name }}
                           </td>
                           <td >
-                             {% if positionnement.is_publish %}<span class="text-success">Publié</span>{% else %}<span class="text-danger">Non publié</span>{% endif %}
+                              {% if positionnement.is_publish %}<span class="text-success">Publié</span>{% else %}<span class="text-danger">Non publié</span>{% endif %}
                           </td>
                           <td >
-                             {{ positionnement.questions.count }} <a href="{% url 'create_question_positionnement' positionnement.id 0 %}"><i class="bi bi-plus-circle"></i> </a> 
-
-                             <a href="{% url 'goto_positionnement_numeric' positionnement.id %}"><i class="bi bi-play-btn"></i> </a>
-
-                             <a href="{% url 'show_positionnement' positionnement.id %}"><i class="bi bi-eye"></i> </a>
-
-
-                            <a href="#" data-toggle='modal' data-target='#div_help' data-positionnemnet_id="{{ positionnement.id }}" class="this_csv_file" >CSV</a>
-
-
+                              {{ positionnement.questions.count }} <a href="{% url 'create_question_positionnement' positionnement.id 0 %}"><i class="bi bi-plus-circle"></i> </a> 
+                              <a href="{% url 'goto_positionnement_numeric' positionnement.id %}"><i class="bi bi-play-btn"></i> </a>
+                              <a href="{% url 'show_positionnement' positionnement.id %}"><i class="bi bi-eye"></i> </a>
+                              <a href="#" data-toggle='modal' data-target='#div_help' data-positionnemnet_id="{{ positionnement.id }}" class="this_csv_file" >CSV</a>
                           </td>
                           <td>
-                              
+                              {{ positionnement.nb_done }}
                           </td>
                         </tr>
                         {% endfor %}

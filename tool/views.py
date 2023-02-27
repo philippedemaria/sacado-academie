@@ -21,7 +21,7 @@ from django.contrib.auth.hashers import make_password
 from django.views.decorators.csrf import csrf_exempt
 from django.forms import inlineformset_factory
 from templated_email import send_templated_mail
-from django.db.models import Q , Sum
+from django.db.models import Q , Sum , F 
 from random import  randint, shuffle
 import math
 import json
@@ -1635,8 +1635,6 @@ def goto_positionnement_student(request,id):
         today = time_zone_user(positionnement.teacher.user)
 
         is_correct = store_positionnement_solution(request ,positionnement_id,student,q_id, solutions,timer)
-    
-        print( q_id , quizz_nav , is_correct )
 
     if quizz_nav == len(question_ids) :
         end_of_quizz = True
@@ -1760,11 +1758,15 @@ def my_results(request):
 
     results , themes ,  final_skills , skill_tab , subskill_tab  = []  , [] ,  [] ,  [] ,  []
     total = 0
+    loop = 0
     for a_p in answerpositionnements :
         question = Question.objects.get(pk=a_p[2])
         dico =  {"positionnement_id" : a_p[0] , "student" : a_p[1], "question" : question, "answer" : a_p[3] , "score" : a_p[4] , "timer" : a_p[5] , "is_correct" : a_p[6] , 'themes' : a_p[7] }
         results.append(dico)
         themes.append(a_p[7])
+        if loop == 0 : 
+            Positionnement.objects.filter(pk=a_p[0]).update(nb_done=F('nb_done') + 1)
+        loop+=1
 
     
         for skill in question.skills.all() :
