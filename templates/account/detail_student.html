@@ -11,7 +11,7 @@
 
  
 {% block page_title %}
-    <span   style="color:{{ group.color|contrast_color_title }}" ><i class="bi bi-trophy icon_size"></i> </span>
+    <span   style="color:{{ group.color|contrast_color_title }}" ><i class="bi bi-clipboard-data icon_size"></i> </span>
  
     {% if request.user.user_type == 2 %}
         {% if group %} <a href="{% url 'list_parcours_group' group.id %}" style="color:{{ group.color|contrast_color_title }}" >{{ group.name }}</a> {% endif %}
