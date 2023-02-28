@@ -157,7 +157,7 @@
                                 {% if data.n %}
                                 <div class="container_bars" style="height:{{ data.hn }}px;left:{{ data.l }}%;"><label>{{ data.n }}</label>
                                     <div class="bars {{ data.c }}" style="height:{{ data.h }}px; ">
-                                        <div class="average">
+                                        <div class="average" {% if data.a == 100 %}style="font-size:30px" {% endif %}>
                                             {{ data.a }}% 
                                         </div>
                                         <div class="detail_bar_score">
