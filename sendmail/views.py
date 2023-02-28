@@ -29,7 +29,10 @@ from account.decorators import user_can_read_discussion
 
 @login_required(login_url= 'index')
 def list_emails(request):
- 
+
+	request.session["tdb"] = "Message"
+	request.session["subtdb"] = ""
+
 	user = request.user
 	users = []
 	if request.user.is_authenticated :
@@ -40,7 +43,7 @@ def list_emails(request):
 			shared_groups = teacher.teacher_group.order_by("level__ranking") 
 			groups = groups | shared_groups
 
-			request.session["tdb"] = False # permet l'activation du surlignage de l'icone dans le menu gauche
+ 
 
 			group_students = set()
 			for group in groups:
@@ -91,7 +94,10 @@ def list_emails(request):
 @user_is_active
 @login_required(login_url= 'index')
 def create_email(request):
- 
+
+	request.session["tdb"] = "Message"
+	request.session["subtdb"] = ""
+
 	form = EmailForm(request.POST or None,request.FILES or None)
 	user = request.user
 	today = time_zone_user(user)
@@ -145,6 +151,9 @@ def delete_email(request,id):
 @login_required(login_url= 'index')
 def show_email(request):
 
+	request.session["tdb"] = "Message"
+	request.session["subtdb"] = ""
+
 	email_id = int(request.POST.get("email_id"))
 	email = Email.objects.get(id=email_id)
 	data = {} 
@@ -171,6 +180,10 @@ def pending_notification(request):
 
 @login_required(login_url= 'index')
 def list_communications(request):
+
+	request.session["tdb"] = "Message"
+	request.session["subtdb"] = ""
+
 	communications = Communication.objects.all()
 	form = CommunicationForm(request.POST or  None)
 	context = {'form': form,  'communications': communications,  } 
@@ -180,7 +193,11 @@ def list_communications(request):
 
 @csrf_exempt
 @login_required(login_url= 'index')
-def create_communication(request):  
+def create_communication(request): 
+
+	request.session["tdb"] = "Message"
+	request.session["subtdb"] = ""
+
 	form = CommunicationForm(request.POST or  None)
 
 	if request.method == "POST":
@@ -203,7 +220,8 @@ def create_communication(request):
 
 @login_required(login_url= 'index')
 def update_communication(request,id): # update
-
+	request.session["tdb"] = "Message"
+	request.session["subtdb"] = ""
 	communication = Communication.objects.get(id= id)
 	form = CommunicationForm(request.POST or  None, instance = communication)
 
@@ -244,6 +262,8 @@ def delete_communication(request, id):
 
 @login_required(login_url= 'index')
 def show_communication(request):
+	request.session["tdb"] = "Message"
+	request.session["subtdb"] = ""
 	communication_id = int(request.POST.get("communication_id"))
 	communication = Communication.objects.get(id=communication_id)
 	form = CommunicationForm(request.POST or None)
@@ -308,7 +328,11 @@ def ajax_notification_student(request):
 #######################################################################################################################################
 
 @login_required(login_url= 'index')
-def create_discussion(request):  
+def create_discussion(request): 
+
+	request.session["tdb"] = "Message"
+	request.session["subtdb"] = "" 
+
 	form   = DiscussionForm(request.POST or  None)
 	form_m = MessageForm(request.POST or  None)
 	if request.user.school :
@@ -342,6 +366,10 @@ def create_discussion(request):
 @user_can_read_discussion
 @login_required(login_url= 'index')
 def show_discussion(request,idd):
+
+	request.session["tdb"] = "Message"
+	request.session["subtdb"] = ""
+
 	discussion = Discussion.objects.get(id = idd)
 	msgs = Message.objects.filter(discussion = discussion)
 	m = msgs.last()
@@ -411,6 +439,10 @@ def delete_message(request,idd, id):
 
 @login_required(login_url= 'index')
 def list_discussion_lesson(request,idu):
+
+	request.session["tdb"] = "Message"
+	request.session["subtdb"] = ""
+
 	user = User.objects.get(pk=idu)
 	form   = DiscussionForm(request.POST or  None)
 	discussions = user.user_discussion.order_by("-date_created")
@@ -420,6 +452,9 @@ def list_discussion_lesson(request,idu):
 @login_required(login_url= 'index')
 def list_discussion_lesson_parent(request,idu):
 
+	request.session["tdb"] = "Message"
+	request.session["subtdb"] = ""
+
 	student = Student.objects.get(user_id=idu)
 	form    = DiscussionForm(request.POST or  None)
 	discussions = student.user.user_discussion.order_by("-date_created")
@@ -428,6 +463,10 @@ def list_discussion_lesson_parent(request,idu):
 
 @login_required(login_url= 'index')
 def create_discussion_lesson(request):  
+
+	request.session["tdb"] = "Message"
+	request.session["subtdb"] = ""
+
 	form   = DiscussionForm(request.POST or  None)
 	form_m = MessageForm(request.POST or  None)
 	if request.user.school :
@@ -465,6 +504,10 @@ def create_discussion_lesson(request):
 @login_required(login_url= 'index')
 @user_can_read_discussion
 def show_discussion_lesson(request,idd):
+
+	request.session["tdb"] = "Message"
+	request.session["subtdb"] = ""
+
 	discussion = Discussion.objects.get(id = idd)
 	msgs = Message.objects.filter(discussion = discussion)
 	m = msgs.last()
@@ -506,6 +549,10 @@ def show_discussion_lesson(request,idd):
  
 @login_required(login_url= 'index')
 def delete_message_lesson(request,idd, id):
+
+	request.session["tdb"] = "Message"
+	request.session["subtdb"] = ""
+	
 	message = Message.objects.get(pk=id)
 
 	if message.user == request.user :

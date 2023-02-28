@@ -14,7 +14,7 @@
 </li>
 
  
-<li class="dropdown {% if '/myaccount' in request.path %}active{% endif %}">
+<li class="dropdown {% if  request.session.tdb == 'Account' %}active{% endif %}">
     <a href="#" class="main" id="account">
     {% if request.user.avatar and sacado_asso  %}
         <img src="{{ request.user.avatar  }}" class="avatar" />
@@ -26,7 +26,7 @@
     </a>    
 </li>
 
-<li class='dropdown'>
+<li class="dropdown {% if  request.session.tdb == 'Groups' %}active{% endif %}">
     <a href="{% url 'index' %}" class="main" >
 
         <i class="bi bi-grid icon_size"></i> 
@@ -39,7 +39,7 @@
 
 
 {% if student.nb_subjects > 2 %}
-<li class='dropdown'>
+<li class="dropdown {% if  request.session.tdb == 'training' %}active{% endif %}">
     <a href="{% url 'dash_student' %}" class="main" >
 
         <i class="bi bi-markdown icon_size"></i> 
@@ -48,7 +48,7 @@
     </a>
 </li>
 {% else %}
-<li class='dropdown'>
+<li class="dropdown {% if  request.session.tdb == 'training' %}active{% endif %}">
     <a href="{% url 'dash_student' %}" class="main" >
         <i class="bi bi-graph-up-arrow  icon_size"></i>
         <div class="captionmenu">Entrainement</div>
@@ -58,7 +58,7 @@
 {% endif %}
 
 
-<li  class="dropdown {% if 'exercise' in request.path %} active{% endif %}">
+<li  class="dropdown {% if  request.session.tdb == 'account' %}active{% endif %}">
     <a href="{% url 'detail_student_all_views' user.id %}" class="main" >
         <i class="bi bi-clipboard-data icon_size"></i>
         <div class="captionmenu">Suivis</div>
@@ -66,10 +66,7 @@
 </li>
 
 
-<li  class="dropdown {% if 'prepeval' in request.path %}
-active
-{% endif %} 
-">
+<li  class="dropdown {% if  request.session.tdb == 'prep_eval' %}active{% endif %}">
     <a href="{% url 'prep_eval' user.id %}" class="main" >
         <i class="bi bi-calendar-week icon_size"></i>
         <div class="captionmenu">Prép' Éval</div>
@@ -106,8 +103,7 @@ active
 </li>
 {% endif %}
 --> 
-
-<li  class="dropdown  {% if '/flashpack' in request.path %} active{% endif %}">
+<li  class="dropdown {% if  request.session.tdb == 'Flashpack' %}active{% endif %}">
     <a href="{% url 'flashpacks' %}" class="main" >
         <i class="bi bi-layers icon_size"></i> 
         <div class="captionmenu">Flashcards</div>
@@ -115,7 +111,7 @@ active
 </li> 
 
 {% if request.user.is_in_academy and request.user.student.data_menu.id > 2 %}
-<li class='dropdown'>
+<li class="dropdown {% if  request.session.tdb == 'Lesson' %}active{% endif %}">
     <a href="{% url 'detail_student_lesson' request.user.id %}" class="main" >
         <i class="bi bi-camera-video icon_size"></i> 
         <div class="captionmenu">Leçons</div>
@@ -124,7 +120,7 @@ active
 {% endif %}
 {% comment %} 
 {% if request.user.is_in_academy %}   
-<li  class="dropdown  {% if '/academy' in request.path %} active{% endif %}">
+<li  class="dropdown {% if  request.session.tdb == 'Auto_test' %}active{% endif %}">
     <a href="{% url 'autotests' %}" class="main" >
         <i class="bi bi-question-circle icon_size"></i> 
         <div class="captionmenu">Auto-test</div>
@@ -135,7 +131,7 @@ active
 
 
 {% if request.user.is_in_academy and request.user.student.data_menu.id > 1 %}
-<li class='dropdown'>
+<li class="dropdown {% if  request.session.tdb == 'Message' %}active{% endif %}">
     <a href="{% url 'list_discussion_lesson' request.user.id %}" class="main" >
         <i class="bi bi-envelope icon_size"></i> 
         <div class="captionmenu">Messages</div>

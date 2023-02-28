@@ -2069,10 +2069,10 @@ a.select_correction:focus {
 }
 
 .selector_theme_selected{
-    border: 1px solid #0093CA;
+    border: 1px solid #9975e0/*#0093CA*/;
     padding:15px;
-    background-color: #b3ebff;
-    color: #0093CA;
+    background-color: #f0eafa ; /*#b3ebff;*/
+    color: #5d4391/*#0093CA*/;
 }
 
 .wrapper_slider_prepeval{

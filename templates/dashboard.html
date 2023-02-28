@@ -410,39 +410,7 @@
         </div>   
         {% endif %}
     {% elif request.user.is_student %}
-        {% if not is_gar_check %}    
-        <div class="row">
-            <div class="col-lg-12 col-xs-12" style=" padding-top: 5px;">
-                <a href="#" id="aggregate_groupe">
-                     Rejoindre un groupe 
-                </a>
-            </div>
-        </div>
-        <div id="aggregate_form">
-            <form action="{%  url 'aggregate_group' %}" method="POST">
-                {% csrf_token %}
-                <div class="row">
-                    <div class="col-lg-12 col-xs-12" style=" padding-top: 10px;">
-                        <input type="text" class="form-control" placeholder="Code du groupe" name="groupe" id="id_groupe"/>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-5 col-xs-5" style=" padding-top: 10px;">
-                        <input type="submit" class="btn btn-primary" value="Associer"/>
-                    </div>
-                    <div class="col-lg-7 col-xs-7" style=" padding-top: 10px;">
-                        <span class="verif_course"></span>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="row">
-            <div class="col-lg-12 col-xs-12" style="padding-top: 10px;">
-                <a href="{% url 'close_my_account' %}">Clôturer mon compte</a>
-            </div>
-        </div>
-        <hr/>
-        {% endif %}
+ 
         <div class="row">
             <div class="col-lg-12 col-xs-12" style="padding-top: 10px;">
                 {% for g in groups %}

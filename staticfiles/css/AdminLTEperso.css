@@ -4063,12 +4063,7 @@ input.form-control {
     width: 92%;
     border-radius:5px; 
 }
-.alert-warning{
-  background-color: #f1eef7 ;
-  border : solid 1px #eee9F6 ;
-  color :  #5d4391 ;
-  padding:15px;
-}
+ 
 .alert-white{
   background-color: #FFF ;
   border : solid 1px #eee9F6 ;

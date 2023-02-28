@@ -284,6 +284,12 @@ a.white:hover{
 }
 
 
+
+element.style {
+}
+
+
+
 .content {
     background-color: #F7F7F7;
     padding: 15px;
@@ -701,7 +707,7 @@ table.table-bordered.dataTable {
   font-size: 70px;
   font-weight: 600;
   color: #5d4391;
-  margin:80px 0px;
+  margin:80px 0px 40px 0px;
 }
 
 .title_bloc_index_white{

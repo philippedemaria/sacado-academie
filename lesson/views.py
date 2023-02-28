@@ -263,7 +263,8 @@ def no_intersection(date, start, user, duration):
 
 def get_the_slot(request): # CREATION PAR LE PROF
 
- 
+    request.session["tdb"] = "Lesson"
+    request.session["subtdb"] = ""
     form = GetEventForm(request.POST or None)
     idt  = request.POST.get("teacher_id")
     utc  = pytz.UTC
@@ -421,6 +422,8 @@ L'équipe Sacado Académie.""".format(str(request.user).capitalize(), str(studen
 
 def validation(request,code): # toujours par le prof
 
+    request.session["tdb"] = "Lesson"
+    request.session["subtdb"] = ""
     connexionEleve_id = decryptage(code)
     connexionEleve    = ConnexionEleve.objects.get(pk=connexionEleve_id)
     connexionEleve.is_validate =1 
@@ -496,6 +499,10 @@ def choose_student(request):
 
 
 def update_event(request,id):
+
+    request.session["tdb"] = "Lesson"
+    request.session["subtdb"] = ""
+
     user = User.objects.get(pk=request.user.id)
     event = Event.objects.get(pk=id)
     form = EventForm(user, request.POST or None, instance = event)
@@ -538,6 +545,10 @@ def shift_event(request):
 
 
 def show_event(request):
+
+    request.session["tdb"] = "Lesson"
+    request.session["subtdb"] = ""
+
     event_id = request.POST.get('event_id')
     event = Event.objects.get(pk=event_id)   
     user = User.objects.get(pk=request.user.id) 
@@ -591,7 +602,10 @@ def delete_student_to_my_lesson_group(request,id):
 
 
 def dashboard_parent(request):
- 
+
+    request.session["tdb"] = "Lesson"
+    request.session["subtdb"] = ""
+
     parent = Parent.objects.get(user=request.user)
     students = parent.students.order_by("user__first_name")
     index_tdb = False  # Permet l'affichage des tutos Youtube dans le dashboard
@@ -605,7 +619,10 @@ def dashboard_parent(request):
 
 
 def detail_student_lesson(request,id):
- 
+
+    request.session["tdb"] = "Lesson"
+    request.session["subtdb"] = ""
+
     user = request.user
     if id == 0 :
         connexions = set()
@@ -624,6 +641,9 @@ def detail_student_lesson(request,id):
 
 
 def ask_lesson(request,id):
+
+    request.session["tdb"] = "Lesson"
+    request.session["subtdb"] = ""
  
     user = request.user
     student = Student.objects.get(user_id=id)
@@ -640,6 +660,9 @@ def ask_lesson(request,id):
 
 
 def buy_credit(request) :
+
+    request.session["tdb"] = "Lesson"
+    request.session["subtdb"] = ""
 
     user     = request.user
     credits  = Credit.objects.filter(user =user)
@@ -681,7 +704,10 @@ def buy_credit(request) :
 
 
 def display_calendar_teacher(request,idt) :
-   
+    
+    request.session["tdb"] = "Lesson"
+    request.session["subtdb"] = ""
+
     teacher    =  Teacher.objects.get(user_id = idt)
     student_id = request.session.get("student_id",None)
     student    = Student.objects.get(user_id=student_id)

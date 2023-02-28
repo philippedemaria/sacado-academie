@@ -965,6 +965,8 @@ def detail_student_parcours(request, id,idp):
 #@user_can_read_details
 def detail_student_all_views(request, id):
 
+
+    request.session["tdb"] = "account"
     user = User.objects.get(pk=id)
     student = user.student
     tracker_execute_exercise(False,user)

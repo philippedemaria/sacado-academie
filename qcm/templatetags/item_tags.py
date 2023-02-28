@@ -1065,6 +1065,14 @@ def get_result_k_s(obj, k_s, student, parcours,typ):
     return obj.result_k_s(k_s, student, parcours,typ)
 
 
+@register.simple_tag
+def get_percent_to_parcours(obj,student): 
+    """
+    retourne  le pourcentage des réponses pour un quizz et des exercices GGB d'un parcours.
+    """
+    return obj.is_percent_to_parcours(student) 
+
+
 @register.simple_tag 
 def get_mark_to_this(obj, student, parcours):
     """

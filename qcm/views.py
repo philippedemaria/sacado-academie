@@ -13519,14 +13519,11 @@ def make_slots(this_parcours, parcours_ids, nf,student):
         documents_list = this_parcours.parcours_relationship.values_list("type_id",flat=True).order_by('ranking')[i*nb_relationships_by_day:(i+1)*nb_relationships_by_day]
         stte_idx = list_idx( structure_idx( list(documents_list) ) )
         # enlève de cette liste les exos qui sont dans studentanswer
-        print("Jour "+str(i))  
         for j in range(len(relationships)):
             if j in stte_idx :
                 this_slot.relationships.add(relationships[j])
-                print('Exercice : ' ,relationships[j].id)
             elif relationships[j].type_id == 2 :
                 if Course.objects.get(pk = relationships[j].document_id ).forme != "" :
-                    print('Autre : ' ,relationships[j].document_id)
                     this_slot.relationships.add(relationships[j])
 
 
@@ -13584,3 +13581,6 @@ def show_prepeval(request,idp):
 def delete_prepeval(request,ids,idp):
     Prepeval.objects.filter(pk=idp).delete()
     return redirect('prep_eval', ids)
+
+
+

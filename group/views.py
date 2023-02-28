@@ -152,6 +152,9 @@ def student_dashboard(request,group_id):
     # si une seule matière alors  sur dashboard
     groups = student.students_to_group.all()
 
+
+    request.session["tdb"] = "training"
+
     parcourses_on_fire = []
 
     student_index = False
@@ -161,101 +164,48 @@ def student_dashboard(request,group_id):
     else :
         template =  "group/dashboard_group.html"  
 
-    today = time_zone_user(request.user)        
-    timer = today.time()
+    today = time_zone_user(request.user)  
+    month, year = today.month, today.year       
+    premier = date( year,  month, 1)
+    
+    if today.month in [1,3,5,7,8,10,12] : nbdays = 31
+    elif today.month == 2 : nbdays =  28 + (year%4 == 0 and (year%100 != 0 or year%400 == 0))
+    else : nbdays = 30
+    dernier = premier + timedelta(days=nbdays-1)
+    mnths =["","Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Aout","Septembre","Octobre","Novembre","Décembre",]
 
-
-    # trackers= Tracker.objects.filter( user = request.user)
-    # for tracker in trackers:
-    #     tracker.delete()
+    this_month  = mnths[today.month]
+    this_months = list()
+    for i in range(nbdays) :
+        this_day = premier + timedelta(days=i)
+        this_next_day = this_day + timedelta(days=1)
+        stud = Studentanswer.objects.filter(student=student,date__gt=this_day,date__lt=this_next_day).aggregate(Sum('secondes'))
+        duration = stud['secondes__sum']
+        if duration and duration > 59 : color = '#1d6718'
+        else : color = '#dd4b39'
+        this_months.append({'date' : this_day , 'duration' : duration , 'color': color })
 
     if int(group_id) > 0 :
 
         template =  "group/dashboard_group.html"  
         group = Group.objects.get(pk = group_id)
         request.session["group_id"] = group_id 
-
         folders = student.folders.filter( is_publish=1 , subject = group.subject,level = group.level,is_archive=0, groups = group , is_trash=0).order_by("ranking")
         
-        #bases = group.group_parcours.filter(Q(is_publish=1) | Q(start__lte=today, stop__gte=today), students =student , subject = group.subject, level = group.level , folders = None, is_archive =0 , is_trash=0).distinct()
-
-        # parcourses = bases.filter(is_evaluation=0, is_sequence=0).order_by("ranking")
-        # sequences  = bases.filter(is_evaluation=0, is_sequence=1).order_by("ranking")
-        # evaluations = bases.filter(is_evaluation=1).order_by("ranking")
-
-        #last_exercises_done = student.answers.filter(exercise__knowledge__theme__subject=group.subject).order_by("-date")[:5]
-
     else :
 
         group = student.students_to_group.first()
-
         try :
             folders = student.folders.filter( is_publish=1 , subject = group.subject,level = group.level,is_archive=0, groups = group , is_trash=0).order_by("ranking")
         except :
             folders = student.folders.filter( is_publish=1 , is_archive=0, is_trash=0).order_by("ranking")
-
-        # bases = student.students_to_parcours
-        # parcourses = bases.filter(is_evaluation=0, folders = None, is_publish=1,is_trash=0, is_sequence=0).order_by("ranking")
-        # sequences = bases.filter(is_evaluation=0, folders = None, is_publish=1,is_trash=0, is_sequence=1).order_by("ranking")
-        # evaluations = bases.filter(Q(is_publish=1) | Q(start__lte=today, stop__gte=today), folders = None, is_evaluation=1,is_trash=0).order_by("ranking")
-        # last_exercises_done = student.answers.order_by("-date")[:5]
-   
         parcourses_on_fire = student.students_to_parcours.filter(Q(is_publish=1) | Q(start__lte=today, stop__gte=today), is_active=1,  is_archive =0 , is_trash=0).distinct()
 
-    #flashpacks = Flashpack.objects.filter(Q(answercards=None) | Q(answercards__rappel=today), Q(stop=None) | Q(stop__gte=today), students=student,is_global=1).exclude(madeflashpack__date=today).distinct()
-
-        #customexercises_set = set()
-    nb_custom = 0
-    # for p in parcourses :
-    #     custom_exercises = Customexercise.objects.filter(Q(is_publish=1) | Q(start__lte=today), parcourses = p , date_limit__gte=today).order_by("date_limit")
-    #     nb_custom += custom_exercises.count()
-    #     customexercises_set.update(set(custom_exercises))
-    #customexercises = list(customexercises_set)
-
-    # relationships = Relationship.objects.filter(Q(is_publish=1) | Q(start__lte=today), parcours__in=parcourses, date_limit__gte=today).order_by("date_limit")
-    # nb_relationships =  relationships.count()
-
-
-    # exercise_tab = []
-    # for r in relationships:
-    #     if r not in exercise_tab:
-    #         exercise_tab.append(r.exercise)
-    # num = 0
-    # for e in exercise_tab:
-    #     if Studentanswer.objects.filter(student=student, exercise=e).count() > 0:
-    #         num += 1
-
-
-    # for c in customexercises :
-    #     if c.customexercise_custom_answer.filter(student=student).count() > 0:
-    #         num += 1
-
-    # try:
-    #     ratio = int(num / (nb_relationships+nb_custom) * 100)
-    # except:
-    #     ratio = 0
-
-    # ratiowidth = int(0.9*ratio)
-
-
-    # responses = request.user.user_response.exclude(is_read=1)
-
-    # studentanswers =  student.answers.all()
-    # exercises = Exercise.objects.filter(pk__in=studentanswers.values_list('exercise', flat=True))
-    
-    # relationships_in_late = student.students_relationship.filter(Q(is_publish = 1)|Q(start__lte=today), parcours__in=parcourses, is_evaluation=0, date_limit__lt=today).exclude(exercise__in=exercises).order_by("date_limit")
-    # relationships_in_tasks = student.students_relationship.filter(Q(is_publish = 1)|Q(start__lte=today), parcours__in=parcourses, date_limit__gte=today).exclude(exercise__in=exercises).order_by("date_limit")
 
     context = {'student_id': student.user.id, 'student': student, 
-                #'relationships': relationships, 'timer' : timer ,  'last_exercises_done' : last_exercises_done, 'responses' : responses , 
-               #'evaluations': evaluations, 'ratio': ratio,
-                'today' : today ,   
-                'group' : group , 'groups' : groups ,
-               #'ratiowidth': ratiowidth, 'relationships_in_late': relationships_in_late, 'index_tdb' : True, 
-               'folders' : folders, #'parcourses_on_fire' : parcourses_on_fire ,  
-               #'relationships_in_tasks': relationships_in_tasks , 'student_index' : student_index , 
-
-                # 'customexercises': customexercises, 'flashpacks' : flashpacks,'evaluations': evaluations,'parcourses': parcourses, 'sequences' : sequences
+               'today' : today ,   
+               'group' : group , 'groups' : groups ,
+               'folders' : folders, 'this_months' : this_months , 'this_month' : this_month,
                }
 
  

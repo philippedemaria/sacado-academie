@@ -36,16 +36,17 @@ from general_fonctions import *
 
 def list_flashpacks(request):
 
+    request.session["tdb"] = "Flashpack" # permet l'activation du surlignage de l'icone dans le menu gauche
+    request.session["subtdb"] = ""
+
     if request.user.is_authenticated :
         if request.user.is_teacher :
             teacher = request.user.teacher
-            request.session["tdb"] = False # permet l'activation du surlignage de l'icone dans le menu gauche
             flashpacks = Flashpack.objects.filter(teacher__user = request.user)
             return render(request, 'flashcard/all_flashpacks.html', {'flashpacks': flashpacks, 'teacher' : teacher })
         else :
             student = request.user.student
             today = time_zone_user(request.user)
-            request.session["tdb"] = False # permet l'activation du surlignage de l'icone dans le menu gauche
             fpacks_base = Flashpack.objects.filter(students=student)
             fpacks = fpacks_base.exclude(is_global=1)
             flashpacks = fpacks_base.filter(is_global=1)
@@ -63,8 +64,8 @@ def list_flashpacks(request):
  
 def list_my_flashpacks(request):
 
-    request.session["tdb"]          = False # permet l'activation du surlignage de l'icone dans le menu gauche
-    request.session["flashpack_id"] = None 
+    request.session["tdb"] = "Flashpack" # permet l'activation du surlignage de l'icone dans le menu gauche
+    request.session["subtdb"] = ""
     teacher            = request.user.teacher
     dataset_user       = teacher.flashpacks
     dataset            = dataset_user.filter(is_archive=0)
@@ -103,10 +104,8 @@ def list_my_flashpacks(request):
 
 def my_flashpack_archives(request):
 
-    request.session["tdb"] = False # permet l'activation du surlignage de l'icone dans le menu gauche
-    request.session["folder_id"] = None
-    request.session["flashpack_id"] = None 
-    request.session["group_id"] = None
+    request.session["tdb"] = "Flashpack" # permet l'activation du surlignage de l'icone dans le menu gauche
+    request.session["subtdb"] = ""
     teacher = request.user.teacher
 
     dataset = teacher.flashpacks.filter(is_archive=1)
@@ -128,6 +127,9 @@ def my_flashpack_archives(request):
 
 
 def create_flashpack(request, idf=0):
+
+    request.session["tdb"] = "Flashpack" # permet l'activation du surlignage de l'icone dans le menu gauche
+    request.session["subtdb"] = ""
 
     teacher = request.user.teacher
     folder_id = request.session.get("folder_id",idf)
@@ -172,6 +174,9 @@ def create_flashpack(request, idf=0):
 
 
 def update_flashpack(request, id):
+
+    request.session["tdb"] = "Flashpack" # permet l'activation du surlignage de l'icone dans le menu gauche
+    request.session["subtdb"] = ""
 
     teacher = request.user.teacher
     folder_id = request.session.get("folder_id",None)
@@ -218,6 +223,9 @@ def update_flashpack(request, id):
 
 def create_flashpack_from_parcours(request, idp=0):
 
+    request.session["tdb"] = "Flashpack" # permet l'activation du surlignage de l'icone dans le menu gauche
+    request.session["subtdb"] = ""
+
     teacher = request.user.teacher
     folder_id = request.session.get("folder_id",None)
     group_id = request.session.get("group_id",None)
@@ -259,6 +267,8 @@ def create_flashpack_from_parcours(request, idp=0):
 
 def create_flashpack_sequence(request, id):
 
+    request.session["tdb"] = "Flashpack" # permet l'activation du surlignage de l'icone dans le menu gauche
+    request.session["subtdb"] = ""
     teacher = request.user.teacher
     folder_id = request.session.get("folder_id",None)
     group_id = request.session.get("group_id",None)
@@ -299,10 +309,10 @@ def create_flashpack_sequence(request, id):
 
 
 
-
-
-
 def peuplate_flashpack_parcours(request,idp):
+
+    request.session["tdb"] = "Flashpack" # permet l'activation du surlignage de l'icone dans le menu gauche
+    request.session["subtdb"] = ""
 
     teacher = request.user.teacher
     parcours = Parcours.objects.get(id=idp)
@@ -345,7 +355,10 @@ def ajax_find_peuplate_sequence(request):
 
 
 def clone_flashpack_sequence(request, idf):
+
     """ cloner un parcours """
+    request.session["tdb"] = "Flashpack" # permet l'activation du surlignage de l'icone dans le menu gauche
+    request.session["subtdb"] = ""
 
     teacher = request.user.teacher
     flashpack = Flashpack.objects.get(pk=idf) # parcours à cloner.pk = None
@@ -383,6 +396,9 @@ def delete_flashpack(request, id):
 
 def create_flashpack_academy(request, id):
 
+    request.session["tdb"] = "Flashpack" # permet l'activation du surlignage de l'icone dans le menu gauche
+    request.session["subtdb"] = ""
+
     form = FlashpackAcademyForm(request.POST or None,request.FILES or None )
     teacher = Teacher.objects.get(user_id=2480)
     if form.is_valid():
@@ -409,6 +425,9 @@ def create_flashpack_academy(request, id):
 
  
 def update_flashpack_academy(request, id):
+
+    request.session["tdb"] = "Flashpack" # permet l'activation du surlignage de l'icone dans le menu gauche
+    request.session["subtdb"] = ""
 
     flashpack = Flashpack.objects.get(pk=id)
     form = FlashpackAcademyForm(request.POST or None,request.FILES or None, instance = flashpack )

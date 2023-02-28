@@ -228,6 +228,8 @@ def index(request):
 
 def dash_student(request):
     
+    request.session["tdb"] = "training"
+    
     if request.user.is_authenticated and request.user.is_student :
         today = time_zone_user(request.user)
         index_tdb = True  

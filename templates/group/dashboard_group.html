@@ -21,7 +21,7 @@
 {% if student.nb_subjects > 2 %}
     <span style="color:#5d4391"><i class='bi bi-markdown'></i> <a href="{% url 'index' %}" style="color:#5d4391"> Matières </a></span>  
 {% else %}
-    <span style="color:#5d4391"><i class="bi bi-grid-3x2-gap icon_size"></i><a href="{% url 'index' %}" style="color:#5d4391"> Tableau de bord </a></span> 
+    <span style="color:#5d4391"><i class="bi bi-graph-up-arrow icon_size"></i><a href="{% url 'index' %}" style="color:#5d4391"> Entrainement </a></span> 
 {% endif %}
 
 <img src="{% static 'img/angle-right.png' %}"/> {% include 'breadcrumb_student.html' %}
@@ -38,18 +38,24 @@
  
 <section class="content_main"> 
 
-
     <div class="row">
         <div class="col-md-12 col-lg-12 col-xs-12">
-            <div class="alert alert-info">10 minutes par jour</div>
+            <div class="alert-white"  style="padding:5px">
+                Compte rendu de {{ this_month }}.  <small>Au moins 10 minutes quotidiennes de pratique sur nos exercices pour réussir en mathématiques.</small>
+                <div style="margin:5px 0px">
+                {% for m in this_months %}
+                    <div style="float:left;height:20px;width:30px;margin-right:1px;text-align:center">
+                        <span style="text-align: center;font-size:10px">{{m.date|date:"j"}}</span><br/>                        
+                        <div style="background-color: {{ m.color}};float:left;height:20px;width:30px;color:white;font-size:10px;padding-top:5px;"> {% if m.duration %}{{m.duration|time_done}}{% else %}0{% endif %}</div>
+                    </div>  
+                {% endfor %}
+                <div style="clear:both;height:10px"></div>
+                </div>
+            </div>
         </div>
     </div>
 
-
-
-
-
-    <div class="row">
+    <div class="row" style="margin-top:20px">
         <div class="col-md-12 col-lg-12 col-xs-12">
             {%  if folders %}
             <div class="row"></div> 
@@ -59,6 +65,7 @@
             {% endif %}  
         </div>
     </div>
+
 </section> 
 
 
