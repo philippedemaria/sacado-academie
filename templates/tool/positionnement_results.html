@@ -172,9 +172,9 @@ Mes résultats
                                 <td>
                                     {% if result.question.qtype == 1 %}
                                         {% if  result.question.is_correct %}
-                                            <span class="btn btn-default">VRAI <i class="fa fa-check text-success"></i> </span>  <span class="btn btn-default">FAUX <i class="fa fa-times text-danger"></i></span>
+                                            <span class="btn btn-success">VRAI  </span>  
                                         {% else %} 
-                                            <span class="btn btn-default">VRAI <i class="fa fa-check text-danger"></i> </span>  <span class="btn btn-default">FAUX <i class="fa fa-times text-success"></i> </span>
+                                            <span class="btn btn-success">FAUX </span>
                                         {% endif %}
                                     {% elif result.question.qtype == 2 %}
  

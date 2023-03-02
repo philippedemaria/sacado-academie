@@ -1668,21 +1668,16 @@ def store_positionnement_solution( request ,positionnement_id,student,q_id, solu
     for ans in solutions : # est une liste d'id des réponses choisies par les réponses proposées
 
         if question.qtype == 1 :
-            if int(ans) == question.is_correct :
+            sl = int(ans)-1
+            if sl == int(question.is_correct) :
                 is_correct = 1
                 score      = question.point
-            answ = ans
+            answ = sl
         elif question.qtype == 2 :
             if ans in question.answer.split("____"):
                 is_correct = 1
                 score      = question.point
             answ = ans
-            # choices = question.choices.all()
-            # for choice in choices :
-            #     if ans in choice.answer :
-            #         is_correct = 1
-            #         score      = question.point
-            # answ = ans
         elif question.qtype == 3 or question.qtype == 4:
             choices  = question.choices.values_list('id',flat=True).filter(is_correct=1)
 
