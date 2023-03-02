@@ -8,8 +8,28 @@
     <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common3.js' %}"></script>
     <script>
         require(['script/ajax-pass_quizz_student']);
-        require(['script/ajax-check_anagrams','script/ajax-check_axe','script/ajax-check_fill','script/ajax-check_filltheblanks','script/ajax-check_grid','script/ajax-check_image', 'script/ajax-check_memory', ]);
-        require(['script/ajax-check_pairs','script/ajax-check_qcm_numeric','script/ajax-check_regroup','script/ajax-check_secretword','script/ajax-check_sort','script/ajax-check_vf', ]); 
+
+        {% if question.qtype == 7 %}
+        require(['script/ajax-check_anagrams' ]);
+        {% elif question.qtype == 18 %}
+        require(['script/ajax-check_axe']);
+        {% elif question.qtype == 9 %}
+        require(['script/ajax-check_filltheblanks']);
+        {% elif question.qtype == 12 %}
+        require(['script/ajax-check_grid']);
+        {% elif question.qtype == 15 %}
+        require(['script/ajax-check_image']);
+        {% elif question.qtype == 14 %}
+        require(['script/ajax-check_memory']);
+        {% elif question.qtype == 5 %}
+        require(['script/ajax-check_pairs']);  
+        {% elif question.qtype == 6 %}
+        require(['script/ajax-check_regroup']); 
+        {% elif question.qtype == 13 %}
+        require(['script/ajax-check_secretword' ]); 
+        {% elif question.qtype == 8 %}
+        require(['script/ajax-check_sort']); 
+        {% endif %}
     </script>
 {% endblock %}
 
@@ -439,7 +459,7 @@
                 <br/><i class="bi bi-emoji-smile" ></i><br/>  
             </h1>
 
-            <span  style="font-size:2em" ><a href="{% url 'my_results' %}">Mes résultats</a></span>
+            <span  style="font-size:2em" ><a href="{% url 'my_results' %}">Consulter mes résultats</a></span>
 
                 
           

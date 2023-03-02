@@ -9,7 +9,9 @@ define(['jquery', 'bootstrap', 'ui', 'ui_sortable'], function ($) {
 //===========================================================================================  
 
     $( document ).on('mouseover', ".draggable" , function () { 
+
         var loop = $(this).data('loop'); 
+
         $( this ).draggable({
                 containment: ".dropzone"+loop ,
                 appendTo : '.droppable'+loop , 
@@ -17,10 +19,9 @@ define(['jquery', 'bootstrap', 'ui', 'ui_sortable'], function ($) {
             });
 
         $( ".droppable"+loop ).droppable({
-                drop: function( event, ui ) { console.log(loop); 
-
+                drop: function( event, ui ) { 
                     $(this).append( $(ui.draggable[0])  );
-                    this_answer = $(ui.draggable[0]).data("subchoice") ; console.log(this_answer); 
+                    this_answer = $(ui.draggable[0]).data("subchoice") ; 
                     old_list = $(this).find('input').val()  ;  
                     var new_list = [];
                     var new_str  = old_list +this_answer;

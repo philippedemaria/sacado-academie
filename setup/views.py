@@ -102,6 +102,13 @@ def end_of_contract() :
 
 def index(request):
 
+    try :
+        del request.session["answerpositionnement"]
+        del request.session["student"]
+        del request.session["positionnement_id"]
+    except :
+        pass
+
     if request.user.is_authenticated :
         index_tdb = True  # Permet l'affichage des tutos Youtube dans le dashboard
   
@@ -790,6 +797,14 @@ def student_to_association(request):
 
 
 def choice_menu(request,id):
+
+    try :
+        del request.session["answerpositionnement"]
+        del request.session["student"]
+        del request.session["positionnement_id"]
+    except :
+        pass
+    
     formule  = Formule.objects.get(pk=id)
     end  = end_of_contract()
     context = { 'formule' : formule , 'end' : end ,  }

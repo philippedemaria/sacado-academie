@@ -1701,9 +1701,11 @@ def store_positionnement_solution( request ,positionnement_id,student,q_id, solu
 
         elif question.qtype == 5 :
 
-            choices  = question.choices.all()
-            for solution in solutions :
+            choices  = question.choices.all()            
+            answ = ""
+            for solution in solutions : 
                 sol = solution.split("=")
+                answ += str(sol[0])+"="+ str(sol[1])+" ; "
                 try : 
                     if str(sol[0]) == str(sol[1]) :
                         corrects += 1
@@ -1711,33 +1713,28 @@ def store_positionnement_solution( request ,positionnement_id,student,q_id, solu
             if corrects == len(choices) :
                 is_correct = 1
                 score      = question.point
-            answ = ""
-            for choice in choices :
-                if choice.imageanswer and choice.imageanswerbis :
-                    answ +=  "<img src="+str(choice.imageanswer)+" width='80px'/> = <img src="+str(choice.imageanswerbis)+" width='80px'/> ; "
-                elif choice.answer and choice.imageanswerbis :
-                    answ +=  str(choice.answer)+" = <img src="+str(choice.imageanswerbis)+" width='80px'/> ; "
-                elif choice.imageanswer and choice.imageanswerbis :
-                    answ +=  "<img src="+str(choice.imageanswer)+" width='80px'/> "+str(choice.answer)+ " ; "
-                else :
-                    answ += str(choice.answer)+" = "+str(choice.answerbis)+" ; " 
-
-
+            
         elif question.qtype == 9 :
 
-            choice_id = request.POST.get("choice_id")
-            choice  = Choice.objects.get(pk=choice_id)
-            answerchoice  = choice.answer.replace("<strong>","####")
-            answerchoice  = answerchoice.replace("</strong>","####")
-            answers = answerchoice.split("####")
-            this_answers = list()
-            for i in range(len(answers)) :
-                if i%2==1 : this_answers.append(answers[i])
+            if i == 1 :
+                choice_id = request.POST.get("choice_id")
+                choice  = Choice.objects.get(pk=choice_id)
 
-            if this_answers == solutions :
-                is_correct = 1
-                score      = question.point
-            answ = choice.answer
+                answerchoice  = choice.answer.replace("<strong>","####")
+                answerchoice  = answerchoice.replace("</strong>","####")
+                answers = answerchoice.split("####")
+                this_answers = list()
+                k=0
+                for u in range(len(answers)) :
+                    if u%2==1 : 
+                        this_answers.append(answers[u])
+                        answers[u] = solutions[k]
+                        k += 1
+
+                answ = "".join(answers)
+                if this_answers == solutions :
+                    is_correct = 1
+                    score      = question.point
 
         answer.append(answ)
         i +=1
@@ -1769,24 +1766,24 @@ def my_results(request):
         loop+=1
 
     
-        for skill in question.skills.all() :
-            if not skill.id in final_skills :
-                final_skills.append(skill.id)
-                total = 1
-                subskill_tab.append({ "skill" : skill.name , "score" : a_p[4] , "total" : 1 })
-            else :
-                idx = final_skills.index(skill.id)
-                total += 1
-                subskill_tab[idx]["score"] += a_p[4]
-                subskill_tab[idx]["total"] += 1
+    #     for skill in question.skills.all() :
+    #         if not skill.id in final_skills :
+    #             final_skills.append(skill.id)
+    #             total = 1
+    #             subskill_tab.append({ "skill" : skill.name , "score" : a_p[4] , "total" : 1 })
+    #         else :
+    #             idx = final_skills.index(skill.id)
+    #             total += 1
+    #             subskill_tab[idx]["score"] += a_p[4]
+    #             subskill_tab[idx]["total"] += 1
 
-    for s in subskill_tab :
-        score = int(s["score"]//s["total"])
-        if score > 90 : color = "darkgreen"
-        elif score > 65 : color = "green"
-        elif score > 40 : color = "orange"
-        else : color = "red"
-        skill_tab.append({ "skill" : s["skill"] , "score" : score , 'color' : color  })
+    # for s in subskill_tab :
+    #     score = int(s["score"]//s["total"])
+    #     if score > 90 : color = "darkgreen"
+    #     elif score > 65 : color = "green"
+    #     elif score > 40 : color = "orange"
+    #     else : color = "red"
+    #     skill_tab.append({ "skill" : s["skill"] , "score" : score , 'color' : color  })
 
 
 
@@ -1801,7 +1798,7 @@ def my_results(request):
             subtheme_tab[idx]["score"] += data[1]
             subtheme_tab[idx]["total"] += 1
 
-
+    labels , dataset , ni = "","" ,1
     for t in subtheme_tab :
 
         this_score = int(t["score"]//t["total"]) 
@@ -1809,10 +1806,22 @@ def my_results(request):
         elif this_score > 65 : color = "green"
         elif this_score > 40 : color = "orange"
         else : color = "red"
+        if ni == len(subtheme_tab):
+            sep =""
+        else :
+            sep = "____"
+        labels += str(t["theme"])+sep
+        dataset += str(this_score)+sep
+        ni+=1        
         theme_tab.append({ "theme" : t["theme"] , "score" : this_score , 'color' : color })
 
+    email_to_send = request.session.get("email",None)
+    if email_to_send :
+        student = request.session.get("student",None)
+        #send_mail('SACADO ACADEMIE : Résultat du test de positionnement de '+student, result_to_send ,settings.DEFAULT_FROM_EMAIL,[email_to_send])
 
-    context = { 'results' : results , 'theme_tab' : theme_tab , 'skill_tab' : skill_tab   }
+
+    context = { 'results' : results , 'theme_tab' : theme_tab , 'skill_tab' : skill_tab  , 'labels':labels , 'dataset' : dataset }
     return render(request, 'tool/positionnement_results.html', context)
 
 ############################################################################################################

@@ -6,12 +6,14 @@
 
 {% block require %}
     <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common3.js' %}"></script>
+    <script>
+        require(['script/ajax-positionnement-result']);
+    </script>  
 {% endblock %}
 
 
-
 {% block page_title %}
-<a href="{% url 'index' %}" class="btn btn-sacado">Retour à l'accueil</a>
+Mes résultats
  
 {% endblock %}
 
@@ -33,7 +35,7 @@
         <div class="col-sm-12">
             
             <div class="row"> 
-                <div class="col-sm-12 col-md-6">
+                <div class="col-sm-12 col-md-7">
                     <p style="width:250px;padding:10px;background-color: white;border-radius:5px 5px 0px 0px;margin:0px"><b>Vos résultats synthétisés</b></p>
                     <div style="width:95%;padding:10px;background-color: white;border-radius:0px 5px 5px  5px">
                         <div class="row"> 
@@ -55,7 +57,7 @@
                             </div>
                         </div>
                         <div class="row"> 
-                            <div class="col-sm-12 col-md-6">
+                            <div class="col-sm-12 col-md-4">
                                 Par thème
                                 {% for data  in theme_tab %}
                                     <li class="sanspuce">
@@ -65,7 +67,13 @@
                                         </div>
                                     </li>
                                 {% endfor %}
+                                <input type="hidden" id="labels" value="{{ labels }}"/>
+                                <input type="hidden" id="dataset" value="{{ dataset }}"/>
+                                <label>Nous estimons le seuil de réussite des connaissances à 80%  pour maîtriser les notions d'un thèmes. Ce seuil est matérialisé par le polygone vert.</label>
+
+                                <a href="{% url 'choice_menu' 2 %}" class="btn btn-primary">Menu Adaptatif proposé à 5€/mois, je m'abonne</a>
                             </div>
+                            {% comment %}
                             <div class="col-sm-12 col-md-6">
                                 Par compétence                             
                                 {% for data  in skill_tab %}
@@ -77,41 +85,47 @@
                                     </li>
                                 {% endfor %}
                             </div>
+                            {% endcomment %}
+                            <div class="col-sm-12 col-md-8">
+                                <canvas id="chart-line"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-sm-12 col-md-6">
+                <div class="col-sm-12 col-md-5">
                     <p style="width:200px;padding:10px;background-color: white;border-radius:5px 5px 0px 0px;margin:0px"><b>Nos conseils</b></p>
                     <div style="width:95%;padding:10px;background-color: white;border-radius:0px 5px 5px  5px">
-                        <p>La multiplicité des variables dans les exercices favorise l'apprentissage des méthodes et automatismes, piliers d'un apprentissage durable des mathématiques.
-                        La correction immédiate des exercices mobilise votre cerveau pour comprendre vos erreurs et leur répétition ancre vos stratégies de résolution. </p> 
+                        <p>Les exercices de Sacado Académie favorisent l'apprentissage des méthodes et des automatismes, qui sont les deux piliers d'un apprentissage durable des mathématiques.La correction immédiate des exercices améliore la mémorisation à terme. Cette rétroaction permet de comprendre sans délai, les erreurs, et la répétition des 5 exercices ancre durablement les stratégies de résolution. </p> 
                         
                         {% for data  in theme_tab %}
                             <p>
-                                {% if data.score < 40 %} Vous devez porter une attention particulière au thème <b class="sacado_color">{{ data.theme }}</b> dont les résultats restent largement inférieurs aux attentes. Il faudra effectuer tous les exercices avec beaucoup d'application et comprendre les méthodes expliquées. Dans un premier temps, n'hésitez pas à résoudre une nombre de situations plus important qu'initialement prévu.
-                                {% elif data.score < 65 %}La maitrise du thème <b class="sacado_color">{{ data.theme }}</b> est fragile. Il faut porter une attention particulière aux corrections proposées et s'appliquer 10 minutes chaque jour pour combler vos doutes.  
+                                {% if data.score < 40 %} 
+                                    Tu dois porter une attention particulière au thème <b class="sacado_color">{{ data.theme }}</b> dont les résultats restent largement inférieurs aux attentes. Il faudra effectuer tous les exercices avec beaucoup d'application et comprendre les corrections expliquées. Dans un premier temps, n'hésite pas à résoudre un nombre de situations plus important qu'initialement prévu.<br/>Avec un entraînement régulier (au moins 10 min par jour) tu vas t’améliorer, courage ! 
+                                {% elif data.score < 65 %}
+                                    La maitrise du thème <b class="sacado_color">{{ data.theme }}</b> est fragile. Il faut porter une attention particulière aux corrections proposées et s'appliquer 10 minutes chaque jour pour combler tes doutes.  
                                 {% elif data.score < 90 %}
-                                Le thème <b class="sacado_color">{{ data.theme }}</b> est globalement compris. En travaillant 10 minutes chaque jour le thème, vos résultats vont gagner en solidité.  
-                                {% else %}Le thème <b class="sacado_color">{{ data.theme }}</b> est parfaitement réussi. Nos exercices, les plus ardus, vont aiguiser votre curiosité et vous pousser vers l'élitisme.  
+                                    Le thème <b class="sacado_color">{{ data.theme }}</b> est globalement compris. En travaillant 10 minutes chaque jour ce thème, tes résultats vont gagner en solidité.  
+                                {% else %}
+                                    Le thème <b class="sacado_color">{{ data.theme }}</b> est parfaitement réussi. Nos exercices, les plus ardus, vont aiguiser ta curiosité et te pousser vers l'élitisme.  
                                 {% endif %}
                             </p> 
                         {% endfor %}
 
-
+                        {% comment %}
                         {% for data  in skill_tab %}
                             <p>
                                 {% if data.score < 40 %} Vous devez vous penchez sur la compétence <b class="sacado_color">{{ data.skill }}</b> dont l'acquisition reste largement inférieure aux attentes. Les exercices liés à cette compétence devront être travaillés avec plus de situations qu'initialiement proposées.
                                 {% elif data.score < 65 %}La maitrise la compétence <b class="sacado_color">{{ data.skill }}</b> est fragile. Il faut s'appliquer 10 minutes chaque jour pour s'assurer d'une routine de travail. Cette méthodologie vous donnera le rythe nécessaire pour l'acquisition de la compétence visée.  
                                 {% elif data.score < 90 %}
                                 La maitrise de la compétence <b class="sacado_color">{{ data.skill }}</b> reste partielle. En travaillant 10 minutes chaque jour, vous devriez gagner en assurance et acquérir cette compétence avec une réelle solidité. 
-                                {% else %}La compétence <b class="sacado_color">{{ data.skill }}</b> est parfaitement acquise. Nos exercices, les plus ardus, vont aiguiser votre curiosité et vous pousser vers l'élitisme.  
+                                {% else %}La compétence <b class="sacado_color">{{ data.skill }}</b> est parfaitement acquise. Nos exercices, les plus ardus, vont aiguiser ta curiosité et vous pousser vers l'élitisme.  
                                 {% endif %}
                             </p> 
                         {% endfor %}
+                        {% endcomment %}
 
-
-
+                            <a href="{% url 'choice_menu' 2 %}" class="btn btn-primary">Menu Adaptatif proposé à 5€/mois, je m'abonne</a>
                     </div>
                 </div>
             </div>
@@ -162,36 +176,49 @@
                                         {% else %} 
                                             <span class="btn btn-default">VRAI <i class="fa fa-check text-danger"></i> </span>  <span class="btn btn-default">FAUX <i class="fa fa-times text-success"></i> </span>
                                         {% endif %}
+                                    {% elif result.question.qtype == 2 %}
+ 
+                                            <li class="sanspuce text-success ">Réponses acceptées : {{ result.question.answer|these_accepted_solutions }}</li>
+                 
+                                    {% elif result.question.qtype == 5 %}
+                                        {% for c in result.answer %}
+                                            {% if forloop.first %}<li class="sanspuce text-success ">{{ c }}</li>{% endif %}
+                                        {% endfor %}
                                     {% else %}
                                         {% for c in result.question.choices.all %}
-                                            <li class="sanspuce">{{ c.answer|safe }}
-                                            {% if c.is_correct %}
-                                                <i class="fa fa-check text-success"></i>
-                                            {% else %}
-                                                <i class="fa fa-times text-danger"></i>
-                                            {% endif %}
-
-                                            {% if c.imagefile %}
-                                                <img src="{{ c.imagefile.url }}" height="100px">
-                                            {% endif %}
+                                            <li class="sanspuce 
+                                                {% if c.is_correct %}
+                                                    text-success 
+                                                {% else %}
+                                                    text-danger 
+                                                {% endif %}">{{ c.answer|safe }}
+                                                {% if c.imagefile %}
+                                                    <img src="{{ c.imagefile.url }}" height="100px" />
+                                                {% endif %}
                                             </li>
                                         {% endfor %}
                                     {% endif %}
                                 </td>
                                 <td>
-                                    {% for a in result.answer %}
-                                        {% if 'jpg' in a  or 'png' in a %}
-                                            <img src="https://sacado-academie.fr/ressources/{{ a }}" height="100px"> 
-                                        {% else %}
-                                            {{ a|safe }}
-                                        {% endif %}  
-
-                                        {% if not forloop.last %}<br/>{% endif %}
-                                    {% endfor %}
+                                    {% if result.question.qtype == 9 or result.question.qtype == 5 %}
+                                        {% for a in result.answer %}
+                                                {% if forloop.first %}<li class="sanspuce text-success ">{{ a|safe }}</li>{% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        {% for a in result.answer %}
+                                            {% if 'jpg' in a  or 'png' in a %}
+                                                <img src="https://sacado-academie.fr/ressources/{{ a }}" height="150px" /> 
+                                            {% elif result.question.qtype == 1 %}
+                                                {% if a == 1 %}VRAI{% else %}FAUX{% endif %}
+                                            {% else %}
+                                                {{ a|safe }}
+                                            {% endif %}  
+                                            {% if not forloop.last %}<br/>{% endif %}
+                                        {% endfor %}
+                                    {% endif %} 
                                     <hr/>
-                                    {% if result.is_correct %}<span class="text-success">Réponse juste</span>{% else %}<span class="text-danger">Réponse fausse</span>{% endif %}
+                                    {% if result.is_correct %}<span class="text-success">Réponse juste</span>{% else %}<span class="text-danger">Réponse fausse</span>{% endif %}<em> en {{ result.timer }} secondes</em>
                                 </td>
-              
                             </tr>
                         {% endfor %}
 
@@ -203,7 +230,8 @@
 
 
     <div class="row"> 
-        <div class="col-sm-12">
+        <div class="col-sm-12">                            
+            <a href="{% url 'choice_menu' 2 %}" class="btn btn-primary">Menu Adaptatif proposé à 5€/mois, je m'abonne</a>
             <a href="{% url 'index' %}" class="btn btn-sacado">Retour à l'accueil</a>
         </div>
     </div>

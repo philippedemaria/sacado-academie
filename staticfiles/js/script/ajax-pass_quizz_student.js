@@ -45,6 +45,22 @@ define(['jquery',  'bootstrap', 'ui' , 'ui_sortable' , 'uploader','config_toggle
 
 
 
+        $("#start_positionnement").prop("disabled",true) ;
+
+        $("body").on("change","#last_name", function (event) {
+
+                $("#start_positionnement").prop("disabled",false)
+
+
+            }) 
+
+
+
+
+
+
+
+
  
     });
 });

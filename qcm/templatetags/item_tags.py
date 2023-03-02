@@ -216,6 +216,12 @@ def question_only_input(arg):
 
 
 @register.filter
+def these_accepted_solutions(arg):
+    '''HTML entity filltheblanks_safe'''
+    return arg.replace('____',' ; ')
+ 
+
+@register.filter
 def shuffle(arg):
     my_list = list(arg)
     random.shuffle(my_list)

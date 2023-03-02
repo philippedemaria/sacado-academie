@@ -1,6 +1,6 @@
 define(['jquery', 'bootstrap', 'ui', 'ui_sortable'], function ($) {
     $(document).ready(function () { 
-        console.log("chargement JS ajax-check_regroup.js  OKK");
+        console.log("chargement JS ajax-check_memory.js  OKK");
 
 
 
