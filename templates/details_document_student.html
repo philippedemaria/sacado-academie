@@ -156,7 +156,27 @@
                         <img src="{{ rc.exercise.supportfile.imagefile.url }}"  class="image_parcours" {% if not rc.is_publish %} style="opacity:0.8" {% endif %}  >
                     {% else %}  
                         {% if parcours_available.is_ok  %}
+                            {% comment %}
+                            {% if not rc.is_display   %} 
+                                <div class="alert alert-danger" style="position: absolute; z-index:9; top:100px;font-size:12px;border-radius: 0px 4px 4px  0px;"> 
+                                      <i class="fa fa-lock"></i> Vous devez obtenir 80% de réussite aux exercices à la section précédente  
+                                </div>
+                     
+                                <img src="{{ rc.exercise.supportfile.imagefile.url }}"  class="image_parcours"   style="opacity:0.8"    >
+                            {% endcomment %} 
+
+
+                            {% if rc.is_in_average %}
+                                <div class="alert alert-white" style="background: {{ parcours.color }} ; cursor:help;
+                                                                        color:white;position: absolute; z-index:9; opacity:0.8 ;
+                                                                        top:100px; left:0px; width:18%;font-size:20px;border-radius: 0px 4px 4px  0px;">
+                                    <i class="bi bi-award" title="Incontournable"></i>
+                                </div>
+                            {% endif %}
+
                             {% if parcours.is_next and not available.is_ok %} 
+
+
                                 <div class="alert alert-danger" style="position: absolute; z-index:9; top:100px;font-size:12px;border-radius: 0px 4px 4px  0px;"> 
                                       <i class="fa fa-lock"></i>  Vous devez passer à un autre exercice  
                                 </div>
@@ -210,14 +230,11 @@
                     </div>
                 {% endif %}    
             {% endif %}   
-            {% comment %}
+ 
             {% if not rc.exercise.supportfile.id == 6520 %}            
                 <div class="card-text" style="background-color:{{ parcours.color }};color:{{ parcours.color|contrast_color }}">
                     <i class="fa fa-fw fa-clock-o"></i> {{ rc.duration }} min.
                     <i class="fa fa-fw fa-save"></i> {{ rc.situation}}
-                    {% if rc.is_in_average %}
-                        <i class="bi bi-award"></i>
-                    {% endif %}
                     {% if not rc.parcours.is_evaluation %}
                     {% if rc.relationships_courses.all|length > 0 %}  
                         <i class="fa fa-fw fa-desktop"></i>
@@ -247,7 +264,7 @@
                     {% endif  %}
                 </div>
             {% endif  %}
-            {% endcomment %}
+      
         </div>
     </div>
 <!---------------------------------------------------------->
