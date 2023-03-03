@@ -65,6 +65,7 @@
 
         <!-- Fin de div de résultat -->
         <!-- Si l'exercice est bloqué, on pose une div par-dessus -->
+        {% comment %}
         {% if  data_under_score.under_score %} <!-- under_score = l'exercice est sous contrainte car l'élève n'a pas obtenu les résultats suffisants-->
             <div class="under_constraint"> <!-- div de fond pour opacité -->
             </div>    
@@ -95,7 +96,7 @@
                 {% endif %}  
             </div>
         {% endif %} 
-
+        {% endcomment %}
         <div class="card-body student" >
             <span style="font-size: 40px; padding-left:3px;float:left; padding-top: 10px; {% if not data.score %} color: {{ rc.parcours.color}} ;  {% endif %} ">
                 {{ nb_exo_only|index:forloop.counter0 }}.</span> 
@@ -148,20 +149,14 @@
                 </a>
                 {% endif  %}
                 {% if rc.exercise.supportfile.is_ggbfile %}  
-                    {% if is_blck and rdoc.is_display  %}
+                    {% if is_blck and rc.is_display  %}
                         <div class="alert alert-danger" style="position: absolute; z-index:9; top:100px;font-size:12px;border-radius: 0px 4px 4px  0px;"> 
                               <i class="fa fa-lock"></i> <span class="hidden_lock"> {{ rc.lock|date:"d-m-Y à H:i" }}</span>
                         </div>
                         <img src="{{ rc.exercise.supportfile.imagefile.url }}"  class="image_parcours" {% if not rc.is_publish %} style="opacity:0.8" {% endif %}  >
                     {% else %}  
                         {% if parcours_available.is_ok  %}
-                            {% if not rdoc.is_display   %} 
-                                <div class="alert alert-danger" style="position: absolute; z-index:9; top:100px;font-size:12px;border-radius: 0px 4px 4px  0px;"> 
-                                      <i class="fa fa-lock"></i> Vous devez obtenir 80% de réussite aux exercices à la section précédente  
-                                </div>
-                     
-                                <img src="{{ rc.exercise.supportfile.imagefile.url }}"  class="image_parcours"   style="opacity:0.8"    >
-                            {% elif parcours.is_next and not available.is_ok %} 
+                            {% if parcours.is_next and not available.is_ok %} 
                                 <div class="alert alert-danger" style="position: absolute; z-index:9; top:100px;font-size:12px;border-radius: 0px 4px 4px  0px;"> 
                                       <i class="fa fa-lock"></i>  Vous devez passer à un autre exercice  
                                 </div>

@@ -52,7 +52,7 @@
 
 {% block body %}
    
-<section class="content_list"> 
+<section class="content_list">  
     {% if parcours.stop   %}
         {% if parcours.stop < today %}
         <div class="row">
@@ -78,9 +78,9 @@
     {% if parcours.is_sequence %}
             <div class="row">
                 <div class="col-sm-12 col-md-12">
-                    {% for rdoc in relationships_customexercises %}
-                        {% with rdoc.doc as rc %}
-                            {% if rc.type_id == 0 %}
+                    {% for rc in relationships_customexercises %} 
+
+                            {% if rc.type_id == 0 %} 
                                 {%  if rc.exercise.supportfile.is_title %}     
                                     <h2 class="listing_div thin" style="padding-left: 30px; width:100%; clear:both"> 
                                         {% if rc.is_header_of_section  %}
@@ -112,9 +112,8 @@
                             {% else %}    
                                 {% include 'details_document_student.html' %}
                             {% endif %} 
-                        {% endwith %}
+          
                     {% endfor %}
-
                 </div>
             </div>
     {% else %}

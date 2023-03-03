@@ -1247,8 +1247,8 @@ def commit_adhesion(request) :
  
         ############################################################
     else:
-        messages.error(request,formset.errors)
-        messages.error(request,"Confirmation du mot de passe erronée. Merci de revenir à la page précédente.")
+        for error in formset.errors :
+            print(request,error)
 
 
 

@@ -4071,8 +4071,6 @@ def show_parcours_student(request, id):
     nb_courses = parcours.course.filter(Q(is_publish=1)|Q(publish_start__lte=today,publish_end__gte=today)).count()
     nb_quizzes = parcours.quizz.filter(Q(is_publish=1)|Q(start__lte=today,stop__gte=today)).count()
 
-
-
     context = { 'stage' : stage , 'relationships_customexercises': relationships_customexercises, 'folder': folder, 'nb_courses' : nb_courses , 
                 'parcours': parcours, 'student': student, 'nb_exercises': nb_exercises,'nb_exo_only': nb_exo_only,  'nb_quizzes' : nb_quizzes ,
                 'today': today ,    }
