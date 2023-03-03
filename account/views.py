@@ -1337,7 +1337,7 @@ def response_from_mail(request,user_id):
         if user.email :
  
             sending_mail("ERREUR SUR UN EXERCICE SACADO",  msg , settings.DEFAULT_FROM_EMAIL ,  [user.email] )
-            sending_mail("ERREUR SUR UN EXERCICE SACADO",  msg , settings.DEFAULT_FROM_EMAIL , ["philippe.demaria-lgf@erlm.tn", "brunoserres33@gmail.com", "nicolas.villemain@claudel.org"])
+            sending_mail("ERREUR SUR UN EXERCICE SACADO",  msg , settings.DEFAULT_FROM_EMAIL , ["philippe.demaria83@gmail.com", "brunoserres33@gmail.com", "nicolas.villemain@claudel.org"])
  
         else :
             if form.is_valid():

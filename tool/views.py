@@ -1565,6 +1565,16 @@ def start_positionnement_student(request,id):
     except :
         pass
 
+    try :
+        send_mail("SACADO ACADEMIE : Test de positionnement ",
+                  "Niveau "+positionnement.level.name+", matière : "+positionnement.subject.name,
+                  settings.DEFAULT_FROM_EMAIL,
+                  ["philippe.demaria83@gmail.com", "brunoserres33@gmail.com","sandyreb@hotmail.fr"])
+
+
+
+    except : pass
+
     request.session["answerpositionnement"] = []
     context = {  "positionnement" : positionnement  }
 
