@@ -1995,7 +1995,8 @@ def my_results(request):
     email_to_send = request.session.get("email",None)
     pdf_files = pdf_to_create(request,theme_tab)
     if email_to_send :
-        pdf_to_send( pdf_to_create(request,theme_tab) , [email_to_send])
+        try:pdf_to_send( pdf_to_create(request,theme_tab) , [email_to_send])
+        except : pass
 
 
 
