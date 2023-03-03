@@ -29,6 +29,7 @@ import time
 ############### bibliothèques pour les impressions pdf  #########################
 import os
 from django.utils import formats, timezone
+import io
 from io import BytesIO, StringIO
 from django.http import  HttpResponse
 from reportlab.pdfgen import canvas
@@ -1823,10 +1824,8 @@ L'équipe Sacado Académie""".format(pluriel,pluriel,pluriel,eleves),'plain'))
 def pdf_to_create(request,theme_tab):
 
     elements = []
-
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="resultats_'+str(uuid.uuid4())[:12]+'.pdf"'
-    doc = SimpleDocTemplate(response,   pagesize=A4, 
+    buffer = io.BytesIO()
+    doc = SimpleDocTemplate(buffer,   pagesize=A4, 
                                         topMargin=0.3*inch,
                                         leftMargin=0.3*inch,
                                         rightMargin=0.3*inch,
@@ -1927,9 +1926,10 @@ def pdf_to_create(request,theme_tab):
                ('BOX', (0,0), (-1,-1), 0.25, colors.white),
                ]))
     elements.append(knowledge_tab_tab)
-
-    return response
-
+    doc.build(elements)
+    buffer.seek(0)
+    pdf: bytes = buffer.getvalue()
+    return FileResponse(pdf, filename='D:/uwamp/www/sacado-acad/resultats_'+str(uuid.uuid4())[:12]+'.pdf')
 
 
 def my_results(request):
@@ -2001,12 +2001,13 @@ def my_results(request):
         theme_tab.append({ "theme" : t["theme"] , "score" : this_score , 'color' : color })
 
     email_to_send = request.session.get("email",None)
-    pdf_files = pdf_to_create(request,theme_tab)
+    pdf_files     = pdf_to_create(request,theme_tab)
+
+    print(pdf_files)
+    
     if email_to_send :
-        try:pdf_to_send( pdf_to_create(request,theme_tab) , [email_to_send])
+        try : pdf_to_send( [pdf_to_create(request,theme_tab),] , [email_to_send])
         except : pass
-
-
 
     context = { 'results' : results , 'theme_tab' : theme_tab , 'skill_tab' : skill_tab  , 'labels':labels , 'dataset' : dataset }
     return render(request, 'tool/positionnement_results.html', context)
