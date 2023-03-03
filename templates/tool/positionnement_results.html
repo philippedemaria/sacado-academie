@@ -69,7 +69,7 @@ Mes résultats
                                 {% endfor %}
                                 <input type="hidden" id="labels" value="{{ labels }}"/>
                                 <input type="hidden" id="dataset" value="{{ dataset }}"/>
-                                <label>Nous estimons le seuil de réussite des connaissances à 80%  pour maîtriser les notions d'un thèmes. Ce seuil est matérialisé par le polygone vert.</label>
+                                <label>Nous estimons le seuil de réussite des connaissances à 80%  pour maîtriser les notions d'un thème. Ce seuil est matérialisé par le polygone vert.</label>
 
                                 <a href="{% url 'choice_menu' 2 %}" class="btn btn-primary">Menu Adaptatif proposé à 5€/mois, je m'abonne</a>
                             </div>
@@ -151,8 +151,7 @@ Mes résultats
                     <tbody>
                         {% for result in  results  %} 
                             <tr>
-                                <td>#{{ result.question.id}}.
-                                    {{ result.question.title|safe}}
+                                <td>{{ result.question.title|safe}}
                                     {% if result.question.audio %}
                                         <div class="col-sm-12 col-md-12" align="center"> 
                                             <audio controls>

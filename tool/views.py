@@ -1744,6 +1744,186 @@ def store_positionnement_solution( request ,positionnement_id,student,q_id, solu
 
 
 
+def pdf_to_send(fichiers,destinataires):
+    """envoie les rapports à une seule famille.
+    Fichiers contient une liste de noms de fichiers pdf à envoyer
+    destinataires : une liste de chaines contenant les destinataires"""
+    #------------
+    if destinataires==[] :
+        return "aucun destinataire"
+    
+    msg=MIMEMultipart()
+    msg['From'] = settings.DEFAULT_FROM_EMAIL
+    msg['To']   = destinataires[0]
+    for i in range(1,len(destinataires)):
+        msg['to']+=","+destinataires[i]
+        
+    liste_eleves=[]  #liste des eleves dont on joint les rapports
+
+    for fichier in fichiers :
+        try :
+            pdf=open(fichier,'rb')
+            fpdf = MIMEBase('application','octet-stream')
+            fpdf.set_payload(pdf.read())
+            pdf.close()
+            encoders.encode_base64(fpdf)
+            fpdf.add_header('content-disposition', 'attachment; filename ='+ fichier)
+            msg.attach(fpdf)
+            liste_eleves.append("eleve"+fichier)
+        except :
+            print("""fonction envoie_pdf de setup : 
+le fichier {} qui doit être envoyé à {} est introuvable""".format(fichier,msg['To']))
+    npdf=len(liste_eleves)  #nombre de fichiers à envoyer
+    if npdf==0 :
+        print("""fonction envoie_pdf de setup : 
+aucun fichier pdf à envoyer""")
+        return "aucun fichier pdf à envoyer"
+
+    # preparation du joli texte du corps du message
+    eleves=liste_eleves[0]
+    if npdf==1 :
+        pluriel=""
+    else :
+        pluriel="s"
+        for i in range(1,npdf-1) :
+            eleves+=", "+liste_eleves[i]
+        eleves+=" et "+liste_eleves[-1]
+    #-------------------------------
+    msg['Subject'] = "Résultat{} de test de positionnemnet de ".format(pluriel)+eleves
+    
+    msg.attach(MIMEText("""Bonjour,
+veuillez trouver en pièce jointe le{} résultat{} de test de positionnemnet de {}.
+
+Très cordialement,
+
+L'équipe Sacado Académie""".format(pluriel,pluriel,pluriel,eleves),'plain'))
+
+    server = smtplib.SMTP(settings.EMAIL_HOST,settings.EMAIL_PORT)
+    server.set_debuglevel(False) # show communication with the server
+    try:
+       server.ehlo()
+       if server.has_extn('STARTTLS'):
+          server.starttls()
+          server.ehlo() 
+       server.login(settings.DEFAULT_FROM_EMAIL, settings.EMAIL_HOST_PASSWORD)
+       server.sendmail(settings.DEFAULT_FROM_EMAIL, destinataires,msg.as_string() )
+    finally:
+        server.quit()
+    return "mails envoyés avec succès"
+
+
+def pdf_to_create(request,theme_tab):
+
+    elements = []
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="resultats_'+str(uuid.uuid4())[:12]+'.pdf"'
+    doc = SimpleDocTemplate(response,   pagesize=A4, 
+                                        topMargin=0.3*inch,
+                                        leftMargin=0.3*inch,
+                                        rightMargin=0.3*inch,
+                                        bottomMargin=0.3*inch     )
+    sample_style_sheet = getSampleStyleSheet()
+    sacado = ParagraphStyle('sacado', 
+                            fontSize=20, 
+                            leading=26,
+                            borderPadding = 0,
+                            alignment= TA_CENTER,
+                            )
+    title = ParagraphStyle('title', 
+                            fontSize=20, 
+                            textColor=colors.HexColor("#00819f"),
+                            )
+    subtitle = ParagraphStyle('title', 
+                            fontSize=16, 
+                            textColor=colors.HexColor("#00819f"),
+                            )
+    normal = ParagraphStyle(name='Normal',fontSize=12,)  
+    mini   = ParagraphStyle(name='Normal',fontSize=10,)  
+    style_cell = TableStyle(
+            [
+                ('SPAN', (0, 1), (1, 1)),
+                ('TEXTCOLOR', (0, 1), (-1, -1),  colors.Color(0,0.7,0.7))
+            ]
+        )
+
+    #logo = Image('D:/uwamp/www/sacado/static/img/sacadoA1.png')
+    logo = Image('https://sacado-academie.fr/static/img/sacadoA1.png')
+    logo_tab = [[logo, "SACADO \nBilan des acquisitions" ]]
+    logo_tab_tab = Table(logo_tab, hAlign='LEFT', colWidths=[0.7*inch,5*inch])
+    logo_tab_tab.setStyle(TableStyle([ ('TEXTCOLOR', (0,0), (-1,0), colors.Color(0,0.5,0.62))]))
+    elements.append(logo_tab_tab)
+    elements.append(Spacer(0, 0.1*inch))
+
+    resultats = Paragraph("Vos résultats synthétisés",subtitle)
+    elements.append(resultats)
+    elements.append(Spacer(0, 0.1*inch))
+    themes = Paragraph("Par thèmes",normal)
+    elements.append(themes)
+    elements.append(Spacer(0, 0.1*inch))
+
+
+    for data  in theme_tab :
+        themes = Paragraph( data["theme"] + " : " + str(data["score"]) +"%",normal)
+        elements.append(themes)
+        elements.append(Spacer(0, 0.1*inch))
+
+        if data["score"] < 40 : 
+            texte = "Tu dois porter une attention particulière au thème "+ data['theme'] +" dont les résultats restent largement inférieurs aux attentes. Il faudra effectuer tous les exercices avec beaucoup d'application et comprendre les corrections expliquées. Dans un premier temps, n'hésite pas à résoudre un nombre de situations plus important qu'initialement prévu. Avec un entraînement régulier (au moins 10 min par jour) tu vas t’améliorer, courage !" 
+        elif data["score"] < 65 :
+            texte = "La maitrise du thème "+ data['theme'] +" est fragile. Il faut porter une attention particulière aux corrections proposées et s'appliquer 10 minutes chaque jour pour combler tes doutes."  
+        elif data["score"] < 90 :
+            texte = "Le thème "+ data['theme'] +" est globalement compris. En travaillant 10 minutes chaque jour ce thème, tes résultats vont gagner en solidité."  
+        else :
+            texte = "Le thème "+ data['theme'] +" est parfaitement réussi. Nos exercices, les plus ardus, vont aiguiser ta curiosité et te pousser vers l'élitisme."
+
+        conseils = Paragraph("Notre conseil",subtitle)
+        elements.append(conseils)
+        elements.append(Spacer(0, 0.1*inch))
+
+        texte = Paragraph(texte,normal)
+        elements.append(texte)
+        elements.append(Spacer(0, 0.1*inch))
+
+
+
+    advises = Paragraph( "Nous estimons le seuil de réussite des connaissances à 80% pour maîtriser les notions d'un thème.",mini)
+    elements.append(advises)
+    elements.append(Spacer(0, 0.1*inch))
+ 
+    resultats = Paragraph("Vos résultats en détails",subtitle)
+    elements.append(resultats)
+    elements.append(Spacer(0, 0.1*inch))
+
+    answerpositionnements = request.session.get("answerpositionnement")
+
+
+    knowledge_tab = [['Question','Choix et solution','Réponse proposée']]
+
+    for result in answerpositionnements :
+        answer = ""
+        question = Question.objects.get(pk=int(result[2]) )
+        title    = question.title
+        for a in result[3] :
+            answer += str(a)+" ; " 
+        answer += " en "+str(result[5])+" secondes"
+
+        choices = question.choices.all()
+        knowledge_tab.append(  ( title , choices ,  answer )  )
+
+
+
+    knowledge_tab_tab = Table(knowledge_tab, hAlign='LEFT', colWidths=[4*inch,1.6*inch,1.7*inch])
+    knowledge_tab_tab.setStyle(TableStyle([
+               ('INNERGRID', (0,0), (-1,-1), 0.25, colors.white),
+               ('BOX', (0,0), (-1,-1), 0.25, colors.white),
+               ]))
+    elements.append(knowledge_tab_tab)
+
+    return response
+
+
+
 def my_results(request):
 
     answerpositionnements = request.session.get("answerpositionnement")
@@ -1801,19 +1981,22 @@ def my_results(request):
         elif this_score > 65 : color = "green"
         elif this_score > 40 : color = "orange"
         else : color = "red"
+        ###### pour afficher le radar ######
         if ni == len(subtheme_tab):
             sep =""
         else :
             sep = "____"
         labels += str(t["theme"])+sep
         dataset += str(this_score)+sep
-        ni+=1        
+        ni+=1     
+        ####################################   
         theme_tab.append({ "theme" : t["theme"] , "score" : this_score , 'color' : color })
 
     email_to_send = request.session.get("email",None)
+    pdf_files = pdf_to_create(request,theme_tab)
     if email_to_send :
-        student = request.session.get("student",None)
-        #send_mail('SACADO ACADEMIE : Résultat du test de positionnement de '+student, result_to_send ,settings.DEFAULT_FROM_EMAIL,[email_to_send])
+        pdf_to_send( pdf_to_create(request,theme_tab) , [email_to_send])
+
 
 
     context = { 'results' : results , 'theme_tab' : theme_tab , 'skill_tab' : skill_tab  , 'labels':labels , 'dataset' : dataset }
