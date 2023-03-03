@@ -1565,16 +1565,6 @@ def start_positionnement_student(request,id):
     except :
         pass
 
-    try :
-        send_mail("SACADO ACADEMIE : Test de positionnement ",
-                  "Niveau "+positionnement.level.name+", matière : "+positionnement.subject.name,
-                  settings.DEFAULT_FROM_EMAIL,
-                  ["philippe.demaria83@gmail.com", "brunoserres33@gmail.com","sandyreb@hotmail.fr"])
-
-
-
-    except : pass
-
     request.session["answerpositionnement"] = []
     context = {  "positionnement" : positionnement  }
 
@@ -1587,8 +1577,8 @@ def goto_positionnement_student(request,id):
     """ participation à un quizz sur poste"""
     student = request.session.get("student")
 
-    first_name = request.POST.get("first_name")
-    last_name  = request.POST.get("last_name")
+    first_name = request.POST.get("first_name",None)
+    last_name  = request.POST.get("last_name",None)
 
     if first_name and last_name :
         request.session["student"] = first_name.capitalize()  +" "+last_name.capitalize() + str(uuid.uuid4())[:8]
@@ -1645,6 +1635,14 @@ def goto_positionnement_student(request,id):
         today = time_zone_user(positionnement.teacher.user)
 
         is_correct = store_positionnement_solution(request ,positionnement_id,student,q_id, solutions,timer)
+
+    else :
+        try :
+            send_mail("SACADO ACADEMIE : Test de positionnement ",
+                      first_name+" "+ last_name +" - Niveau : "+positionnement.level.name+", matière : "+positionnement.subject.name,
+                      settings.DEFAULT_FROM_EMAIL,
+                      ["philippe.demaria83@gmail.com", "brunoserres33@gmail.com","sandyreb@hotmail.fr"])
+        except : pass
 
     if quizz_nav == len(question_ids) :
         end_of_quizz = True
