@@ -1590,6 +1590,8 @@ def goto_positionnement_student(request,id):
 
     if first_name and last_name :
         request.session["student"] = first_name.capitalize()  +" "+last_name.capitalize() + str(uuid.uuid4())[:8]
+        request.session["student_full_name"] = first_name.capitalize()  +" "+last_name.capitalize()
+        request.session["email_to_send"] = request.POST.get("email")
 
     if not  request.session["student"] : 
         return redirect('index')
@@ -1995,6 +1997,8 @@ def my_results(request):
         theme_tab.append({ "theme" : t["theme"] , "score" : this_score , 'color' : color })
 
     email_to_send = request.session.get("email",None)
+
+    print(email_to_send)
 
     if email_to_send :
         pdf_to_send( pdf_to_create(request,theme_tab,student) , [email_to_send])

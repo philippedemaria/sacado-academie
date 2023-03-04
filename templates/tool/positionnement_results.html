@@ -13,13 +13,16 @@
 
 
 {% block page_title %}
-Mes résultats
- 
+Mes résultats  
+    {% if request.session.email %}
+    <a href="#" onclick="window.print()" class="btn btn-primary"><i class="bi bi-printer"></i></a>
+    {% endif %}
 {% endblock %}
 
 
 {% block page_menu_right %} 
 
+    {{ request.session.student_full_name }}
  
 {% endblock %}
 

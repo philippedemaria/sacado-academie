@@ -43,10 +43,9 @@
 
 
 {% block page_menu_right %} 
- 
-    {% for question in questions %}
-        <button id="question_{{ question.id }}" class="btn btn-default thisquestion"> Q{{ forloop.counter }} </button> 
-    {% endfor %}
+
+     {{ request.session.student_full_name }}
+
  
 {% endblock %}
 
