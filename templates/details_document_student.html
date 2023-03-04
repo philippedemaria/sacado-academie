@@ -232,7 +232,7 @@
             {% endif %}   
  
             {% if not rc.exercise.supportfile.id == 6520 %}            
-                <div class="card-text" style="background-color:{{ parcours.color }};color:{{ parcours.color|contrast_color }}">
+                <div class="card-text" style="background-color:{{ parcours.color }};color:{{ parcours.color|contrast_color }};opacity:0.8">
                     <i class="fa fa-fw fa-clock-o"></i> {{ rc.duration }} min.
                     <i class="fa fa-fw fa-save"></i> {{ rc.situation}}
                     {% if not rc.parcours.is_evaluation %}
