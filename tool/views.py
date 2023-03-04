@@ -1801,10 +1801,14 @@ Très cordialement,
 
 L'équipe Sacado Académie""".format(student),'plain','utf-8')
 
-    msg=MIMEMultipart(_supbpart=(texte,fpdf))
+    msg=MIMEMultipart( 'alternative' )
     msg['From'] = settings.DEFAULT_FROM_EMAIL
     msg['to']= ",". join(destinataires)
-    msg['Subject'] = "Résultats du test de positionnemnet de" +student
+    msg['Subject'] = "Résultats du test de positionnemnet de " +student
+
+    msg.attach(texte)
+    msg.attach(fpdf)
+
     server = smtplib.SMTP(settings.EMAIL_HOST,settings.EMAIL_PORT)
     server.set_debuglevel(False) # show communication with the server
     server.ehlo()
@@ -1996,12 +2000,10 @@ def my_results(request):
         ####################################   
         theme_tab.append({ "theme" : t["theme"] , "score" : this_score , 'color' : color })
 
-    email_to_send = request.session.get("email",None)
-
-    print(email_to_send)
+    email_to_send =  request.session.get("email_to_send",None)  
 
     if email_to_send :
-        pdf_to_send( pdf_to_create(request,theme_tab,student) , [email_to_send])
+        pdf_to_send( pdf_to_create(request,theme_tab) , [email_to_send] , student)
 
     context = { 'results' : results , 'theme_tab' : theme_tab , 'skill_tab' : skill_tab  , 'labels':labels , 'dataset' : dataset , 'brut' : brut , 'total' : loop }
     return render(request, 'tool/positionnement_results.html', context)

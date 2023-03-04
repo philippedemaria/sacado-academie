@@ -38,13 +38,13 @@
 
 
 {% block page_title %}
-    {{ positionnement.title }} <small> {{ positionnement.level.name }}</small>
+    {{ positionnement.title }} <small> {{ positionnement.level.name }} 
 {% endblock %}
 
 
 {% block page_menu_right %} 
 
-     {{ request.session.student_full_name }}
+   <img width="25px" src="{% static 'img/angle-right.png' %}"/>  </small>  <label class="sacado_text_color">  {{ request.session.student_full_name }}</label>
 
  
 {% endblock %}

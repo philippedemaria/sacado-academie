@@ -39,7 +39,7 @@ background-image:-webkit-gradient(linear, left bottom, right top, from(#6d327c),
 }
 
 .resize_image_td img{
-    height: 100px!important;  
+    max-height: 100px!important;  
     width: auto!important;  
 
 }
