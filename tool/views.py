@@ -1984,7 +1984,7 @@ def my_results(request):
 
         this_score = int(t["score"]//t["total"]) 
         if this_score > 90 : color = "darkgreen"
-        elif this_score > 65 : color = "green"
+        elif this_score > 65 : color = "#62D85A"
         elif this_score > 40 : color = "orange"
         else : color = "red"
         ###### pour afficher le radar ######
