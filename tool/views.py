@@ -1801,9 +1801,7 @@ L'équipe Sacado Académie""".format(student),'plain','utf-8')
 
     msg=MIMEMultipart(_supbpart=(texte,fpdf))
     msg['From'] = settings.DEFAULT_FROM_EMAIL
-    msg['To']   = destinataires[0]
-    for i in range(1,len(destinataires)):
-     msg['to']+=","+destinataires[i]
+    msg['to']= ",". join(destinataires)
     msg['Subject'] = "Résultats du test de positionnemnet de" +student
     server = smtplib.SMTP(settings.EMAIL_HOST,settings.EMAIL_PORT)
     server.set_debuglevel(False) # show communication with the server
