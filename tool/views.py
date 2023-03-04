@@ -2002,8 +2002,8 @@ def my_results(request):
 
     email_to_send =  request.session.get("email_to_send",None)  
 
-    if email_to_send :
-        pdf_to_send( pdf_to_create(request,theme_tab) , [email_to_send] , student)
+    # if email_to_send :
+    #     pdf_to_send( pdf_to_create(request,theme_tab) , [email_to_send] , student)
 
     context = { 'results' : results , 'theme_tab' : theme_tab , 'skill_tab' : skill_tab  , 'labels':labels , 'dataset' : dataset , 'brut' : brut , 'total' : loop }
     return render(request, 'tool/positionnement_results.html', context)
