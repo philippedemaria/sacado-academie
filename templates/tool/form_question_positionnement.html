@@ -87,19 +87,9 @@
                     {% block type_of_question %} 
 
                             <div class="row" >
-                                <div class="col-sm-8 col-md-8" > <label>Enoncé</label><br/> 
+                                <div class="col-sm-10 col-md-10" > <label>Enoncé</label><br/> 
                                     {{ form.title|add_class:"quizz_box quizz_font40" |attr:"placeholder:Ecrire votre question ici" |attr:"rows:3"|attr:"required"  }}
                                 </div>
-
-                                <div class="col-sm-2 col-md-2" > 
- 
-                                    <div align="center">
-                                        <label>ex-image</label><br/>
-                                        {{ form.imagefile|add_class:"btn btn-default" }}
-                                    </div>
-
-                                </div>
-
 
                                 <div class="col-sm-2 col-md-2" > 
  
@@ -116,7 +106,6 @@
                             </div>
 
  
-                            <div class="row no_visu_on_load">
      
                                 <div class="col-sm-12 col-md-1" align="center" >
                                     <div class="quizz_assets" style="height:110px">
@@ -164,7 +153,7 @@
                                         {{ form.audio|add_class:"btn btn-default" }}
                                     </div>
                                 </div> 
-                            </div>
+                 
  
 
 
