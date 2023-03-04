@@ -1677,7 +1677,7 @@ def store_positionnement_solution( request ,positionnement_id,student,q_id, solu
     for ans in solutions : # est une liste d'id des réponses choisies par les réponses proposées
 
         if question.qtype == 1 :
-            sl = int(ans)-1
+            sl = int(ans)
             if sl == int(question.is_correct) :
                 is_correct = 1
                 score      = question.point
