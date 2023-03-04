@@ -35,8 +35,8 @@ Mes résultats
         <div class="col-sm-12">
             
             <div class="row"> 
-                <div class="col-sm-12 col-md-7">
-                    <p style="width:250px;padding:10px;background-color: white;border-radius:5px 5px 0px 0px;margin:0px"><b>Vos résultats synthétisés</b></p>
+                <div class="col-sm-12 col-md-6">
+                    <p style="width:250px;padding:10px;background-color: white;border-radius:5px 5px 0px 0px;margin:0px"><b>Tes résultats synthétisés</b></p>
                     <div style="width:95%;padding:10px;background-color: white;border-radius:0px 5px 5px  5px">
                         <div class="row"> 
                             <div class="col-sm-12 col-md-12">
@@ -57,7 +57,7 @@ Mes résultats
                             </div>
                         </div>
                         <div class="row"> 
-                            <div class="col-sm-12 col-md-4">
+                            <div class="col-sm-12 col-md-12">
                                 Par thème
                                 {% for data  in theme_tab %}
                                     <li class="sanspuce">
@@ -86,18 +86,24 @@ Mes résultats
                                 {% endfor %}
                             </div>
                             {% endcomment %}
-                            <div class="col-sm-12 col-md-8">
-                                <canvas id="chart-line"></canvas>
-                            </div>
                         </div>
                     </div>
                 </div>
+                <div class="col-sm-12 col-md-6">
+                    <p style="width:200px;padding:10px;background-color: white;border-radius:5px 5px 0px 0px;margin:0px"><b>Ton score <span class="sacado_text_color">{{ brut }}/{{ total }}</span></b></p>
+                    <div style="width:95%;padding:10px;background-color: white;border-radius:0px 5px 5px  5px">
+                        <canvas id="chart-line"></canvas>
+                    </div>
 
-                <div class="col-sm-12 col-md-5">
+
+
+                </div>
+            </div>
+            <div class="row"> 
+                <div class="col-sm-12 col-md-12">
                     <p style="width:200px;padding:10px;background-color: white;border-radius:5px 5px 0px 0px;margin:0px"><b>Nos conseils</b></p>
                     <div style="width:95%;padding:10px;background-color: white;border-radius:0px 5px 5px  5px">
                         <p>Les exercices de Sacado Académie favorisent l'apprentissage des méthodes et des automatismes, qui sont les deux piliers d'un apprentissage durable des mathématiques.La correction immédiate des exercices améliore la mémorisation à terme. Cette rétroaction permet de comprendre sans délai, les erreurs, et la répétition des 5 exercices ancre durablement les stratégies de résolution. </p> 
-                        
                         {% for data  in theme_tab %}
                             <p>
                                 {% if data.score < 40 %} 
@@ -137,7 +143,7 @@ Mes résultats
             <div style="width:95%;padding:10px;background-color: white;border-radius:5px">
                 <div class="row"> 
                     <div class="col-sm-12 col-md-12">
-                        <p><b>Vos résultats en détails.</b></p>
+                        <p><b>Tes résultats en détails.</b></p>
                     </div>
                 </div>
                 <table class="table">

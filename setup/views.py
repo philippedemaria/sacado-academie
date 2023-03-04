@@ -18,8 +18,9 @@ from django.core.mail import send_mail, EmailMessage
 
 import smtplib
 from email.mime.multipart import MIMEMultipart
+from email.mime.application import MIMEApplication
 from email.mime.text import MIMEText
-from email.mime.base import MIMEBase
+#from email.mime.base import MIMEBase
 from email import encoders
 
 from django.db.models import Count, Q

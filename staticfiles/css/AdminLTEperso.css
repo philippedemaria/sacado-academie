@@ -4294,16 +4294,15 @@ table.table-bordered.dataTable {
 }
 
 
-
-
-
-
-
-
 .card_passation{
     margin: 0px ;
     padding: 20px 50px ;
     width:100%;
+}
+
+
+.card_passation *{
+    font-family:'MJXc-TeX-main-R', 'MJXc-TeX-main-Rw' ;
 }
 /********************************************* bleu :  #005e74 ************************************/
 /********************************************* violet hover :  #5d4391 ************************************/

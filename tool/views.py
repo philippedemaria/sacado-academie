@@ -17,6 +17,13 @@ from sacado.settings import MEDIA_ROOT
 from qcm.views import  get_teacher_id_by_subject_id
 from django.contrib.auth.decorators import  permission_required,user_passes_test, login_required
 
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.application import MIMEApplication
+from email.mime.text import MIMEText
+#from email.mime.base import MIMEBase
+from email import encoders
+
 from django.contrib.auth.hashers import make_password
 from django.views.decorators.csrf import csrf_exempt
 from django.forms import inlineformset_factory
@@ -1753,7 +1760,7 @@ def store_positionnement_solution( request ,positionnement_id,student,q_id, solu
 
 
 
-def pdf_to_send(fichiers,destinataires):
+def pdf_to_send(fichiers,destinataires,student):
     """envoie les rapports à une seule famille.
     Fichiers contient une liste de noms de fichiers pdf à envoyer
     destinataires : une liste de chaines contenant les destinataires"""
@@ -1768,54 +1775,45 @@ def pdf_to_send(fichiers,destinataires):
         msg['to']+=","+destinataires[i]
         
     liste_eleves=[]  #liste des eleves dont on joint les rapports
+    if type(fichiers) == list():
+        for fichier in fichiers :
+            try :
+                pdf=open(fichier,'rb')
+                fpdf = MIMEBase('application','octet-stream')
+                fpdf.set_payload(pdf.read())
+                pdf.close()
+                encoders.encode_base64(fpdf)
+                fpdf.add_header('content-disposition', 'attachment; filename ='+ fichier)
+                msg.attach(fpdf)
+            except :
+                print("""fonction envoie_pdf de setup : le fichier {} qui doit être envoyé à {} est introuvable""".format(fichier,msg['To']))
+    elif type(fichiers) == bytes:
+        fpdf = MIMEApplication(fichiers,'pdf')
+        fpdf.add_header('content-disposition','attachment')
 
-    for fichier in fichiers :
-        try :
-            pdf=open(fichier,'rb')
-            fpdf = MIMEBase('application','octet-stream')
-            fpdf.set_payload(pdf.read())
-            pdf.close()
-            encoders.encode_base64(fpdf)
-            fpdf.add_header('content-disposition', 'attachment; filename ='+ fichier)
-            msg.attach(fpdf)
-            liste_eleves.append("eleve"+fichier)
-        except :
-            print("""fonction envoie_pdf de setup : 
-le fichier {} qui doit être envoyé à {} est introuvable""".format(fichier,msg['To']))
-    npdf=len(liste_eleves)  #nombre de fichiers à envoyer
-    if npdf==0 :
-        print("""fonction envoie_pdf de setup : 
-aucun fichier pdf à envoyer""")
-        return "aucun fichier pdf à envoyer"
 
-    # preparation du joli texte du corps du message
-    eleves=liste_eleves[0]
-    if npdf==1 :
-        pluriel=""
-    else :
-        pluriel="s"
-        for i in range(1,npdf-1) :
-            eleves+=", "+liste_eleves[i]
-        eleves+=" et "+liste_eleves[-1]
-    #-------------------------------
-    msg['Subject'] = "Résultat{} de test de positionnemnet de ".format(pluriel)+eleves
-    
-    msg.attach(MIMEText("""Bonjour,
-veuillez trouver en pièce jointe le{} résultat{} de test de positionnemnet de {}.
+    texte = MIMEText("""Bonjour,
+veuillez trouver en pièce jointe les résultats du test de positionnemnet de {}.
 
 Très cordialement,
 
-L'équipe Sacado Académie""".format(pluriel,pluriel,pluriel,eleves),'plain'))
+L'équipe Sacado Académie""".format(student),'plain','utf-8')
 
+    msg=MIMEMultipart(_supbpart=(texte,fpdf))
+    msg['From'] = settings.DEFAULT_FROM_EMAIL
+    msg['To']   = destinataires[0]
+    for i in range(1,len(destinataires)):
+     msg['to']+=","+destinataires[i]
+    msg['Subject'] = "Résultats du test de positionnemnet de" +student
     server = smtplib.SMTP(settings.EMAIL_HOST,settings.EMAIL_PORT)
     server.set_debuglevel(False) # show communication with the server
     try:
-       server.ehlo()
-       if server.has_extn('STARTTLS'):
-          server.starttls()
-          server.ehlo() 
-       server.login(settings.DEFAULT_FROM_EMAIL, settings.EMAIL_HOST_PASSWORD)
-       server.sendmail(settings.DEFAULT_FROM_EMAIL, destinataires,msg.as_string() )
+        server.ehlo()
+        if server.has_extn('STARTTLS'):
+           server.starttls()
+           server.ehlo()
+        server.login(settings.DEFAULT_FROM_EMAIL,settings.EMAIL_HOST_PASSWORD)
+        server.sendmail(settings.DEFAULT_FROM_EMAIL,destinataires,msg.as_string() )
     finally:
         server.quit()
     return "mails envoyés avec succès"
@@ -1928,8 +1926,7 @@ def pdf_to_create(request,theme_tab):
     elements.append(knowledge_tab_tab)
     doc.build(elements)
     buffer.seek(0)
-    pdf: bytes = buffer.getvalue()
-    return FileResponse(pdf, filename='D:/uwamp/www/sacado-acad/resultats_'+str(uuid.uuid4())[:12]+'.pdf')
+    return buffer.getvalue()
 
 
 def my_results(request):
@@ -1937,16 +1934,18 @@ def my_results(request):
     answerpositionnements = request.session.get("answerpositionnement")
 
     results , themes ,  final_skills , skill_tab , subskill_tab  = []  , [] ,  [] ,  [] ,  []
-    total = 0
+    brut = 0
     loop = 0
     for a_p in answerpositionnements :
         question = Question.objects.get(pk=a_p[2])
         dico =  {"positionnement_id" : a_p[0] , "student" : a_p[1], "question" : question, "answer" : a_p[3] , "score" : a_p[4] , "timer" : a_p[5] , "is_correct" : a_p[6] , 'themes' : a_p[7] }
         results.append(dico)
         themes.append(a_p[7])
+        if a_p[6] : brut +=1
         if loop == 0 : 
             Positionnement.objects.filter(pk=a_p[0]).update(nb_done=F('nb_done') + 1)
         loop+=1
+    student = a_p[1]
 
     
     #     for skill in question.skills.all() :
@@ -1974,7 +1973,6 @@ def my_results(request):
     for data in themes :
         if not data[0] in final_themes :
             final_themes.append(data[0])
-            total = 1
             subtheme_tab.append({ "theme" : data[0] , "score" : data[1] , "total" : 1 })
         else :
             idx = final_themes.index(data[0])
@@ -2001,15 +1999,12 @@ def my_results(request):
         theme_tab.append({ "theme" : t["theme"] , "score" : this_score , 'color' : color })
 
     email_to_send = request.session.get("email",None)
-    pdf_files     = pdf_to_create(request,theme_tab)
 
-    print(pdf_files)
-    
     if email_to_send :
-        try : pdf_to_send( [pdf_to_create(request,theme_tab),] , [email_to_send])
+        try : pdf_to_send( [pdf_to_create(request,theme_tab,student)] , [email_to_send])
         except : pass
 
-    context = { 'results' : results , 'theme_tab' : theme_tab , 'skill_tab' : skill_tab  , 'labels':labels , 'dataset' : dataset }
+    context = { 'results' : results , 'theme_tab' : theme_tab , 'skill_tab' : skill_tab  , 'labels':labels , 'dataset' : dataset , 'brut' : brut , 'total' : loop }
     return render(request, 'tool/positionnement_results.html', context)
 
 ############################################################################################################
