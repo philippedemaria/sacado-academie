@@ -151,7 +151,7 @@ Mes résultats
                     <tbody>
                         {% for result in  results  %} 
                             <tr>
-                                <td>{{ result.question.title|safe}}
+                                <td class="resize_image_td">{{ result.question.title|safe}}
                                     {% if result.question.audio %}
                                         <div class="col-sm-12 col-md-12" align="center"> 
                                             <audio controls>
@@ -168,7 +168,7 @@ Mes résultats
                                         </div>
                                     {% endif %}
                                 </td>
-                                <td>
+                                <td class="resize_image_td">
                                     {% if result.question.qtype == 1 %}
                                         {% if  result.question.is_correct %}
                                             <span class="btn btn-success">VRAI  </span>  
@@ -198,7 +198,7 @@ Mes résultats
                                         {% endfor %}
                                     {% endif %}
                                 </td>
-                                <td>
+                                <td class="resize_image_td">
                                     {% if result.question.qtype == 9 or result.question.qtype == 5 %}
                                         {% for a in result.answer %}
                                                 {% if forloop.first %}<li class="sanspuce text-success ">{{ a|safe }}</li>{% endif %}
