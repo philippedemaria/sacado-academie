@@ -30,6 +30,8 @@
         {% elif question.qtype == 8 %}
         require(['script/ajax-check_sort']); 
         {% endif %}
+
+        history.forward()
     </script>
 {% endblock %}
 
