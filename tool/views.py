@@ -1807,15 +1807,13 @@ L'équipe Sacado Académie""".format(student),'plain','utf-8')
     msg['Subject'] = "Résultats du test de positionnemnet de" +student
     server = smtplib.SMTP(settings.EMAIL_HOST,settings.EMAIL_PORT)
     server.set_debuglevel(False) # show communication with the server
-    try:
-        server.ehlo()
-        if server.has_extn('STARTTLS'):
-           server.starttls()
-           server.ehlo()
-        server.login(settings.DEFAULT_FROM_EMAIL,settings.EMAIL_HOST_PASSWORD)
-        server.sendmail(settings.DEFAULT_FROM_EMAIL,destinataires,msg.as_string() )
-    finally:
-        server.quit()
+    server.ehlo()
+    if server.has_extn('STARTTLS'):
+       server.starttls()
+       server.ehlo()
+    server.login(settings.DEFAULT_FROM_EMAIL,settings.EMAIL_HOST_PASSWORD)
+    server.sendmail(settings.DEFAULT_FROM_EMAIL,destinataires,msg.as_string() )
+    server.quit()
     return "mails envoyés avec succès"
 
 
