@@ -4,7 +4,7 @@ from django.http import JsonResponse , FileResponse
 from django.core import serializers
 from django.template.loader import render_to_string
 from django.contrib import messages
-from django.core.mail import send_mail
+from django.core.mail import send_mail , EmailMessage
  
 from tool.models import *
 from tool.forms import *
@@ -1767,61 +1767,22 @@ def pdf_to_send(fichiers,destinataires,student):
     Fichiers contient une liste de noms de fichiers pdf à envoyer
     destinataires : une liste de chaines contenant les destinataires"""
     #------------
-    if destinataires==[] :
-        return "aucun destinataire"
-    
-    msg=MIMEMultipart()
-    msg['From'] = settings.DEFAULT_FROM_EMAIL
-    msg['To']   = destinataires[0]
-    for i in range(1,len(destinataires)):
-        msg['to']+=","+destinataires[i]
-        
-    liste_eleves=[]  #liste des eleves dont on joint les rapports
-    if type(fichiers) == list():
-        for fichier in fichiers :
-            try :
-                pdf=open(fichier,'rb')
-                fpdf = MIMEBase('application','octet-stream')
-                fpdf.set_payload(pdf.read())
-                pdf.close()
-                encoders.encode_base64(fpdf)
-                fpdf.add_header('content-disposition', 'attachment; filename ='+ fichier)
-                msg.attach(fpdf)
-            except :
-                print("""fonction envoie_pdf de setup : le fichier {} qui doit être envoyé à {} est introuvable""".format(fichier,msg['To']))
-    elif type(fichiers) == bytes:
-        fpdf = MIMEApplication(fichiers,'pdf')
-        fpdf.add_header('content-disposition','attachment')
-
-
-    texte = MIMEText("""Bonjour,
+    texte = """Bonjour,
 veuillez trouver en pièce jointe les résultats du test de positionnemnet de {}.
 
 Très cordialement,
 
-L'équipe Sacado Académie""".format(student),'plain','utf-8')
+L'équipe Sacado Académie""".format(student)
 
-    msg=MIMEMultipart( 'alternative' )
-    msg['From'] = settings.DEFAULT_FROM_EMAIL
-    msg['to']= ",". join(destinataires)
-    msg['Subject'] = "Résultats du test de positionnemnet de " +student
+    msg = EmailMessage("SACADO ACADEMIE : Test de positionnement "+student, texte, settings.DEFAULT_FROM_EMAIL, destinataires)
+    msg.attach('resultats.pdf', fichiers, 'application/pdf')
+    msg.send()
 
-    msg.attach(texte)
-    msg.attach(fpdf)
-
-    server = smtplib.SMTP(settings.EMAIL_HOST,settings.EMAIL_PORT)
-    server.set_debuglevel(False) # show communication with the server
-    server.ehlo()
-    if server.has_extn('STARTTLS'):
-       server.starttls()
-       server.ehlo()
-    server.login(settings.DEFAULT_FROM_EMAIL,settings.EMAIL_HOST_PASSWORD)
-    server.sendmail(settings.DEFAULT_FROM_EMAIL,destinataires,msg.as_string() )
-    server.quit()
-    return "mails envoyés avec succès"
 
 
 def pdf_to_create(request,theme_tab):
+
+    student_full_name = request.session.get("student_full_name")
 
     elements = []
     buffer = io.BytesIO()
@@ -1839,11 +1800,11 @@ def pdf_to_create(request,theme_tab):
                             )
     title = ParagraphStyle('title', 
                             fontSize=20, 
-                            textColor=colors.HexColor("#00819f"),
+                            textColor=colors.HexColor("#8262c2"),
                             )
     subtitle = ParagraphStyle('title', 
                             fontSize=16, 
-                            textColor=colors.HexColor("#00819f"),
+                            textColor=colors.HexColor("#8262c2"),
                             )
     normal = ParagraphStyle(name='Normal',fontSize=12,)  
     mini   = ParagraphStyle(name='Normal',fontSize=10,)  
@@ -1856,13 +1817,13 @@ def pdf_to_create(request,theme_tab):
 
     #logo = Image('D:/uwamp/www/sacado/static/img/sacadoA1.png')
     logo = Image('https://sacado-academie.fr/static/img/sacadoA1.png')
-    logo_tab = [[logo, "SACADO \nBilan des acquisitions" ]]
+    logo_tab = [[logo, "SACADO ACADEMIE\nBilan du test de positionnement de "+student_full_name ]]
     logo_tab_tab = Table(logo_tab, hAlign='LEFT', colWidths=[0.7*inch,5*inch])
-    logo_tab_tab.setStyle(TableStyle([ ('TEXTCOLOR', (0,0), (-1,0), colors.Color(0,0.5,0.62))]))
+    logo_tab_tab.setStyle(TableStyle([ ('TEXTCOLOR', (0,0), (-1,0), colors.HexColor("#8262c2") )]))
     elements.append(logo_tab_tab)
     elements.append(Spacer(0, 0.1*inch))
 
-    resultats = Paragraph("Vos résultats synthétisés",subtitle)
+    resultats = Paragraph("Tes résultats synthétisés",subtitle)
     elements.append(resultats)
     elements.append(Spacer(0, 0.1*inch))
     themes = Paragraph("Par thèmes",normal)
@@ -1918,8 +1879,6 @@ def pdf_to_create(request,theme_tab):
         choices = question.choices.all()
         knowledge_tab.append(  ( title , choices ,  answer )  )
 
-
-
     knowledge_tab_tab = Table(knowledge_tab, hAlign='LEFT', colWidths=[4*inch,1.6*inch,1.7*inch])
     knowledge_tab_tab.setStyle(TableStyle([
                ('INNERGRID', (0,0), (-1,-1), 0.25, colors.white),
@@ -1931,9 +1890,12 @@ def pdf_to_create(request,theme_tab):
     return buffer.getvalue()
 
 
+
 def my_results(request):
 
     answerpositionnements = request.session.get("answerpositionnement")
+    student_full_name     = request.session.get("student_full_name")
+    email_to_send =  request.session.get("email_to_send",None) 
 
     results , themes ,  final_skills , skill_tab , subskill_tab  = []  , [] ,  [] ,  [] ,  []
     brut = 0
@@ -1947,29 +1909,6 @@ def my_results(request):
         if loop == 0 : 
             Positionnement.objects.filter(pk=a_p[0]).update(nb_done=F('nb_done') + 1)
         loop+=1
-    student = a_p[1]
-
-    
-    #     for skill in question.skills.all() :
-    #         if not skill.id in final_skills :
-    #             final_skills.append(skill.id)
-    #             total = 1
-    #             subskill_tab.append({ "skill" : skill.name , "score" : a_p[4] , "total" : 1 })
-    #         else :
-    #             idx = final_skills.index(skill.id)
-    #             total += 1
-    #             subskill_tab[idx]["score"] += a_p[4]
-    #             subskill_tab[idx]["total"] += 1
-
-    # for s in subskill_tab :
-    #     score = int(s["score"]//s["total"])
-    #     if score > 90 : color = "darkgreen"
-    #     elif score > 65 : color = "green"
-    #     elif score > 40 : color = "orange"
-    #     else : color = "red"
-    #     skill_tab.append({ "skill" : s["skill"] , "score" : score , 'color' : color  })
-
-
 
     final_themes , theme_tab , subtheme_tab  = [] ,  [] ,  []  
     for data in themes :
@@ -2000,10 +1939,9 @@ def my_results(request):
         ####################################   
         theme_tab.append({ "theme" : t["theme"] , "score" : this_score , 'color' : color })
 
-    email_to_send =  request.session.get("email_to_send",None)  
 
-    # if email_to_send :
-    #     pdf_to_send( pdf_to_create(request,theme_tab) , [email_to_send] , student)
+    if email_to_send :
+        pdf_to_send( pdf_to_create(request,theme_tab) , [email_to_send] , student_full_name)
 
     context = { 'results' : results , 'theme_tab' : theme_tab , 'skill_tab' : skill_tab  , 'labels':labels , 'dataset' : dataset , 'brut' : brut , 'total' : loop }
     return render(request, 'tool/positionnement_results.html', context)
