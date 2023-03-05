@@ -1806,34 +1806,30 @@ def pdf_to_create(request,theme_tab):
                             fontSize=16, 
                             textColor=colors.HexColor("#8262c2"),
                             )
-    normal = ParagraphStyle(name='Normal',fontSize=12,)  
-    mini   = ParagraphStyle(name='Normal',fontSize=10,)  
-    style_cell = TableStyle(
-            [
-                ('SPAN', (0, 1), (1, 1)),
-                ('TEXTCOLOR', (0, 1), (-1, -1),  colors.Color(0,0.7,0.7))
-            ]
-        )
 
+    normal_color = ParagraphStyle(name='Normal',fontSize=12,textColor=colors.HexColor("#8262c2"))  
+    normal       = ParagraphStyle(name='Normal',fontSize=12,)  
+    mini         = ParagraphStyle(name='Normal',fontSize=10,)  
+ 
     #logo = Image('D:/uwamp/www/sacado/static/img/sacadoA1.png')
     logo = Image('https://sacado-academie.fr/static/img/sacadoA1.png')
-    logo_tab = [[logo, "SACADO ACADEMIE\nBilan du test de positionnement de "+student_full_name ]]
+    logo_tab = [[logo, "SACADO ACADEMIE\nRésultats du test de positionnement de "+student_full_name ]]
     logo_tab_tab = Table(logo_tab, hAlign='LEFT', colWidths=[0.7*inch,5*inch])
     logo_tab_tab.setStyle(TableStyle([ ('TEXTCOLOR', (0,0), (-1,0), colors.HexColor("#8262c2") )]))
     elements.append(logo_tab_tab)
     elements.append(Spacer(0, 0.1*inch))
 
-    resultats = Paragraph("Tes résultats synthétisés",subtitle)
+    resultats = Paragraph("Tes résultats synthétisés",title)
     elements.append(resultats)
     elements.append(Spacer(0, 0.1*inch))
-    themes = Paragraph("Par thèmes",normal)
+    themes = Paragraph("Par thèmes",subtitle)
     elements.append(themes)
     elements.append(Spacer(0, 0.1*inch))
 
 
     for data  in theme_tab :
-        themes = Paragraph( data["theme"] + " : " + str(data["score"]) +"%",normal)
-        elements.append(themes)
+        theme = Paragraph( data["theme"] + " : " + str(data["score"]) +"%",subtitle)
+        elements.append(theme)
         elements.append(Spacer(0, 0.1*inch))
 
         if data["score"] < 40 : 
@@ -1845,13 +1841,13 @@ def pdf_to_create(request,theme_tab):
         else :
             texte = "Le thème "+ data['theme'] +" est parfaitement réussi. Nos exercices, les plus ardus, vont aiguiser ta curiosité et te pousser vers l'élitisme."
 
-        conseils = Paragraph("Notre conseil",subtitle)
+        conseils = Paragraph("Notre conseil",normal_color)
         elements.append(conseils)
         elements.append(Spacer(0, 0.1*inch))
 
         texte = Paragraph(texte,normal)
         elements.append(texte)
-        elements.append(Spacer(0, 0.1*inch))
+        elements.append(Spacer(0, 0.2*inch))
 
 
 
@@ -1859,32 +1855,6 @@ def pdf_to_create(request,theme_tab):
     elements.append(advises)
     elements.append(Spacer(0, 0.1*inch))
  
-    resultats = Paragraph("Vos résultats en détails",subtitle)
-    elements.append(resultats)
-    elements.append(Spacer(0, 0.1*inch))
-
-    answerpositionnements = request.session.get("answerpositionnement")
-
-
-    knowledge_tab = [['Question','Choix et solution','Réponse proposée']]
-
-    for result in answerpositionnements :
-        answer = ""
-        question = Question.objects.get(pk=int(result[2]) )
-        title    = question.title
-        for a in result[3] :
-            answer += str(a)+" ; " 
-        answer += " en "+str(result[5])+" secondes"
-
-        choices = question.choices.all()
-        knowledge_tab.append(  ( title , choices ,  answer )  )
-
-    knowledge_tab_tab = Table(knowledge_tab, hAlign='LEFT', colWidths=[4*inch,1.6*inch,1.7*inch])
-    knowledge_tab_tab.setStyle(TableStyle([
-               ('INNERGRID', (0,0), (-1,-1), 0.25, colors.white),
-               ('BOX', (0,0), (-1,-1), 0.25, colors.white),
-               ]))
-    elements.append(knowledge_tab_tab)
     doc.build(elements)
     buffer.seek(0)
     return buffer.getvalue()
