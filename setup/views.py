@@ -1464,34 +1464,34 @@ def ajax_price_changement_formule(request) :
     student_id = request.POST.get("student_id",None)
     formule_id = request.POST.get("formule_id",None)
     duration   = request.POST.get("duration",None)
+
     data = {}
     offset = 0
     if formule_id and duration :
         formule = Formule.objects.get(pk=formule_id)
         if int(duration) == 12 : 
             price   = formule.price * 10
-            offset = 5
+            offset  = 1 #5
         else : 
             price   = formule.price * int(duration)
-            
-    student = Student.objects.get(user_id=student_id) 
-    today = time_zone_user(student.user)
-    adhesion  = student.adhesions.last()
+      
+    student              = Student.objects.get(user_id=student_id) 
+    today                = time_zone_user(student.user)
+    adhesion             = student.adhesions.last()
     end_of_this_adhesion = today + timedelta(days=30*int(duration)+ offset)
 
-
-
-    if end_of_this_adhesion <  adhesion.stop and formule_id and  adhesion.formule_id >= int(formule_id) :
+    if adhesion and end_of_this_adhesion < adhesion.stop and formule_id and  adhesion.formule_id >= int(formule_id) :
         data["no_end"] = True
 
-    elif end_of_this_adhesion <  adhesion.stop :
+    elif adhesion and end_of_this_adhesion < adhesion.stop :
         data["no_end"] = False
         days_left = adhesion.stop - today # nbre de jours de l'ancienne adhésion dèja payée mais pas consommée
         formule   = Formule.objects.get(pk=adhesion.formule_id)
         old_price = days_left.days * formule.price/30 # cout du relicat de jours
         price = max( price - old_price , 0 )
 
-    else :
+    elif adhesion and today < adhesion.stop :
+        price   = price  
         data["no_end"] = False
         days_left = end_of_this_adhesion - adhesion.stop 
 
@@ -1499,37 +1499,23 @@ def ajax_price_changement_formule(request) :
             formule = Formule.objects.get(pk=formule_id)
             price   = days_left.days * formule.price/30
 
-
     data["end_of_this_adhesion"] = str(end_of_this_adhesion.day) +"-" + str(end_of_this_adhesion.month) +"-" + str(end_of_this_adhesion.year)
     data["amount"]   = price
     data["start"]    = today
     data["stop"]     = end_of_this_adhesion
-    data["year"]     = adhesion.year
-    data["level_id"] = adhesion.level.id
-
-
+    if adhesion :
+        data["year"]     = adhesion.year
+        data["level_id"] = adhesion.level.id
+ 
     data["result"] = str(price) 
-
     return JsonResponse(data)
-
-
-
-
-
-
-
-
 
 
 def adhesions_academy(request):
     """ liste des adhésions """
     user = request.user
-
     u_parents = all_from_parent_user(user)
-
     factures =  Facture.objects.filter(user__in=u_parents,is_lesson=0) 
-
-
     today = time_zone_user(request.user)
     last_week = today + timedelta(days = 7)
     context = { "factures" : factures,  "last_week" : last_week    }

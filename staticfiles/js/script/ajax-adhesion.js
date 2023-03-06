@@ -293,11 +293,11 @@ define(['jquery', 'bootstrap'], function ($) {
                             success: function (data) {
         
                                 if (data.no_end){
-                                $('#result_change_adhesion' ).html("").html("<div class='alert alert-danger'>Vous ne pouvez pas souscrire cet abonnement, votre abonnement prévoit déjà une période plus longue.</div>" );
+                                $('#result_change_adhesion' ).html("").html("<div class='row' style='margin-bottom:100px'><div class='col-sm-12 col-md-12'><div class='alert alert-danger'>Vous ne pouvez pas souscrire cet abonnement, votre abonnement prévoit déjà une période plus longue.</div></div></div>" );
                                 }
                                 else
                                 {
-                                $('#result_change_adhesion' ).html("").html("<div class='alert alert-success'>Somme à payer : "+data.result+" €</div>");                            
+                                $('#result_change_adhesion' ).html("").html("<div class='row' style='margin-bottom:100px'><div class='col-sm-12 col-md-12'><div class='alert alert-success'>Somme à payer : "+data.result+" €</div></div></div>");                            
                                 }
                             }
                         }

@@ -559,7 +559,7 @@ hr.divider {
 /* ------------------------------------------------------------------------------------------------------------*/
  
 .box-footer span{
-  cursor: pointer;
+  /*cursor: pointer;*/
 }
 
 .double_bottom_padding{
