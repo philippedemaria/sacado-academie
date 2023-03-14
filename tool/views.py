@@ -1616,15 +1616,6 @@ def goto_positionnement_student(request,id):
     else :
         question_ids      = request.session.get("question_ids")
 
-
-    try :
-        f = open('/var/www/sacado-academie/logs/test_positionnement.log','a')
-        print(question_ids, file=f)
-        f.close()
-    except :
-        pass 
-
-
     #Génération des réponses 
     is_shuffle = False
     if positionnement.is_shuffle :
