@@ -1618,7 +1618,7 @@ def goto_positionnement_student(request,id):
 
 
     try :
-        f = open('/var/www/sacado/logs/test_positionnement.log','a')
+        f = open('/var/www/sacado-academie/logs/test_positionnement.log','a')
         print(question_ids, file=f)
         f.close()
     except :
