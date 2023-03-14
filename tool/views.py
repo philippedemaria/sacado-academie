@@ -1667,6 +1667,15 @@ def goto_positionnement_student(request,id):
     quizz_nav += 1
     quizz_nav_prev = quizz_nav - 1
 
+    try :
+        f = open('/var/www/sacado/logs/test_positionnement.log','a')
+        print(q_id, file=f)
+        f.close()
+    except :
+        pass 
+
+
+
     context = { "first_name" : first_name  , "last_name" : last_name ,  "positionnement" : positionnement , "question" : question , "quizz_nav" : quizz_nav, "quizz_nav_prev" : quizz_nav_prev ,"end_of_quizz" : end_of_quizz ,"stop_time" : stop_time , 'student' : student  }
 
     return render(request, 'tool/pass_positionnement_student.html', context)
@@ -1839,7 +1848,7 @@ def pdf_to_create(request,theme_tab):
         elif data["score"] < 90 :
             texte = "Le thème "+ data['theme'] +" est globalement compris. En travaillant 10 minutes chaque jour ce thème, tes résultats vont gagner en solidité."  
         else :
-            texte = "Le thème "+ data['theme'] +" est parfaitement réussi. Nos exercices, les plus ardus, vont aiguiser ta curiosité et te pousser vers l'élitisme."
+            texte = "Le thème "+ data['theme'] +" est parfaitement réussi. Nos exercices, les plus ardus, vont aiguiser ta curiosité et te permettre d'atteindre l'excellence."
 
         conseils = Paragraph("Notre conseil",normal_color)
         elements.append(conseils)

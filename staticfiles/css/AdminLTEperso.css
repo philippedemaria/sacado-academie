@@ -7969,15 +7969,15 @@ a.white, a.white:active, a.white:visited, a.white:hover, .white{
 
 
 .btn-new  {
-  color : #007bff!important;
+  color : #9975e0!important;
   border-radius: 20px; /*radius des boutons*/
-  border: 1px solid #007bff;
+  border: 1px solid #5f3aa8;
   margin-right: 5px;
 }
 .btn-new:hover, .btn-new:hover > a ,
 .btn-new:active, .btn-new:active > a ,
 .btn-new.hover,  .btn-new.hover > a   {
-  background-color: #007bff!important;/*   #dd4b39!important;*/
+  background-color: #5f3aa8!important;/*   #dd4b39!important;*/
   color: white!important;
   text-decoration: none;
 }

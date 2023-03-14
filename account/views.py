@@ -269,7 +269,7 @@ def avatar(request) :
     user = User.objects.get(pk = request.user.id )
     avatar_form = AvatarUserForm(request.POST or None, request.FILES or None, instance = user  ) 
 
-
+    request.session["tdb"] = "Account"
     if request.method == 'POST':
         if avatar_form.is_valid():
             user.avatar = request.POST.get("avatar")
@@ -294,8 +294,7 @@ def change_avatar(request,ids) :
     avatar_form = AvatarUserForm(request.POST or None, request.FILES or None, instance = user  ) 
     backtitle_form = BacktitleUserForm(request.POST or None, request.FILES or None, instance = user  ) 
     
-
-        
+    request.session["tdb"] = "Account"
     if request.method == 'POST':
         if avatar_form.is_valid():
             user.avatar = request.POST.get("avatar")
@@ -320,7 +319,7 @@ def change_avatar(request,ids) :
 
 
 def change_backtitle(request,ids) :
-
+    request.session["tdb"] = "Account"
     user = User.objects.get(pk = ids )
     backtitle_form = BacktitleUserForm(request.POST or None, request.FILES or None, instance = user  ) 
      
@@ -347,7 +346,7 @@ def change_backtitle(request,ids) :
 
 #@user_is_parcours_teacher
 def create_background(request, id ):
- 
+    request.session["tdb"] = "Account"
     if not request.user.is_superuser : 
         return redirect('index')
 
@@ -374,7 +373,7 @@ def delete_background(request,id  ):
 
 
 def list_backgrounds(request) :
-    
+    request.session["tdb"] = "Account"
     if not request.user.is_superuser : 
         return redirect('index')
     
@@ -387,7 +386,7 @@ def list_backgrounds(request) :
 
 
 def background(request) :
-
+    request.session["tdb"] = "Account"
     user = User.objects.get(pk = request.user.id )
     background_form = BackgroundUserForm(request.POST or None, request.FILES or None, instance = user  ) 
 
@@ -921,6 +920,7 @@ def detail_student_parcours(request, id,idp):
 
     student = Student.objects.get(user_id=id)
     tracker_execute_exercise(False,student.user)
+    request.session["tdb"] = "Groups"
 
     if not logged_user_has_permission_to_this_student(request.user, student) :
         messages.error(request, "Erreur...Vous n'avez pas accès à ces résultats.")
@@ -965,8 +965,7 @@ def detail_student_parcours(request, id,idp):
 #@user_can_read_details
 def detail_student_all_views(request, id):
 
-
-    request.session["tdb"] = "account"
+    request.session["tdb"] = "Groups"
     user = User.objects.get(pk=id)
     student = user.student
     tracker_execute_exercise(False,user)
@@ -1092,6 +1091,9 @@ def detail_student_all_views(request, id):
                 datas["h"]    = student_answers_nb
                 datas["a"]    = int(average["average_score"])
                 datas["n"]    = student_answers_nb
+                if average["duration"] : datas["t"] = int(average["duration"])
+                else : datas["t"] = ""
+
                 if j == 2 and    month%2==1 : datas["l"]    = 9*step
                 else : datas["l"]    = 10*step
                 datas["le"]   = student_answers  
@@ -1143,6 +1145,7 @@ def detail_student_all_views(request, id):
 #@user_can_read_details
 def detail_student_academy(request, id):
 
+    request.session["tdb"] = "Groups"
     user = User.objects.get(pk=id)
     student = user.student
     tracker_execute_exercise(False,user)
@@ -1287,14 +1290,19 @@ def ajax_get_details_graph(request):
     date_f = datetime(int(y),month,int(d))
     date_e = date_f + timedelta(days=1)
 
-    student = Student.objects.get(pk = student_id)
-    student_answers    = Studentanswer.objects.filter( student  = student , date__gte  = date_f , date__lte  = date_e)
+    student_answers = Studentanswer.objects.filter( student_id  = student_id , date__gte  = date_f , date__lte  = date_e)
+    timer    = student_answers.aggregate(duration = Sum('secondes'))
+    duration = "<i class='bi bi-clock'></i> "
+    if timer["duration"] > 60 : 
+        duration += " "+str(int(timer["duration"]//60)) + " min. " 
+        if timer["duration"]%60 != 0 :
+            duration += str(timer["duration"]%60)+ " s."
+    else : duration +=  " "+str(int(timer["duration"]%60))+ " s."   
  
-
-    context = {'student_answers': student_answers}
+    context = {'student_answers': student_answers   }
 
     data = {}
-
+    data['timer'] =  duration
     data['this_date'] =  date_f.strftime("%d-%m-%Y") 
     data['html'] = render_to_string('account/ajax_get_details_graph.html', context)
  
@@ -1812,7 +1820,7 @@ def delete_parent(request, id):
 
 
 def my_profile(request):
-
+    request.session["tdb"] = "Account"
     if request.user.is_authenticated : 
         user = request.user
         is_manager = user.is_manager
@@ -1964,6 +1972,8 @@ def ajax_control_code_student(request):
 
 
 def ajax_detail_student(request):
+
+
     student_id = int(request.POST.get("student_id"))
     theme_id = int(request.POST.get("theme_id"))
     group_id = int(request.POST.get("group_id"))

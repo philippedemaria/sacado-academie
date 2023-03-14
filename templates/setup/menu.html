@@ -11,7 +11,7 @@
     <div class="full_container">
         <div class="row">
             <div class="col-sm-12 col-md-12" align="center" style="margin-bottom: 20px">
-                <img src="{% if formule.id == 1 %}{% static 'img/menu_autonomie.png' %}{% elif formule.id == 2 %}{% static 'img/menu_ia.png' %}{% elif formule.id == 3 %}{% static 'img/menu_suivi.png' %}{% else %}{% static 'img/menu_accompagnement.png' %}{% endif %}" width="60px">
+                <img src="{% if formule.id == 1 %}{% static 'img/menu_autonomie.png' %}{% elif formule.id == 2 %}{% static 'img/menu_suivi.png' %}{% elif formule.id == 3 %}{% static 'img/menu_exam.png' %}{% else %}{% static 'img/menu_class.png' %}{% endif %}" width="60px">
                 Menu <span class="sub_header"> {{ formule.name }}</span> 
 
 
@@ -69,7 +69,7 @@
         </div>
         <div class="row">
             <div class="col-sm-12 col-md-12 rose" align="center">
-                <h4>1 semaine offerte pour tester les services (hors tchat, visio et messages).</h4>
+                <h4>1 semaine offerte pour tester les services (hors visios).</h4>
             </div>
         </div> 
 

@@ -846,6 +846,6 @@ def diagBaton(data) :
 
 def contact_academy(request):
 
-
+    request.session["tdb"] = 'Contact'
     context = {  }
     return render(request, 'academy/contact.html', context)

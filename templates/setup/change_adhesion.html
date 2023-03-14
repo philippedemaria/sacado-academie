@@ -48,15 +48,16 @@
         <div class="card" style="padding: 20px">
             <div class="row">
                 <div class="col-sm-12 col-md-12">
-                    <h2>{{student }}</h2>
+                    <h2  class="sacado_color_text">{{student }}</h2>
                 </div> 
             </div>
 
             <div class="row">
                 <div class="col-sm-12 col-md-12">
                     <h4>Adhésion actuelle  </h4>
-                    <li class="sanspuce"><label>Formule  : {{ adhesion.formule }}</label></li>
-                    <li class="sanspuce"><label>Jusqu'au : {{ adhesion.stop|date:"d-m-Y" }}</label></li>
+                    <li class="sanspuce"><label>Niveau   : <span class="sacado_color_text">{{ student.level.name }}</span></label></li>
+                    <li class="sanspuce"><label>Formule  : <span class="sacado_color_text">{{ adhesion.formule }}</span></label></li>
+                    <li class="sanspuce"><label>Jusqu'au : <span class="sacado_color_text">{{ adhesion.stop|date:"d-m-Y" }}</span></label></li>
                 </div> 
             </div>
 
@@ -73,16 +74,17 @@
                     <div class="form-group">                     
                         <label>Formule souhaitée :</label>
                             {% for f in formules  %}
-                                <li class="sanspuce"><label><input type="radio" value="{{ f.id }}" class="formule_change" name="formule"> {{ f.name }}</label></li>
+                                <li class="sanspuce"><label><input type="radio" value="{{ f.id }}" class="formule_change" name="formule"> <span class="sacado_color_text">{{ f.name }}</span></label></li>
                             {% endfor %}
                     </div>    
                 </div> 
                 <div class="col-sm-12 col-md-6">
                     <div class="form-group">                     
                         <label>Durée :</label>
-                        <li class="sanspuce"><label><input type="radio" value="1" name="duration" class="duration_change" > 1 mois</label></li>
-                        <li class="sanspuce"><label><input type="radio" value="3" name="duration" class="duration_change" > 3 mois</label></li>
-                        <li class="sanspuce"><label><input type="radio" value="12" name="duration" class="duration_change" > 12 mois</label></li>
+                        <li class="sanspuce"><label><input type="radio" value="1" name="duration" class="duration_change" > <span class="sacado_color_text">1 mois</span></label></li>
+                        <li class="sanspuce"><label><input type="radio" value="3" name="duration" class="duration_change" > <span class="sacado_color_text">3 mois</span></label></li>
+                        <li class="sanspuce"><label><input type="radio" value="12" name="duration" class="duration_change" > <span class="sacado_color_text">7 juillet {{ this_year}}</span>
+                        </label></li>
                     </div>    
                 </div> 
             </div> 

@@ -4,7 +4,33 @@
 
 {% for s in student_answers %}
 
-<li class="sanspuce"><img src="{{ s.exercise.supportfile.imagefile.url }}" width="200px" /> {{ s.exercise }} : {{ s.exercise.knowledge }}</li>
+<li class="sanspuce" style="clear:both">
+	<div style="float:left; margin-right:20px" >
+		<img src="{{ s.exercise.supportfile.imagefile.url }}" width="200px" /> 
+	</div>
+
+	<div  style="padding-top:20px">
+		{{ s.exercise.knowledge.name }}
+		<div class="row">
+ 			<div class="col-sm-3 col-md-2" >
+				<div class="ajax_round"  style="border-color:{% if s.point > 90 %}#1d6718{% elif s.point > 65  %}#62d85a{% elif s.point > 40  %}#b5a32b{% else %}#b5322b{% endif %};
+												color:{% if s.point > 90 %}#1d6718{% elif s.point > 65  %}#62d85a{% elif s.point > 40  %}#b5a32b{% else %}#b5322b{% endif %}">
+					{{ s.point }}%  
+				</div>
+			</div>
+ 			<div class="col-sm-3 col-md-2"  style="color:#9975e0;padding-top:25px;">
+ 
+				<i class="bi bi-clock-history"></i>	{{ s.secondes|time_done }} 
+ 
+			</div>
+ 			<div class="col-sm-4 col-md-3"  style="padding-top:25px;">
+				<a href="{% url 'execute_exercise' s.parcours.id s.exercise.id  %}" target="_blank"  style="color:#9975e0;">Reprendre l'exercice</a>
+			</div>
+		</div>
+ 
+	</div>
+</li>
 
 
 {% endfor %}
+<div style="clear:both"></div>

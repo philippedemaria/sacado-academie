@@ -12,11 +12,7 @@
     </a>
  </li>
 
-<li class="dropdown 
-{% if '/myaccount' in request.path %}
-active
-{% endif %} 
-">
+<li class="dropdown {% if  request.session.tdb == 'Account' %}active{% endif %}">
     <a href="#"  id="account" class="main" >
     {% if request.user.avatar   %}
         <img src="{{ request.user.avatar  }}" class="avatar" />
@@ -28,15 +24,15 @@ active
     </a>
 </li>
 
-<li class='dropdown'>
+<li class="dropdown  {% if  request.session.tdb == 'Groups' %}active{% endif %}">
     <a href="{% url 'index' %}" class="main" >
-        <i class="bi bi-speedometer2 icon_size"></i> 
-        <div class="captionmenu">Tableau de bord</div>
+        <i class="bi bi-people icon_size"></i> 
+        <div class="captionmenu">Mes enfants</div>
     </a>
 </li>
  
 
-<li class='dropdown'>
+<li class="dropdown  {% if  request.session.tdb == 'adhesion' %}active{% endif %}">
     <a href="{% url 'adhesions_academy' %}" class="main" >
         <i class="bi bi-badge-ad fa-2x"></i> 
         <div class="captionmenu">Adhésions</div>
@@ -44,10 +40,10 @@ active
 </li>
 
 {% if request.user.parent.is_lesson %}
-<li class='dropdown'>
+<li class="dropdown  {% if  request.session.tdb == 'Lesson' %}active{% endif %}">
     <a href="{% url 'detail_student_lesson' 0 %}" class="main" >
         <i class="bi bi-camera-video icon_size"></i> 
-        <div class="captionmenu">Leçons</div>
+        <div class="captionmenu">Visios</div>
     </a>
 </li>
 {% endif %}
@@ -55,7 +51,7 @@ active
 
 
 {% if request.user.is_in_academy %}
-<li class='dropdown'>
+<li class="dropdown  {% if  request.session.tdb == 'Contact' %}active{% endif %}">
     <a href="{% url 'contact_academy' %}" class="main" >
         <i class="bi bi-envelope icon_size"></i> 
         <div class="captionmenu">Contact</div>

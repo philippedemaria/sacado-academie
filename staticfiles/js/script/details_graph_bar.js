@@ -29,6 +29,7 @@ $(document).ready(function () {
                     success: function (data) {
                         $('#body_detail_bar').html(data.html);
                         $('#title_detail_bar').html(data.this_date);
+                        $('#title_detail_timer').html(data.timer);
                     }
                 }
             )

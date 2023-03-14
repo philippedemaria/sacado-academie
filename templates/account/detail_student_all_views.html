@@ -156,12 +156,25 @@
                             {% for data in dataset.datas %}
                                 {% if data.n %}
                                 <div class="container_bars" style="height:{{ data.hn }}px;left:{{ data.l }}%;"><label>{{ data.n }}</label>
-                                    <div class="bars {{ data.c }}" style="height:{{ data.h }}px; ">
-                                        <div class="average" {% if data.a == 100 %}style="font-size:30px" {% endif %}>
+                                    <div class="bars {{ data.c }}" style="height:{{ data.h }}px;text-align: center ">
+                                        <div class="average" style="font-size:30px">
                                             {{ data.a }}% 
-                                        </div>
+                                            {% if data.a > 90 and data.t > 600 %}<i class="bi bi-trophy-fill"></i>
+                                            {% elif data.a > 90 and data.t < 600 %}<i class="bi bi-clock-history" title="Les 10 minutes ne sont pas atteintes..."></i>
+                                            {% elif data.t < 600 %}<i class="bi bi-clock-history" title="Les 10 minutes ne sont pas atteintes..."></i>
+
+
+
+
+                                            {% endif %}
+
+
+
+                                            <div style="font-size:15px">{{data.t|time_done}}</div>
+                                        </div>  
+                                        
                                         <div class="detail_bar_score">
-                                            <a href="#" data-toggle='modal' data-target='#detail_bar_score' data-student_id="{{ student.user.id}}" data-date="{{ data.date}}"  data-month="{{ data.m}}" class="get_details_bar white"><i class="bi bi-question-circle"></i></a> 
+                                            <a href="#" data-toggle='modal' data-target='#detail_bar_score' data-student_id="{{ student.user.id}}" data-date="{{ data.date}}"  data-month="{{ data.m}}" class="get_details_bar white"><i class="bi bi-eye"></i></a> 
                                         </div>
                                     </div>
                                 </div>  
@@ -259,11 +272,10 @@
                 <div class="modal-dialog" role="document" style="width:70%">
                     <div class="modal-content" >
                         <div class="modal-header">
-                            <h2 > Exercices du <span id="title_detail_bar"></span> </h2>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button> 
-
+                            <h2 > Exercices du <span id="title_detail_bar"></span> <span id="title_detail_timer" style="color:#9975e0;font-size:20px;"></span></h2>
                         </div>
                         <div class="modal-body" id="body_detail_bar">
  

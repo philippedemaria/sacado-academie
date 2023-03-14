@@ -805,10 +805,13 @@ def choice_menu(request,id):
         del request.session["positionnement_id"]
     except :
         pass
-    
+
+    form = AuthenticationForm()
+    np_form = NewpasswordForm()
+
     formule  = Formule.objects.get(pk=id)
     end  = end_of_contract()
-    context = { 'formule' : formule , 'end' : end ,  }
+    context = { 'formule' : formule , 'end' : end , 'form' : form , 'np_form' : np_form   }
     return render(request, 'setup/menu.html', context)   
 
 
@@ -817,10 +820,13 @@ def details_of_adhesion(request) :
     nb_child   = request.POST.get("children")
     formule_id = request.POST.get("formule_id")
 
-
     data_post = request.POST
     levels    = Level.objects.exclude(pk=13)
     formule   = Formule.objects.get(pk = formule_id)
+
+
+    form = AuthenticationForm()
+    np_form = NewpasswordForm()
 
     if request.user.is_authenticated and request.user.is_in_academy :
         adhesion = Adhesion.objects.filter(user = request.user).last()
@@ -829,7 +835,7 @@ def details_of_adhesion(request) :
  
     else : 
         userFormset = formset_factory(UserForm, extra = int(nb_child) + 1, max_num= int(nb_child) + 2, formset=BaseUserFormSet)
-        context     = {  'formule' : formule ,    'data_post' : data_post ,  'levels' : levels ,  'userFormset' : userFormset, "renewal" : False }
+        context     = {  'formule' : formule ,    'data_post' : data_post ,  'levels' : levels ,  'userFormset' : userFormset, "renewal" : False, "form" : form, "np_form" : np_form }
         template    = 'setup/detail_of_adhesion.html'
 
     return render(request, template , context)   
@@ -1116,7 +1122,6 @@ def attribute_group_to_student_by_level(level,student,formule_id) :
 
     teacher_ids = ["0" ,89513,89507,89508,89510, 89511, 46245  , 46242 , 46246  , 46247, 46222, 46243, 46244,"", 130243] # "0" ET "" sont des offsets
     teacher_id = teacher_ids[level.id]
-    if formule_id > 3 : formule_id = 3 # A changer si on rajoute des formules
     group = Group.objects.filter(level = level, school_id = 50, teacher_id=teacher_id, formule_id=formule_id).first()
     group.students.add(student)
     groups = [group]
@@ -1130,7 +1135,7 @@ def attribute_group_to_student_by_level(level,student,formule_id) :
 
 
 def add_adhesion(request) :
-
+    request.session["tdb"] = 'adhesion'
     form =  UserForm(request.POST or None)
     formules = Formule.objects.filter(is_sale=1)
     levels = Level.objects.exclude(pk=13).order_by("ranking")
@@ -1206,7 +1211,7 @@ def commit_adhesion(request) :
 
     data_post   = request.POST
     nb_child = int( data_post.get("nb_child") )
-
+    request.session["tdb"] = 'adhesion'
     formule_id     = int(data_post.get("formule_id"))    
     data_posted = {"total_price" : data_post.get('total_price'), "month_price" : data_post.get('month_price'), "nb_month" : data_post.get('nb_month'), "date_end" : data_post.get('date_end'), "formule_id" : formule_id , "nb_child" : nb_child }
  
@@ -1233,7 +1238,7 @@ def commit_adhesion(request) :
             user["email"]      =  form.cleaned_data["email"]   
             if 1<= i <= nb_child : 
                 level          = Level.objects.get(pk = int(levels[i])).name
-                user["level"]  = level 
+                user["level"]  =  level
                 students.append(user)
             else :
                 user["level"]      = "" 
@@ -1269,7 +1274,7 @@ def save_adhesion(request) :
     students_of_adhesion = request.session.get("students_of_adhesion")
     data_posted = request.session.get("data_posted") # détails de l'adhésion
     nb_child = int(data_posted.get("nb_child"))
-
+    request.session["tdb"] = 'adhesion'
     users = []
 
     total_price = 0
@@ -1291,7 +1296,7 @@ def save_adhesion(request) :
 
         last_name, first_name, username , password , email , level =  s["last_name"]  , s["first_name"] , s["username"] , s["password"] , s["email"] , s["level"]  
         level = Level.objects.get(name = level)    
-        user, created = User.objects.update_or_create(username = username, password = password , user_type = 0 , defaults = { "last_name" : last_name , "first_name" : first_name  , "email" : email , "country_id" : 4 ,  "school_id" : 50 , "closure" : date_end_dateformat })
+        user, created = User.objects.update_or_create(username = username, password = password , user_type = 0 , defaults = { "last_name" : last_name , "first_name" : first_name  , "email" : email , "country_id" : 5 ,  "school_id" : 50 , "closure" : date_end_dateformat })
         student,created_s = Student.objects.update_or_create(user = user, defaults = { "task_post" : 1 , "level" : level })
 
 
@@ -1430,6 +1435,7 @@ def save_adhesion(request) :
 
 def change_adhesion(request,ids):
     """ liste des adhésions """
+    request.session["tdb"] = 'adhesion'
     user     = request.user
     formules = Formule.objects.filter(is_sale=1)
     student  = Student.objects.get(user_id=ids)
@@ -1443,19 +1449,65 @@ def change_adhesion(request,ids):
         student    = student
         year       = request.POST.get("year")
 
+        payment_is_ok = False
+
         if payment_is_ok :
-
-
             adhesion = Adhesion.objects.create(amount = amount , formule_id =formule_id , start = start , stop = stop , level_id = level_id , student = student , year = year)
             chrono   = create_chrono(Facture,"F")
-            facture  = Facture.objects.create(chrono = chrono , user =user , file = "" , date = start , orderID = "" , is_lesson = 0  ) #orderID = Numéro de paiement donné par la banque"
+            facture  = Facture.objects.create(chrono = chrono , user = user , file = "" , date = start , orderID = "" , is_lesson = 0  ) #orderID = Numéro de paiement donné par la banque"
             facture.adhesions.add(adhesion) 
 
         return redirect("adhesions_academy")
+
+    today = time_zone_user(student.user)
+    if today.month < 7 : this_year = today.year 
+    else : this_year = today.year + 1
  
-    context = {    "student" : student , "adhesion" : adhesion   , "formules" : formules   }
+    context = {    "student" : student , "adhesion" : adhesion   , "formules" : formules   , "this_year" : this_year  }
 
     return render(request, 'setup/change_adhesion.html', context)
+
+
+def get_price_and_end_adhesion(formule_id, date_joined, today, duration, student ):
+
+    formule = Formule.objects.get(pk=formule_id)
+    price_a_month = formule.price
+    try    : adhesion = student.adhesions.last()
+    except : adhesion = None
+    if today.month < 7 : this_year = today.year 
+    else : this_year = today.year + 1
+    end_of_this_adhesion = today + timedelta(days=30*int(duration))
+
+    if date_joined + timedelta(days=7) > today :
+        if 6 < student.level.id < 10 : price_a_month += 10
+        elif 9 < student.level.id : price_a_month += 20
+
+        if int(duration) == 12 : 
+            end_of_this_adhesion = datetime(this_year,7,7 )
+            price = (end_of_this_adhesion-today).days*price_a_month/31
+        else : 
+            price  = price_a_month * int(duration)
+
+    elif adhesion and end_of_this_adhesion < adhesion.stop and formule_id and adhesion.formule_id >= int(formule_id) :
+        data["no_end"] = True
+
+    elif adhesion and end_of_this_adhesion < adhesion.stop :
+        data["no_end"] = False
+        if int(duration) == 12 : 
+            end_of_this_adhesion = datetime(this_year,7,7 )
+            price = (end_of_this_adhesion-today).days*price_a_month/31
+        else : 
+            price  = price_a_month * int(duration)
+
+        days_left = adhesion.stop - today # nbre de jours de l'ancienne adhésion dèja payée mais pas consommée
+        old_formule   = Formule.objects.get(pk=adhesion.formule_id)
+        if 6 < student.level.id < 10 : old_formule_price = old_formule.price +10
+        elif 9 < student.level.id : old_formule_price = old_formule.price +20
+        else : old_formule_price = old_formule.price
+        old_price = days_left.days * old_formule_price/30 # cout du relicat de jours
+        price = max( price - old_price , 0 )
+
+    return round(price,2) , end_of_this_adhesion
 
 
 
@@ -1465,54 +1517,31 @@ def ajax_price_changement_formule(request) :
     formule_id = request.POST.get("formule_id",None)
     duration   = request.POST.get("duration",None)
 
+    user    = User.objects.get(pk=student_id)  
+    date_joined = user.date_joined.replace(tzinfo=None)
+    student = Student.objects.get(user_id=student_id)   
+    try    : adhesion = student.adhesions.last()
+    except : adhesion = None
+    today   = datetime.now()
+    if today.year < 7 : this_year = today.year
+    else :  this_year = today.year + 1
     data = {}
-    offset = 0
-    if formule_id and duration :
-        formule = Formule.objects.get(pk=formule_id)
-        if int(duration) == 12 : 
-            price   = formule.price * 10
-            offset  = 1 #5
-        else : 
-            price   = formule.price * int(duration)
-      
-    student              = Student.objects.get(user_id=student_id) 
-    today                = time_zone_user(student.user)
-    adhesion             = student.adhesions.last()
-    end_of_this_adhesion = today + timedelta(days=30*int(duration)+ offset)
 
-    if adhesion and end_of_this_adhesion < adhesion.stop and formule_id and  adhesion.formule_id >= int(formule_id) :
-        data["no_end"] = True
-
-    elif adhesion and end_of_this_adhesion < adhesion.stop :
-        data["no_end"] = False
-        days_left = adhesion.stop - today # nbre de jours de l'ancienne adhésion dèja payée mais pas consommée
-        formule   = Formule.objects.get(pk=adhesion.formule_id)
-        old_price = days_left.days * formule.price/30 # cout du relicat de jours
-        price = max( price - old_price , 0 )
-
-    elif adhesion and today < adhesion.stop :
-        price   = price  
-        data["no_end"] = False
-        days_left = end_of_this_adhesion - adhesion.stop 
-
-        if formule_id and duration :
-            formule = Formule.objects.get(pk=formule_id)
-            price   = days_left.days * formule.price/30
-
+    price,end_of_this_adhesion = get_price_and_end_adhesion(formule_id, date_joined, today,duration,student )
     data["end_of_this_adhesion"] = str(end_of_this_adhesion.day) +"-" + str(end_of_this_adhesion.month) +"-" + str(end_of_this_adhesion.year)
+    data["result"]   = str(price) 
     data["amount"]   = price
     data["start"]    = today
     data["stop"]     = end_of_this_adhesion
-    if adhesion :
-        data["year"]     = adhesion.year
-        data["level_id"] = adhesion.level.id
+    data["year"]     = adhesion.year
+    data["level_id"] = adhesion.level.id
  
-    data["result"] = str(price) 
     return JsonResponse(data)
 
 
 def adhesions_academy(request):
     """ liste des adhésions """
+    request.session["tdb"] = 'adhesion'
     user = request.user
     u_parents = all_from_parent_user(user)
     factures =  Facture.objects.filter(user__in=u_parents,is_lesson=0) 
@@ -1521,9 +1550,6 @@ def adhesions_academy(request):
     context = { "factures" : factures,  "last_week" : last_week    }
 
     return render(request, 'setup/list_adhesions.html', context)
-
-
-
 
 
 

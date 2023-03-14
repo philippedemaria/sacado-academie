@@ -110,11 +110,11 @@ active
     </a>
 </li> 
 
-{% if request.user.is_in_academy and request.user.student.data_menu.id > 2 %}
+{% if request.user.is_in_academy and request.user.student.data_menu.id > 1 %}
 <li class="dropdown {% if  request.session.tdb == 'Lesson' %}active{% endif %}">
     <a href="{% url 'detail_student_lesson' request.user.id %}" class="main" >
         <i class="bi bi-camera-video icon_size"></i> 
-        <div class="captionmenu">Leçons</div>
+        <div class="captionmenu">Visios</div>
     </a>
 </li>
 {% endif %}

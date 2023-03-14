@@ -16,7 +16,7 @@
             <div class="col-sm-12 col-md-10">
 
                 
-                <h4 class="title_page"> <img src="{% if formule.id == 1 %}{% static 'img/menu_autonomie.png' %}{% elif formule.id == 2 %}{% static 'img/menu_ia.png' %}{% elif formule.id == 3 %}{% static 'img/menu_suivi.png' %}{% else %}{% static 'img/menu_accompagnement.png' %}{% endif %}" width="60px" /> <span class="sub_header">Menu <span class="sub_header">{{ formule.name }}</span>  </span> </h4>
+                <h4 class="title_page"> <img src="{% if formule.id == 1 %}{% static 'img/menu_autonomie.png' %}{% elif formule.id == 2 %}{% static 'img/menu_suivi.png' %}{% elif formule.id == 3 %}{% static 'img/menu_exam.png' %}{% else %}{% static 'img/menu_class.png' %}{% endif %}" width="60px" /> <span class="sub_header">Menu <span class="sub_header">{{ formule.name }}</span>  </span> </h4>
 
 
                     L'adhésion est souscrite  
@@ -170,7 +170,7 @@
                         {% if not forloop.first %}
                         <div class="form-group">
                             <label>Niveau :</label>
-                            <select name="level" class="form-control select2">
+                            <select name="level" class="form-control select2" required>
                                 {% for l in levels|dictsort:"ranking" %}
                                     <option value="{{ l.id }}">{{ l.name }}</option>
                                 {% endfor %}

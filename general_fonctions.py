@@ -232,6 +232,13 @@ def time_zone_user(user):
     return today
 
 
+def naivetime_to_bd_time(naive_date):
+    timezone.activate(pytz.timezone(naive_date))
+    today = timezone.localtime(timezone.now())
+    return today
+
+
+
  
  
 def attribute_all_documents_to_student(parcourses,student):
