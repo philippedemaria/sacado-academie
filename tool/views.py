@@ -1616,6 +1616,15 @@ def goto_positionnement_student(request,id):
     else :
         question_ids      = request.session.get("question_ids")
 
+
+    try :
+        f = open('/var/www/sacado/logs/test_positionnement.log','a')
+        print(question_ids, file=f)
+        f.close()
+    except :
+        pass 
+
+
     #Génération des réponses 
     is_shuffle = False
     if positionnement.is_shuffle :
@@ -1666,15 +1675,6 @@ def goto_positionnement_student(request,id):
 
     quizz_nav += 1
     quizz_nav_prev = quizz_nav - 1
-
-    try :
-        f = open('/var/www/sacado/logs/test_positionnement.log','a')
-        print(q_id, file=f)
-        f.close()
-    except :
-        pass 
-
-
 
     context = { "first_name" : first_name  , "last_name" : last_name ,  "positionnement" : positionnement , "question" : question , "quizz_nav" : quizz_nav, "quizz_nav_prev" : quizz_nav_prev ,"end_of_quizz" : end_of_quizz ,"stop_time" : stop_time , 'student' : student  }
 
