@@ -101,7 +101,7 @@
                     {% if question.qtype == 1 %}
                         <b>{% if question.is_correct %}<span class="text-success">VRAI</span>{% else %}<span class="text-danger">FAUX</span>{% endif %}</b>
                     {% elif question.qtype == 2 %}
-                        <b>Réponse attendue :</b> {{ question.answer}}
+                        <b>Réponse attendue :</b> {{ question.answer|these_accepted_solutions}}
                     {% elif question.qtype == 3 or question.qtype == 4 %}
                     <table class="table borderless">
                         <tr>
