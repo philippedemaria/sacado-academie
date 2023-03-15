@@ -85,11 +85,18 @@
                     
                 </div>
                 <div class="col-sm-11 ">
+                    {% if question.qtype == 1 %}
+
+
+                    {% elif question.qtype == 2 %}
+
+
+                    {% elif question.qtype == 3 or question.qtype == 4 %}
                     <table class="table borderless">
                         <tr>
                         {% for c in question.choices.all %}
                             <td>{% if c.imageanswer %}
-                                    {{ c.imageanswer.url }}
+                                    <img src="{{ c.imageanswer.url }}" width="100px" />
                                 {% else %}
                                     {{ c.answer }}
                                 {% endif %} 
@@ -99,6 +106,29 @@
                         {% endfor %}
                         </tr>
                     </table>
+                    {% elif question.qtype == 5 %}
+                        {% for c in question.choices.all %}
+                            {% if c.imageanswer and c.imageanswerbis  %}
+                                <img src="{{ c.imageanswer.url }}" width="100px" /> <img src="{{ c.imageanswerbis.url }}" width="100px" />
+                            {% elif c.imageanswer %}
+                                <img src="{{ c.imageanswer.url }}" width="100px" /> {{ c.answerbis }}
+                            {% elif c.imageanswerbis %}
+                                {{ c.answer }} <img src="{{ c.imageanswerbis.url }}" width="100px" /> 
+                            {% else %}
+                                {{ c.answer }}
+                            {% endif %} 
+                            {% if c.retroaction %}<hr/>{{ c.retroaction }}{% endif %}
+                        {% endfor %}
+                    {% else %}
+                        {% for c in question.choices.all %}
+                            {% if c.imageanswer %}
+                                <img src="{{ c.imageanswer.url }}" width="100px" />
+                            {% else %}
+                                {{ c.answer }}
+                            {% endif %} 
+                            {% if c.retroaction %}<hr/>{{ c.retroaction }}{% endif %}
+                        {% endfor %}
+                    {% endif %}
                 </div>
             </div>
             <div class="row">  
