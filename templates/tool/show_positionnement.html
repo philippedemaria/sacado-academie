@@ -72,7 +72,7 @@
 
 
                     {% if question.calculator %}<img src="{% static 'img/no_calculator.png' %}" width="25px" /> {% else %}<img src="{% static 'img/no_calculator.png' %}" width="25px"/>{% endif %}
-                    {% if question.qtype == 1 %}VF{% elif question.qtype == 2 %}Réponse écrite{% elif question.qtype == 3 %}QCM{% else %}QCS{% endif %}
+                    {% if question.qtype == 1 %}VF{% elif question.qtype == 2 %}Réponse écrite{% elif question.qtype == 3 %}QCS{% else %}QCM{% endif %}
                     {% if question.qtype == 1 %}{{ question.answer}}{% endif %}<hr/>
                     {% for s in question.skills.all %}
                         {{ s }}{% if not forloop.last %}, {% endif %}
