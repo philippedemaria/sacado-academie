@@ -72,8 +72,21 @@
 
 
                     {% if question.calculator %}<img src="{% static 'img/no_calculator.png' %}" width="25px" /> {% else %}<img src="{% static 'img/no_calculator.png' %}" width="25px"/>{% endif %}
-                    {% if question.qtype == 1 %}VF{% elif question.qtype == 2 %}Réponse écrite{% elif question.qtype == 3 %}QCS{% else %}QCM{% endif %}
-                    {% if question.qtype == 1 %}{{ question.answer}}{% endif %}<hr/>
+                    {% if question.qtype == 1 %}
+                        Vrai / Faux 
+                    {% elif question.qtype == 2 %}
+                        Réponse écrite
+
+                    {% elif question.qtype == 3 %}
+                        QCS
+                    {% elif question.qtype == 4 %}
+                        QCM
+                    {% elif question.qtype == 5 %}
+                        Les paires
+                    {% elif question.qtype == 9 %}
+                        Texte à trous
+                    {% endif %}
+                    <hr/>
                     {% for s in question.skills.all %}
                         {{ s }}{% if not forloop.last %}, {% endif %}
                     {% endfor %}
@@ -86,11 +99,9 @@
                 </div>
                 <div class="col-sm-11 ">
                     {% if question.qtype == 1 %}
-
-
+                        <b>{% if question.is_correct %}<span class="text-success">VRAI</span>{% else %}<span class="text-danger">FAUX</span>{% endif %}</b>
                     {% elif question.qtype == 2 %}
-
-
+                        <b>Réponse attendue :</b> {{ question.answer}}
                     {% elif question.qtype == 3 or question.qtype == 4 %}
                     <table class="table borderless">
                         <tr>
