@@ -76,24 +76,12 @@
                         </span>
                         {% endif %}
                     </div>
-
-
-
-
-
                     <!-- Legende de la small-box -->
-                    <div style="position:absolute;right:3px; top:70px; padding:0px 3px;opacity:0.9; background-color:white; border-radius:4px;max-height:100px;overflow-y: auto">
+                    <div style="position:absolute;right:1px; top:70px; padding:0px 3px;opacity:0.9; background-color:white; border-radius:2px;max-height:100px;overflow-y: auto">
                             {% for s in data.my_students %} 
                                 <li class="sanspuce"><a href="{% url 'detail_student_all_views'  s.user.id   %}" class="small_users"> {{s.user.last_name|lower|capfirst}} {{s.user.first_name|lower|capfirst}}</a></li>
                             {% endfor %}
                     </div>
-
-
-
-
-
-                        
- 
                     <div class="small-box-footer" >
                         <div class="row">                                      
                             <div class="col-lg-12 col-xs-12" style="padding-right:0px;font-size: 12px;margin-top: 7px">
@@ -120,17 +108,12 @@
                         </div>
                         <div class="row">                                      
                             <div class="col-lg-12 col-xs-12" style="padding-right:10px; margin-bottom: 18px; margin-top: 12px">
-                            
-
                                 <a href="{% url 'list_parcours_group' group.id  %}" class="btn btn-default btn-accueil" style="width:280px;color:{{ group.color}}"> 
                                     Accéder                              
                                     {% if group.is_pending_correction %}
                                         <i class="fa fa-copyright pull-right" style="font-size:12px; margin-top:5px" title="Copies à corriger" ></i> 
                                     {% endif %}
                                 </a>
-                        
-
-
                             </div>
                         </div>
                         {% if data.nb_documents == 0 %}
@@ -210,24 +193,35 @@
                     </div>
                 {% else %}  
 
-
-                    {% if teacher.user.is_superuser or teacher.user.is_staff or teacher.user.is_manager %}
-                    <div class="row">
-                        <div class="col-lg-12 col-xs-12">
-                            <p></p>
-                            <div class="round" style="background-color: #FFB400">
-                                <h1 class="sacado">2.<br>Démarrez  avec </h1>
-                                <a href="{% url 'create_group' %}" >Créer mon premier groupe</a>
-                                <h1 class="sacado">sacAdo </h1>
+                    {% if teacher.user.school.id == 50 %}
+                        <div class="row">
+                            <div class="col-lg-12 col-xs-12">
+                                <p></p>
+                                <div class="round" style="background-color: #dc3545">
+                                    <h1 class="sacado">2.<br>Démarrez  ... </h1>
+                                    <a href="{% url 'add_students_to_my_lesson_group' %}" >Récupérer mes élèves</a>
+                                    <h1 class="sacado">SACADO ACADEMIE</h1>
+                                </div>
                             </div>
                         </div>
-                    </div>
                     {% else %}
-                        <div class="alert alert-warning">
-                            Vous n'avez aucun groupe affecté mais vous n'avez pas la permission de créer vos groupes. 
+                        {% if teacher.user.is_superuser or teacher.user.is_staff or teacher.user.is_manager %}
+                        <div class="row">
+                            <div class="col-lg-12 col-xs-12">
+                                <p></p>
+                                <div class="round" style="background-color: #FFB400">
+                                    <h1 class="sacado">2.<br>Démarrez  avec </h1>
+                                    <a href="{% url 'create_group' %}" >Créer mon premier groupe</a>
+                                    <h1 class="sacado">sacAdo </h1>
+                                </div>
+                            </div>
                         </div>
+                        {% else %}
+                            <div class="alert alert-warning">
+                                Vous n'avez aucun groupe affecté mais vous n'avez pas la permission de créer vos groupes. 
+                            </div>
+                        {% endif %}
                     {% endif %}
-
                 {% endif %}
         {% endfor %}
 

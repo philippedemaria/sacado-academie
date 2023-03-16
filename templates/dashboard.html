@@ -113,7 +113,11 @@
                             {% block page_title %}
                                     {% if request.user.is_authenticated %}
                                         {% if user.is_teacher %}
-                                            <span style="color:#5d4391"><i class="bi bi-people icon_size" ></i> Groupes  </span> 
+                                            <span style="color:#5d4391"><i class="bi bi-people icon_size" ></i> Groupes  </span>
+
+                                            {% if teacher.user.school.id == 50 %} 
+                                                <a href="{% url 'add_students_to_my_lesson_group' %}" class="btn btn-outline-danger" >Récupérer mes élèves</a>
+                                            {% endif %}
                                             {% if webinaire %}
                                             <div class="webinaire_index">
                                                 <i class="fa fa-bullhorn text-warning"></i> Invitation Webinaire</b> le {{ webinaire.date_time|date:"d-m-y à H:i"}} <i class="fa fa-hand-o-right"></i><a href="{% url 'webinaire_register'  %}" > Voir le menu</a>
@@ -131,16 +135,6 @@
                         </div>
                         <ul class="nav navbar-nav navbar-right">
                         {% block page_menu_right %}
-                            {% if request.user.is_authenticated %}
-                                {% if user.is_teacher %} 
-                                    <li>
-                                        <a href="https://sacado-academie.fr/ressources/prise_en_main.pdf" target ="_blank" class="btn btn-outline-danger" >
-                                            Prise en main  <img src="{% static 'img/pdf.png' %}" width="15px"/>
-                                        </a>
-                                    </li>
- 
-                                {% endif %}
-                            {% endif %} 
                             {% if teacher_to_student %}
                             <li class="sans_puce"><a href="#" id="teacher_to_student_view" class="btn btn-sacado">Revenir au profil enseignant</a> </li>
 

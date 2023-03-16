@@ -15,25 +15,6 @@
 
 {% endblock %} 
 
- 
-
-
-{% block styleMk4ht %}
-    <link href="{% static 'plugins/schedule/fullcalendar/fullcalendar.min.css' %}" rel='stylesheet' />
-    <link href="{% static 'plugins/schedule/fullcalendar/fullcalendar.print.min.css' %}" rel='stylesheet' media='print' />
-    <style type='text/css'>
-        body {
-                font-size: 14px;
-                font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
-                }
-        #calendar {
-                width: 900px;
-                margin: 0 auto;
-                }
-    </style>
-{% endblock  %}
-
-
 
 {% block page_title %} 
     <i class="bi bi-camera-video sacado_color_text"></i> 
@@ -67,7 +48,7 @@
                       <ul style="padding: 10px!important;">
                       {% for s in l.list %} 
                       {% is_inside_my_lesson teacher s as ins %}
-                      <li class="sanspuce">
+                      <li class="sanspuce" style="font-size: 15px;" >
                           <input id="student_id" value="{{ s.user.id }}" name="students" type="checkbox" {% if ins %} checked {% endif %} />
                           {% if ins %}
                               <b class="sacado_text_color"> {{ s }}</b> <i class="bi bi-align-end"></i>  <span style="color : {{ l.grouper.color }}">{{s.data_menu.name}} </span>
