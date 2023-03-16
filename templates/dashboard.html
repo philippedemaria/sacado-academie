@@ -503,7 +503,7 @@
     {% if request.user.is_superuser %}
     <div class="row">
         <div class="col-lg-12 col-xs-12 inside_volet_show_submenu">
-            <a href="{% url 'sequences' %}"  title="Voir la liste de mes séquences" {% if request.session.subtdb == 'Sequences' %} class="active_selected"{% endif %}><i class="bi bi-ladder" ></i> Séquences<sup class="text-danger">Nouveauté</sup> </a>    
+            <a href="{% url 'sequences' %}"  title="Voir la liste de mes séquences" {% if request.session.subtdb == 'Sequences' %} class="active_selected"{% endif %}><i class="bi bi-ladder" ></i> Séquences</a>    
             <a href="{% url 'sequences_archives' %}" class="inside_volet pull-right" title="Mes séquences archivés"><i class="bi bi-archive"></i></a>
             <a href="{% url 'create_sequence' 0 %}" class="inside_volet pull-right" title="Créer une nouvelle séquence"><i class="bi bi-plus-circle"></i></a>
         </div>
@@ -558,7 +558,7 @@
     <hr/>
     <div class="row">
         <div class="col-lg-12 col-xs-12 inside_volet_show_submenu">
-            <a href="{% url 'my_own_exercises' %}"   {% if request.session.subtdb == 'Exercises' %} class="active_selected"{% endif %}  title="Voir la liste de mes exercices"><i class="bi bi-explicit"></i> Exercices<sup class="text-danger">Nouveauté</sup> </a> 
+            <a href="{% url 'my_own_exercises' %}"   {% if request.session.subtdb == 'Exercises' %} class="active_selected"{% endif %}  title="Voir la liste de mes exercices"><i class="bi bi-explicit"></i> Exercices </a> 
             
             <a href="#" data-toggle='modal' data-helper_text='custom_exercises'   data-target='#helper_div' class="pull-right edit helper_div_text"><i class="fa fa-question-circle"></i></a> 
             <a href="{% url 'supportfile_creator' 0  %}" class="inside_volet pull-right" title="Créer une nouvel exercice perso"><i class="bi bi-plus-circle"></i></a>

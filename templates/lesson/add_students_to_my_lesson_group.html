@@ -35,34 +35,21 @@
 
 
 
-
-
 {% block page_title %} 
     <i class="bi bi-camera-video sacado_color_text"></i> 
-    Ajouter des élèves à mes leçons  - <small>{{ teacher.students.count }} actuellement</small>
+    Ajouter des élèves à mes leçons  - <small>{{ teacher.students.count }} actuellement en charge</small>
 {% endblock  %}
-
-
 
 
 
 {% block page_menu_right %} 
- <small>{{ teacher.user.last_name}} {{ teacher.user.first_name}}</small> 
- 
 {% endblock  %}
-
-
-
 
 
 
 
 
 {% block body  %} 
- 
-
-
-
 <section class="content_container">
 
     <div class="row">
@@ -75,14 +62,23 @@
                 {% regroup students by level as level_list %}
 
                 {% for l in level_list %}
-                    <h3 style="background-color: #f1eef7"> {{ l.grouper }}</h3> 
-                        <ul style="padding: 10px!important;">
-                        {% for s in l.list %} 
-                        {% is_inside_my_lesson teacher s as ins %}
-                        <li class="sanspuce"><input id="student_id" value="{{ s.user.id }}" name="students" type="checkbox" {% if ins %} checked {% endif %} />{% if ins %}<b> {{ s }}</b>{% else %} {{ s }} {% endif %}</li>
-                        {% endfor  %}
-                        </ul>
-                    
+                    <div class="card" style="width:350px;padding:15px;height:200px; border : 5px solid {{ l.grouper.color }};overflow-y: auto">
+                    <span style="background-color: {{ l.grouper.color }};font-size: 20px;padding:5px;color: {{ l.grouper.color|contrast_color }}"> {{ l.grouper }}</span> 
+                      <ul style="padding: 10px!important;">
+                      {% for s in l.list %} 
+                      {% is_inside_my_lesson teacher s as ins %}
+                      <li class="sanspuce">
+                          <input id="student_id" value="{{ s.user.id }}" name="students" type="checkbox" {% if ins %} checked {% endif %} />
+                          {% if ins %}
+                              <b class="sacado_text_color"> {{ s }}</b> <i class="bi bi-align-end"></i>  <span style="color : {{ l.grouper.color }}">{{s.data_menu.name}} </span>
+                              <a href="{% url 'delete_student_to_my_lesson_group' s.user.id %}" onclick="return TestRemove('{{ s.user }}')"><i class="bi bi-x-circle"></i></a>
+                          {% else %} 
+                              {{ s }} <i class="bi bi-align-end"></i> <span style="color : {{ l.grouper.color }}">{{s.data_menu.name}} </span>
+                          {% endif %}
+                        </li>
+                      {% endfor  %}
+                      </ul>
+                    </div>
                 {% endfor %}
 
 

@@ -87,7 +87,6 @@ def group_has_overall_parcourses(group):
         for p in pses :
             if p not in  parcourses_tab :
                 parcourses_tab.append(p)
-
     return parcourses_tab
 
 
@@ -97,6 +96,19 @@ def sharing_teachers(request,group, teachers):
 	for share in shares : 	
 		share.delete()
 
+	for folder in group.group_folders.all():
+		folder.coteachers.clear()
+
+	for parcours in group.group_parcours.all() :
+		parcours.coteachers.clear()
+
+	for bibliotex in group.bibliotexs.all():
+		bibliotex.coteachers.clear()
+
+	for flashpack in group.flashpacks.all():
+		flashpack.coteachers.clear()
+
+
 	choices = request.POST.getlist("choices") 
 	for c in choices :
 		c_tab = c.split("-")
@@ -104,9 +116,16 @@ def sharing_teachers(request,group, teachers):
 		role =  int(c_tab[0])
 		Sharing_group.objects.create(group = group ,teacher = teacher, role = role  )
 
-		parcourses = group_has_overall_parcourses(group)
-		for parcours in parcourses :
+
+		for folder in group.group_folders.all():
+			folder.coteachers.add(teacher)
+		for parcours in group.group_parcours.all() :
 			parcours.coteachers.add(teacher)
+		for bibliotex in group.bibliotexs.all():
+			bibliotex.coteachers.add(teacher)
+		for flashpack in group.flashpacks.all():
+			flashpack.coteachers.add(teacher)
+
 
 
 @user_is_superuser

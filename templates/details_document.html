@@ -58,15 +58,21 @@
             </span>
  
           </div>
-
         {% endif %}
           <!-- average  -->
+
+          {% if rc.parcours.teacher == request.teacher %} 
           <div class="btn btn-{% if  rc.is_in_average %}success{% else %}default{% endif %} select_average"  
                 style="position: absolute; right : 0px; top:67px;" 
                 id="average{{rc.id}}"  title="Rentre en compte pour le calcul de la moyenne de la section" 
                 data-relationship_id="{{rc.id}}">   
               <i class="bi bi-award"></i>
           </div>
+          {% endif %}
+
+
+
+
           <!-- Publication  -->
           <div href="#card{{rc.id}}" class="action_content {% if  not rc.is_in_average %}btn btn-default{% elif  rc.is_publish %}btn btn-success{% else %}btn btn-danger{% endif %}"  style="position: absolute; right : 0px; top:90px;" id="publisher{{rc.id}}"  data-relationship_id="{{rc.id}}" data-statut="{{rc.is_publish }}" data-custom="0" title="Publier l'exercice" >   
               {% if  rc.is_publish %}Publié{% elif rc.start %}{{ rc.start|date:"d N Y" }}{% else %}Dépublié{% endif %}

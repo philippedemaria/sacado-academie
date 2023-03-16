@@ -80,13 +80,18 @@
               <i class="fa fa-minus-circle"></i>
           </div>
           <!-- average  -->
+          {% if 'parcours_show' in request.path %}
+          <div style="position: absolute; right : 0px; top:200px;" title="Rentre en compte pour le calcul de la moyenne de la secton" >  
+              <i class="bi bi-award"></i>
+          </div>
+          {% else %}
           <div class="btn btn-default select_average"  
                 style="position: absolute; right : 0px; top:200px;" 
                 id="constraint{{rc.id}}"  title="Rentre en compte pour le calcul de la moyenne de la secton" 
                 data-relationship_id="{{rc.id}}">   
               <i class="bi bi-award"></i>
           </div>
-
+          {% endif %}
 
           <!--  
           =============================================================================================================

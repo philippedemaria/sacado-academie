@@ -2,7 +2,7 @@ from django.db import models
 from datetime import date
 from account.models import Student, Teacher, ModelWithCode, generate_code
 from school.models import School
-from socle.models import Level, Subject , Waiting , Vignette
+from socle.models import Level, Subject , Waiting , Vignette 
 from django.apps import apps
 from django.utils import timezone
 from django.db.models import Q
@@ -14,8 +14,10 @@ from django.db.models import Q
 class Group(ModelWithCode):
 
     FORMULES = (
-        (1, "SANS Visio"),
-        (2, "AVEC Visio"),
+        (1, "Autonomie"),
+        (2, "Suivi"),
+        (3, "Prép'Exam"),
+        (4, "Prep'Classe"), 
     )
 
 
@@ -113,10 +115,14 @@ class Group(ModelWithCode):
         students = self.students.all()
         studnts = students.exclude(user__username__contains= "_e-test") 
         snt = studnts.count()
-        profil = self.students.filter(user__username__contains= "_e-test").count()
+        profil = students.filter(user__username__contains= "_e-test").count()
         profilTest = False
         if profil > 0 : 
             profilTest = True
+
+        my_students = [s for s in teacher.students.all() if s in studnts ]
+
+        print(my_students)
             
  
         parcourses = self.group_parcours.filter(Q(teacher=teacher)|Q(author=teacher)|Q(coteachers = teacher), subject = self.subject, level = self.level ,  folders=None, is_favorite=1,  is_archive=0, is_trash=0) 
@@ -138,6 +144,8 @@ class Group(ModelWithCode):
             if parcours.is_evaluation and parcours.is_favorite :
                 nbef += 1
 
+
+        data["my_students"] = my_students
         data["count_students"] = snt
         data["students"] = students.values("user__id", "user__last_name", "user__first_name").exclude(user__username__contains= "_e-test").order_by("user__last_name") 
         data["nb_parcours"] = nb

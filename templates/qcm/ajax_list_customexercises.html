@@ -1,0 +1,400 @@
+
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+
+<div class="row">
+    {% for exercise in exercises  %}
+        {% with supportfile=exercise.supportfile %}  
+        <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="form_card tweeter card_shadow" style="margin-top:20px; position:relative;">
+                <div class="parcours_div_support scrollbar" id="parcours_div_support{{ forloop.counter}}">
+                    {% get_parcourses_from_level exercise teacher as parcourses %}
+                    <div class='labeltitle'>
+                        Cliquer sur les parcours à attribuer (enregistrement direct)
+                        <a href="javascript:void();" data-loop="{{ forloop.counter}}" class="close_parcours_div_support pull-right"><i class="fa fa-times text-default"></i></a>
+                    </div>
+                    {% for parcours in parcourses %}
+                        <label class="btn btn-{% if exercise in parcours.exercises.all %}primary{% else %}default{% endif %}" id="parcours{{exercise.id}}-{{ forloop.counter}}">{{ parcours.title }} 
+                            {% if not exercise in parcours.exercises.all %}
+                            <input type="checkbox" data-exercise_id="{{ exercise.id}}" data-parcours_id="{{ parcours.id}}" 
+                                    data-loop="{{ forloop.counter}}" id="assign_exercise_to_parcours{{exercise.id}}-{{ forloop.counter}}" class="assign_exercise_to_parcours" />
+                            {% endif %}
+                        </label>
+                    {% endfor %}
+                </div>
+
+                <div style="position:absolute;top:0px;right: 30px; ">
+                    {% if supportfile.level.image %}
+                    <img src="{% static supportfile.level.image  %}" width="15px"/> 
+                    {% endif %}
+                </div>
+                <div class="row" style="border-bottom:1px solid #CCC;padding-bottom:5px; margin-bottom: 5px">
+                    <div class="col-sm-3">
+                        <a href="{% url 'update_supportfile' supportfile.id  %}" title="Configurer" class="label_my_own"><i class="bi bi-gear"></i></a>
+                        <a href="{% url 'show_all_type_exercise' supportfile.id   %}" title="Voir" target="_blank" class="label_my_own"><i class="bi bi-eye"></i> </a>
+                        <a href="javascript:void();"  title="Assigner à un parcours" class="parcours_selector_support label_my_own" data-loop="{{ forloop.counter}}"><i class="bi bi-box-arrow-up-right"></i></a>
+                    </div>
+                    <div class="col-sm-6"> 
+                        <img src="{{ supportfile.qtype_logo.url  }}" width="20px" class="qtypes_logo" /> 
+                        {{ supportfile.qtype_title  }} 
+                    </div>
+                    <div class="col-sm-3" align='right'>
+                        {% if supportfile.correction != "" %}
+                            <span class="helper_tip" style="color:#222">
+                                <i class="fa fa-copyright text-{% if supportfile.is_display_correction %}light{% else %}mauve{% endif %}" style="font-size:18px;cursor:help"></i>
+                                <div class="helper_tip_text">Exercice corrigé</div>
+                            </span>
+                        {% endif  %} 
+                        {% if supportfile.nb_pseudo %}
+                             <label>
+                                <small>
+                                    <span class="helper_tip" style="color:#222"><b>Ps</b> 
+                                        <div class="helper_tip_text">Exercice Pseudo aléatoire</div>
+                                    </span>
+                                    <small>[{{supportfile.nb_pseudo}}/{{supportfile.supportchoices.count}}]</small>
+                                </small>
+                            </label>
+                        {% endif  %} 
+                        {% if supportfile.is_scratch %}
+                            <img src="{% static 'img/is_scratch.png' %}" width="20px" />
+                        {% endif  %}                               
+                        {% if supportfile.calculator %}
+                            <img src="{% static 'img/calculator.png' %}" width="20px" />
+                        {% else %}
+                            <img src="{% static 'img/no_calculator.png' %}" width="20px" />
+                        {% endif  %}                       
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 exercise_body_shared consigne_small_font" style="min-height:50px; max-height: 300px">
+                        {% if supportfile.qtype == 100 %}
+                            {% if supportfile.imagefile %}
+                            <img src="{{ supportfile.imagefile.url }}" height="270px" />
+                            {% endif %}
+
+                        {% else %}
+                            {{ supportfile.annoncement|safe }}
+                        {% endif %}
+                    </div>                    
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 exercise_body_shared" style="min-height:0px; max-height: 300px">
+                        {% if supportfile.qtype == 1 %} <!-- VF -->
+                            <div class="row" style="padding-top: 20px;"> 
+                                {% for c in supportfile.supportchoices.all %}
+                                    <div class="col-sm-6" align='center'> 
+                                        <li  class='sanspuce answer_box'>{{ c.answer|safe }}
+                                        {% if c.is_correct %}
+                                            <i class="fa fa-check text-success"></i>
+                                        {% else %}
+                                            <i class="fa fa-times text-danger"></i>
+                                        {% endif %}</li>
+                                    </div>
+                                {% endfor %} 
+                            </div>
+
+                        {% elif supportfile.qtype == 2 %} <!-- Réponse à compléter -->
+                            {% for c in supportfile.supportchoices.all %}
+                                <div class="row" style="padding:5px 0px;border-bottom: 1px solid #CCC"> 
+                                    {% if c.answer %}
+                                        <div class="col-sm-6"  style="font-size:14px;">
+                                            {{ c.answer|safe }}
+                                        </div>
+                                        <div class="col-sm-6"  style="font-size:14px;">
+                                            <div class="answer_mini_box">{{ c.answerbis|safe }}</div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        {% elif supportfile.qtype == 3 or supportfile.qtype == 4 %} <!-- QCS-QCM -->
+
+                            {% for choice in supportfile.supportchoices.all  %}
+                            <div class="row quizz_item" style="padding: 10px; font-size:13px;{% if choice.is_correct %}border: 1px solid green;{% endif %}"> 
+                                <div class="col-sm-11" align='left' >
+                                {% if choice.imageanswer  %}<img src="{{ choice.imageanswer.url }}" height="80px" />{% endif %}{{ choice.answer }}
+                                </div>       
+                                <div class="col-sm-1" align='left'>
+                                    <input type="{% if supportfile.qtype == 3  %}radio{% else %}checkbox{% endif %}" name="answers" value="{{ choice.id }}"   />
+                                </div>
+                            </div>
+                            {% endfor %}
+
+
+
+
+                        {% elif supportfile.qtype == 5 %}<!-- Paires -->
+
+                            {% for choice in supportfile.supportchoices.all  %}
+                            <div class="row " style="padding: 10px; font-size:18px"> 
+                                <div class="col-sm-6 quizz_item" align='center'>
+                                {% if choice.imageanswer  %}<img src="{{ choice.imageanswer.url }}" height="80px" />{% endif %}{{ choice.answer }}
+                                </div>       
+                                <div class="col-sm-6 quizz_item" align='center'>
+                                {% if choice.imageanswerbis  %}<img src="{{ choice.imageanswerbis.url }}" height="80px" />{% endif %}{{ choice.answerbis }}
+                                </div>
+                            </div>
+                            {% endfor %}
+
+                        {% elif supportfile.qtype == 6 %}<!-- Correspondance -->
+
+                            {% for choice in supportfile.supportchoices.all %}
+                                    <div class="bilan_div" style="padding:5px">{{ choice.answer }}  {% if supportfile.nb_subpseudo %}<label><small>[{{ supportfile.nb_subpseudo}}]</small></label>{% endif %}
+                                        <div class="quizz_item_choice" style="padding:5px">
+                                        {% for subchoice in choice.supportsubchoices.all %}
+                                            <li class="sanspuce">{{ subchoice.answer }}</li>
+                                        {% endfor %}
+                                        </div>
+                                    </div>
+                            {% endfor %}
+
+
+
+                        {% elif supportfile.qtype == 7 %}<!-- Anagrammes -->
+                            
+                            <div class="row" style="margin-top:20px"> 
+                                <div class="col-sm-12 col-md-12" >
+                                    Vous devez trouver {% if supportfile.nb_pseudo %}{{ supportfile.nb_pseudo }} sur les {% endif %}{{ supportfile.supportchoices.count }}  mots donc les anagrammes sont ci-dessous.   
+                                </div>
+                            </div>
+                            {% for choice in supportfile.supportchoices.all %}
+                            <div class="row">
+                                {% if  choice.answer|wordcount > 1 %} 
+                                 <div class="col-sm-12 col-md-12">{{ choice.answer|filltheblanks_safe|safe }} </div>
+                                {% else %}
+                                <div class="col-sm-12 col-md-3" align='right'>
+                                {{ choice.answer|safe }} 
+                                </div>
+                                <div class="col-sm-1 col-md-1" align='left'>
+                                  <i class="fa fa-caret-right"></i> 
+                                </div>
+                                <div class="col-sm-11 col-md-8" align='left'>
+                                     <input type="text"    />
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                         
+                        {% elif supportfile.qtype == 8 %}<!-- Classement par ordre -->
+                        
+                            {% for choice in supportfile.supportchoices.all %}
+                                    <div class="bilan_div" style="padding:5px;width:95%"> 
+                                        {% for subchoice in choice.supportsubchoices.all %}
+                                            {% if subchoice.imageanswer  %}<img src="{{ subchoice.imageanswer.url }}" width="80px" />{% endif %}
+                                            <div class="quizz_item" style="padding:5px;float:left;width:30px;height:30px">{{ subchoice.answer }}</div>
+                                        {% endfor %}
+                                    </div>
+                            {% endfor %}
+ 
+                        {% elif supportfile.qtype == 9 %}<!-- Filltheblanks_safe -->
+                            <div class="row" align="left"> 
+                                <div class="col-sm-12 col-md-12" >
+                                    {% for choice in supportfile.supportchoices.all %}
+                                        <div class="fill_the_blanks_text" style="text-align:left;font-size: 13px"> 
+                                             {{ choice.answer|filltheblanks_safe|safe }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+
+                        {% elif supportfile.qtype == 10 %}<!-- Puzzle -->
+
+                            <div class="row" style="margin-top:20px">
+                                <div class="col-sm-2 col-md-2" >
+                                    {% for choice in supportfile.supportchoices.all %}
+                                        <div class="quizz_choice"> 
+                                            {{ choice.answer }} x {{ choice.answerbis }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+
+                                <div class="col-sm-10 col-md-10" >
+                                    {% for choice in supportfile.supportchoices.all %}
+                                        <div class="quizz_choice"> 
+                                            {% if choice.imageanswer  %}<img src="{{ choice.imageanswer.url }}" height="200px" />{% endif %} 
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+
+
+                        {% elif supportfile.qtype == 11 %}<!-- Mots croisés -->
+                        pass
+
+
+                        {% elif supportfile.qtype == 12 %}<!-- Mots mélés -->
+                            <div class="row">
+                                <div class="col-sm-8" align='center'>
+                                    {{ supportfile.grid|safe }}
+                                </div>
+                                <div class="col-sm-4">
+                                    {% for choice in supportfile.supportchoices.all %}
+                                        <li class="sanspuce">{{forloop.counter}}. {{ choice }}</li>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% elif supportfile.qtype == 13 %}<!-- Mots secret --> 
+                            {% for choice in  supportfile.supportchoices.all %}
+                                <div class="quizz_choice"> 
+                                    {{ choice.answer }}
+                                </div>
+                            {% endfor %}  
+                        {% elif supportfile.qtype == 14 %}<!-- Mémo cartes -->
+                            {% for choice in supportfile.supportchoices.all %}
+                                    <div class="bilan_div" style="padding:5px">{{ choice.answer }}
+                                        <div class="quizz_item" style="padding:5px">
+                                        {% for subchoice in choice.supportsubchoices.all %}
+                                            <li class="sanspuce">{{ subchoice.answer }}</li>
+                                        {% endfor %}
+                                        </div>
+                                    </div>
+                            {% endfor %}
+                        {% elif supportfile.qtype == 15 %} <!-- Placement sur image -->   
+                            {% for choice in supportfile.supportchoices.all %}
+                                    <div class="row">
+                                        <div class="col-xs-9">
+                                            <img src="{{ choice.imageanswer.url}}" width="300px"/>
+                                        </div>
+                                        <div class="col-xs-3">
+                                            {% for subchoice in choice.supportsubchoices.all %}
+                                                <li class="sanspuce">{{ subchoice.label }}</li>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                            {% endfor %}
+                        {% elif supportfile.qtype == 16 %}<!-- #####################################  Insertion vidéo Non codé -->
+                        pass
+                        {% elif supportfile.qtype == 17 %}<!-- #####################################  Quiz Cap Non codé -->
+                        pass
+                        {% elif supportfile.qtype == 18 %}<!-- Classement sur un axe -->     
+
+                            {% for choice in supportfile.supportchoices.all %}
+ 
+                                {% if choice.is_written %}
+                                    <div class="row">
+                                        <div class="col-xs-9">
+                                            <div class="quizz_choice" style="background-color: #a94442;color:white">Mode aléatoire </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-xs-12" style="line-height:25px">
+                                            L'origine de l'axe est $a \in$ [<b>{{ choice.xmin }}</b>;<b>{{ choice.xmin|add:choice.xmax }}</b>] et l'extrémité de l'axe est $a +${{ choice.precision }} avec une unité de <b>{{ choice.tick }}</b>, une secondaire de <b>{{ choice.subtick }}</b>.
+                                        </div>
+                                    </div> 
+
+                                    <div class="row">
+                                        <div class="col-xs-12" style="line-height:25px">
+                                            Pour chaque situation, {{ supportfile.nb_subpseudo }}{% if supportfile.nb_subpseudo > 1 %}  marqueurs sont demandés.{% else %} marqueur est demandé.{% endif %}
+                                        </div>
+                                    </div> 
+
+                                {% else %}
+                                    <div class="row">
+                                        <div class="col-xs-12" style="line-height:25px">
+                                             L'axe est gradué de <b>{{ choice.xmin }}</b> à  <b>{{ choice.xmax }}</b> avec une unité de <b>{{ choice.tick }}</b>, une secondaire de <b>{{ choice.subtick }}</b>.
+                                        </div>
+                                    </div>                            
+                                    <div class="row">
+                                        {% if choice.imageanswer %}
+                                        <div class="col-xs-9">
+                                            <img src="{{ choice.imageanswer.url}}" width="150px"/>
+                                        </div>
+                                        {% endif %}
+                                        {% for subchoice in choice.supportsubchoices.all %}
+                                            <div class="quizz_choice">{{ subchoice.label }} </div>
+                                        {% endfor %}  
+                                    </div>
+                                {% endif %}    
+                            {% endfor %}
+
+
+                        {% elif supportfile.qtype == 19 %}<!-- Interface Python -->
+                            <div class="row">
+                                <div class="col-sm-12">
+                                     <div class="python_editor"><div class="nb_line">1 2 3 4 5 6 7 8 9 </div></div>
+                                </div>
+                            </div> 
+                        {% elif supportfile.qtype == 20 %}<!-- Réponse rédigée -->
+                            <div align="center">
+                            {% if supportfile.is_image %}
+                                 <input type="file" class="btn btn-default" > 
+                            {% endif %}
+                            {% if supportfile.is_text %}
+                                 <img src="{% static 'img/editor.jpg'  %}" />
+                            {% endif %}
+                            {% if supportfile.is_file %}
+                                <input type="file" class="btn btn-default" > 
+                            {% endif %}
+                            </div>
+                        {% endif %}
+
+ 
+                    </div>
+                </div>
+
+
+ 
+            </div>  
+        </div>
+        {% endwith %}
+    {% empty %}
+        <div class="col-sm-4 col-md-4">
+            <div class="alert alert-sacado">
+                Aucun exercice trouvé.
+            </div>
+        </div>
+    {% endfor %}
+</div>  
+{% if is_mathJax %}
+<script>
+MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+
+ 
+MathJax = {
+  tex: {packages: {'[+]': ['input']} ,   inlineMath: [['$', '$']] , displayMath: [['$$', '$$'], ["\\[", "\\]"]],  },
+  startup: {
+    ready() {
+      const Configuration = MathJax._.input.tex.Configuration.Configuration;
+      const CommandMap = MathJax._.input.tex.SymbolMap.CommandMap;
+      const TEXCLASS = MathJax._.core.MmlTree.MmlNode.TEXCLASS;
+      
+      new CommandMap('input', {input: 'Input'}, {
+        Input(parser, name) {
+          const xml = parser.create('node', 'XML');
+          const id = parser.GetBrackets(name, '');
+          const w = parser.GetBrackets(name, '5em');
+          const classe = parser.GetBrackets(name, 'input_latex');
+          const value = parser.GetArgument(name);
+          xml.setXML(MathJax.startup.adaptor.node('input', {
+            id: id, name: id, value: value, class: classe , style: {width: w}
+             }), MathJax.startup.adaptor);
+          xml.getSerializedXML = function () {
+            return this.adaptor.outerHTML(this.xml) + '</input>';
+          }
+          parser.Push(
+            parser.create('node', 'TeXAtom', [
+              parser.create('node', 'semantics', [
+                parser.create('node', 'annotation-xml', [
+                  xml
+                ], {encoding: 'application/xhtml+xml'})
+              ])
+            ], {texClass: TEXCLASS.ORD})
+          );
+        }
+      });
+      Configuration.create('input', {handler: {macro: ['input']}});
+
+      MathJax.startup.defaultReady();
+    }
+  }
+};
+</script>
+<script id="MathJax-script" defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+{% endif  %}
+
+ 
+

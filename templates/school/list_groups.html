@@ -49,7 +49,7 @@
                     <tbody>
                         {% for group in groups %}
                             <tr>
-                                <td style="width:150px ; border-left:5px solid {{group.color}}">
+                                <td style="width:150px ; border-left:5px solid {{group.level.color}}">
                                     <input type="checkbox" name="group_ids" value="{{ group.id }}" />
                                     <a href="{% url 'update_group_school'  group.id %}" style="color:{{group.color}}">{{ group.name }} </a>
                                     <span style="color:#CCC; font-size: 10px" class="pull-right tool_tip" >

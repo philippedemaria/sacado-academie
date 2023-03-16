@@ -75,7 +75,7 @@
             Mes élèves
 
             {% if request.user.is_superuser %}
-            <a href="{% url 'add_students_to_my_lesson_group' %}" class="pull-right"><i class="bi bi-plus-circle"></i> Ajouter</a>
+            <small><a href="{% url 'add_students_to_my_lesson_group' %}"><i class="bi bi-gear"></i></a></small>
             {% endif %}
 
 
@@ -86,15 +86,16 @@
                 {% regroup students by level as level_list %}
 
                 {% for l in level_list %}
-                    <h4 style="background-color: #f1eef7"> {{ l.grouper }}</h4> 
-                    <ul style="padding: 10px!important;">
+                <div style="border : 3px solid {{ l.grouper.color }};margin-bottom:5px"> 
+                    <div style="background-color: {{ l.grouper.color }};width:100%;color:{{ l.grouper.color|contrast_color }};"> {{ l.grouper }}</div> 
+                    <ul style="padding: 10px!important;margin-bottom: 0px;">
                     {% for s in l.list %} 
-                    <li><a href="{% url 'detail_student_academy' s.user.id %}">{{ s }}</a> 
-                        <a href="{% url 'delete_student_to_my_lesson_group' s.user.id %}" class="pull-right" onclick="return TestRemove('{{ s.user }}')"><i class="bi bi-trash"></i></a>
+                    <li class="sanspuce">
+                        <a href="{% url 'detail_student_academy' s.user.id %}">{{ s }}</a> 
                     </li> 
                     {% endfor  %}
                     </ul>
-                    
+                </div>    
                 {% endfor %}
 
 

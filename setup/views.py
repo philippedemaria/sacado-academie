@@ -1122,6 +1122,7 @@ def attribute_group_to_student_by_level(level,student,formule_id) :
 
     teacher_ids = ["0" ,89513,89507,89508,89510, 89511, 46245  , 46242 , 46246  , 46247, 46222, 46243, 46244,"", 130243] # "0" ET "" sont des offsets
     teacher_id = teacher_ids[level.id]
+    if formule_id > 2 : formule_id = 2
     group = Group.objects.filter(level = level, school_id = 50, teacher_id=teacher_id, formule_id=formule_id).first()
     group.students.add(student)
     groups = [group]
@@ -1344,16 +1345,23 @@ def save_adhesion(request) :
         if nb_child > 1 :
             nbc = "s"
             
-        msg = "Bonjour "+p["first_name"]+" "+p["last_name"]+",\n\nVous venez de souscrire à une adhésion "+formule_adhesion +" à la SACADO Académie avec le menu "+formule_name+". \n"
+        msg = "Bonjour "+p["first_name"]+" "+p["last_name"]+",\n\nVous venez de souscrire à une adhésion "+formule_adhesion +" à la SACADO ACADEMIE avec le menu "+formule_name+". \n"
+
+
         msg += "Votre référence d'adhésion est "+chrono+".\n\n"
         msg += "Votre identifiant est "+p["username"]+" et votre mot de passe est "+p["password_no_crypted"]+"\n"
         msg += "Vous avez inscrit : \n"
         for s in students_of_adhesion :
             msg += "- "+s["first_name"]+" "+s["last_name"]+", l'identifiant de connexion est : "+s["username"]+", le mot de passe est "+s["password_no_crypted"]+" \n"
 
+
+        if data_posted['formule_id'] > 1 :
+            msg += "Un.e enseignant.e de la SACADO ACADEMIE va vous contacter sous 24 heures par mail pour établir un plan de travail personnalisé.\n\n"
+        msg += "Pour établir des conseils personalisés, nous vous demandons à votre enfant de remplir un questionnaire à cette adresse : https://sacado-academie.fr/questionnaire\n\n"
+
         msg += "\n\nRetrouvez ces détails à partir de votre tableau de bord après votre connexion à https://sacado-academie.fr"
 
-        msg += "\n\nL'équipe de SACADO Académie vous remercie de votre confiance.\n\n"
+        msg += "\n\nL'équipe de SACADO ACADEMIE vous remercie de votre confiance.\n\n"
 
         ###### Quelques recommandations pour les parents
 
@@ -1361,17 +1369,11 @@ def save_adhesion(request) :
         msg += "Indique ton Nom d’utilisateur et ton Mot de passe\n\n"
         msg += "Clique sur le bouton « connexion »   -> Tu arrives ensuite sur ton profil. \n\n"   
         msg += "Le menu est à gauche :\n\n"
-        msg += "« Compte » permet de changer ton mot de passe, te déconnecter et choisir ton avatar.\n\n"
-        msg += "« Matières » te permet d’accéder à tes parcours d’exercices. Tu cliques sur « accéder » pour entrer dans le dossier, puis tu choisis un thème."
-        msg += "A l’intérieur, tu auras tous les exercices.\n\n"
-        msg += "Tu vas à ton rythme, tu choisis les exercices que tu as besoin de travailler, de réviser…\n\n"
-        msg += "Tu enregistres quand tu as fait au moins 5 situations (parfois 10), si tu as fait des erreurs, c’est normal parce que tu apprends, essaie de bien comprendre la correction proposée, puis continue les exercices suivants pour améliorer ton score."
-        msg += "Une pastille de couleur sur un exercice permet de voir que tu l’as déjà fait (% de réussite).\n\n"
-        msg += "« Suivi » permet de voir ton évolution. Clique en bas sur les différents bilans et en haut à droite pour la synthèse.\n\n"
-        msg += "« Flashpack » : permet de créer des propres cartes de révision, pour entraîner ta mémoire.\n\n"
+        msg += "Sur ton tableau de bord, tu trouves les indications de tes options.\n\n"
+
 
         #########
-        email=EmailMessage("Inscription SACADO Académie",msg,settings.DEFAULT_FROM_EMAIL,[p["email"]])
+        email=EmailMessage("Inscription SACADO ACADEMIE",msg,settings.DEFAULT_FROM_EMAIL,[p["email"]])
 
         image=MIMEBase('application','octet-stream')
         nomImage="instruction.png"
@@ -1395,7 +1397,8 @@ def save_adhesion(request) :
             smsg = "Bonjour "+s["first_name"]+" "+s["last_name"]+",\n\nvous venez de souscrire à une adhésion "+formule_adhesion +" à SACADO Académie avec le menu "+formule_name+". \n"
             smsg += "votre référence d'adhésion est "+chrono+".\n\n"
             smsg += "Votre identifiant est "+s["username"]+" et votre mot de passe est "+s["password_no_crypted"]+"\n\n"
-            smsg += "Il est possible de retrouver ces détails à partir de votre tableau de bord après votre connexion à https://sacado-academie.fr"
+            smsg += "Il est possible de retrouver ces détails à partir de votre tableau de bord après votre connexion à https://sacado-academie.fr\n\n"
+            smsg += "Pour établir des conseils personalisés, nous te demandons de remplir si tu le souhaites les questionnaire à cette adresse : https://sacado-academie.fr/questionnaire\n\n"
             smsg += "\n\nL'équipe SACADO vous remercie de votre confiance.\n\n"
 
             send_mail("Inscription SACADO académie", smsg, settings.DEFAULT_FROM_EMAIL, srcv)

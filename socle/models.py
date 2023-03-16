@@ -115,12 +115,13 @@ class Level(models.Model):
         ('c6', 'Post BaC'),
     )
 
-    name = models.CharField(max_length=255, null=True, blank=True, verbose_name="Nom")
+    name      = models.CharField(max_length=255, null=True, blank=True, verbose_name="Nom")
     shortname = models.CharField(max_length=255, null=True, blank=True, verbose_name="Abréviation")
-    cycle = models.CharField(max_length=10, default='c1', choices=CYCLES,  verbose_name="Cycle")
-    image = models.CharField(max_length=255, null=True, blank=True, verbose_name="Image")    
-    themes = models.ManyToManyField(Theme, related_name = "theme_level", default="",  verbose_name="Thèmes")
-    ranking = models.PositiveIntegerField(  default=0,  blank=True, null=True, editable=False)
+    cycle     = models.CharField(max_length=10, default='c1', choices=CYCLES,  verbose_name="Cycle")
+    image     = models.CharField(max_length=255, null=True, blank=True, verbose_name="Image")    
+    themes    = models.ManyToManyField(Theme, related_name = "theme_level", default="",  verbose_name="Thèmes")
+    ranking   = models.PositiveIntegerField(  default=0,  blank=True, null=True, editable=False)
+    color     = models.CharField(max_length=255, default='#46119c', blank=True, null=True, verbose_name="Couleur*")
 
     def __str__(self):
         return self.name

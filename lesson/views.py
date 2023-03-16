@@ -11,6 +11,7 @@ from lesson.models import Event, ConnexionEleve , Slot , Credit
 from lesson.forms import EventForm , SlotForm , GetEventForm , CreditForm
 from account.models import User, Student , Parent, Teacher , Facture
 from school.models import School
+from group.models import Sharing_group
 import locale
 locale.setlocale(locale.LC_TIME,'')
 from django.contrib import messages
@@ -572,15 +573,37 @@ def delete_event(request,id):
 
 
 
+def get_the_new_group(teacher,group):
+
+    Sharing_group.objects.create(group = group ,teacher = teacher, role = 1  )
+
+    for folder in group.group_folders.all():
+        folder.coteachers.add(teacher)
+    for parcours in group.group_parcours.all() :
+        parcours.coteachers.add(teacher)
+    for bibliotex in group.bibliotexs.all():
+        bibliotex.coteachers.add(teacher)
+    for flashpack in group.flashpacks.all():
+        flashpack.coteachers.add(teacher)
+
+
+
+
+
 def add_students_to_my_lesson_group(request):
- 
+    
     user = request.user
+    teacher = user.teacher
     if request.method == "POST":
         students = request.POST.getlist('students')
 
         for s in students :
-            user.teacher.students.add(s)
-        return redirect('calendar_show' , 0)
+            teacher.students.add(s)
+            student = Student.objects.get(pk=s)
+            for group in student.students_to_group.all():
+                get_the_new_group(teacher,group)
+
+        return redirect('add_students_to_my_lesson_group')
 
     today   = time_zone_user(user)
     students = Student.objects.filter(user__school_id = 50,user__user_type=0, user__closure__gte= today  ).order_by("level__ranking", "user__last_name")
@@ -592,10 +615,29 @@ def add_students_to_my_lesson_group(request):
 
 def delete_student_to_my_lesson_group(request,id):
  
-    user = request.user  
-    s= Student.objects.get(user_id=id) 
-    user.teacher.students.remove(s)
-    return redirect('calendar_show' , 0)
+    teacher = request.user.teacher
+    student = Student.objects.get(user_id=id) 
+    teacher.students.remove(student)
+
+    for group in student.students_to_group.all():
+
+        shares = Sharing_group.objects.filter(group  = group, teacher=teacher)
+        for share in shares :   
+            share.delete()
+
+        for folder in group.group_folders.all():
+            folder.coteachers.remove(teacher)
+
+        for parcours in group.group_parcours.all() :
+            parcours.coteachers.remove(teacher)
+
+        for bibliotex in group.bibliotexs.all():
+            bibliotex.coteachers.remove(teacher)
+
+        for flashpack in group.flashpacks.all():
+            flashpack.coteachers.remove(teacher)
+
+    return redirect('add_students_to_my_lesson_group')
 
 
 

@@ -993,148 +993,131 @@ def detail_student_all_views(request, id):
 
     months = []
     score_bool = False
-    if request.user.is_teacher:
-        students = []
-        teacher = Teacher.objects.get(user=request.user)
-        group = student.students_to_group.filter( Q(teacher=teacher)| Q(teachers=teacher)).last()
-        groups =  student.students_to_group.filter(Q(teacher=teacher)| Q(teachers=teacher))
 
-        themes = set()
-        for g in groups :            
-            themes.update(student.level.themes.filter(subject=g.subject)) 
-            sts = g.students.all().order_by("user__last_name")
-            for s in sts :
-                students.append(s)
 
-        form = EmailForm(request.POST or None)       
-        sender_mail(request,form)
-        if group :
-            nav = navigation(group, id)
-            context = {'exercises': exercises, 'knowledges': knowledges,    'themes': themes, 'students' : students ,  'group' : group , 'communications' : [], 'today' : today , 'form' : form ,  'groups' : groups ,
-                   'student': student, 'parcours': None, 'sprev_id': nav[0], 'snext_id': nav[1] , 'teacher' : teacher,'months':months }
-        else :
-            messages.error(request, "Erreur...L'élève "+str(student.user.first_name)+" "+str(student.user.last_name)+" n'est pas associé à un groupe.")
-            context = {'exercises': exercises, 'knowledges': knowledges,    'themes': themes, 'students' : students ,  'group' : None , 'communications' : [], 'today' : today , 'form' : form ,  'groups' : groups ,
-                   'student': student, 'parcours': None,  'teacher' : teacher,'months':months }
+    group = Group.objects.filter(students=student).last()
+    groups = student.students_to_group.all()
+    themes = set()
+    for g in groups :
+        themes.update(student.level.themes.filter(subject=g.subject)) 
+
+    ###################
+    #### Suivi si academie
+    i = 1
+
+
+    today   = time_zone_user(request.user) 
+    year  = int(today.strftime("%Y"))
+    month = int( today.strftime("%m"))
+    
+
+
+    nxt_mnth = today.replace(day=28) +  timedelta(days=4)
+    res = nxt_mnth -  timedelta(days=nxt_mnth.day) 
+
+    maxiset = []
+    for j in range(3):
+        upper_set = dict()
+        dataset = []
+        max_student_answers_nb = 1
+        step = 0
+        init , end = 1 + 10*j, 11+10*j
+        real_month = [0,31,28,31,30,31,30,31,31,30,31,30,31]
+        end = min(real_month[month], end )
+
+        begin   = datetime( year , month , init)
+        last_d  = datetime( year , month , end)
+
+        if j == 2 :
+            end = min(end,31)
+            end =  end+1
+            try :
+                last_d = datetime( year , month+1 , 1)
+            except :
+                last_d = datetime( year , 12 , 1)
+
+
+        student_answers_global = Studentanswer.objects.filter( student  = student , date__gte  = begin , date__lte  = last_d )
+        nb_exo_count_g = student_answers_global.count()
+        data_g = student_answers_global.aggregate( duration = Sum("secondes"), average_score_g=Avg('point'))
+        if data_g["average_score_g"] : average_score_g = int(data_g["average_score_g"]) 
+        else : average_score_g = 0
+        if data_g["duration"] : duration_g = data_g["duration"] 
+        else : duration_g = 0
+        e_k_count_g = Studentanswer.objects.values_list("exercise__knowledge" ,flat =True).filter( student  = student , date__gte  = begin , date__lte  = last_d ).distinct().count()
+
+        for i in range(init,end):
+            datas = {}
+            test_date = datetime( year , month , i)
+            if i == res.day:
+                try : 
+                    mnth = month + 1
+                    test_date_last = datetime( year , mnth , 1)
+                except : 
+                    test_date_last = datetime( year+1 , 1 , 1)
+            else : test_date_last = datetime( year , month , i+1)
+
+            student_answers    = Studentanswer.objects.filter( student  = student , date__gte  = test_date , date__lte  = test_date_last)
+            student_answers_nb = student_answers.count()
+            average            = student_answers.aggregate( duration = Sum("secondes"), average_score=Avg('point'))
+
+            if not average["average_score"] : average["average_score"] = 0
+
+            datas["date"] = test_date
+            datas["hn"]   = 0
+            datas["h"]    = student_answers_nb
+            datas["a"]    = int(average["average_score"])
+            datas["n"]    = student_answers_nb
+            if average["duration"] : datas["t"] = int(average["duration"])
+            else : datas["t"] = ""
+
+            if j == 2 and    month%2==1 : datas["l"]    = 9*step
+            else : datas["l"]    = 10*step
+            datas["le"]   = student_answers  
+            datas["m"]    = month
+
+            if int(average["average_score"]) < 50 :
+                datas["c"] = "red" 
+            elif int(average["average_score"]) < 70 :
+                datas["c"] = "orange" 
+            elif int(average["average_score"]) < 85 :
+                datas["c"] = "green"
+            else :
+                datas["c"] = "darkgreen"
+            step +=1
+
+            dataset.append(datas)
  
-    else :
-        group = Group.objects.filter(students=student).last()
-        groups = student.students_to_group.all()
-        themes = set()
-        for g in groups :
-            themes.update(student.level.themes.filter(subject=g.subject)) 
-
-        ###################
-        #### Suivi si academie
-        i = 1
-
- 
-        today   = time_zone_user(request.user) 
-        year  = int(today.strftime("%Y"))
-        month = int( today.strftime("%m"))
+            if max_student_answers_nb < student_answers_nb :
+                max_student_answers_nb = student_answers_nb
         
+        for d in dataset :
+            d["h"]  = int((d["h"]/max_student_answers_nb)*300)
+            d["hn"] = d["h"]+20
+
+        upper_set['datas']           = dataset 
+        upper_set['nb_exo_g']        = nb_exo_count_g
+        upper_set['average_score_g'] = average_score_g
+        upper_set['duration_g']      = duration_g
+        upper_set['k_count_g']       = e_k_count_g
 
 
-        nxt_mnth = today.replace(day=28) +  timedelta(days=4)
-        res = nxt_mnth -  timedelta(days=nxt_mnth.day) 
+        if nb_exo_count_g : is_display = True
+        else : is_display = False 
+        upper_set['is_display']      = is_display
 
-        maxiset = []
-        for j in range(3):
-            upper_set = dict()
-            dataset = []
-            max_student_answers_nb = 1
-            step = 0
-            init , end = 1 + 10*j, 11+10*j
-            real_month = [0,31,28,31,30,31,30,31,31,30,31,30,31]
-            end = min(real_month[month], end )
-
-            begin   = datetime( year , month , init)
-            last_d  = datetime( year , month , end)
-
-            if j == 2 :
-                end = min(end,31)
-                end =  end+1
-                try :
-                    last_d = datetime( year , month+1 , 1)
-                except :
-                    last_d = datetime( year , 12 , 1)
-
-
-            student_answers_global = Studentanswer.objects.filter( student  = student , date__gte  = begin , date__lte  = last_d )
-            nb_exo_count_g = student_answers_global.count()
-            data_g = student_answers_global.aggregate( duration = Sum("secondes"), average_score_g=Avg('point'))
-            if data_g["average_score_g"] : average_score_g = int(data_g["average_score_g"]) 
-            else : average_score_g = 0
-            if data_g["duration"] : duration_g = data_g["duration"] 
-            else : duration_g = 0
-            e_k_count_g = Studentanswer.objects.values_list("exercise__knowledge" ,flat =True).filter( student  = student , date__gte  = begin , date__lte  = last_d ).distinct().count()
-
-            for i in range(init,end):
-                datas = {}
-                test_date = datetime( year , month , i)
-                if i == res.day:
-                    try : 
-                        mnth = month + 1
-                        test_date_last = datetime( year , mnth , 1)
-                    except : 
-                        test_date_last = datetime( year+1 , 1 , 1)
-                else : test_date_last = datetime( year , month , i+1)
-
-                student_answers    = Studentanswer.objects.filter( student  = student , date__gte  = test_date , date__lte  = test_date_last)
-                student_answers_nb = student_answers.count()
-                average            = student_answers.aggregate( duration = Sum("secondes"), average_score=Avg('point'))
-
-                if not average["average_score"] : average["average_score"] = 0
-
-                datas["date"] = test_date
-                datas["hn"]   = 0
-                datas["h"]    = student_answers_nb
-                datas["a"]    = int(average["average_score"])
-                datas["n"]    = student_answers_nb
-                if average["duration"] : datas["t"] = int(average["duration"])
-                else : datas["t"] = ""
-
-                if j == 2 and    month%2==1 : datas["l"]    = 9*step
-                else : datas["l"]    = 10*step
-                datas["le"]   = student_answers  
-                datas["m"]    = month
-
-                if int(average["average_score"]) < 50 :
-                    datas["c"] = "red" 
-                elif int(average["average_score"]) < 70 :
-                    datas["c"] = "orange" 
-                elif int(average["average_score"]) < 85 :
-                    datas["c"] = "green"
-                else :
-                    datas["c"] = "darkgreen"
-                step +=1
-
-                dataset.append(datas)
-     
-                if max_student_answers_nb < student_answers_nb :
-                    max_student_answers_nb = student_answers_nb
-            
-            for d in dataset :
-                d["h"]  = int((d["h"]/max_student_answers_nb)*300)
-                d["hn"] = d["h"]+20
-
-            upper_set['datas']           = dataset 
-            upper_set['nb_exo_g']        = nb_exo_count_g
-            upper_set['average_score_g'] = average_score_g
-            upper_set['duration_g']      = duration_g
-            upper_set['k_count_g']       = e_k_count_g
-
-
-            if nb_exo_count_g : is_display = True
-            else : is_display = False 
-            upper_set['is_display']      = is_display
-
-            maxiset.append(upper_set)
+        maxiset.append(upper_set)
 
 
  
         context = {'exercises': exercises, 'knowledges': knowledges,   'themes': themes, 'communications' : [], 'group' : group ,  'today' : today  , 'teacher' : None , 'groups' : groups ,
                    'student': student, 'parcours': None, 'sprev_id': None, 'snext_id': None, 'score_bool' : score_bool  ,  'maxiset' : maxiset  }
+
+
+        if request.user.is_teacher  :
+
+            nav = navigation(group, id)
+            context.update({ 'sprev_id': nav[0], 'snext_id': nav[1]   })
 
 
     return render(request, 'account/detail_student_all_views.html', context)

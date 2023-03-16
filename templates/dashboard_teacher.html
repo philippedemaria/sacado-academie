@@ -34,14 +34,23 @@
                            data-group_name='{{ group.name }}' data-group_id='{{ group.id }}' data-target='#exampleModal'> <span class="label label-default"> {{ data.count_students }}<i class="fa fa-users"></i></span></a>
                         </form>
                         <font style="color:#CCC">
+                        {% if teacher == group.teacher %}
                             {% for s in data.students %} 
                                 <a href="{% url 'detail_student_all_views'  s.user__id   %}" class="small_users"> {{s.user__last_name|lower|capfirst}} {{s.user__first_name|lower|capfirst}}</a>{% if not forloop.last %}, {% endif %}
                             {% endfor %}
+                        {% endif %}
                         </font>
                         <div style="clear:both"></div>
+
+
+                        {% if teacher == group.teacher or group.is_shared %}
+                            <span style="color:{{ group.color }};font-size:12px">
+                                <a href="{% url 'add_students_to_my_lesson_group'  %}" style="background-color:{{ group.color }}; color:{{ group.color|contrast_color }}; padding :1px 5px; border-radius: 3px">+ Ajouter mes élèves </a> 
+                            </span>
+                        {% else %}
                         <span style="color:{{ group.color }};font-size:12px"><a href="{% url 'update_group' group.id %}" style="background-color:{{ group.color }}; color:{{ group.color|contrast_color }}; padding :1px 5px; border-radius: 3px">+ Ajouter</a> ou lien d'inscription à donner aux élèves  : https://sacado-academie.fr/group/{{ group.code }}   
-                              
                         </span> 
+                        {% endif %}
                     </div>
 
 
@@ -67,6 +76,21 @@
                         </span>
                         {% endif %}
                     </div>
+
+
+
+
+
+                    <!-- Legende de la small-box -->
+                    <div style="position:absolute;right:3px; top:70px; padding:0px 3px;opacity:0.9; background-color:white; border-radius:4px;max-height:100px;overflow-y: auto">
+                            {% for s in data.my_students %} 
+                                <li class="sanspuce"><a href="{% url 'detail_student_all_views'  s.user.id   %}" class="small_users"> {{s.user.last_name|lower|capfirst}} {{s.user.first_name|lower|capfirst}}</a></li>
+                            {% endfor %}
+                    </div>
+
+
+
+
 
                         
  
@@ -131,11 +155,29 @@
                                     <a  href="{% url 'result_group_exercise'  group.id %}" style="font-size:15px; color:{{ group.color|contrast_color }};" title="Lien interne" ><i class="fa fa-mortar-board"></i><span class="small_displayer"> Suivis </span></a><a  href="{% url 'result_group_exercise'  group.id %}" target="_blank" title="Lien externe" > <img src="{% static 'img/external-link_white.png' %}"  width="8px" ></a>
                                 </div> 
                                 <div class="col-lg-4 col-xs-4" style="padding-right:0px">
-                                    <a  href="javascript:void();"  class="label_small_box group_shower" data-group_id="{{group.id }}" style="font-size:15px; color:{{ group.color|contrast_color }};"><i class="fa fa-users"></i>
+    
+
+                                    {% if teacher != group.teacher or group.is_shared %}
+
+                                    <a  href="{% url 'add_students_to_my_lesson_group' %}" style="font-size:15px; color:{{ group.color|contrast_color }};">
+                                        <i class="bi bi-person-plus"></i>
+                                        <span class="small_displayer"  style="color:{{ group.color|contrast_color }};"> 
+                                            Élève{{ data.snt|pluralize }}
+                                        </span> 
+                                    </a> 
+
+                                    {% else %}
+                                    <a  href="javascript:void();"  class="label_small_box group_shower" data-group_id="{{group.id }}" style="font-size:15px; color:{{ group.color|contrast_color }};">
+                                        <i class="fa fa-users"></i>
                                         <span class="helper_tip small_displayer"  style="color:{{ group.color|contrast_color }};"> 
                                             Élève{{ data.snt|pluralize }}
                                         </span> 
-                                    </a>   
+                                    </a>  
+                                    {% endif %}
+
+
+
+
                                 </div>
                             </div>
                         {% endif  %}
