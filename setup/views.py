@@ -681,6 +681,8 @@ def contact(request):
 def advises_index(request):
     form = AuthenticationForm()
     np_form = NewpasswordForm()
+    delete_session_key(request, "answerpositionnement")
+    delete_session_key(request, "positionnement_id")
     positionnements = Positionnement.objects.filter(is_publish=1).order_by("level__ranking")
     context = { 'form' : form  , 'np_form' : np_form , 'positionnements' : positionnements   }
     return render(request, 'setup/advises.html', context)
