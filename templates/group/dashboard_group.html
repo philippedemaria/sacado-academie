@@ -46,7 +46,7 @@
                 {% for m in this_months %}
                     <div style="float:left;height:20px;width:30px;margin-right:1px;text-align:center">
                         <span style="text-align: center;font-size:10px">{{m.date|date:"j"}}</span><br/>                        
-                        <div style="background-color: {{ m.color}};float:left;height:20px;width:30px;color:white;font-size:10px;padding-top:5px;"> {% if m.duration > 600 %}{{m.duration|int_to_min}}{% else %}0{% endif %}</div>
+                        <div style="background-color: {{ m.color}};float:left;height:20px;width:30px;color:white;font-size:10px;padding-top:5px;">  {{m.duration|int_to_min}} </div>
                     </div>  
                 {% endfor %}
                 <div style="clear:both;height:10px"></div>

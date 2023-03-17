@@ -181,8 +181,9 @@ def student_dashboard(request,group_id):
         this_next_day = this_day + timedelta(days=1)
         stud = Studentanswer.objects.filter(student=student,date__gt=this_day,date__lt=this_next_day).aggregate(Sum('secondes'))
         duration = stud['secondes__sum']
-        if duration and duration > 59 : color = '#1d6718'
-        else : color = '#dd4b39'
+        if duration and duration > 599 : color = '#005B42'
+        elif duration : color = '#C7A6FE'
+        else : color = '#FEF6FF'
         this_months.append({'date' : this_day , 'duration' : duration , 'color': color })
 
     if int(group_id) > 0 :
