@@ -703,9 +703,9 @@ def int_to_min(arg):
     convertit 1 entier en minutes
     """
 
-    if arg == "":
-        return arg
-    elif arg < 60:
+    if arg == "" or not arg:
+        return 0
+    elif arg and arg < 60:
         return arg
     else :
         m = arg // 60
