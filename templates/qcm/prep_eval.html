@@ -43,7 +43,6 @@
                             <li class="sanspuce text-mauve">{{ t.theme.name }}</li>
                         {% endfor %}
                     </a>
-
                     <a href="{% url 'delete_prepeval' request.user.id prepeval.id %}" class="this_trash_bin_absolute">
                         <i class="bi bi-trash"></i>
                     </a>
@@ -69,6 +68,9 @@
                 <h2>Nouvelle préparation à une évaluation</h2>              
             </div>
             <div class="modal-body">
+
+
+                {% if sacado_asso %}
                 <form action="" method="POST">
                     {% csrf_token %}
                     <div class="wrapper_slider_prepeval">
@@ -222,6 +224,9 @@
                         </div>
                     </div>
                 </form>
+                {% else %}
+                <span class="btn btn-danger btn-lg">Votre abonnement est terminé</span>
+                {% endif %}
             </div> 
         </div>
     </div> 
