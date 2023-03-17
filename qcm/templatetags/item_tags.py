@@ -693,8 +693,28 @@ def int_minutes(arg):
             else :
                 minutes = str(m)
             r = str(h)+"h."+minutes        
-
     return r
+
+
+
+@register.filter
+def int_to_min(arg):
+    """
+    convertit 1 entier en minutes
+    """
+
+    if arg == "":
+        return arg
+    elif arg < 60:
+        return arg
+    else :
+        m = arg // 60
+        return int(round(m,1))
+
+
+
+
+
 
 
 
