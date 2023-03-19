@@ -14,6 +14,7 @@
 </li>
 
  
+ 
 <li class="dropdown {% if  request.session.tdb == 'Account' %}active{% endif %}">
     <a href="#" class="main" id="account">
     {% if request.user.avatar and sacado_asso  %}
@@ -37,29 +38,17 @@
 
  
 
-
-{% if student.nb_subjects > 2 %}
 <li class="dropdown {% if  request.session.tdb == 'training' %}active{% endif %}">
-    <a href="{% url 'dash_student' %}" class="main" >
-
+    <a href="{% if sacado_asso %}{% url 'dash_student' %}{% else %}{% url 'end_of_adhesion' %}{% endif %}" class="main" >
         <i class="bi bi-markdown icon_size"></i> 
-        <div class="captionmenu">Matières</div>
-
+        <div class="captionmenu">{% if student.nb_subjects > 2 %}Matières{% else %}Entrainement{% endif %}</div>
     </a>
 </li>
-{% else %}
-<li class="dropdown {% if  request.session.tdb == 'training' %}active{% endif %}">
-    <a href="{% url 'dash_student' %}" class="main" >
-        <i class="bi bi-graph-up-arrow  icon_size"></i>
-        <div class="captionmenu">Entrainement</div>
-
-    </a>
-</li>
-{% endif %}
+ 
 
 
 <li  class="dropdown {% if  request.session.tdb == 'account' %}active{% endif %}">
-    <a href="{% url 'detail_student_all_views' user.id %}" class="main" >
+    <a href="{% if sacado_asso %}{% url 'detail_student_all_views' user.id %}{% else %}{% url 'end_of_adhesion' %}{% endif %}" class="main" >
         <i class="bi bi-clipboard-data icon_size"></i>
         <div class="captionmenu">Suivis</div>
     </a>
@@ -67,44 +56,15 @@
 
 
 <li  class="dropdown {% if  request.session.tdb == 'prep_eval' %}active{% endif %}">
-    <a href="{% url 'prep_eval' user.id %}" class="main" >
+    <a href="{% if sacado_asso %}{% url 'prep_eval' user.id %}{% else %}{% url 'end_of_adhesion' %}{% endif %}" class="main" >
         <i class="bi bi-calendar-week icon_size"></i>
         <div class="captionmenu">Prép' Éval</div>
     </a>
 </li>
 
 
-<!-- 
-<li  class='dropdown {% if 'exercise' in request.path %}
-active
-{% endif %} 
-'>
-    <a href="{% url 'exercises' %}" >
-        <i class="fa fa-laptop fa-2x"></i>
-        <div class="captionmenu">Exercices</div>
-    </a>
-</li> 
-
-
-<li  class="dropdown  {% if '/sendmail' in request.path %} active{% endif %}">
-    <a href="{% url 'emails' %}" class="main" >
-        <i class="fa fa-inbox fa-2x"></i> 
-        <div class="captionmenu">Messages</div>
-    </a>
-</li>
-
-
-{% if not request.user.is_in_academy %}
-<li  class="dropdown  {% if '/tool' in request.path %} active{% endif %}">
-    <a href="{% url 'list_quizz_student' %}" class="main" >
-        <i class="bi bi-aspect-ratio icon_size"></i> 
-        <div class="captionmenu">Quizz</div>
-    </a>
-</li>
-{% endif %}
---> 
 <li  class="dropdown {% if  request.session.tdb == 'Flashpack' %}active{% endif %}">
-    <a href="{% url 'flashpacks' %}" class="main" >
+    <a href="{% if sacado_asso %}{% url 'flashpacks' %}{% else %}{% url 'end_of_adhesion' %}{% endif %}" class="main" >
         <i class="bi bi-layers icon_size"></i> 
         <div class="captionmenu">Flashcards</div>
     </a>
@@ -112,7 +72,7 @@ active
 
 {% if request.user.is_in_academy and request.user.student.data_menu.id > 1 %}
 <li class="dropdown {% if  request.session.tdb == 'Lesson' %}active{% endif %}">
-    <a href="{% url 'detail_student_lesson' request.user.id %}" class="main" >
+    <a href="{% if sacado_asso %}{% url 'detail_student_lesson' request.user.id %}{% else %}{% url 'end_of_adhesion'  %}{% endif %}" class="main" >
         <i class="bi bi-camera-video icon_size"></i> 
         <div class="captionmenu">Visios</div>
     </a>
@@ -121,7 +81,7 @@ active
 {% comment %} 
 {% if request.user.is_in_academy %}   
 <li  class="dropdown {% if  request.session.tdb == 'Auto_test' %}active{% endif %}">
-    <a href="{% url 'autotests' %}" class="main" >
+    <a href="{% if sacado_asso %}{% url 'autotests' %}{% else %}{% url 'end_of_adhesion' %}{% endif %}" class="main" >
         <i class="bi bi-question-circle icon_size"></i> 
         <div class="captionmenu">Auto-test</div>
     </a>
@@ -132,7 +92,7 @@ active
 
 {% if request.user.is_in_academy and request.user.student.data_menu.id > 1 %}
 <li class="dropdown {% if  request.session.tdb == 'Message' %}active{% endif %}">
-    <a href="{% url 'list_discussion_lesson' request.user.id %}" class="main" >
+    <a href="{% if sacado_asso %}{% url 'list_discussion_lesson' request.user.id %}{% else %}{% url 'end_of_adhesion' %}{% endif %}" class="main" >
         <i class="bi bi-envelope icon_size"></i> 
         <div class="captionmenu">Messages</div>
     </a>

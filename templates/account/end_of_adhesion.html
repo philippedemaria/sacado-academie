@@ -1,0 +1,33 @@
+{% extends 'dashboard.html' %}
+{% load widget_tweaks %}
+{% load static %}
+
+
+{% block require %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common-action2.js' %}"></script>
+{% endblock %}
+
+
+
+
+{% block page_title %}
+    Fin d'adhésion
+{% endblock %}
+
+{% block page_menu_right %}
+
+{% endblock %}
+
+
+
+{% block body %}
+    <section class="content_list"> 
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="alert alert-white"> 
+                    Votre adhésion est terminée depuis le {{ last_adhesion.stop|date:"d N Y"}}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

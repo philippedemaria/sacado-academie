@@ -41,16 +41,20 @@
     <div class="row">
         <div class="col-md-12 col-lg-12 col-xs-12">
             <div class="alert-white"  style="padding:5px">
-                Compte rendu de {{ this_month }}.  <small>Au moins 10 minutes quotidiennes de pratique sur nos exercices pour réussir en mathématiques.</small>
+                Compte rendu de {{ this_month }}.  <span style="font-size: 10px">Au moins 10 minutes quotidiennes de pratique sur nos exercices pour réussir en mathématiques.</small>
                 <div style="margin:5px 0px">
                 {% for m in this_months %}
                     <div style="float:left;height:20px;width:30px;margin-right:1px;text-align:center">
-                        <span style="text-align: center;font-size:10px">{{m.date|date:"j"}}</span><br/>                        
-                        <div style="background-color: {{ m.color}};float:left;height:20px;width:30px;color:white;font-size:10px;padding-top:5px;">  {{m.duration|int_to_min}} </div>
+                        <span style="text-align: center;padding:2px;font-size:10px">{{m.date|date:"j"}}</span><br/>                        
+                        <div style="background-color: {{ m.color}};float:left;height:20px;width:30px;color:white;font-size:10px;padding-top:5px;">  {{m.duration}} </div>
                     </div>  
                 {% endfor %}
-                <div style="clear:both;height:10px"></div>
+                    <div style="background-color:#5D4391; float:left;height:20px;width:30px;margin-right:1px;text-align:center">
+                        <span style="color:white;text-align: center;font-size:12px"><i class="bi bi-clock"></i></span><br/>                        
+                        <div style="background-color:#5D4391;color:white;font-size:12px;padding-top:5px;height:20px;width:30px;"> {{ duration_sum}}   </div>
+                    </div> 
                 </div>
+                <div style="clear:both;height:10px"></div>                
             </div>
         </div>
     </div>

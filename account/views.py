@@ -200,23 +200,18 @@ class DashboardView(TemplateView): # lorsque l'utilisateur vient de se connecter
 
 ########################################            MON COMPTE               #########################################
 
-def myaccount(request):
- 
-    if request.user.is_teacher:
-        teacher = Teacher.objects.get(user_id=request.session.get('user_id'))
-        context = {'teacher': teacher, }
-        return render(request, 'account/teacher_account.html', context)
-    else:
-        student = Student.objects.get(user_id=request.session.get('user_id'))
-        context = {'student': student, }
 
-        return render(request, 'account/student_account.html', context)
-
-
-
-
-
-
+def end_of_adhesion(request):
+    
+    if request.user.is_student :
+        student =  request.user.student
+        last_adhesion = student.adhesions.last()
+        context = {'student': student, 'last_adhesion' : last_adhesion }
+    elif request.user.is_parent : 
+        parent   = request.user.parent
+        students = parent.students.all()
+        context = {'parent': parent, 'students' : students }
+    return render(request, 'account/end_of_adhesion.html', context)
 
 ########################################            AVATAR                   #########################################
 

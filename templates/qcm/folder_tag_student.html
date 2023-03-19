@@ -41,9 +41,15 @@
             {% for p in folder.parcours.all|dictsort:"ranking" %}
                 {% get_percent_to_parcours p student as data  %}
                 <li class="sanspuce">
+                    {% if sacado.asso %}
                     <a href="{% url 'show_parcours_student' p.id %}" class="sommaire"><b><i class="bi bi-check {{ data.colored }}" ></i></b>{{ p.title|truncatechars:40 }} 
                         {% if data.nb_total %}<b class="pull-right {{ data.colored }}" title="Avancement">{{ data.nb_total }}%</b>{% endif %}
                     </a>
+                    {% else %}
+                    <a href="#" class="sommaire" title="Adhésion expirée"><b><i class="bi bi-check {{ data.colored }}" ></i></b>{{ p.title|truncatechars:40 }} 
+                        {% if data.nb_total %}<b class="pull-right {{ data.colored }}" title="Avancement">{{ data.nb_total }}%</b>{% endif %}
+                    </a>
+                    {% endif %}
                 </li>
             {% endfor %}
         </div>

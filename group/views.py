@@ -141,6 +141,18 @@ def set_username_student_profile(name):
     return un 
 
  
+def int_to_min(arg):
+    """
+    convertit 1 entier en minutes
+    """
+
+    if arg == "" or not arg:
+        return 0
+    elif arg and arg < 60:
+        return arg
+    else :
+        m = arg / 60
+        return int(round(m,0))
 
 
 
@@ -151,7 +163,6 @@ def student_dashboard(request,group_id):
     # si plusieurs matières alors on envoi =e sur dashboard_group 
     # si une seule matière alors  sur dashboard
     groups = student.students_to_group.all()
-
 
     request.session["tdb"] = "training"
 
@@ -176,18 +187,22 @@ def student_dashboard(request,group_id):
 
     this_month  = mnths[today.month]
     this_months = list()
+    duration_sum = 0
     for i in range(nbdays) :
         this_day = premier + timedelta(days=i)
         this_next_day = this_day + timedelta(days=1)
         stud = Studentanswer.objects.filter(student=student,date__gt=this_day,date__lt=this_next_day).aggregate(Sum('secondes'))
-        duration = stud['secondes__sum']
-        if duration and duration > 599 : color = '#005B42'
-        elif duration : color = '#C7A6FE'
+        duration = int_to_min(stud['secondes__sum'])
+        if duration and duration > 599 : 
+            color = '#00987F'
+            duration_sum += duration
+        elif duration : 
+            color = '#C7A6FE'
+            duration_sum += duration
         else : color = '#FEF6FF'
         this_months.append({'date' : this_day , 'duration' : duration , 'color': color })
 
     if int(group_id) > 0 :
-
         template =  "group/dashboard_group.html"  
         group = Group.objects.get(pk = group_id)
         request.session["group_id"] = group_id 
@@ -204,7 +219,7 @@ def student_dashboard(request,group_id):
 
 
     context = {'student_id': student.user.id, 'student': student, 
-               'today' : today ,   
+               'today' : today ,  'duration_sum' : duration_sum , 
                'group' : group , 'groups' : groups ,
                'folders' : folders, 'this_months' : this_months , 'this_month' : this_month,
                }

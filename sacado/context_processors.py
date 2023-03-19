@@ -19,8 +19,12 @@ from datetime import datetime
 
 
 def is_sacado_asso(this_user, today):
-    is_sacado = True
-    is_active = True
+    last_adhesion = this_user.student.adhesions.last()
+    is_sacado = False
+    is_active = False
+    if last_adhesion.stop > today :
+        is_sacado = True
+        is_active = True
     return is_sacado, is_active
 
 ##############################################################################################################################################
@@ -91,6 +95,8 @@ def menu(request):
                 group = Group.objects.get(pk=group_id)
             else :
                 group = None
+
+            print(sacado_asso)
 
             return {
                 'is_gar_check' : is_gar_check,

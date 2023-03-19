@@ -697,27 +697,6 @@ def int_minutes(arg):
 
 
 
-@register.filter
-def int_to_min(arg):
-    """
-    convertit 1 entier en minutes
-    """
-
-    if arg == "" or not arg:
-        return 0
-    elif arg and arg < 60:
-        return arg
-    else :
-        m = arg // 60
-        return int(round(m,1))
-
-
-
-
-
-
-
-
 @register.simple_tag ##  
 def get_relationship(obj,parcours): 
     return obj.is_relationship(parcours) 
