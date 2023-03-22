@@ -16,7 +16,7 @@
 {% if messages %}
 <ul class="messages" id="container_messages">
     {% for message in messages %}
-    <div class="container alert alert-info" role="alert" style="top:100px">
+    <div class="container alert alert-info" role="alert" style="top:50px">
         {{ message }}
     </div>
     {% endfor %}
@@ -51,7 +51,7 @@ Intro Section -
                     Les rituels <br/>pour réussir  en Mathématiques
                 </div>
                 <div class="bandeau_accueil_subtitle">
-                10 minutes chaque jour avec la   <a href="#" data-toggle='modal' data-target='#div_methode_sacado' class="rose_light" ><b>méthode SACADO</b> </a>
+                10 minutes chaque jour avec la   <a href="#" data-toggle='modal' data-target='#div_methode_sacado' class="rose_light" ><b>méthode SACADO<sup><small><i class='fa fa-copyright'></i></small></sup></b> </a>
                 </div>
             </div>
             <div class="col-xs-12 col-md-12 col-lg-6 no_display_index" >
@@ -117,8 +117,8 @@ Intro Section -
                     <div class="row" align="center">
                     {% for data in dataset %}
                         <div class="col-xs-4 col-md-4">
-                            <div class="modal_title_level">{{ data.level.name }}</div>
                             <a href="{% url 'show_this_index_exercise' data.exercise.id %}">{% if  data.exercise.supportfile.imagefile %} <img src="{{ data.exercise.supportfile.imagefile.url }}"  width="150px" /> {% endif %}</a>
+                            <div class="modal_title_level">{{ data.level.name }}</div>
                         </div>
                     {% endfor %}                        
                     </div>
@@ -394,7 +394,7 @@ Intro Section -
    
                 <b class="rose">Interface Enfant </b>
 
-                    <li>Séquences d’exercices organisées par un programme d’intelligence artificiel, qui adapte une section de cours et d’activités en fonction de ses résultats.</li>
+                    <li>Séquences de cours et d’activités.</li>
                     <li>Niveaux structurés en fonction de ses réussites (il saute des paliers) ou de ses lacunes (il s’entraine  jusqu’à sa réussite !)</li>
                     <li>Préparation d'évaluation en fonction des chapitres travaillés en classe.</li>
                     <li>Suivi détaillé de sa progression jour par jour</li>
@@ -405,9 +405,6 @@ Intro Section -
                     <li>Choix de la réception d’un mail à chaque exercice fait (fréquence à choisir)</li>
                     <li>Choix de la réception d’un rapport d’activité (nombre et % de réussite des exercices effectués)</li>
                     <li>Génération d’un bilan (format pdf)</li>
-
-
-
 
                 </div>
                 <h2  align="center"><i class="bi bi-plus"></i></h2>
@@ -450,8 +447,8 @@ Intro Section -
 
                 <div id="show_detail_display_suivi" style="font-size:12px;">
                     <b class="rose">Interface Enfant </b>
-
-                    <li>Séquences d’exercices organisées par un programme d’intelligence artificielle, qui adapte une section de cours et d’activités en fonction des résultats.</li>
+                    
+                    <li>Séquences de cours et d’activités.</li>
                     <li>Niveaux structurés et chronologiques</li>
                     <li class="rose">Préparation aux évaluations en fonction des chapitres travaillés en classe.</li>
                     <li>Suivi détaillé de progression jour par jour.</li>
@@ -506,7 +503,7 @@ Intro Section -
                 <div id="show_detail_display_perso" style="font-size:12px;">
                     <b class="rose">Interface Enfant </b>
 
-                    <li>Séquences d’exercices organisées par un programme d’intelligence artificielle, qui adapte une section de cours et d’activités en fonction des résultats.</li>
+                    <li>Séquences de cours et d’activités.</li>
                     <li>Niveaux structurés et chronologiques</li>
                     <li class="rose">Préparation aux évaluations en fonction des chapitres travaillés en classe.</li>
                     <li>Suivi détaillé de progression jour par jour.</li>

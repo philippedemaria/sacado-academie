@@ -155,7 +155,7 @@ class Formule(models.Model):
 
 
 	def total(self) :
-		return round( self.price  * int(self.nb_month) , 2)
+		return round( self.price   , 2)
 
 
 class Formuleprice(models.Model):

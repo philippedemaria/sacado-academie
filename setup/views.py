@@ -223,7 +223,15 @@ def index(request):
         for level in levels :
             dico = {}
             dico["level"] = level
-            dico["exercise"] = Exercise.objects.get(pk=pk_ids[i])
+            if level.id == 4 : dico["exercise"] = Exercise.objects.filter(supportfile__code='7c1af8fe').first()
+            elif level.id == 5 : dico["exercise"] = Exercise.objects.filter(supportfile__code='a2cb5280').first()
+            elif level.id == 7 : dico["exercise"] = Exercise.objects.filter(supportfile__code='6ba5ee87').first()
+            elif level.id == 8 : dico["exercise"] = Exercise.objects.filter(supportfile__code='e9b62f68').first()
+            elif level.id == 9 : dico["exercise"] = Exercise.objects.filter(supportfile__code='b1c4c33b').first()
+            elif level.id == 10 : dico["exercise"] = Exercise.objects.filter(supportfile__code='d3ec9103').first()
+            elif level.id == 11 : dico["exercise"] = Exercise.objects.filter(supportfile__code='649bbb27').first()
+            elif level.id == 12 : dico["exercise"] = Exercise.objects.filter(supportfile__code='58b1458d').first()
+            else : dico["exercise"] = Exercise.objects.get(pk=pk_ids[i])
             dataset.append(dico)
             i+=1
 
@@ -341,10 +349,7 @@ def send_message(request):
     else :
         messages.error(request,"Oubli de token.")
 
-    if request.POST["info_academy"] == "yes" :
-        return redirect("academy")
-    else :
-        return redirect("index")
+    return redirect("index")
 
 
 

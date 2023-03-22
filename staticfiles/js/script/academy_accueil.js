@@ -371,22 +371,13 @@ $(document).ready(function () {
 
             $($target).click(function(){
 
-                // Récupérartion des montants
-                data_value = $(this).attr("data_value");
-                data_menus = $(this).attr("data_menus");
-                var menu_id_tab = data_menus.split(",");
-                $.each(menu_id_tab, function (index, value) {
-                    $("#total_price"+value).val(  $("#total_price_"+data_value+value).text()    ) ; 
-                    $("#month_price"+value).val(  $("#payment_"+data_value+value).text()    ) ; 
-                    }); 
-
                 // Afficahge des montants
                 $('.family_selected').removeAttr("checked");
                 $(this).children().attr("checked", "checked");
                 $('.nb_child').val($nb);
                 $('.child').html("").html($n); 
-                $(".family_selected").addClass("btn-violet_border").removeClass("btn-violet");                
-                $(this).addClass("btn-violet").removeClass("btn-violet_border");
+                $(".family_selected").addClass("btn-violet_border").removeClass("btn-violet_border_active");                
+                $(this).addClass("btn-violet_border_active").removeClass("btn-violet_border");
                 $('.family').hide() ;
                 $($number).show() ;
             });

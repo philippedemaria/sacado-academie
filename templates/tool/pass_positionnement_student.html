@@ -443,10 +443,11 @@
         <div class="form-group">
             <div class="col-sm-12 col-md-12" id="button_submit_div">
                 {% if question.has_choices_with_retroaction %}
-                    <a href="javascript:void();" id="show_retroaction" class="btn btn-primary"><i class="fa fa-caret-right"></i> Enregistrer la réponse</a>
+                    <a href="javascript:void();" id="show_retroaction" class="btn btn-lg btn-primary" style="width:240px"><i class="fa fa-caret-right"></i> Enregistrer la réponse</a>
                 {% else %}
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-caret-right"></i> Enregistrer la réponse</button>
+                    <button type="submit" class="btn  btn-lg  btn-primary" style="width:240px"><i class="fa fa-caret-right" ></i> Enregistrer la réponse</button>
                 {% endif %}
+                <a href="{% url 'list_positionnements' %}" class="btn btn-lg  btn-default"  style="width:240px">Retour vers les tests</a>
             </div>
         </div>
     </div> 

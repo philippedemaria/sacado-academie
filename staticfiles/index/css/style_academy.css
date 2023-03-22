@@ -2111,16 +2111,6 @@ a.detail_index:hover{
     border-color: #5d4391;
 }
 
-.btn-violet_border {
-    color: #5d4391;
-    background-color: transparent;
-    border-color: #5d4391;
-}
-.btn-violet_border:hover {
-    color: #fff;
-    background-color: #aa96cf;
-    border-color: #5d4391;
-}
 
 
 .pricing_box .container .card{
@@ -2148,6 +2138,19 @@ a.detail_index:hover{
     background-color: #aa96cf;
     border-color: #5d4391;
 }
+
+
+.btn-violet_border_active {
+    color: white;
+    background-color: #5d4391;
+    border-color: #5d4391;
+}
+.btn-violet_border_active:hover {
+    color: #fff;
+    background-color: #aa96cf;
+    border-color: #5d4391;
+}
+
 
 .btn-group, .btn-group-vertical {
     position: relative;

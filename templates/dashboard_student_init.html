@@ -32,24 +32,24 @@
             <a href="{% url 'index' %}" class="student_init">
                 <i class="bi bi-grid icon_size"></i> <label class="big_size margin_bottom20"> Tableau de bord</label><br/>Sur cet écran, tu as un accès direct à tous les modules.
             </a>
-            <a href="{% url 'dash_student' %}" class="student_init">
+            <a href="{% if sacado_asso %}{% url 'dash_student' %}{% else %}{% url 'end_of_adhesion' %}{% endif %}" class="student_init">
                 <i class="bi bi-graph-up-arrow icon_size"></i> <label class="big_size margin_bottom20"> Entraînement</label><br/>Module pour t’entrainer
                             10 min par jour aux
                             différents chapitres,
                             classés par thèmes.
             </a>
-            <a href="{% url 'detail_student_all_views' user.id %}" class="student_init">
+            <a href="{% if sacado_asso %}{% url 'detail_student_all_views' user.id %}{% else %}{% url 'end_of_adhesion' %}{% endif %}" class="student_init">
                 <i class="bi bi-clipboard-data icon_size"></i> <label class="big_size margin_bottom20"> Suivis</label><br/>Module pour suivre les
                     résultats de tes
                     entraînements.
             </a>
-            <a href="{% url 'detail_student_all_views' user.id %}" class="student_init">
+            <a href="{% if sacado_asso %}{% url 'prep_eval' user.id %}{% else %}{% url 'end_of_adhesion' %}{% endif %}" class="student_init">
                 <i class="bi bi-calendar-week icon_size"></i> <label class="big_size margin_bottom20"> Prép' éval</label><br/>Module pour préparer
                     tes évaluations avec ton
                     planning de révision.
                     Prêt pour le jour J !
             </a>
-            <a href="{% url 'flashpacks' %}" class="student_init">
+            <a href="{% if sacado_asso %}{% url 'flashpacks' %}{% else %}{% url 'end_of_adhesion' %}{% endif %}" class="student_init">
                 <i class="bi bi-layers icon_size"></i> <label class="big_size margin_bottom20"> Flashcards</label><br/>Module pour créer tes
                             fiches de révisions.
                             Gagne en mémorisation à
