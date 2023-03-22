@@ -55,12 +55,16 @@
             <span style="font-size:1.2em; text-align: left;" >    
                 Nombre de questions : <b>{{ positionnement.questions.count}}</b><br/>
                 Vous devez répondre à chaque question.<br/> Le type de question est indiqué en haut de page.<br/>
+                Vous avez la possibilité d'utiliser votre calculatrice.<br/>
+                Il est important de répondre à toutes les questions.<br/>
+
                  
                 {% if positionnement.is_back %}
                     A tout moment, Vous pouvez revenir à une question en arrière lorsque vous avancez dans le test. 
                 {% else %}
                     <span class="text-danger">Attention, vous ne pouvez pas revenir en arrière lorsque vous avancez dans le test.</span> 
-                {% endif %}
+                {% endif %}<br/><br/>
+                Ce questionnaire est basé sur les attendus de l'Education Nationale française. 
             </span>
         </div>
     </div> 

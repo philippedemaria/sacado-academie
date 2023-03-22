@@ -95,9 +95,7 @@ def menu(request):
                 group = Group.objects.get(pk=group_id)
             else :
                 group = None
-
-            print(sacado_asso)
-
+                
             return {
                 'is_gar_check' : is_gar_check,
                 'student': student,

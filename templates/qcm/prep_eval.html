@@ -70,7 +70,7 @@
             <div class="modal-body">
 
 
-                {% if sacado_asso %}
+                {% if request.user.is_in_academy %}
                 <form action="" method="POST">
                     {% csrf_token %}
                     <div class="wrapper_slider_prepeval">
@@ -225,7 +225,7 @@
                     </div>
                 </form>
                 {% else %}
-                <span class="btn btn-danger btn-lg">Votre abonnement est terminé</span>
+                        {% include 'no_access.html'  %}
                 {% endif %}
             </div> 
         </div>

@@ -73,7 +73,7 @@
         <div class="col-md-12 col-lg-12 col-xs-12">
         
             <div class="alert alert-white">
-                <p>Un Flashcards est un ensemble de cartes Mémoire. </p>
+                <p>Un Flashcard est un ensemble de cartes Mémoire. </p>
                 <p>Une carte mémoire est une carte sur laquelle vous pouvez écrire une définition, une formule, une méthode à connaitre. </p>
                 <p>Une fois que votre Flashcards est créé, vous pouvez revoir toutes les notions d'un même thème ou chapitre qui vous parait important. Ainsi, vous réactivez votre mémoire pour fixer les notions.</p>
                 <p>Cette réactivation, ritualisée, est portée par les sciences cognitives et Stanislas Dehaene dont voici son approche par les <a href="http://parisinnovationreview.com/article/les-quatre-piliers-de-lapprentissage-stanislas-dehaene" target="_blank">4 piliers de l'apprentissage</a> :
@@ -99,17 +99,7 @@
 
     {% if not request.user.is_in_academy   %} 
 
-    <div class="row">
-        <div class="col-md-12 col-lg-12 col-xs-12">
-        
-            <div class="alert alert-warning">
-                   Votre accès est bloqué.  La date de validité de votre abonnement est expirée.
-            </div>
-        
-
-        
-        </div>        
-    </div>
+        {% include 'no_access.html'  %}
 
     {% endif %}
 
