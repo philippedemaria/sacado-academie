@@ -19,6 +19,7 @@ from datetime import datetime
 
 
 def is_sacado_asso(this_user, today):
+
     last_adhesion = this_user.student.adhesions.last()
     is_sacado = False
     is_active = False
@@ -63,7 +64,7 @@ def menu(request):
                 is_pending_studentanswers = True
  
             ### Permet de vérifier qu'un enseignant est dans un établissement sacado
-            sacado_asso, sacado_is_active = is_sacado_asso(teacher.user,today)
+            sacado_asso, sacado_is_active = True, True
  
             ### Rapelle le renouvellement de la cotisation
             renew_hidden = request.session.get("renewal", False)
@@ -95,7 +96,7 @@ def menu(request):
                 group = Group.objects.get(pk=group_id)
             else :
                 group = None
-                
+
             return {
                 'is_gar_check' : is_gar_check,
                 'student': student,
@@ -109,7 +110,7 @@ def menu(request):
         elif request.user.is_parent:
             this_user = User.objects.get(pk=request.user.id)
             students = this_user.parent.students.all()
-            sacado_asso, sacado_is_active = is_sacado_asso(this_user, today)
+            sacado_asso, sacado_is_active = True, True
             return {
                 'this_user': this_user,
                 'sacado_asso' : sacado_asso , 

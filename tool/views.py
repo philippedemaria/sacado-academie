@@ -1834,14 +1834,18 @@ def pdf_to_create(request,theme_tab):
 
         if data["score"] < 40 : 
             texte = "Tu dois porter une attention particulière au thème "+ data['theme'] +" dont les résultats restent largement inférieurs aux attentes. Il faudra effectuer tous les exercices avec beaucoup d'application et comprendre les corrections expliquées. Dans un premier temps, n'hésite pas à résoudre un nombre de situations plus important qu'initialement prévu. Avec un entraînement régulier (au moins 10 min par jour) tu vas t’améliorer, courage !" 
+            formule_ad = "Formule Suivi"
         elif data["score"] < 65 :
             texte = "La maitrise du thème "+ data['theme'] +" est fragile. Il faut porter une attention particulière aux corrections proposées et s'appliquer 10 minutes chaque jour pour combler tes doutes."  
+            formule_ad = "Formule Suivi"
         elif data["score"] < 90 :
             texte = "Le thème "+ data['theme'] +" est globalement compris. En travaillant 10 minutes chaque jour ce thème, tes résultats vont gagner en solidité."  
+            formule_ad = "Formule Suivi"
         else :
             texte = "Le thème "+ data['theme'] +" est parfaitement réussi. Nos exercices, les plus ardus, vont aiguiser ta curiosité et te permettre d'atteindre l'excellence."
+            formule_ad = "Formule Autonomie"
 
-        conseils = Paragraph("Notre conseil",normal_color)
+        conseils = Paragraph("Notre conseil :",normal_color)
         elements.append(conseils)
         elements.append(Spacer(0, 0.1*inch))
 
@@ -1849,8 +1853,10 @@ def pdf_to_create(request,theme_tab):
         elements.append(texte)
         elements.append(Spacer(0, 0.2*inch))
 
-
-
+        formule_advise = Paragraph("Formule conseillée : " + formule_ad ,normal_color)
+        elements.append(formule_advise)
+        elements.append(Spacer(0, 0.1*inch))
+ 
     advises = Paragraph( "Nous estimons le seuil de réussite des connaissances à 80% pour maîtriser les notions d'un thème.",mini)
     elements.append(advises)
     elements.append(Spacer(0, 0.1*inch))
