@@ -13547,8 +13547,14 @@ def prep_eval(request,id):
 
     if request.method == 'POST':
         parcours_ids = request.POST.getlist('parcours_ids')
+        if len(parcours_ids) == 0 :
+            messages.error(request,"Vous devez sélectionner au moins un thème.")
+            return redirect('prep_eval',id)
         if form.is_valid():
             nf = form.save(commit=False)
+            if nf.date == "" :
+                messages.error(request,"Vous devez sélectionner une date.")
+                return redirect('prep_eval',id)
             nf.student = student
             this_parcours = Parcours.objects.create(title="Révision du "+str(nf.date), teacher_id = teacher_id, author_id = teacher_id, subject_id = subject_id,  is_publish=1 , level_id = level_id , is_sequence=1)
             nf.parcours = this_parcours
