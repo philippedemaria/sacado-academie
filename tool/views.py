@@ -1648,7 +1648,7 @@ def goto_positionnement_student(request,id):
 
     else :
         try :
-            send_mail("SACADO ACADEMIE : Test de positionnement ",
+            send_mail("SACADO ACADEMIE : début d'un test de positionnement ",
                       first_name+" "+ last_name +" - Niveau : "+positionnement.level.name+", matière : "+positionnement.subject.name,
                       settings.DEFAULT_FROM_EMAIL,
                       ["philippe.demaria83@gmail.com", "brunoserres33@gmail.com","sandyreb@hotmail.fr"])
@@ -1886,6 +1886,9 @@ def my_results(request):
             Positionnement.objects.filter(pk=a_p[0]).update(nb_done=F('nb_done') + 1)
         loop+=1
 
+    try : positionnement = Positionnement.objects.get(pk=dico["positionnement_id"])
+    except : pass
+
     final_themes , theme_tab , subtheme_tab  = [] ,  [] ,  []  
     for data in themes :
         if not data[0] in final_themes :
@@ -1918,6 +1921,16 @@ def my_results(request):
 
     if email_to_send :
         pdf_to_send( pdf_to_create(request,theme_tab) , [email_to_send] , student_full_name)
+
+    try :
+        send_mail("SACADO ACADEMIE : Fin d'un test de positionnement ",
+                  first_name+" "+ last_name +" - Niveau : "+positionnement.level.name+", matière : "+positionnement.subject.name,
+                  settings.DEFAULT_FROM_EMAIL,
+                  ["philippe.demaria83@gmail.com", "brunoserres33@gmail.com","sandyreb@hotmail.fr"])
+    except : pass
+
+
+
 
     context = { 'results' : results , 'theme_tab' : theme_tab , 'skill_tab' : skill_tab  , 'labels':labels , 'dataset' : dataset , 'brut' : brut , 'total' : loop }
     return render(request, 'tool/positionnement_results.html', context)
