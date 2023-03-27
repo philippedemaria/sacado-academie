@@ -47,7 +47,8 @@
  
             <div class="logo float-left">
                 <a class="navbar-brand sacado" href="{% url 'index' %}"><img src="{% static 'img/sacadoA1.png' %}"/>
-                   SACADO ACADÉMIE </a><i class="bi bi-telephone"></i> 06 03 54 27 47
+                   SACADO ACADÉMIE </a>
+                   <span class="telephonie"><i class="bi bi-telephone"></i> 06 03 54 27 47</span>
             </div>
 
             <nav class="main-nav float-right d-none d-lg-block">
@@ -57,7 +58,7 @@
                     <li class="min_width"> <a href="{% url 'parents' %}" class="detail_index_menu{% if 'parents' in request.path %}_active{% endif %}"  >Espace Parent</a></li>
                     <li class="min_width"> <a href="{% url 'contact' %}"  class="detail_index_menu{% if 'contact' in request.path %}_active{% endif %}" >Contact</a></li>
 
-                    <li><a href="#menus" class="btn-inscription">Inscription</a></li>
+                    <li><a href="{% url 'index' %}#menus" class="btn-inscription">Inscription</a></li>
                     <li><a href="#" data-toggle='modal' data-target='#connexion' class="btn-inscription">Connexion</a></li>
 
                 </ul>

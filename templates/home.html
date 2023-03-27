@@ -56,8 +56,8 @@ Intro Section -
             </div>
             <div class="col-xs-12 col-md-12 col-lg-6" >
                 <img src="{% static 'img/accueil_0.png'  %}"/>
-                <div align="center" >
-                    <a href="{% url 'advises_index' %}" class="white bigger_size">Je souhaite passer un test de positionnement GRATUITEMENT.</a>
+                <div align="center" class="bigger_size" style="color:white">
+                    Je souhaite passer un <a href="{% url 'advises_index' %}" class="white">test de positionnement</a> GRATUITEMENT.
                 </div>
             </div> 
     </div>
@@ -138,21 +138,19 @@ Intro Section -
             </div>
         </div>
         <div class="row">
-            <div class="col-xs-12 col-md-2" align="right">
-                Une <b class="rose">interface d'entraînement</b> complète avec tous les <b class="rose">thèmes, les chapitres</b> et <b class="rose">scores</b> directement affichés. Le  temps passé  par journée est affiché pour contrôler effectivement la <b class="rose">durée d'apprentissage</b> <br/><small>(Niveau affiché CM2)</small>
-            </div>
-            <div class="col-xs-12 col-md-10" align="center">
-                <img src="{% static 'img/training_1.jpg' %}"  />
+            <div class="col-xs-12 col-md-12">
+                <img src="{% static 'img/training_1.jpg' %}"  style="float: left;width:70%;margin-right:30px"  /><br/><br/>
+                Une <b class="rose">interface d'entraînement</b> complète avec tous les <b class="rose">thèmes</b>, les <b class="rose">chapitres</b> et les <b class="rose">scores</b> directement affichés. <br/>Le  temps passé  par journée est affiché pour contrôler effectivement la <b class="rose">durée d'apprentissage</b> <br/><small>(Niveau affiché CM2)</small>
             </div>
         </div>
-        <div class="row" style="margin-top:20px;">
+        <div class="row" style="margin-top:30px;">
             <div class="col-xs-12 col-md-7">
-                Des <b class="rose">chapitres complets</b>  avec des parties de <b class="rose">cours interactifs</b> et des <b class="rose">exercices d'application directe</b> qui reprennent les objectifs des programmes de l'<b class="rose">Education Nationale</b>.<small>(Niveau affiché Troisième)</small>
-                <img src="{% static 'img/training_2.jpg' %}"  />
+                Des <b class="rose">chapitres complets</b>  avec des parties de <b class="rose">cours interactifs</b> et des <b class="rose">exercices d'application directe</b> qui reprennent les objectifs des programmes de l'<b class="rose">Education Nationale</b>.<small>(Niveau affiché Troisième)</small><br/><br/>
+                <img src="{% static 'img/training_2.jpg' %}" width="90%"  />
             </div>
             <div class="col-xs-12 col-md-5">
-                Des exercices entièrement <b class="rose">corrigés</b>, <b class="rose">interactifs</b> et <b class="rose">réalistes</b> qui reprennent les énoncés d'examen et des attendus des programmes <small>(Niveau affiché Première)</small>
-                <img src="{% static 'img/training_3.jpg' %}"  />
+                Des exercices entièrement <b class="rose">corrigés</b>, <b class="rose">interactifs</b> et <b class="rose">réalistes</b> qui reprennent les énoncés d'examen et des attendus des programmes <small>(Niveau affiché Première)</small><br/><br/>
+                <img src="{% static 'img/training_3.jpg' %}" width="90%"  />
             </div>
         </div>
     </div>
@@ -164,9 +162,9 @@ Intro Section -
             <div class="col-xs-12 col-md-12">
                 <h1 class="title_bloc_index" style="font-variant: small-caps;">Les Prép'éval</h1>
                 <p class="p_index">Choisis <b class="rose">la date</b> de ton évaluation, <b class="rose">les thèmes</b> à réviser et <span class="sacado">SACADO</span> confectionne ton <b class="rose">programme de révision</b> jour par jour, avec suivi de progression, jusqu'au jour J.</p><p class="p_index"> En trois clics....</p>
-                <img src="{% static 'img/prep_1.png' %}" width="33%" />
-                <img src="{% static 'img/prep_2.png' %}" width="33%" />
-                <img src="{% static 'img/prep_3.png' %}" width="33%" />
+                <img src="{% static 'img/prep_1.png' %}" width="330px" />
+                <img src="{% static 'img/prep_2.png' %}" width="330px" />
+                <img src="{% static 'img/prep_3.png' %}" width="330px" />
 
                 <p class="p_index">Le <b class="rose">programme de révision</b> généré</p>
                 <img src="{% static 'img/prep_4.png' %}" width="100%"   />
@@ -182,7 +180,7 @@ Intro Section -
                 <h1 class="title_bloc_index">NOTRE MÉTHODE</h1>
                 <p class="p_index">  Votre enfant progresse à son rythme avec des <b class="rose">exercices interactifs, corrigés immédiatement</b>, qu’il peut recommencer sans limitation. Les variables des exercices sont <b class="rose">aléatoires</b> pour ancrer les procédures en mémoire.</p>
                 <p class="p_index"><img src="{% static 'img/image_a.png' %}" style="float:right" />  Chaque jour, <b class="rose">10 minutes</b> d'entrainement sur nos exercices structurés en parcours permettent de reprendre les procédures et techniques et de les fixer dans la mémoire. Ces <b class="rose">rituels</b> facilitent la maîtrise des <b class="rose">automatismes</b> à la base de l'apprentissage des mathématiques.</p>
-                <p class="p_index">Sacado Académie utilise la puissance de l'<b class="rose">enseignement adaptatif</b>. Les exercices sont alors proposés selon les réussites des enfants.  </p>
+
                 <p class="p_index"> De la <b class="rose">maternelle</b> à la <b class="rose">terminale</b>, SACADO Académie propose des parcours<b class="rose"> 100% mathématiques</b> conformes aux <b class="rose">réformes</b> et aux <b class="rose">programmes scolaires 2022-2023</b> de l’Éducation Nationale.</p>
             </div>
         </div>
@@ -202,7 +200,6 @@ Intro Section -
         </div>
     </div>
     <div class="row">
-
         <div class="col-xs-12 col-md-4"  align="center">
             <div class="card border_card" >             
                 <div class="card-header">              
@@ -218,12 +215,11 @@ Intro Section -
                 <div class="card-body">
                     <div class="this_price"> <span class="currency">5 €</span>/mois<br/><small style="font-size:12px">Sans engagement</small></div>
                     <div class="card-block plus">
-                        <p class="card-text">  <a href="#" data-toggle='modal' data-target='#Autonomie'  class="detail_index"><i class="bi bi-cursor"></i>  Plus de détails <i class="bi bi-question-circle"></i></a>  </p>
+                        <p class="card-text">  <a href="#" data-toggle='modal' data-target='#Autonomie'  class="detail_index">  Plus de détails <i class="bi bi-question-circle"></i></a>  </p>
                     </div>
                     <div class="card-block plus">
                         <a href="{% url 'choice_menu' 1 %}" class="btn btn-asso">Choisir ce menu</a>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -243,7 +239,7 @@ Intro Section -
                     <div class="this_price">dès <span class="currency">29 €</span>/mois<br/><small style="font-size:12px">Sans engagement</small></div>
                     <div class="card-block plus">
                         <p class="card-text">  
-                            <a href="#" data-toggle='modal' data-target='#Suivi'  class="detail_index"><i class="bi bi-cursor"></i>  Plus de détails <i class="bi bi-question-circle"></i></a>  
+                            <a href="#" data-toggle='modal' data-target='#Suivi'  class="detail_index"> Plus de détails <i class="bi bi-question-circle"></i></a>  
                         </p>
                     </div>                    
                     <div class="card-block plus">
@@ -268,7 +264,7 @@ Intro Section -
                     <div class="this_price"> dès <span class="currency">290 €<br/><small style="font-size:14px">(package de 10 visio-conférences)</small></div>
                     <div class="card-block plus">
                         <p class="card-text">  
-                            <a href="#" data-toggle='modal' data-target='#exam'  class="detail_index"><i class="bi bi-cursor"></i>  Plus de détails <i class="bi bi-question-circle"></i></a>  
+                            <a href="#" data-toggle='modal' data-target='#exam'  class="detail_index">  Plus de détails <i class="bi bi-question-circle"></i></a>  
                         </p>
                     </div>
                     <div class="card-block plus">
@@ -278,7 +274,6 @@ Intro Section -
             </div>
         </div>
     </div>
-
     <div class="row" style="margin-top:80px">
         <div class="col-xs-12 col-md-12">
             <h1 class="title_bloc_index">NOTRE INTERFACE</h1>
@@ -290,9 +285,9 @@ Intro Section -
             <a href="{% url 'acad_exercises' %}" class="icon_link_index" >
                 <div class="sub_icon_link_index">
                     <img src="{% static 'img/icone_exos.jpg' %}"/> <br/> 
-                    <p class="p_index"><strong style="color:#444"> Cours et exercices</strong> <br/>  
+                    <p class="p_index"><strong style="color:#444;text-decoration:underline"> Cours et exercices</strong> <br/>  
                          
-                    <small>Interactifs, autocorrigés et détaillés<br/> Préparation aux évaluations</small> </p> 
+                    <small >Interactifs, autocorrigés et détaillés<br/> Préparation aux évaluations</small> </p> 
                 </div>
             </a>
         </div>
@@ -300,8 +295,8 @@ Intro Section -
             <a href="{% url 'parents' %}" class="icon_link_index" >
                 <div class="sub_icon_link_index">
                     <img src="{% static 'img/icone_interface.jpg' %}"/> <br/> 
-                    <p class="p_index"><strong style="color:#444" >  Espace parent</strong> <br/>                         
-                    <small>Interface complète<br/>  et détaillée </small>  </p>
+                    <p class="p_index"><strong style="color:#444;text-decoration:underline" >  Espace parent</strong> <br/>                         
+                    <small   >Interface complète<br/>  et détaillée </small>  </p>
                 </div>
             </a>   
         </div>
@@ -309,8 +304,8 @@ Intro Section -
             <a href="{% url 'numeric' %}" class="icon_link_index">
                 <div class="sub_icon_link_index">
                     <img src="{% static 'img/icone_memory.jpg' %}"/> <br/> 
-                    <p class="p_index"><strong  style="color:#444"> Apprentissage actif</strong><br/>                        
-                    <small>Rétroaction, mémorisation, automatisme </small>  </p>
+                    <p class="p_index"><strong  style="color:#444;text-decoration:underline"> Apprentissage actif</strong><br/>                        
+                    <small >Rétroaction, mémorisation, automatisme </small>  </p>
                 </div>
             </a>          
         </div>
