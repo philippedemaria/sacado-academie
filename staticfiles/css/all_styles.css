@@ -1653,7 +1653,7 @@ input:invalid:focus {
 }
 
 .text-mauve{
-  color :#A383D9;
+  color :#7153a2;
 }
 
 .text-orange{
@@ -2056,7 +2056,7 @@ a.select_correction:focus {
     height: 300px;
     overflow-y: auto;
     border: 1px solid #CCC;
-    color:#AAA;
+    color:#A383D9;
 }
 
 .slide_prepeval_title label{
