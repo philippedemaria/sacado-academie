@@ -689,7 +689,7 @@ table.table-bordered.dataTable {
   font-family: 'Roboto',  sans-serif;
   font-size:25px;
   padding:40px 0px 50px 100px;
-  
+
   color:#FFF;
 }
 
@@ -734,6 +734,10 @@ table.table-bordered.dataTable {
 
 .p_index{
   font-size:26px;
+}
+
+.p_index_margin{
+  margin-top:10px;
 }
 
 .this_price{
@@ -919,7 +923,9 @@ a.icon_link_index:hover .sub_icon_link_index{
         font-size:13px;
         margin: 10px 0px;
       }
-
+      .p_index_margin{
+        margin-top:0px;
+      }
 
       .header_bar {
         height: 90px;
