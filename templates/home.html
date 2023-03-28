@@ -46,22 +46,25 @@ Intro Section -
 ============================-->
 <section class="bandeau_accueil">
     <div class="row">
-            <div class="col-xs-12 col-md-12 col-lg-6" >
-                <div class="bandeau_accueil_title">
-                    Les rituels <br/>pour réussir  en Mathématiques
-                </div>
-                <div class="bandeau_accueil_subtitle">
+        <div class="col-xs-12 col-md-12 col-lg-6 no_display_index" >
+            <div class="bandeau_accueil_title">
+                Les rituels <br/>pour réussir  en Mathématiques
+            </div>
+            <div class="bandeau_accueil_subtitle">
+            10 minutes chaque jour avec la   <a href="#" data-toggle='modal' data-target='#div_methode_sacado' class="rose_light" ><b>méthode SACADO</b><sup><small><i class='fa fa-copyright'></i></small></sup> </a>
+            </div>
+        </div>
+        <div class="col-xs-12 col-md-12 col-lg-6" >
+            <img src="{% static 'img/accueil_0.png'  %}" class="img_if_small" />
+            <div align="center" class="bigger_size" style="color:white">
+                Je souhaite passer un <a href="{% url 'advises_index' %}" class="white">test de positionnement</a> GRATUITEMENT.
+                <div class="img_if_small_bandeau_accueil_subtitle"  style="margin:20px 0px">
                 10 minutes chaque jour avec la   <a href="#" data-toggle='modal' data-target='#div_methode_sacado' class="rose_light" ><b>méthode SACADO<sup><small><i class='fa fa-copyright'></i></small></sup></b> </a>
                 </div>
             </div>
-            <div class="col-xs-12 col-md-12 col-lg-6" >
-                <img src="{% static 'img/accueil_0.png'  %}"/>
-                <div align="center" class="bigger_size" style="color:white">
-                    Je souhaite passer un <a href="{% url 'advises_index' %}" class="white">test de positionnement</a> GRATUITEMENT.
-                </div>
-            </div> 
+        </div> 
     </div>
-    <div class="row try_exercises">
+    <div class="row">
         <div class="col-xs-12 col-md-12" align="center" >
             <a href="#" data-toggle='modal' data-target='#div_levels' class="white bigger_size"><img src="{% static 'img/target.png' %}"></i>
                 <br/>Essayer nos exercices
@@ -74,7 +77,12 @@ Intro Section -
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content" >
                 <div class="modal-header">
-                    <h2 class="font_sacado">    La méthode SACADO</h2>
+                    <h2 class="font_sacado">La méthode SACADO<sup>©</sup>
+
+                    </h2>
+                    <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
                   
@@ -82,7 +90,7 @@ Intro Section -
 
                     C’est la méthode Sacado©<br/>
 
-                    <img src="{% static 'img/ebbinghaus.jpg' %}" /><br/>
+                    <img src="{% static 'img/ebbinghaus.jpg' %}"  class="little_img_if_small"  /><br/>
 
                      
 
@@ -112,6 +120,7 @@ Intro Section -
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content" >
                 <div class="modal-header">
+
                     <h2 class="font_sacado">Choisir votre niveau</h2>
                 </div>
                 <div class="modal-body modal_level">
@@ -136,23 +145,23 @@ Intro Section -
         <div class="row">
             <div class="col-xs-12 col-md-12">
                 <h1 class="title_bloc_index" style="font-variant: small-caps;">L'entraînement</h1>
-                <p class="p_index"><b class="rose">10 minutes</b> chaque jour, pour <b class="rose">fixer les notions</b> et les <b class="rose">méthodes de base</b> et construire des savoirs et des connaissances solides.</p>
+                <p class="p_index"><b class="rose">10 minutes</b> chaque jour, pour <b class="rose">fixer les notions</b>, maîtriser les <b class="rose">méthodes de base</b> et construire des savoirs solides.</p>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-12 col-md-12">
-                <img src="{% static 'img/training_1.jpg' %}"  style="float: left;width:70%;margin-right:30px"  /><br/><br/>
-                Une <b class="rose">interface d'entraînement</b> complète avec tous les <b class="rose">thèmes</b>, les <b class="rose">chapitres</b> et les <b class="rose">scores</b> directement affichés. <br/>Le  temps passé  par journée est affiché pour contrôler effectivement la <b class="rose">durée d'apprentissage</b> <br/><small>(Niveau affiché CM2)</small>
+                <img src="{% static 'img/training_1.jpg' %}"  class="img_training_if_small"  />
+                <p class="p_index">Une <b class="rose">interface d'entraînement</b> complète avec tous les <b class="rose">thèmes</b>, les <b class="rose">chapitres</b> et les <b class="rose">scores</b> directement affichés. <br/>Le  temps passé  par journée est affiché pour contrôler effectivement la <b class="rose">durée d'apprentissage</b>. <br/><small>(Niveau affiché CM2)</small></p>
             </div>
         </div>
-        <div class="row" style="margin-top:30px;">
+        <div class="row" class="for_small">
             <div class="col-xs-12 col-md-7">
-                Des <b class="rose">chapitres complets</b>  avec des parties de <b class="rose">cours interactifs</b> et des <b class="rose">exercices d'application directe</b> qui reprennent les objectifs des programmes de l'<b class="rose">Education Nationale</b>.<small>(Niveau affiché Troisième)</small><br/><br/>
-                <img src="{% static 'img/training_2.jpg' %}" width="90%"  />
+                <p class="p_index">Des <b class="rose">chapitres complets</b>  avec des parties de <b class="rose">cours interactifs</b> et des <b class="rose">exercices d'application directe</b> qui reprennent les objectifs des programmes de l'<b class="rose">Education Nationale</b>.<small>(Niveau affiché Troisième)</small></p><div class="v_space_2br"></div>
+                <img src="{% static 'img/training_2.jpg' %}" class="_img_training_if_small"  />
             </div>
             <div class="col-xs-12 col-md-5">
-                Des exercices entièrement <b class="rose">corrigés</b>, <b class="rose">interactifs</b> et <b class="rose">réalistes</b> qui reprennent les énoncés d'examen et des attendus des programmes <small>(Niveau affiché Première)</small><br/><br/>
-                <img src="{% static 'img/training_3.jpg' %}" width="90%"  />
+                <p class="p_index">Des exercices entièrement <b class="rose">corrigés</b>, <b class="rose">interactifs</b> et <b class="rose">réalistes</b> qui reprennent les énoncés d'examen et des attendus des programmes. <small>(Niveau affiché Première)</small></p><div class="v_space_2br"></div>
+                <img src="{% static 'img/training_3.jpg' %}" class="_img_training_if_small" />
             </div>
         </div>
     </div>
@@ -183,143 +192,141 @@ Intro Section -
                 <p class="p_index">  Votre enfant progresse à son rythme avec des <b class="rose">exercices interactifs, corrigés immédiatement</b>, qu’il peut recommencer sans limitation. Les variables des exercices sont <b class="rose">aléatoires</b> pour ancrer les procédures en mémoire.</p>
                 <p class="p_index"><img src="{% static 'img/image_a.png' %}" style="float:right" />  Chaque jour, <b class="rose">10 minutes</b> d'entrainement sur nos exercices structurés en parcours permettent de reprendre les procédures et techniques et de les fixer dans la mémoire. Ces <b class="rose">rituels</b> facilitent la maîtrise des <b class="rose">automatismes</b> à la base de l'apprentissage des mathématiques.</p>
 
-                <p class="p_index"> De la <b class="rose">maternelle</b> à la <b class="rose">terminale</b>, SACADO Académie propose des parcours<b class="rose"> 100% mathématiques</b> conformes aux <b class="rose">réformes</b> et aux <b class="rose">programmes scolaires 2022-2023</b> de l’Éducation Nationale.</p>
+                <p class="p_index"> De la <b class="rose">maternelle</b> à la <b class="rose">terminale</b>, SACADO Académie propose des parcours<b class="rose"> 100% mathématiques</b> conformes aux <b class="rose">réformes</b> et aux <b class="rose">programmes scolaires en vigueur</b> de l’Éducation Nationale.</p>
             </div>
         </div>
     </div>
 </div>
 
 <div class="fond_bis" style="margin-top:80px">
-<section class="container" id="menus">
-    <div class="row">
-        <div class="col-xs-12 col-md-12">
-            <h1 class="title_bloc_index_white">NOS MENUS</h1>
+    <section class="container" id="menus">
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <h1 class="title_bloc_index_white">NOS MENUS <font style="font-size:14px;font-weight:100">Offre d'essai : 7 jours gratuits (hors visios)</font></h1>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-12 col-md-12 full_height" align="center" >
-            <div style="background-color:white;padding:10px; margin-bottom:30px;">Offre d'essai : 7 jours gratuits (Hors visios)</div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-12 col-md-4"  align="center">
-            <div class="card border_card" >             
-                <div class="card-header">              
-                    <div class="row">
-                        <div class="col-sm-4 col-md-3">
-                            <img src="{% static 'img/menu_autonomie.png' %}"  width="60px">
+        <div class="row">
+            <div class="col-xs-12 col-md-4"  align="center">
+                <div class="card border_card" >             
+                    <div class="card-header">              
+                        <div class="row">
+                            <div class="col-sm-4 col-md-3">
+                                <img src="{% static 'img/menu_autonomie.png' %}"  width="60px">
+                            </div>
+                            <div class="col-sm-8 col-md-9 font_white">
+                             Menu<div class="sub_header">Autonomie</div> 
+                            </div>
                         </div>
-                        <div class="col-sm-8 col-md-9 font_white">
-                         Menu<div class="sub_header">Autonomie</div> 
+                    </div>
+                    <div class="card-body">
+                        <div class="this_price"> <span class="currency">5 €</span>/mois<br/><small style="font-size:12px">Sans engagement</small></div>
+                        <div class="card-block plus">
+                            <p class="card-text">  <a href="#" data-toggle='modal' data-target='#Autonomie'  class="detail_index">  Plus de détails <i class="bi bi-question-circle"></i></a>  </p>
+                        </div>
+                        <div class="card-block plus">
+                            <a href="{% url 'choice_menu' 1 %}" class="btn btn-asso">Choisir ce menu</a>
                         </div>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="this_price"> <span class="currency">5 €</span>/mois<br/><small style="font-size:12px">Sans engagement</small></div>
-                    <div class="card-block plus">
-                        <p class="card-text">  <a href="#" data-toggle='modal' data-target='#Autonomie'  class="detail_index">  Plus de détails <i class="bi bi-question-circle"></i></a>  </p>
+            </div>
+            <div class="col-xs-12 col-md-4"  align="center">
+                <div class="card border_card" >             
+                    <div class="card-header">              
+                        <div class="row">
+                            <div class="col-sm-4 col-md-3">
+                                <img src="{% static 'img/menu_suivi.png' %}"  width="60px">
+                            </div>
+                            <div class="col-sm-8 col-md-9 font_white">
+                             Menu<div class="sub_header">Suivi</div> 
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-block plus">
-                        <a href="{% url 'choice_menu' 1 %}" class="btn btn-asso">Choisir ce menu</a>
+                    <div class="card-body">
+                        <div class="this_price">dès <span class="currency">29 €</span>/mois<br/><small style="font-size:12px">Sans engagement</small></div>
+                        <div class="card-block plus">
+                            <p class="card-text">  
+                                <a href="#" data-toggle='modal' data-target='#Suivi'  class="detail_index"> Plus de détails <i class="bi bi-question-circle"></i></a>  
+                            </p>
+                        </div>                    
+                        <div class="card-block plus">
+                            <a href="{% url 'choice_menu' 2 %}" class="btn btn-asso">Choisir ce menu</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-4"  align="center">
+                <div class="card border_card" >             
+                    <div class="card-header">              
+                        <div class="row">
+                            <div class="col-sm-4 col-md-3">
+                                <img src="{% static 'img/menu_exam.png' %}"  width="60px">
+                            </div>
+                            <div class="col-sm-8 col-md-9 font_white">
+                             Menu<div class="sub_header">Prép'Examen</div> 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="this_price"> dès <span class="currency">290 €<br/><small style="font-size:14px">(package de 10 visio-conférences)</small></div>
+                        <div class="card-block plus">
+                            <p class="card-text">  
+                                <a href="#" data-toggle='modal' data-target='#exam'  class="detail_index">  Plus de détails <i class="bi bi-question-circle"></i></a>  
+                            </p>
+                        </div>
+                        <div class="card-block plus">
+                            <a href="{% url 'choice_menu' 3 %}" class="btn btn-asso">Choisir ce menu</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-xs-12 col-md-4"  align="center">
-            <div class="card border_card" >             
-                <div class="card-header">              
-                    <div class="row">
-                        <div class="col-sm-4 col-md-3">
-                            <img src="{% static 'img/menu_suivi.png' %}"  width="60px">
-                        </div>
-                        <div class="col-sm-8 col-md-9 font_white">
-                         Menu<div class="sub_header">Suivi</div> 
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="this_price">dès <span class="currency">29 €</span>/mois<br/><small style="font-size:12px">Sans engagement</small></div>
-                    <div class="card-block plus">
-                        <p class="card-text">  
-                            <a href="#" data-toggle='modal' data-target='#Suivi'  class="detail_index"> Plus de détails <i class="bi bi-question-circle"></i></a>  
-                        </p>
-                    </div>                    
-                    <div class="card-block plus">
-                        <a href="{% url 'choice_menu' 2 %}" class="btn btn-asso">Choisir ce menu</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xs-12 col-md-4"  align="center">
-            <div class="card border_card" >             
-                <div class="card-header">              
-                    <div class="row">
-                        <div class="col-sm-4 col-md-3">
-                            <img src="{% static 'img/menu_exam.png' %}"  width="60px">
-                        </div>
-                        <div class="col-sm-8 col-md-9 font_white">
-                         Menu<div class="sub_header">Prép'Examen</div> 
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="this_price"> dès <span class="currency">290 €<br/><small style="font-size:14px">(package de 10 visio-conférences)</small></div>
-                    <div class="card-block plus">
-                        <p class="card-text">  
-                            <a href="#" data-toggle='modal' data-target='#exam'  class="detail_index">  Plus de détails <i class="bi bi-question-circle"></i></a>  
-                        </p>
-                    </div>
-                    <div class="card-block plus">
-                        <a href="{% url 'choice_menu' 3 %}" class="btn btn-asso">Choisir ce menu</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row" style="margin-top:80px">
-        <div class="col-xs-12 col-md-12">
-            <h1 class="title_bloc_index">NOTRE INTERFACE</h1>
-        </div>
-    </div>
+    </section>
+</div>
 
-    <div class="row" style="margin-bottom:60px">
-        <div class="col-xs-6 col-md-4"  align="center">
-            <a href="{% url 'acad_exercises' %}" class="icon_link_index" >
-                <div class="sub_icon_link_index">
-                    <img src="{% static 'img/icone_exos.jpg' %}"/> <br/> 
-                    <p class="p_index"><strong style="color:#444;text-decoration:underline"> Cours et exercices</strong> <br/>  
-                         
-                    <small >Interactifs, autocorrigés et détaillés<br/> Préparation aux évaluations</small> </p> 
-                </div>
-            </a>
+
+<div class="background_accueil">
+    <div class="container" id="interfaces">
+
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <h1 class="title_bloc_index">NOTRE INTERFACE</h1>
+            </div>
         </div>
-        <div class="col-xs-6 col-md-4"  align="center">
-            <a href="{% url 'parents' %}" class="icon_link_index" >
+
+        <div class="row" style="margin-bottom:60px">
+            <div class="col-xs-6 col-md-4"  align="center">
+                    <div class="sub_icon_link_index">
+                        <img src="{% static 'img/icone_exos.jpg' %}"/> <br/> 
+                        <a href="{% url 'acad_exercises' %}" class="icon_link_index p_index" >Cours et exercices</a> <br/>  
+                             
+                        <small >Interactifs, autocorrigés et détaillés<br/> Préparation aux évaluations</small> 
+                    </div>
+
+            </div>
+            <div class="col-xs-6 col-md-4"  align="center">
                 <div class="sub_icon_link_index">
                     <img src="{% static 'img/icone_interface.jpg' %}"/> <br/> 
-                    <p class="p_index"><strong style="color:#444;text-decoration:underline" >  Espace parent</strong> <br/>                         
-                    <small   >Interface complète<br/>  et détaillée </small>  </p>
+                    <a href="{% url 'parents' %}" class="icon_link_index p_index" >  Espace parent </a>    <br/>                     
+                    <small   >Interface complète<br/>  et détaillée </small>   
                 </div>
-            </a>   
-        </div>
-        <div class="col-xs-6 col-md-4"  align="center">
-            <a href="{% url 'numeric' %}" class="icon_link_index">
+            </div>
+            <div class="col-xs-6 col-md-4"  align="center">
                 <div class="sub_icon_link_index">
                     <img src="{% static 'img/icone_memory.jpg' %}"/> <br/> 
-                    <p class="p_index"><strong  style="color:#444;text-decoration:underline"> Apprentissage actif</strong><br/>                        
-                    <small >Rétroaction, mémorisation, automatisme </small>  </p>
+                     <a href="{% url 'numeric' %}" class="icon_link_index p_index"> Apprentissage actif</a> <br/>                        
+                    <small >Rétroaction, mémorisation, automatisme </small>  
                 </div>
-            </a>          
+            
+            </div>
         </div>
+
     </div>
-
-
-
-
-
-</section>
 </div>
- 
+
+
+
+
+
 
 <div class="modal fade" id="Autonomie" tabindex="-1" role="dialog" aria-labelledby="Autonomie">
     <div class="modal-dialog" role="document" style="width:70%">
@@ -327,7 +334,7 @@ Intro Section -
             <div class="modal-header">
                 <div class="row">
                     <div class="col-sm-3 col-md-2">
-                        <img src="{% static 'img/menu_ia.png' %}"  width="60px"/>
+                        <img src="{% static 'img/menu_autonomie.png' %}"  width="60px"/>
                     </div>
                     <div class="col-sm-8 col-md-9">
                         <span style="font-size:30px;">  Menu <span class="sub_header">Autonomie</span> </span>
@@ -343,8 +350,7 @@ Intro Section -
             <div class="modal-body" style="font-size:14px;" >
    
                 <b class="rose">Interface Enfant </b>
-
-                <li>Séquences d’exercices organisées par un programme d’intelligence artificielle, qui adapte une section de cours et d’activités en fonction des résultats.</li>
+                <li>Séquences de cours et d’activités.</li>
                 <li>Niveaux structurés en fonction des réussites (il saute des paliers) ou des lacunes (il s’entraine  jusqu’à sa réussite !)</li>
                 <li class="rose">Préparation aux évaluations en fonction des chapitres travaillés en classe.</li>
                 <li>Suivi détaillé de progression jour par jour.</li>

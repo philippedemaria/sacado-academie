@@ -81,9 +81,12 @@
         </div> 
         
         <div class="row" id = "result_price">
-            {% csrf_token %}
-            <input type="hidden" name="formule_id" id="menu_id" value="{{ formule.id }}" />
-            <input type="submit" name="sending" class="btn-inscription" value="Valider le nombre d'enfants" style="margin-left: 20%;" /> 
+            <div class="col-sm-12 col-md-12" align="center">
+                {% csrf_token %}
+                <input type="hidden" name="formule_id" id="menu_id" value="{{ formule.id }}" />
+                <input type="submit" name="sending" class="btn-inscription" value="Valider le nombre d'enfants" /> 
+            </div>
+
         </div>
 
 

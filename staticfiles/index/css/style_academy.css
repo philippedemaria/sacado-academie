@@ -37,13 +37,6 @@
 }
 
 
-@media (max-width:750px){
-    .try_exercises{
-      margin-top:20px;
-    }
-}
-
-
 .sanspuce{
   list-style: none;
 }
@@ -662,11 +655,11 @@ table.table-bordered.dataTable {
 }
 
 .main_body {
-    margin-top: 70px;
+    margin: 70px 0px;
     width: 100%;
     margin-left: auto;
     margin-right: auto;
-    overflow-x: hidden;
+    overflow: hidden;
 }
  
 .bandeau_accueil{
@@ -730,7 +723,7 @@ table.table-bordered.dataTable {
   font-size: 70px;
   font-weight: 600;
   color: #FFF;
-  margin:80px 0px;
+  margin:80px 0px 40px 0px;
 }
 
 
@@ -766,6 +759,13 @@ a.icon_link_index{
   text-decoration : underline;
 }
 
+a.icon_link_index:hover{
+  color:#e00a72;
+  border-radius: 40px;
+  text-decoration : underline;
+}
+
+
 a.icon_link_index:hover .sub_icon_link_index{
   color:#e00a72;
   border-radius: 40px;
@@ -777,6 +777,8 @@ a.icon_link_index:hover .sub_icon_link_index{
   font-family: 'Roboto',  sans-serif;
   background-image: url('/static/img/fond_accueil_bis.png'); 
   background-repeat: no-repeat;
+  background-size: 100%;
+  height:750px;
 }
 
 
@@ -821,6 +823,25 @@ a.icon_link_index:hover .sub_icon_link_index{
  
 
 }
+      
+.img_if_small_bandeau_accueil_subtitle{
+  display: none;
+}
+
+.img_training_if_small{
+    float: left;
+    width:70%;
+    margin-right:30px
+}
+
+.for_small{
+  margin-top:30px;
+}
+
+.v_space_2br{
+  margin-top:20px;
+}
+
 
 @media (max-width: 990px) {
 
@@ -849,8 +870,10 @@ a.icon_link_index:hover .sub_icon_link_index{
       .bandeau_accueil{
       font-family: 'Roboto', cursive;
       background-repeat: no-repeat; 
-      height:400px;
+      height:500px;    
+      font-size: 12px;
       }
+
       .bandeau_accueil_title{
         font-family: 'Roboto', cursive;
         text-transform: uppercase ;
@@ -882,11 +905,21 @@ a.icon_link_index:hover .sub_icon_link_index{
         font-family: 'Roboto',  sans-serif;
         background-image: url('/static/img/fond_accueil_bis.png'); 
         background-repeat: no-repeat;
+        background-size: cover;
+        height: 1750px;
       }
 
       .telephonie{
         display:block;
+        font-size: 12px;
       }
+
+      .p_index{
+        font-size:13px;
+        margin: 10px 0px;
+      }
+
+
       .header_bar {
         height: 90px;
         transition: all 0.5s;
@@ -896,6 +929,45 @@ a.icon_link_index:hover .sub_icon_link_index{
         top: 0;
         margin-right: auto;
       }
+
+      .try_exercises{
+        margin-top:20px;
+      }
+      .img_if_small{
+        width: 400px
+      }
+      .little_img_if_small{
+        width: 300px
+      }
+ 
+      .img_if_small_bandeau_accueil_subtitle{
+        display: block;
+        font-size:12px;
+      }
+
+      .img_training_if_small{
+          margin-right: auto;
+          margin-left: auto;
+          width:100%;
+          margin-bottom: 10px
+      }
+
+      ._img_training_if_small{
+          margin-right: auto;
+          margin-left: auto;
+          width:100%;
+          margin-bottom: 10px
+      }
+
+
+
+      .for_small{
+        margin-top:10px;
+      }
+      .v_space_2br{
+        margin-top:10px;
+      }
+
 }
 
 /*--------------------------------------------------------------
