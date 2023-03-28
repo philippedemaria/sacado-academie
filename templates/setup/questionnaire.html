@@ -1,0 +1,104 @@
+{% extends 'dashboard.html' %}
+
+{% load widget_tweaks %}
+{% load static %}
+
+
+
+ 
+
+
+
+{% block body %}
+<section class="content_list"> 
+
+    <div class="card">
+        <input name="identifiant" type="hidden" value="{{ request.user.id }}" />
+        <div class="row">
+            <div class="col-sm-8">
+                Quelle est ta moyenne actuelle en Mathématiques ?
+            </div>
+            <div class="col-sm-4" align="center">
+                <input name="actual_average" type="number" step="1" min="0" max ="20"  class="form-control"  />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-8">
+                Quelle moyenne vises-tu en Mathématiques ?
+            </div>
+            <div class="col-sm-4" align="center">
+                <input name="target_average" type="number" step="1" min="10" max ="20"  class="form-control" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-8">
+                Combien de temps par jour, es-tu prêt à faire des mathématiques ?
+            </div>
+            <div class="col-sm-4" align="center">
+                <input name="duration" type="number" step="5" min="5"  class="form-control" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-8">
+                Tes points forts sont ?
+            </div>
+            <div class="col-sm-4" align="center">
+                <select name="forces" multiple class="form-control" >
+                    <option value="Nombres et calculs">Nombres et calculs</option>
+                    <option value="Gestions de données">Gestions de données</option>
+                    <option value="Géométrie">Géométrie</option>
+                    <option value="Fonctions">Fonctions</option>
+                    <option value="Probabilité - statistiques">Probabilité - statistiques</option>
+                    <option value="Complexes">Complexes</option>
+                    <option value="Géométrie dans l'espace">Géométrie dans l'espace</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-8">
+                Tes points de fragilité sont ?
+            </div>
+            <div class="col-sm-4" align="center" class="form-control" >
+                <select name="forces" multiple>
+                    <option value="Nombres et calculs">Nombres et calculs</option>
+                    <option value="Gestions de données">Gestions de données</option>
+                    <option value="Géométrie">Géométrie</option>
+                    <option value="Fonctions">Fonctions</option>
+                    <option value="Probabilité - statistiques">Probabilité - statistiques</option>
+                    <option value="Complexes">Complexes</option>
+                    <option value="Géométrie dans l'espace">Géométrie dans l'espace</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-8">
+                Tes loisirs s'orientent vers ?
+            </div>
+            <div class="col-sm-4" align="center">
+                
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-8" align="center">
+                Ce que tu voudrais exercer comme métier ?
+            </div>
+            <div class="col-sm-4" align="center">
+                
+            </div>
+        </div>
+    </div>
+
+</section> 
+
+
+                  <div class="col-sm-12 col-md-12">
+                      <div class="form-group">
+                          <label>{{ form.is_publish.label_tag }}</label>
+                          {{ form.is_publish |attr:"data-toggle:toggle" |attr:"data-onstyle:success"|attr:"data-offstyle:danger"|attr:"data-on:Oui"|attr:"data-off:Non"}}
+                          {{ form.is_publish.errors }}
+                      </div>
+                  </div>
+  
+{% endblock %}

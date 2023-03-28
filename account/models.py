@@ -6,7 +6,7 @@ from django.contrib.auth.models import AbstractUser
 from django.core.mail import send_mail
 from django.db import models
 from django.db.models import  Q, Avg, Sum
-from socle.models import Level, Knowledge, Skill, Subject
+from socle.models import Level, Knowledge, Skill, Subject, Theme
 from school.models import School, Country
 
 from templated_email import send_templated_mail
@@ -699,6 +699,23 @@ class Student(ModelWithCode):
         #     if cd["amount__sum"]>0:
         #         test = True
         #     return test
+
+
+
+
+class Description(models.Model):
+    """questionnaire après adhesion"""
+    actual_average = models.PositiveIntegerField( default=10)
+    target_average = models.PositiveIntegerField( default=10)
+    duration       = models.PositiveIntegerField( default=10, null=True, blank=True)
+    forces         = models.ManyToManyField(Theme, related_name="forces_descriptions",blank=True)
+    weaknesses     = models.ManyToManyField(Theme, related_name="weakness_descriptions", blank=True)
+    student        = models.ForeignKey(Student, related_name="descriptions", on_delete=models.CASCADE,  null=True, blank=True)
+    job            = models.CharField(max_length=50,  verbose_name="Job") 
+    hobbies        = models.CharField(max_length=50,  verbose_name="hobbies") 
+
+    def __str__(self):
+        return "{} {} : {}€".format(self.student.user.last_name, self.student.user.first_name, self.amount)
 
 
 

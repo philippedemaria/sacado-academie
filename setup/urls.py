@@ -45,7 +45,8 @@ urlpatterns = [
     path('renewal_adhesion', renewal_adhesion, name='renewal_adhesion'),
     path('ajax_prices_formule', ajax_prices_formule, name='ajax_prices_formule'),
 
-
+    
+    path('questionnaire', questionnaire, name='questionnaire'),
     ############################################################################################
     #######  Academy
     ############################################################################################

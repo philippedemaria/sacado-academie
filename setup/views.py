@@ -26,7 +26,7 @@ from email import encoders
 from django.db.models import Count, Q
 
 from account.decorators import is_manager_of_this_school
-from account.forms import  UserForm, TeacherForm, StudentForm , BaseUserFormSet , NewpasswordForm
+from account.forms import  UserForm, TeacherForm, StudentForm , BaseUserFormSet , NewpasswordForm, DescriptionForm
 from account.models import  User, Teacher, Student  , Parent , Adhesion , Facture
 from association.models import Accounting , Detail , Rate , Abonnement , Holidaybook , Activeyear
 from group.models import Group, Sharing_group
@@ -1364,7 +1364,7 @@ def save_adhesion(request) :
 
         if data_posted['formule_id'] > 1 :
             msg += "Un.e enseignant.e de la SACADO ACADEMIE va vous contacter sous 24 heures par mail pour établir un plan de travail personnalisé.\n\n"
-        msg += "Pour établir des conseils personalisés, nous vous demandons à votre enfant de remplir un questionnaire à cette adresse : https://sacado-academie.fr/questionnaire\n\n"
+        #msg += "Pour établir des conseils personalisés, nous vous demandons à votre enfant de remplir un questionnaire à cette adresse : https://sacado-academie.fr/questionnaire\n\n"
 
         msg += "\n\nRetrouvez ces détails à partir de votre tableau de bord après votre connexion à https://sacado-academie.fr"
 
@@ -1405,7 +1405,7 @@ def save_adhesion(request) :
             smsg += "votre référence d'adhésion est "+chrono+".\n\n"
             smsg += "Votre identifiant est "+s["username"]+" et votre mot de passe est "+s["password_no_crypted"]+"\n\n"
             smsg += "Il est possible de retrouver ces détails à partir de votre tableau de bord après votre connexion à https://sacado-academie.fr\n\n"
-            smsg += "Pour établir des conseils personalisés, nous te demandons de remplir si tu le souhaites les questionnaire à cette adresse : https://sacado-academie.fr/questionnaire\n\n"
+            #smsg += "Pour établir des conseils personalisés, nous te demandons de remplir si tu le souhaites les questionnaire à cette adresse : https://sacado-academie.fr/questionnaire\n\n"
             smsg += "\n\nL'équipe SACADO vous remercie de votre confiance.\n\n"
 
             send_mail("Inscription SACADO académie", smsg, settings.DEFAULT_FROM_EMAIL, srcv)
@@ -1438,9 +1438,6 @@ def save_adhesion(request) :
 
 
     return redirect( 'index' )
-
-
-
 
 
 def change_adhesion(request,ids):
@@ -1703,6 +1700,22 @@ def send_reports(request) :
     destinataires=["stephan.ceroi@mailo.com","stephan.ceroi@gmail.com"]
     r=envoie_rapport(fichiers, destinataires)
     return HttpResponse(r)
+
+
+
+
+
+@login_required
+def questionnaire(request) :
+    """questionnaire après adhesion"""
+    student = request.user.student
+
+    form = DescriptionForm(request.POST or None )
+ 
+    context = {    "form" : form   ,  "student" : student   }
+
+    return render(request, 'setup/questionnaire.html', context)
+
 
 
 

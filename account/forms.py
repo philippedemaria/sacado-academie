@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import Teacher, User, Student, Parent , Response , Newpassword , Avatar , Background
+from .models import Teacher, User, Student, Parent , Response , Newpassword , Avatar , Background, Description
 
 from django.core.exceptions import ValidationError
 from django.forms import BaseFormSet
@@ -30,6 +30,10 @@ class AvatarForm(forms.ModelForm):
         model = Avatar
         fields = '__all__'
 
+class DescriptionForm(forms.ModelForm):
+    class Meta:
+        model = Description
+        fields = '__all__'
 
 
 class AvatarUserForm(forms.ModelForm):
