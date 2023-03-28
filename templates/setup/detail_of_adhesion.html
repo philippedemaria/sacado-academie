@@ -155,9 +155,8 @@
                         <div class="row">
                             <div class="col-sm-12 col-md-6">
                                 <div class="form-group">
-                                    {{ form.password1.label_tag }}
-                                    {{ form.password1 |add_class:"form-control"|attr:"required" }} 
-                                    <small><em>Au moins 8 caractères</em></small>
+                                    {{ form.password1.label_tag }} <small><em>Au moins 8 caractères</em></small>
+                                    {{ form.password1 |add_class:"form-control"|attr:"required" }}
                                     {{ form.password1.errors }}
                                 </div>
                             </div>  
@@ -196,7 +195,7 @@
                 {% endfor %}
             </div>
             <div class="row" style="margin-top:30px">
-                <div class="col-sm-12 col-md-6 col-lg-6" align="center">
+                <div class="col-sm-12 {% if data_post.nb_child == 1 %}col-md-6{% endif %}" align="center">
                     <input type="submit" value="Valider et voir le récapitulatif" class="btn-asso" id="sendit" />
                 </div>
             </div>

@@ -986,10 +986,10 @@ p {
 
 
 input:invalid {
-  border: 2px solid red;
+  border: 2px solid #6c07ad;
 }
 input:invalid:focus {
-  background-color: #ff2a51;
+  background-color: #e2d9f9;
 }
 
 .this_variable_active{

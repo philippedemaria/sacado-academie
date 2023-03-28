@@ -12,16 +12,15 @@
     <div class="container"> 
         <div class="row">
             <div class="col-sm-12 col-md-12">
-                {% comment %}
                 <div class="card_recapitulatif" >  
                     Menu  <b>{{ formule.name }}</b> <br/>
-                    Adhésion <b>{{ formule.adhesion }}</b> <br/>
                     Nombre d'enfant : <b>{{ data_post.nb_child }}</b> <br/>
+                    {% comment %}
                     Fin de l'adhésion : <b>{{ data_post.date_end }}</b>  <br/>
                     Montant total de l'adhésion : <b class="line_through">{{ data_post.total_price }}€</b> = {{ data_post.nb_month }} mois x <span  class="line_through">{{ data_post.month_price }}€/mois </span><br/><br/>
                     <small>Pour toute résiliation de l'adhésion avant la fin mentionnée ci-dessus, les frais de gestion s'élèvent à 5,99€.</small>
+                    {% endcomment %}
                 </div>
-                {% endcomment %}
                 <div class="card_recapitulatif" >  
                     1 semaine  d'essai gratuite 
                </div>
@@ -32,7 +31,7 @@
         <hr/>
  
         <form action="{% url 'save_adhesion' %}"  >
-                {% csrf_token %}
+            {% csrf_token %}
             <input type="hidden" name="formule_id" value="{{ formule.id }}" />
             <input type="hidden" name="nb_child"  value="{{ data_post.nb_child }}" />
             <div class="row">
@@ -99,7 +98,7 @@
  
 
             <div class="row" style="margin-top:30px">
-                <div class="col-sm-12 col-md-6 col-lg-6">
+                <div class="col-sm-12 {% if data_post.nb_child == 1 %}col-md-6{% endif %}" align="center">
 
 
                     <a href="{% url 'save_adhesion' %}" class="btn-asso" onclick="alert('... Merci de patienter pendant la création des exercices et les cours du niveau de votre/vos enfant.s ... Environ 5 minutes ...')">Confirmer l'inscription gratuite</a>
