@@ -1877,8 +1877,9 @@ def my_results(request):
     brut = 0
     loop = 0
     for a_p in answerpositionnements :
+        student = a_p[1]
         question = Question.objects.get(pk=a_p[2])
-        dico =  {"positionnement_id" : a_p[0] , "student" : a_p[1], "question" : question, "answer" : a_p[3] , "score" : a_p[4] , "timer" : a_p[5] , "is_correct" : a_p[6] , 'themes' : a_p[7] }
+        dico =  {"positionnement_id" : a_p[0] , "student" :student, "question" : question, "answer" : a_p[3] , "score" : a_p[4] , "timer" : a_p[5] , "is_correct" : a_p[6] , 'themes' : a_p[7] }
         results.append(dico)
         themes.append(a_p[7])
         if a_p[6] : brut +=1
@@ -1924,13 +1925,10 @@ def my_results(request):
 
     try :
         send_mail("SACADO ACADEMIE : Fin d'un test de positionnement ",
-                  first_name+" "+ last_name +" - Niveau : "+positionnement.level.name+", matière : "+positionnement.subject.name,
+                  student +" - Niveau : "+positionnement.level.name+", matière : "+positionnement.subject.name,
                   settings.DEFAULT_FROM_EMAIL,
-                  ["philippe.demaria83@gmail.com", "brunoserres33@gmail.com","sandyreb@hotmail.fr"])
+                  ["info@sacado-academie.fr"])
     except : pass
-
-
-
 
     context = { 'results' : results , 'theme_tab' : theme_tab , 'skill_tab' : skill_tab  , 'labels':labels , 'dataset' : dataset , 'brut' : brut , 'total' : loop }
     return render(request, 'tool/positionnement_results.html', context)
