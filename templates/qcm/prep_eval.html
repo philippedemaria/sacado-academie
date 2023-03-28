@@ -39,8 +39,8 @@
                     <a href="{% url 'show_prepeval' prepeval.id %}" class="init">
                         <label class="big_size margin_bottom20"> Évaluation du {{ prepeval.date|date:"d N Y" }} </label><br/>
                         Tu as choisi les thèmes :
-                        {% for t in prepeval.parcours.get_themes %}
-                            <li class="text-mauve">{{ t.theme.name }}</li>
+                        {% for p in prepeval.o_parcours.all %}
+                            <li class="text-mauve">{{ p.title }}</li>
                         {% endfor %}
                     </a>
                     <a href="{% url 'delete_prepeval' request.user.id prepeval.id %}" class="this_trash_bin_absolute">

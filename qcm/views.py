@@ -13513,6 +13513,7 @@ def make_slots(this_parcours, parcours_ids, nf,student):
             except : pass
             rank += 1
 
+
     nb_relationships_by_day = this_parcours.parcours_relationship.count()//nb_days
     # Création des slots
     for i in range(nb_days) : # i représente le slot du ième jour
@@ -13522,6 +13523,7 @@ def make_slots(this_parcours, parcours_ids, nf,student):
         relationships  = this_parcours.parcours_relationship.order_by('ranking')[i*nb_relationships_by_day:(i+1)*nb_relationships_by_day]
         documents_list = this_parcours.parcours_relationship.values_list("type_id",flat=True).order_by('ranking')[i*nb_relationships_by_day:(i+1)*nb_relationships_by_day]
         stte_idx = list_idx( structure_idx( list(documents_list) ) )
+
         # enlève de cette liste les exos qui sont dans studentanswer
         for j in range(len(relationships)):
             if j in stte_idx :
@@ -13565,6 +13567,7 @@ def prep_eval(request,id):
             this_parcours = Parcours.objects.create(title="Révision du "+str(nf.date), teacher_id = teacher_id, author_id = teacher_id, subject_id = subject_id,  is_publish=1 , level_id = level_id , is_sequence=1)
             nf.parcours = this_parcours
             nf.save()
+            nf.o_parcours.set(parcours_ids)
             slots = make_slots(this_parcours, parcours_ids , nf,student)
             this_parcours.students.add(student)
 

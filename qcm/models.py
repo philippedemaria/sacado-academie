@@ -2847,9 +2847,18 @@ class Prepeval(models.Model):
     parcours     = models.ForeignKey(Parcours,  on_delete=models.CASCADE, blank=True,  related_name='prepevals', editable= False)
     date         = models.DateField()  
     mark         = models.DecimalField(default=-1,  max_digits=5, decimal_places=2 , blank=True)
-
+    o_parcours   = models.ManyToManyField(Parcours, blank=True,  related_name='o_prepevals', editable= False)
+    
     def __str__(self):
         return "Prep'éval de : {}".format(self.student.user)
+
+
+    def chapters(self):
+        chapters = set()
+        for r in self.parcours.parcours_relationship.all():
+            chapters.add(r.parcours.title)
+        return chapters
+
 
 
 class Slot(models.Model):

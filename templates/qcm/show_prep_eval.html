@@ -3,10 +3,7 @@
 {% load widget_tweaks %}
 {% load item_tags %}
  
- 
-{% block page_title %}
-    <i class="bi bi-calendar-week"></i> Prép' Éval {{ prepeval.date }}
-{% endblock %}
+
 
 
 {% block require %}
@@ -19,17 +16,22 @@
 
 
 
+ 
+{% block page_title %}
+    <i class="bi bi-calendar-week"></i> Prép' Éval {{ prepeval.date }} <img width="25px" src="{% static 'img/angle-right.png' %}"/> 
+    <small><a href="{% url 'show_parcours_student' prepeval.parcours.id %}" class="btn btn-new" title="Encore plus d'exercices...">Pour en faire plus ?</a></small>
+{% endblock %}
+
+
+
+
 {% block page_menu_right %}
 {% endblock %}
 
  
 
 
-
-
 {% block body  %}  
-
-
 <section class="content_main">
     <div class="row">
         <div class="col-xs-12">
