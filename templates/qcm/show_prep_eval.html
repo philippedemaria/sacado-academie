@@ -64,7 +64,7 @@
                                 <img src="{% static 'img/no_calculator.png' %}"  with="20px"  height="20px"  />
                             {% endif  %} 
                             <br/>
-                            {{ r.exercise.knowledge.name }}{%  if r.exercise.knowledge.name|length < 90 %}<br/>{% end %}
+                            {{ r.exercise.knowledge.name }}{%  if r.exercise.knowledge.name|length < 90 %}<br/>{% endif %}
 
                             {% get_score_and_time  r.exercise student as st_list %}
                             {% for st in st_list %} 
