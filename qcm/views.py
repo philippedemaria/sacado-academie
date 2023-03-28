@@ -4046,6 +4046,8 @@ def show_parcours_student(request, id):
     except :
         pass
 
+    request.session["prepeval_id"] = None
+
     parcours = Parcours.objects.get(id=id)
 
     stage = get_stage(parcours.teacher.user)
@@ -8494,6 +8496,10 @@ def store_the_score_relation_ajax(request):
                     data["numexo"] = this_studentanswer.numexo
                 return JsonResponse(data)
             #####################################################################
+
+        prepeval_id = request.session.get('prepeval_id', None)
+        if prepeval_id :
+            return redirect('show_prepeval' ,  prepeval_id )
 
         if relation.parcours.is_evaluation and relation.parcours.is_next :
             parcours      = relation.parcours
@@ -13571,6 +13577,7 @@ def show_prepeval(request,idp):
 
     request.session["tdb"] = "prep_eval" # permet l'activation du surlignage de l'icone dans le menu gauche
     request.session["subtdb"] = ""
+    request.session["prepeval_id"] = idp
 
 
     prepeval = Prepeval.objects.get(pk=idp)

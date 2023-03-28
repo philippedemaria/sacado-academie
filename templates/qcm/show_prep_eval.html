@@ -51,8 +51,9 @@
             <div class="col-xs-8">  
                 <h2 class="text-mauve">{{ slot.content|safe }} {{ slot.date|date:"d N Y" }} </h2>
                 {% for r in slot.relationships.all %}
-                    <a class="prep_listing">
+                    
                         {% if r.type_id == 0 %}
+                        <a href="{% url 'execute_exercise' r.parcours.id r.exercise.id %}" class="prep_listing">
                             {% if  r.exercise.supportfile.imagefile %}
                             <img src="{{ r.exercise.supportfile.imagefile.url }}"  class="prep_image" />
                             {% endif %}
@@ -79,26 +80,28 @@
                                 {% endif %}" style="font-size:10px">{{ st.score }}% 
                                 </div>  
                             {% endfor %}
-
-
+                        </a>
                         {% elif r.type_id == 2 %}
+                        <a href="{% url 'show_course_sequence_student' r.type_of_document.id  r.parcours.id %}" class="prep_listing">
                             <img src="{% static 'img/logo_cours.jpg' %}" class="prep_image" /><b>{{ r.type_of_document.forme }}</b><br/>
                             {{ r.duration}} min. 
-
-
-
-                        {% elif r.type_id == 3 %}<img src="{% static 'img/logo_quizz.jpg' %}" class="prep_image" /> <b>Quizz</b> <br/>
+                        </a>
+                        {% elif r.type_id == 3 %}
+                        <a href="{% url 'goto_quizz_student' r.type_of_document.id %}" class="prep_listing">
+                            <img src="{% static 'img/logo_quizz.jpg' %}" class="prep_image" /> <b>Quizz</b> <br/>
                             {{ r.duration}} min. <br/> {{r.type_of_document.questions.count }} questions
-                        {% elif r.type_id == 4 %}<img src="{% static 'img/logo_bibliotex.jpg' %}" class="prep_image" /> <b>Sujet rédigé</b><br/>
+                        </a>
+                        {% elif r.type_id == 4 %}
+                        <a href="{% url 'show_bibliotex' r.type_of_document.id %}" class="prep_listing">
+                            <img src="{% static 'img/logo_bibliotex.jpg' %}" class="prep_image" /> <b>Sujet rédigé</b><br/>
                             {{ r.duration}} min. 
-                        {% elif r.type_id == 5 %}<img src="{% static 'img/logo_flashcard.jpg' %}" class="prep_image" /> <b>Cartes mémoire</b><br/>
+                        </a>
+                        {% elif r.type_id == 5 %}
+                        <a href="{% url 'show_flashpack' r.type_of_document.id %}" class="prep_listing">
+                            <img src="{% static 'img/logo_flashcard.jpg' %}" class="prep_image" /> <b>Cartes mémoire</b><br/>
                             {{ r.duration}} min. {{r.type_of_document.flashcards.count }} questions
+                        </a>
                         {% endif %}<br/>
-
-
-
-
-                    </a>
                 {% endfor %}
             </div>
             <div class="col-xs-12 col-md-4">
