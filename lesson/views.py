@@ -603,6 +603,8 @@ def add_students_to_my_lesson_group(request):
             for group in student.students_to_group.all():
                 get_the_new_group(teacher,group)
 
+        messages.success(request,"Récupération effectuée. Retourner sur vos groupes pour accéder aux contenus de vos élèves.")
+
         return redirect('add_students_to_my_lesson_group')
 
     today   = time_zone_user(user)
