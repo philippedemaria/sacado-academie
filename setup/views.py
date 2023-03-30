@@ -1331,6 +1331,9 @@ def save_adhesion(request) :
 
         if i == 0 :
             facture = Facture.objects.create(chrono = chrono , user = user, date = today ,    file = None , is_lesson = 0  )
+            # si non payement alors modifier e chrono en chrono de période d'essai.
+            facture.chrono = "Période d'essai "+str(facture.id)
+            facture.save()
             new_facture = facture
         else :
             facture = new_facture
