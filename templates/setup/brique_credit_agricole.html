@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% load widget_tweaks %}
+{% load static %}
+
+
+
+
+{% block body %}
+<section class="container" style="margin-top:100px">
+    <h3 class="thin">Paiement de la cotisation </h3>
+ 
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+ 
+               {{  contact  }}, vous  venez de demander une adhésion à sacado-académie.
+ 
+        </div>
+    </div> 
+    
+<form method="POST" action="https://recette-tpeweb.e-transactions.fr/php/">
+<input type="hidden" name="PBX_SITE" value="{{ PBX_SITE }}">
+<input type="hidden" name="PBX_RANG" value="{{PBX_RANG}}">
+<input type="hidden" name="PBX_IDENTIFIANT" value="{{PBX_IDENTIFIANT}}">
+<input type="hidden" name="PBX_EFFECTUE" value="{{PBX_EFFECTUE}}">
+<input type="hidden" name="PBX_REFUSE" value="{{PBX_REFUSE}}">
+<input type="hidden" name="PBX_ANNULE" value="{{PBX_ANNULE}}">
+<input type="hidden" name="PBX_ATTENTE" value="{{PBX_ATTENTE}}">
+<input type="hidden" name="PBX_SOURCE" value="RWD">
+<input type="hidden" name="PBX_TOTAL" value="{{ PBX_TOTAL }}"> <!-- montant en centimes -->
+<input type="hidden" name="PBX_DEVISE" value="978">
+<input type="hidden" name="PBX_CMD" value="{{ PBX_CMD }}"> <!-- référence de la transaction -->
+<input type="hidden" name="PBX_PORTEUR" value="{{ PBX_PORTEUR }}">
+<input type="hidden" name="PBX_RETOUR" value="Mt:M;Ref:R;Auto:A;Erreur:E">
+<input type="hidden" name="PBX_HASH" value="SHA512">
+<input type="hidden" name="PBX_SHOPPINGCART" value="{{ PBX_SHOPPINGCART }}">
+<input type="hidden" name="PBX_BILLING" value="{{ PBX_BILLING }}">
+<input type="hidden" name="PBX_TIME" value="{{ PBX_TIME }}">
+<input type="hidden" name="PBX_HMAC" value="{{ PBX_HMAC|safe }}">
+<input type="submit" value="Envoyer">
+</form>
+
+
+{% endblock %}
