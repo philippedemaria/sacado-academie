@@ -1378,20 +1378,20 @@ def save_adhesion(request) :
         msg += "Le menu est à gauche :\n\n"
         msg += "Sur ton tableau de bord, tu trouves les indications de tes options.\n\n"
 
-
+        send_mail("Inscription SACADO Académie", msg, settings.DEFAULT_FROM_EMAIL, p["email"] )
         #########
-        email=EmailMessage("Inscription SACADO ACADEMIE",msg,settings.DEFAULT_FROM_EMAIL,[p["email"]])
+        # this_email=EmailMessage("Inscription SACADO ACADEMIE",msg,settings.DEFAULT_FROM_EMAIL,[email])
 
-        image=MIMEBase('application','octet-stream')
-        nomImage="instruction.png"
-        fichierImage=open(settings.STATIC_ROOT+"/img/"+nomImage,'rb')
-        image.set_payload((fichierImage).read())
-        encoders.encode_base64(image)
-        image.add_header('Content-Disposition', "inline ; filename= %s" % nomImage)
+        # image=MIMEBase('application','octet-stream')
+        # nomImage="instruction.png"
+        # fichierImage=open(settings.STATIC_ROOT+"/img/"+nomImage,'rb')
+        # image.set_payload((fichierImage).read())
+        # encoders.encode_base64(image)
+        # image.add_header('Content-Disposition', "inline ; filename= %s" % nomImage)
         
-        email.attach(image)
+        # this_email.attach(image)
         
-        email.send()
+        # this_email.send()
         #####################"
         # fin envoi du courriel 2e version, bêta
         ##################################################
