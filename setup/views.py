@@ -1378,7 +1378,7 @@ def save_adhesion(request) :
         msg += "Le menu est à gauche :\n\n"
         msg += "Sur ton tableau de bord, tu trouves les indications de tes options.\n\n"
 
-        send_mail("Inscription SACADO Académie", msg, settings.DEFAULT_FROM_EMAIL, p["email"] )
+        send_mail("Inscription SACADO Académie", msg, settings.DEFAULT_FROM_EMAIL, [p["email"]] )
         #########
         # this_email=EmailMessage("Inscription SACADO ACADEMIE",msg,settings.DEFAULT_FROM_EMAIL,[email])
 
