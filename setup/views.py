@@ -56,6 +56,7 @@ import os
 import fileinput 
 import json
 
+import hmac
 ##############   bibliothèques pour les impressions pdf    #########################
 import os
 from pdf2image import convert_from_path # convertit un pdf en autant d'images que de pages du pdf
@@ -72,6 +73,7 @@ from reportlab.pdfgen.canvas import Canvas
 from reportlab.lib.utils import ImageReader
 from reportlab.lib.enums import TA_JUSTIFY,TA_LEFT,TA_CENTER,TA_RIGHT 
 ############## FIN bibliothèques pour les impressions pdf  #########################
+
 
 
 def attribute_student_toindex() :
@@ -1129,7 +1131,7 @@ def attribute_group_to_student_by_level(level,student,formule_id) :
 
     teacher_ids = ["0" ,89513,89507,89508,89510, 89511, 46245  , 46242 , 46246  , 46247, 46222, 46243, 46244,"", 130243] # "0" ET "" sont des offsets
     teacher_id = teacher_ids[level.id]
-    if formule_id > 2 : formule_id = 2
+    if int(formule_id) > 2 : formule_id = 2
     group = Group.objects.filter(level = level, school_id = 50, teacher_id=teacher_id, formule_id=formule_id).first()
     group.students.add(student)
     groups = [group]
@@ -1175,11 +1177,13 @@ def add_adhesion(request) :
 
             adhesion = Adhesion.objects.create(start = today, stop = end, student = student , level_id = level_id  , amount = 0  , formule_id = formule_id ) 
             facture = Facture.objects.create(chrono = chrono, file = "" , user = request.user , date = today , is_lesson = 0    ) 
+            facture.chrono = "Période d'essai "+ str(facture.id)
+            facture.save()
             facture.adhesions.add(adhesion)
             success = attribute_group_to_student_by_level(level,student,formule_id)
 
             msg = "Bonjour,\n\nVous venez de souscrire à une adhésion à la SACADO Académie. \n"
-            msg += "Votre référence d'adhésion est "+chrono+".\n\n"
+            msg += "Votre référence d'adhésion est "+facture.chrono+".\n\n"
             msg += "Vous avez inscrit : \n"
             msg += "- "+student.user.first_name+" "+student.user.last_name+", l'identifiant de connexion est : "+student.user.username +" \n"
             msg += "\n\nRetrouvez ces détails à partir de votre tableau de bord après votre connexion à https://sacado-academie.fr"
@@ -2106,3 +2110,74 @@ def tweeter_delete(request, id):
         return redirect('tweeters')
     else :
         return redirect('index') 
+
+
+############## CA  #########################
+
+#-------------------------------------------------------
+#  paiement avec la brique credit agricole
+
+def paiement(request):
+    montant=1717
+    f=open("logs/debug.log","a")
+    cmd="ref de la commande"
+    timestamp=datetime.today().isoformat()
+    timestamp="2023-03-30T19:28:23.506729"
+    email="stephan.ceroi@gmail.com"
+    print(settings.PBX_RANG,file=f)
+    PBX_SHOPPINGCART='<?xml version="1.0" encoding="utf-8" ?><shoppingcart><total><totalQuantity>12</totalQuantity></total></shoppingcart>'
+    PBX_BILLING='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>Jean</Firstname><LastName>Dupont</LastName><Address1>12 rue Test</Address1><ZipCode>75001</ZipCode><City>Paris</City><CountryCode>250</CountryCode></Address></Billing>'
+    print(settings.PBX_CLE_HMAC,type(settings.PBX_CLE_HMAC), file=f)
+    chaine='PBX_SITE={}&\
+PBX_RANG={}&\
+PBX_IDENTIFIANT={}&\
+PBX_EFFECTUE={}&\
+PBX_REFUSE={}&\
+PBX_ANNULE={}&\
+PBX_ATTENTE={}&\
+PBX_SOURCE=RWD&\
+PBX_TOTAL={}&\
+PBX_DEVISE=978&\
+PBX_CMD={}&\
+PBX_PORTEUR={}&\
+PBX_RETOUR=Mt:M;Ref:R;Auto:A;Erreur:E&\
+PBX_HASH=SHA512&\
+PBX_SHOPPINGCART={}&\
+PBX_BILLING={}&\
+PBX_TIME={}'.format(settings.PBX_SITE,settings.PBX_RANG,settings.PBX_IDENTIFIANT,settings.PBX_EFFECTUE,settings.PBX_REFUSE,settings.PBX_ANNULE,settings.PBX_ATTENTE,montant,cmd,email,PBX_SHOPPINGCART,PBX_BILLING,timestamp)
+    
+    HMAC=hmac.new(bytearray.fromhex(settings.PBX_CLE_HMAC),msg=chaine.encode("utf-8"),digestmod="sha512").hexdigest().upper()
+    print(chaine,HMAC,file=f)
+    context={'PBX_RANG':settings.PBX_RANG, 'PBX_SITE':settings.PBX_SITE, 'PBX_IDENTIFIANT':settings.PBX_IDENTIFIANT,
+             'PBX_EFFECTUE':settings.PBX_EFFECTUE,'PBX_REFUSE':settings.PBX_REFUSE,'PBX_ANNULE':settings.PBX_ANNULE,'PBX_ATTENTE':settings.PBX_ATTENTE,'PBX_TOTAL':montant,"PBX_CMD":cmd,'PBX_PORTEUR':email,'PBX_SHOPPINGCART':PBX_SHOPPINGCART,'PBX_BILLING':PBX_BILLING,'PBX_TIME':timestamp,"PBX_HMAC":HMAC}
+
+    return render(request,"setup/brique_credit_agricole.html",context)
+
+
+def retour_paiement(request,status):
+    # la banque appelle cette page lorsque la transaction est terminÃ©e
+    # status = 
+    context={}
+    erreur=request.GET.get('code_erreur',None)
+    numero_autorisation=request.GET.get("num_auto",None)
+    if status=="effectue" :
+        if erreur=="00000" and numero_autorisation != None : # tout va bien
+            print("transaction ok")
+        else :
+            print("le status est 'effectuÃ©', pourtant il y a une erreur : erreur = {},numero_autor.={}".format(erreur,numero_autorisation))
+            
+    elif status=="annule":
+        pass
+    elif status=="refuse":
+        pass
+    elif status=="attente":
+        pass
+    else :
+        print("(retour_paiement) : je ne comprends pas le status de la rÃ©ponse venant de la banque")
+        return render(request,"setup/retour_paiement",context)
+        
+        
+
+
+
+############## FIN CA  #########################

@@ -58,6 +58,12 @@ urlpatterns = [
     path('faq', faq, name='faq'),
     path('who_is', who_is, name='who_is'),
 
+    ############################################################################################
+    #######  Paiement CA
+    ############################################################################################
+    path("paiement",paiement,name="paiement"),
+    path("retour_paiement/<str:status>",retour_paiement,name="retour_paiement")
+
 ]
 
 
