@@ -1281,7 +1281,8 @@ def save_adhesion(request) :
     parents_of_adhesion = request.session.get("parents_of_adhesion")
     students_of_adhesion = request.session.get("students_of_adhesion")
     data_posted = request.session.get("data_posted") # détails de l'adhésion
-    nb_child = int(data_posted.get("nb_child"))
+    try : nb_child = int(data_posted.get("nb_child"))
+    except : nb_child = len(students_of_adhesion)
     request.session["tdb"] = 'adhesion'
     users = []
 
