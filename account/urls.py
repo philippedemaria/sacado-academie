@@ -70,8 +70,9 @@ urlpatterns = [
 
     path('detail_student_academy/<int:id>', detail_student_academy, name='detail_student_academy'),
 
-
-
+    path('student_profil/<int:ids>', student_profil, name='student_profil'),
+    path('change_password/<int:ids>', change_password, name='change_password'),
+    
     path('newpassword_student/<int:id>/<int:idg>', newpassword_student, name='newpassword_student'),
     path('update_student/<int:id>/<int:idg>', update_student, name='update_student'),
     path('update_student_by_ajax', update_student_by_ajax, name='update_student_by_ajax'),

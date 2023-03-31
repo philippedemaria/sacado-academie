@@ -32,21 +32,21 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-12 col-md-2">
+            <div class="col-sm-12 col-md-2 col-lg-1">
                 <div class="form-group">
                     <label>{{ user_form.civilite.label_tag }}</label>
                     {{ user_form.civilite  |add_class:"form-control select2" }}
                     {{ user_form.civilite.errors }}
                 </div>
             </div>
-            <div class="col-sm-12 col-md-5">
+            <div class="col-sm-12 col-md-5 col-lg-4">
                 <div class="form-group">
                     <label>{{ user_form.last_name.label_tag }}</label>
                     {{ user_form.last_name  |add_class:"form-control" }}
                     {{ user_form.last_name.errors }}
                 </div>
             </div>
-            <div class="col-sm-12 col-md-5">
+            <div class="col-sm-12 col-md-5 col-lg-4">
                 <div class="form-group">
                     <label>{{ user_form.first_name.label_tag }}</label>
                     {{ user_form.first_name  |add_class:"form-control" }}
@@ -55,14 +55,14 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-12 col-md-6">
+            <div class="col-sm-12 col-md-6 col-lg-4">
                 <div class="form-group">
                     <label>{{ user_form.email.label_tag }}</label>
                     {{ user_form.email  |add_class:"form-control" }}
                     {{ user_form.email.errors }}
                 </div>
             </div>
-            <div class="col-sm-12 col-md-6">
+            <div class="col-sm-12 col-md-6 col-lg-4">
                 <div class="form-group">
                     <label>{{ user_form.time_zone.label_tag }}</label>
                     {{ user_form.time_zone  |add_class:"form-control select2" }}
@@ -75,7 +75,7 @@
 
 
         <div class="row">
-            <div class="col-sm-12 col-md-12">
+            <div class="col-sm-12 col-md-8">
                 <div class="form-group">
                     Notifications
                      <table class="table">
@@ -86,8 +86,8 @@
                             </td>                            
                         </tr>
                         <tr>
-                            <td><label>Recevoir un mail récaptitulatif ? <small>en nombre de jours. Si vous renseignez par 0, vous ne recevrez aucun mail.</small></label></td>
-                            <td>{{ parent_form.periodicity|add_class:"form-control"  }}    
+                            <td><label>Recevoir un mail récaptitulatif ? <small>Si vous renseignez par 0, vous ne recevrez aucun mail.</small></label></td>
+                            <td>{{ parent_form.periodicity  }}   jours 
                                 {{ parent_form.periodicity.errors }}
                             </td>                            
                         </tr>

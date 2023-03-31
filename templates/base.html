@@ -149,15 +149,15 @@
                 <h4 >Mot de passe oublié</h4>
             </div>
             <div class="modal-body">
-                    <div class="row">
-                        <div class="col-lg-12 col-xs-12">
-                            Pour des raisons de sécurité, il n'est pas possible de récupérer votre mot de passe. <b>Vous devez renseigner ci-dessous l'adresse électronique que vous avez utilisé lors de votre inscription.</b>
-                            Vous allez recevoir un courriel sur cette adresse contenant un lien permettant de réinitialiser votre mot de passe.<br/> <b>Pour les élèves :</b> Si vous n'avez pas renseigné d'adresse électronique lors de votre inscription, vous ne pouvez pas récupérer votre mot de passe sans passer par votre enseignant.
-                             
+                <div class="row">
+                    <div class="col-lg-12 col-xs-12">
+                        Pour des raisons de sécurité, il n'est pas possible de récupérer votre mot de passe. <b>Vous devez renseigner ci-dessous l'adresse électronique que vous avez utilisé lors de votre inscription.</b>
+                        Vous allez recevoir un courriel sur cette adresse contenant un lien permettant de réinitialiser votre mot de passe.<br/> <b>Pour les comptes enfants :</b> Si vous n'avez pas renseigné d'adresse électronique lors de votre inscription, vous ne pouvez pas récupérer votre mot de passe par courriel. Votre parent peut depuis son espace personnel vous réattribuer un mot de passe.
+                         
 
-                        </div>        
-                    </div> 
-                    <hr>
+                    </div>        
+                </div> 
+                <hr>
                 <form action="{%  url 'password_reset' %}" method="POST"  >
                 {% csrf_token %}
                     <div class="row">

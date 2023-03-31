@@ -15,7 +15,11 @@
 {% endblock %}
 
 {% block page_title %}
-    <i class="fa fa-user"></i> Mon profil
+    {% if student.user.avatar %} 
+        <a href="{% url 'change_avatar' student.user.id %}"><img src="{{ student.user.avatar }}"  class="avatar" /></a>
+    {% else %}
+        <a href="{% url 'change_avatar' student.user.id %}"><img src="{% static 'img/avatar/0.jpg' %}" width="80px" height="80px" class="avatar" /></a>
+    {% endif %} Profil de {{ student.user.first_name }} {{ student.user.last_name }}
 {% endblock %}
  
 {% block page_menu_right %}
@@ -25,10 +29,12 @@
 {% block body %}
     
 <section class="content_main">
-    <form action="" method="POST">
-        {% csrf_token %}
-        <div class="row">
-            <div class="col-sm-12 col-md-8">
+
+    <div class="row">
+        <div class="col-sm-12 col-md-7">
+            <form action="" method="POST" class="profile_card">
+                <h3 class="thin">Détails du compte de {{ student.user.first_name }}</h3>
+                {% csrf_token %}
                 <div class="row">
                     <div class="col-sm-12 col-md-4">
                         <div class="form-group">
@@ -78,59 +84,54 @@
                         </div>
                     </div>
                 </div>   
-            </div>
-            <div class="col-sm-12 col-md-4">
-                {% if sacado_asso %}
-                <a href="{% url 'avatar' %}">Choisir mon avatar</a><br/>
-                {% else  %}
-                <a href="#">Choisir mon avatar</a><br/>
-                {% endif  %}
-                {% if user_form.avatar  %}  
-                     <img src="{{ user.avatar  }}" class="avatar" />
-                {% endif %}
-            </div>
-        </div>   
-
-
-
-        <div class="row">
-            <div class="col-sm-12 col-md-6">
-                <div class="form-group">
-                    <label>{{ form.level.label_tag }}</label>
-                    {{ form.level |add_class:"form-control select2" }}
-                    {{ form.level.errors }}
-                </div>
-            </div>
-        </div>     
-
-            <div class="row">
-                <div class="col-sm-12 col-md-6">
-                    <div class="form-group">
-                    Notification 
-                        <table class="table">
-                            <tr>
-                                <td><small><em>Recevoir chaque fois qu'une tache est envoyée par mon enseignant ?</em></small></td>
-                                <td>{{ form.task_post |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}    
-                                    {{ form.task_post.errors }}
-                                </td>                            
-                            </tr>
-                        </table>
-
+                <div class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <label>Formule : </label>
+                            <span class="font_sacado">{{ student.data_menu.name }}  </span>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div class="form-group">
+                            <label>{{ form.level.label_tag }}</label>
+                            <span class="font_sacado">{{ student.level.name }}</span>
+                        </div>
+                    </div>
+                </div>     
+                <div class="row">
+                    <div class="col-sm-12 col-md-12">
+                        <div class="form-group">
+                            <input value="Enregistrer" type="submit" class="btn btn-primary"/>
+                            <a href="javascript:history.back()">
+                                <input type="button" value="Annuler"
+                                       class="btn btn-default "/>
+                            </a>
+                        </div>   
                     </div>
                 </div>
-            </div>
-        <div class="row">
-                <div class="col-sm-12 col-md-12">
-                    <div class="form-group">
-                        <input value="Enregistrer" type="submit" class="btn btn-primary"/>
-                        <a href="javascript:history.back()">
-                            <input type="button" value="Annuler"
-                                   class="btn btn-default "/>
-                        </a>
-                    </div>   
+            </form>
+        </div>   
+        <div class="col-sm-0 col-md-1"></div>
+        <div class="col-sm-12 col-md-4">
+            <form action="{% url 'change_password' student.user.id %}" method="POST"  class="profile_card">
+                <h3 class="thin">Créer un nouveau de mot de passe pour {{ student.user.first_name }}</h3>
+                <div class="form-group">{% csrf_token %}
+                    <label>Nouveau mot de passe</label>
+                    <input type="password" name="password" id="this_password" class='form-control'/>
                 </div>
+                <div class="form-group">
+                    <label>Confirmer ce mot de passe</label>
+                    <input type="password" name="conf_password" id="conf_password"  class='form-control' />
+                </div>
+                <div class="form-group">
+                    <input value="Activer ce mot de passe" type="submit" class="btn btn-primary" onclick="return testPassword('this_password', 'conf_password')" />
+                </div>        
+            </form>
         </div>
-    </form>
+    </div>
+
+
+
 </section>
  
  

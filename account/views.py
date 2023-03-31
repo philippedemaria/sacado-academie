@@ -1708,7 +1708,8 @@ def register_users_by_csv(request,key):
 
         return render(request, 'account/csv_all_teachers_or_students.html', {'key': key , 'communications' : [], })
 
-  
+
+
 #########################################Lost password #################################################################
 
 
@@ -1871,6 +1872,42 @@ def my_profile(request):
             return render(request, 'account/parent_form.html', {'parent_form': form, 'communications' : [],  'user_form': user_form, 'parent': parent, 'today' : today })
     else :
         redirect("index")
+
+
+
+
+
+def student_profil(request,ids):
+
+    student = Student.objects.get(user_id=ids)
+    user = student.user
+    user_form = UserUpdateForm(request.POST or None, request.FILES or None, instance= user)
+    form = StudentForm(request.POST or None, request.FILES or None, instance=student)
+    if request.method == "POST":
+        if all((user_form.is_valid(), form.is_valid())):
+            user_form.save()
+            student_f = form.save(commit=False)
+            student_f.user = user
+            student_f.save()
+            messages.success(request, 'Le profil de '+user.first_name+' a été changé avec succès !')
+            return redirect('index')
+
+        else:
+            print(form.errors)
+    context = {'form': form, 'user_form': user_form, 'communications' : [],  'student': student}
+    return render(request, 'account/student_form.html', context )
+
+
+
+def change_password(request,ids):
+
+    student = Student.objects.get(user_id=ids)
+    user = student.user
+    user.password = make_password(request.POST.get('password'))
+    user.save()
+    messages.success(request, 'Le mot de passe de '+user.first_name+' a été changé avec succès !')
+    return redirect('student_profil', ids)
+
 
 
 @csrf_exempt

@@ -903,7 +903,7 @@ class Parent(models.Model):
     user        = models.OneToOneField(User, blank=True, related_name="parent", on_delete=models.CASCADE, primary_key=True)
     students    = models.ManyToManyField(Student, related_name="students_parent", editable=False)
     task_post   = models.BooleanField(default=1, verbose_name="Notification de tache ?")
-    periodicity = models.PositiveIntegerField(default=14, verbose_name="Périodicité ? En nombre de jours")
+    periodicity = models.PositiveIntegerField(default=7, verbose_name="Périodicité ? En nombre de jours")
 
     def __str__(self):
         lname = self.user.last_name.capitalize()
