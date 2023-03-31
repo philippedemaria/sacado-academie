@@ -17,7 +17,7 @@
 {% endblock %}
 
 {% block page_title %}
-    <i class="fa fa-user"></i> Changer l'avatar
+     Changer l'arrière plan 
 {% endblock %}
  
 {% block page_menu_right %}
@@ -36,38 +36,43 @@
 {% block body %}
     
 <section class="content_main">
-    <form action="" method="POST">
+
+    <form action="{% url 'change_backtitle' ids %}" method="POST">
         {% csrf_token %}
         <div class="row">
             <div class="col-sm-12 col-md-12">
-                {% for avatar in avatars %}
-                    <a href="javascript:void()" class="choicer_avatar" data-url="{{ avatar.image.url }}"> <img src="{{ avatar.image.url }}" class="avatar" height='90px' width='90px' /></a>
+                {% for backtitle in backtitles %}
+                    <a href="javascript:void()" class="choicer_backtitle" data-url="{{ backtitle.image.url }}"> <img src="{{ backtitle.image.url }}" class="list_fond" width="310px" height="130px"  /></a>
                 {% endfor %}
             </div>
         </div>  
-        <input type="hidden" name="avatar" id="id_avatar"  >   
+        <input type="hidden" name="backtitle" id="id_backtitle"  >
         <div class="row">
             <div class="col-sm-12 col-md-12">
                 <div class="form-group">
                     <input value="Enregistrer" type="submit" class="btn btn-primary"/>
-                    <a href="javascript:history.back()"><input type="button" value="Annuler"class="btn btn-default" /></a>
+                    <a href="javascript:history.back()"><input type="button" value="Annuler" class="btn btn-default" /></a>
                 </div>   
             </div>
         </div>
     </form>
+
     <hr/>
+
     <div class="row">
         <div class="col-sm-12 col-md-12">
-            Importer une image/une photo de profil
+            Importer un arrière plan
         </div>
     </div>
-    <form action="" method="POST">        {% csrf_token %}
+
+    <form action="" method="POST">
+        {% csrf_token %}  
         <div class="row">
             <div class="col-sm-12 col-md-12">
                 <div class="form-group">
-                    <label>Image de profil <span class="text-danger">largeur : 90px et hauteur : 90px</span></label>
-                    {{ avatar_form.avatar |add_class:"btn btn-default" }}
-                    {{ avatar_form.avatar.errors }}
+                    <label>Arrière plan <span class="text-danger">largeur : 310px et hauteur : 130px</span></label>
+                    {{ backtitle_form.backtitle |add_class:"btn btn-default" }}
+                    {{ backtitle_form.backtitle.errors }}
                 </div>
             </div>
         </div>  
@@ -75,12 +80,17 @@
             <div class="col-sm-12 col-md-12">
                 <div class="form-group">
                     <input value="Importer" type="submit" class="btn btn-primary"/>
+
+
+                    <a href="javascript:history.back()">
+                        <input type="button" value="Annuler"
+                               class="btn btn-default" />
+                    </a>
+
+
                 </div>   
             </div>
         </div>
-    </form>
-    
-
 
     </form>
 

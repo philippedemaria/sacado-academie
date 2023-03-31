@@ -16,10 +16,11 @@
                         style="background-color: #af9cd4 ; background-image: url('https://sacado-academie.fr/ressources/background/default.jpg');" 
                     {% endif %} > 
                   <!-- Add the bg color to the header using any of the bg-* classes -->
+                <a href="{% url 'change_backtitle' student.user.id %}">  
                 <div class="handler widget-user-header">
 
                 </div>
-
+                </a>
                 {% if student.user.avatar %} 
                     <a href="{% url 'change_avatar' student.user.id %}"><img src="{{ student.user.avatar }}"  class="avatar" /></a>
                 {% else %}

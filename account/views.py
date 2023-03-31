@@ -306,7 +306,7 @@ def change_avatar(request,ids) :
     avatars    = Avatar.objects.filter(adult=adult)
     backtitles = Background.objects.filter(is_title=1)
 
-    context = {'avatar_form': avatar_form, 'backtitle_form': backtitle_form, 'avatars' : avatars , 'backtitles' : backtitles , 'avatar_student_id' : True , 'ids' : ids }
+    context = {'avatar_form': avatar_form, 'avatars' : avatars , 'avatar_student_id' : True , 'ids' : ids }
     return render(request, 'account/avatar_theme_form.html', context)
 
 
@@ -317,16 +317,17 @@ def change_backtitle(request,ids) :
     request.session["tdb"] = "Account"
     user = User.objects.get(pk = ids )
     backtitle_form = BacktitleUserForm(request.POST or None, request.FILES or None, instance = user  ) 
-     
+    backtitles = Background.objects.filter(is_title=1)
     if request.method == 'POST':
         if backtitle_form.is_valid():
             user.backtitle = request.POST.get("backtitle")
             user.save()
             return redirect('index')
         else:
-            messages.error(request, backtitle_form.errors)
 
-    return redirect( 'change_avatar', ids)
+            messages.error(request, backtitle_form.errors)
+    context = { 'backtitle_form': backtitle_form, 'backtitles' : backtitles , 'avatar_student_id' : True , 'ids' : ids }
+    return render(request, 'account/avatar_theme_form_back.html', context)
 
 
 
