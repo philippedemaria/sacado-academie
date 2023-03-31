@@ -2,7 +2,7 @@
 {% load widget_tweaks %}
 {% load item_tags %}
 <div  class="box box-widget widget-user-2"  
-      style="{% if flashpack.vignette %}background-image: url('{{ flashpack.vignette.url }}');{% else %} background-image: url('{% static 'img/flash_accueil.png' %}');{% endif %} background-size: cover;">
+      style="{% if flashpack.vignette %}background-image: url('{{ flashpack.vignette.url }}');{% else %} background-image: url('{% static 'img/flashcard_img.jpg' %}');{% endif %} background-size: cover;">
     <div class="handler widget-user-header">
         <!-- Add signet to folder -->
         <div class="group_show  no_visu_on_load" id="bibliotex_show{{flashpack.id }}"> 
@@ -55,11 +55,11 @@
                 <a href="{% url 'set_flashcards_to_flashpack' flashpack.id %}" >
                     <span class="helper_tip" style=" font-size:24px;"> 
                         {% if flashpack.is_comments %} 
-                        <i class="bi bi-cloud-plus-fill text-validate"></i>
+                        <i class="bi bi-cloud-plus-fill font_sacado"></i>
                         <div class="helper_tip_text_right" style="font-size:14px;">Lire les commentaires des flashcards</div>
                         {% else %}
-                        <i class="bi bi-cloud-plus  text-validate"></i>
-                        <div class="helper_tip_text_right" style="font-size:14px;">Créer des flashcards</div>
+                        <i class="bi bi-cloud-plus  font_sacado"></i>
+                        <div class="helper_tip_text_right" style="font-size:14px;">Créer des cartes</div>
                         {% endif %}
                     </span>
                 </a>
@@ -83,7 +83,7 @@
                     <a href="{% url 'show_flashpack' flashpack.id %}" class="edit" onclick="return launch_flashpack()"><i class="bi bi-play"></i> Tester mes connaissances <small>{{ spaced_repetitions.count }} <i class="bi bi-stack"></i> </small></a>                    
                 {% else %}
                     {% if not flashpack.is_global %}
-                        <a href="{% url 'show_flashpack' flashpack.id %}" class="edit" onclick="return launch_flashpack()"><i class="bi bi-bootstrap-reboot"></i> Lancer les flashcards </a> 
+                        <a href="{% url 'show_flashpack' flashpack.id %}" class="edit" onclick="return launch_flashpack()"><i class="bi bi-bootstrap-reboot"></i> Lancer le flashcard </a> 
                     {% else %}
                         <span class="automatic_insertion">Pas de flashcard aujourd'hui</span>
                         <a href="{% url 'flashpack_results' flashpack.id 0 %}" class="edit pull-right" ><i class="bi bi-trophy"></i> Résultats</a>

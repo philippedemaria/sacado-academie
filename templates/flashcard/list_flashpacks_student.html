@@ -69,12 +69,13 @@
         </div>
     {% endif %}
 
+    {% if fpacks.count == 0 %}
     <div class="row">
         <div class="col-md-12 col-lg-12 col-xs-12">
         
             <div class="alert alert-white">
                 <p>Un Flashcard est un ensemble de cartes Mémoire. </p>
-                <p>Une carte mémoire est une carte sur laquelle vous pouvez écrire une définition, une formule, une méthode à connaitre. </p>
+                <p>Une carte Mémoire est une carte sur laquelle vous pouvez écrire une définition, une formule, une méthode à connaitre. </p>
                 <p>Une fois que votre Flashcard est créé, vous pouvez revoir toutes les notions d'un même thème ou chapitre qui vous paraissent importantes. Ainsi, vous réactivez votre mémoire pour fixer les notions.</p>
                 <p>Cette réactivation, ritualisée, est portée par les sciences cognitives et 4 piliers de l'apprentissage</a> :
                 <ol>
@@ -95,7 +96,7 @@
         
         </div>        
     </div>
-
+    {% endif %}
 
     {% if not request.user.is_in_academy   %} 
 
