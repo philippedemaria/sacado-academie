@@ -23,9 +23,9 @@
     <a href="{% url 'add_adhesion' %}" class="btn btn-inscription pull-right"> Nouvelle adhésion</a>  
 
 
- 
+    {% comment %}
     <a href="{% url 'renewal_adhesion'   %}" class="btn btn-inscription pull-right"> Renouveler</a>   
-
+    {% endcomment %}
 {% endblock %}
 
 
@@ -62,7 +62,7 @@
                                         {% for adh in facture.adhesions.all %}
                                             <li class="sanspuce">
                                                 {{ adh.student }}  - 
-                                                {{  adh.formule}}   <small>jusqu'au</small> {{adh.stop|date:"d-m-Y" }} - <a href="{% url 'change_adhesion' adh.student.user.id %}">Modifier la formule</a>  
+                                                {{  adh.formule}}   <small>jusqu'au</small> {{adh.stop|date:"d-m-Y" }} - <a href="{% url 'change_adhesion' adh.student.user.id %}" style="text-decoration:underline">Gérer la formule</a>  
                                             </li>
                                         {% endfor %}
                                     </td>

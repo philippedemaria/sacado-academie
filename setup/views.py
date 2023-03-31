@@ -863,9 +863,10 @@ def ajax_prices_formule(request) :
  
     formule_id = request.POST.get("formule_id",None)
     student_id = request.POST.get("student_id",None)
+    level_id   = request.POST.get("level_id",None)
     data = {}
     if formule_id :
-        prices = Formuleprice.objects.values("price","nb_month").filter(formule_id=int(formule_id)).order_by("-nb_month") 
+        prices = Formule.objects.values("price","nb_month").filter(formule_id=int(formule_id)).order_by("-nb_month") 
 
     data["prices"] = list(prices)
 
@@ -992,7 +993,7 @@ def all_from_parent_user(user) :
 
 
 def save_renewal_adhesion(request) :
-    """page de paiement paypal
+    """page de paiement 
     request.POST contient une liste student_ids, une liste level, et des
     listes "engagement"+student_ids"""
     #----- on met les informations concernant le paiment dans session
@@ -1000,41 +1001,80 @@ def save_renewal_adhesion(request) :
     somme = 0
     students = []
 
+    user = request.user
 
+    nbs = 0
     for student_id in request.POST.getlist('student_ids') :
-
+        nbs += 1
         engagement  = request.POST.get('engagement'+student_id,None) 
         formule_id  = request.POST.get('formule'+student_id,None)  
         level_id  = request.POST.get('level'+student_id,None) 
 
         try :
             formule = Formule.objects.get(pk=formule_id)
-
-
             engagement_si_tab = request.POST.get('engagement'+student_id)
             amount, duration = engagement_si_tab.split("-")
             amount=amount.replace(",",".")
             somme +=  float(amount)
             student  = Student.objects.get(user_id = student_id)
             level    = Level.objects.get(pk = level_id)
-            formuleprice = Formuleprice.objects.get(nb_month= duration, formule_id=formule_id)
+
+            if duration == 12 : duration = 10
+            if level_id < 6    : price = formule.price * duration
+            elif level_id < 10 : price = (formule.price +10) * duration
+            else               : price = (formule.price +20) * duration
+
             students.append({
-                'duration'  : duration, 
-                'name'      : student.user.first_name +" " +student.user.last_name,
-                'formule'   : formule.name,
-                'level_name': level.name,
-                'price'     : formuleprice.price  } 
+                'duration'   : duration,
+                'student_id' : student.user.id,
+                'name'       : student.user.first_name +" " +student.user.last_name,
+                'formule'    : formule.name,
+                'formule_id' : formule.id,                
+                'level_name' : level.name,
+                'level_id'   : level_id,
+                'price'      : price  } 
                 )
-
-
-
         except :	
             pass
 
-    somme = "{:.2f}".format(somme).replace(".",",")
-    context = { 'somme' : somme , 'students' : students }
+    request.session["list_of_formules"] = students
+
+
+
+    montant=somme*100
+    cmd="Abonnement famille " + request.user.last_name
+    timestamp=datetime.today().isoformat()
+    email= user.email
+    PBX_SHOPPINGCART='<?xml version="1.0" encoding="utf-8" ?><shoppingcart><total><totalQuantity>{}</totalQuantity></total></shoppingcart>'.format(nbs)
+    PBX_BILLING='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</Firstname><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format(user.first_name,user.last_name)
+
+    chaine='PBX_SITE={}&\
+PBX_RANG={}&\
+PBX_IDENTIFIANT={}&\
+PBX_EFFECTUE={}&\
+PBX_REFUSE={}&\
+PBX_ANNULE={}&\
+PBX_ATTENTE={}&\
+PBX_SOURCE=RWD&\
+PBX_TOTAL={}&\
+PBX_DEVISE=978&\
+PBX_CMD={}&\
+PBX_PORTEUR={}&\
+PBX_RETOUR=Mt:M;Ref:R;Auto:A;Erreur:E&\
+PBX_HASH=SHA512&\
+PBX_SHOPPINGCART={}&\
+PBX_BILLING={}&\
+PBX_TIME={}'.format(settings.PBX_SITE,settings.PBX_RANG,settings.PBX_IDENTIFIANT,settings.PBX_EFFECTUE,settings.PBX_REFUSE,settings.PBX_ANNULE,settings.PBX_ATTENTE,montant,cmd,email,PBX_SHOPPINGCART,PBX_BILLING,timestamp)
+    
+    HMAC=hmac.new(bytearray.fromhex(settings.PBX_CLE_HMAC),msg=chaine.encode("utf-8"),digestmod="sha512").hexdigest().upper()
+
+    somme = "{:.2f}".format(somme).replace(".",",") 
+
+    context={'somme' : somme , 'students' : students , 'PBX_RANG':settings.PBX_RANG, 'PBX_SITE':settings.PBX_SITE, 'PBX_IDENTIFIANT':settings.PBX_IDENTIFIANT,
+             'PBX_EFFECTUE':settings.PBX_EFFECTUE,'PBX_REFUSE':settings.PBX_REFUSE,'PBX_ANNULE':settings.PBX_ANNULE,'PBX_ATTENTE':settings.PBX_ATTENTE,'PBX_TOTAL':montant,"PBX_CMD":cmd,'PBX_PORTEUR':email,'PBX_SHOPPINGCART':PBX_SHOPPINGCART,'PBX_BILLING':PBX_BILLING,'PBX_TIME':timestamp,"PBX_HMAC":HMAC}
 
     return render(request, 'setup/save_renewal_adhesion.html', context)  
+
 
 
 @csrf_exempt
@@ -1455,25 +1495,6 @@ def change_adhesion(request,ids):
     formules = Formule.objects.filter(is_sale=1)
     student  = Student.objects.get(user_id=ids)
     adhesion  = student.adhesions.last()    
-    if request.method == "POST" :
-        amount     = request.POST.get("amount")
-        formule_id = request.POST.get("formule")
-        start      = request.POST.get("start")
-        stop       = request.POST.get("stop")
-        level_id   = request.POST.get("level_id")
-        student    = student
-        year       = request.POST.get("year")
-
-        payment_is_ok = False
-
-        if payment_is_ok :
-            adhesion = Adhesion.objects.create(amount = amount , formule_id =formule_id , start = start , stop = stop , level_id = level_id , student = student , year = year)
-            chrono   = create_chrono(Facture,"F")
-            facture  = Facture.objects.create(chrono = chrono , user = user , file = "" , date = start , orderID = "" , is_lesson = 0  ) #orderID = Numéro de paiement donné par la banque"
-            facture.adhesions.add(adhesion) 
-
-        return redirect("adhesions_academy")
-
     today = time_zone_user(student.user)
     if today.month < 7 : this_year = today.year 
     else : this_year = today.year + 1
@@ -1484,7 +1505,7 @@ def change_adhesion(request,ids):
 
 
 def get_price_and_end_adhesion(formule_id, date_joined, today, duration, student ):
-
+    data = {}
     formule = Formule.objects.get(pk=formule_id)
     price_a_month = formule.price
     try    : adhesion = student.adhesions.last()
@@ -1494,35 +1515,41 @@ def get_price_and_end_adhesion(formule_id, date_joined, today, duration, student
     end_of_this_adhesion = today + timedelta(days=30*int(duration))
 
     if date_joined + timedelta(days=7) > today :
-        if 6 < student.level.id < 10 : price_a_month += 10
-        elif 9 < student.level.id : price_a_month += 20
+        data["no_end"] = False
+
+        if 6 < student.level.id < 10 and formule.id > 1 : price_a_month += 10
+        elif 9 < student.level.id  and formule.id > 1   : price_a_month += 20
 
         if int(duration) == 12 : 
-            end_of_this_adhesion = datetime(this_year,7,7 )
+            end_of_this_adhesion = datetime(this_year,7,7, tzinfo=pytz.timezone("Europe/Paris"))
             price = (end_of_this_adhesion-today).days*price_a_month/31
         else : 
             price  = price_a_month * int(duration)
 
+
     elif adhesion and end_of_this_adhesion < adhesion.stop and formule_id and adhesion.formule_id >= int(formule_id) :
         data["no_end"] = True
+        price = 0
+
+
 
     elif adhesion and end_of_this_adhesion < adhesion.stop :
         data["no_end"] = False
         if int(duration) == 12 : 
-            end_of_this_adhesion = datetime(this_year,7,7 )
+            end_of_this_adhesion = datetime(this_year,7,7 , tzinfo=pytz.timezone("Europe/Paris"))
             price = (end_of_this_adhesion-today).days*price_a_month/31
         else : 
             price  = price_a_month * int(duration)
 
         days_left = adhesion.stop - today # nbre de jours de l'ancienne adhésion dèja payée mais pas consommée
         old_formule   = Formule.objects.get(pk=adhesion.formule_id)
-        if 6 < student.level.id < 10 : old_formule_price = old_formule.price +10
-        elif 9 < student.level.id : old_formule_price = old_formule.price +20
+        if 6 < student.level.id < 10  and formule.id > 1  : old_formule_price = old_formule.price +10
+        elif 9 < student.level.id  and formule.id > 1    : old_formule_price = old_formule.price +20
         else : old_formule_price = old_formule.price
         old_price = days_left.days * old_formule_price/30 # cout du relicat de jours
         price = max( price - old_price , 0 )
 
-    return round(price,2) , end_of_this_adhesion
+    return data , round(price,2) , end_of_this_adhesion
 
 
 
@@ -1533,16 +1560,16 @@ def ajax_price_changement_formule(request) :
     duration   = request.POST.get("duration",None)
 
     user    = User.objects.get(pk=student_id)  
-    date_joined = user.date_joined.replace(tzinfo=None)
+    date_joined = user.date_joined 
     student = Student.objects.get(user_id=student_id)   
     try    : adhesion = student.adhesions.last()
     except : adhesion = None
-    today   = datetime.now()
+    today   = time_zone_user(request.user)
     if today.year < 7 : this_year = today.year
     else :  this_year = today.year + 1
     data = {}
 
-    price,end_of_this_adhesion = get_price_and_end_adhesion(formule_id, date_joined, today,duration,student )
+    data , price,end_of_this_adhesion = get_price_and_end_adhesion(formule_id, date_joined, today,duration,student )
     data["end_of_this_adhesion"] = str(end_of_this_adhesion.day) +"-" + str(end_of_this_adhesion.month) +"-" + str(end_of_this_adhesion.year)
     data["result"]   = str(price) 
     data["amount"]   = price
@@ -2114,20 +2141,36 @@ def tweeter_delete(request, id):
 
 ############## CA  #########################
 
-#-------------------------------------------------------
-#  paiement avec la brique credit agricole
 
-def paiement(request):
-    montant=1717
-    f=open("logs/debug.log","a")
-    cmd="ref de la commande"
+def paiement(request) :
+    """page de paiement 
+    request.POST contient une liste student_ids, une liste level, et des
+    listes "engagement"+student_ids"""
+    #----- on met les informations concernant le paiment dans session
+    #------------- extraction des infos pour les passer au template
+
+    user = request.user
+
+    student_id = request.POST.get('student_id')
+    amount     = request.POST.get('amount')
+    start      = request.POST.get('start')
+    stop       = request.POST.get('stop')
+    level_id   = request.POST.get('level_id')
+    formule_id = request.POST.get('formule')
+ 
+    request.session["details_of_student"] = {'student_id' : student_id , 'level_id' : level_id ,  'formule_id' : formule_id , 'amount' : amount , 'today' : start , 'end_day' : stop }
+
+    student = Student.objects.get(pk=student_id)
+    level   = Level.objects.get(pk=level_id)
+    formule = Formule.objects.get(pk=formule_id)
+
+    montant=int(float(amount)*100)
+    cmd="Abonnement "+formule.name+" :" + student.user.last_name + " "+student.user.first_name +" "+level.shortname
     timestamp=datetime.today().isoformat()
-    timestamp="2023-03-30T19:28:23.506729"
-    email="stephan.ceroi@gmail.com"
-    print(settings.PBX_RANG,file=f)
-    PBX_SHOPPINGCART='<?xml version="1.0" encoding="utf-8" ?><shoppingcart><total><totalQuantity>12</totalQuantity></total></shoppingcart>'
-    PBX_BILLING='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>Jean</Firstname><LastName>Dupont</LastName><Address1>12 rue Test</Address1><ZipCode>75001</ZipCode><City>Paris</City><CountryCode>250</CountryCode></Address></Billing>'
-    print(settings.PBX_CLE_HMAC,type(settings.PBX_CLE_HMAC), file=f)
+    email= user.email
+    PBX_SHOPPINGCART='<?xml version="1.0" encoding="utf-8" ?><shoppingcart><total><totalQuantity>1</totalQuantity></total></shoppingcart>' 
+    PBX_BILLING='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</Firstname><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format(user.first_name,user.last_name)
+
     chaine='PBX_SITE={}&\
 PBX_RANG={}&\
 PBX_IDENTIFIANT={}&\
@@ -2147,11 +2190,53 @@ PBX_BILLING={}&\
 PBX_TIME={}'.format(settings.PBX_SITE,settings.PBX_RANG,settings.PBX_IDENTIFIANT,settings.PBX_EFFECTUE,settings.PBX_REFUSE,settings.PBX_ANNULE,settings.PBX_ATTENTE,montant,cmd,email,PBX_SHOPPINGCART,PBX_BILLING,timestamp)
     
     HMAC=hmac.new(bytearray.fromhex(settings.PBX_CLE_HMAC),msg=chaine.encode("utf-8"),digestmod="sha512").hexdigest().upper()
-    print(chaine,HMAC,file=f)
-    context={'PBX_RANG':settings.PBX_RANG, 'PBX_SITE':settings.PBX_SITE, 'PBX_IDENTIFIANT':settings.PBX_IDENTIFIANT,
+
+
+    y,m,d = stop.split("T")[0].split("-")
+    end_day = d+"-"+m+"-"+y
+    context={ 'formule' : formule , 'level' : level , 'student' : student ,  'amount' : amount , 'end_day' : end_day ,  'PBX_RANG':settings.PBX_RANG, 'PBX_SITE':settings.PBX_SITE, 'PBX_IDENTIFIANT':settings.PBX_IDENTIFIANT,
              'PBX_EFFECTUE':settings.PBX_EFFECTUE,'PBX_REFUSE':settings.PBX_REFUSE,'PBX_ANNULE':settings.PBX_ANNULE,'PBX_ATTENTE':settings.PBX_ATTENTE,'PBX_TOTAL':montant,"PBX_CMD":cmd,'PBX_PORTEUR':email,'PBX_SHOPPINGCART':PBX_SHOPPINGCART,'PBX_BILLING':PBX_BILLING,'PBX_TIME':timestamp,"PBX_HMAC":HMAC}
 
-    return render(request,"setup/brique_credit_agricole.html",context)
+    return render(request, 'setup/brique_credit_agricole.html', context)  
+
+
+
+#-------------------------------------------------------
+#  paiement avec la brique credit agricole
+
+# def paiement_old(request):
+#     montant=1717
+#     cmd="ref de la commande"
+#     timestamp=datetime.today().isoformat()
+#     timestamp="2023-03-30T19:28:23.506729"
+#     email="stephan.ceroi@gmail.com"
+
+#     PBX_SHOPPINGCART='<?xml version="1.0" encoding="utf-8" ?><shoppingcart><total><totalQuantity>12</totalQuantity></total></shoppingcart>'
+#     PBX_BILLING='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>Jean</Firstname><LastName>Dupont</LastName><Address1>12 rue Test</Address1><ZipCode>75001</ZipCode><City>Paris</City><CountryCode>250</CountryCode></Address></Billing>'
+ 
+#     chaine='PBX_SITE={}&\
+# PBX_RANG={}&\
+# PBX_IDENTIFIANT={}&\
+# PBX_EFFECTUE={}&\
+# PBX_REFUSE={}&\
+# PBX_ANNULE={}&\
+# PBX_ATTENTE={}&\
+# PBX_SOURCE=RWD&\
+# PBX_TOTAL={}&\
+# PBX_DEVISE=978&\
+# PBX_CMD={}&\
+# PBX_PORTEUR={}&\
+# PBX_RETOUR=Mt:M;Ref:R;Auto:A;Erreur:E&\
+# PBX_HASH=SHA512&\
+# PBX_SHOPPINGCART={}&\
+# PBX_BILLING={}&\
+# PBX_TIME={}'.format(settings.PBX_SITE,settings.PBX_RANG,settings.PBX_IDENTIFIANT,settings.PBX_EFFECTUE,settings.PBX_REFUSE,settings.PBX_ANNULE,settings.PBX_ATTENTE,montant,cmd,email,PBX_SHOPPINGCART,PBX_BILLING,timestamp)
+    
+#     HMAC=hmac.new(bytearray.fromhex(settings.PBX_CLE_HMAC),msg=chaine.encode("utf-8"),digestmod="sha512").hexdigest().upper()
+#     context={'PBX_RANG':settings.PBX_RANG, 'PBX_SITE':settings.PBX_SITE, 'PBX_IDENTIFIANT':settings.PBX_IDENTIFIANT,
+#              'PBX_EFFECTUE':settings.PBX_EFFECTUE,'PBX_REFUSE':settings.PBX_REFUSE,'PBX_ANNULE':settings.PBX_ANNULE,'PBX_ATTENTE':settings.PBX_ATTENTE,'PBX_TOTAL':montant,"PBX_CMD":cmd,'PBX_PORTEUR':email,'PBX_SHOPPINGCART':PBX_SHOPPINGCART,'PBX_BILLING':PBX_BILLING,'PBX_TIME':timestamp,"PBX_HMAC":HMAC}
+
+#     return render(request,"setup/brique_credit_agricole.html",context)
 
 
 def retour_paiement(request,status):
@@ -2162,9 +2247,20 @@ def retour_paiement(request,status):
     numero_autorisation=request.GET.get("num_auto",None)
     if status=="effectue" :
         if erreur=="00000" and numero_autorisation != None : # tout va bien
-            print("transaction ok")
+ 
+            this_year  = detail["today"].year
+            detail = request.session.get("details_of_student")
+            Adhesion.objects.create(amount=detail["amount"] ,level_id = detail["level_id"], start =  detail["today"] , stop = detail["end_day"] , student_id = detail["student_id"] , formule_id = detail["formule_id"], year = this_year )
+            chrono   = create_chrono(Facture,"F")
+            facture  = Facture.objects.create(chrono = chrono , user = user , file = "" , date = start , orderID = "" , is_lesson = 0  ) #orderID = Numéro de paiement donné par la banque"
+            facture.adhesions.add(adhesion) 
+
+            try : request.session.pop('details_of_student', None) 
+            except : pass
+
         else :
-            print("le status est 'effectuÃ©', pourtant il y a une erreur : erreur = {},numero_autor.={}".format(erreur,numero_autorisation))
+            f=open("logs/debug.log","a")
+            print("le status est 'effectué', pourtant il y a une erreur : erreur = {},numero_autor.={}".format(erreur,numero_autorisation), file=f)
             
     elif status=="annule":
         pass
@@ -2173,8 +2269,9 @@ def retour_paiement(request,status):
     elif status=="attente":
         pass
     else :
-        print("(retour_paiement) : je ne comprends pas le status de la rÃ©ponse venant de la banque")
-        return render(request,"setup/retour_paiement",context)
+        print("(retour_paiement) : je ne comprends pas le status de la réponse venant de la banque")
+    
+    return render(request,"setup/retour_paiement",context)
         
         
 

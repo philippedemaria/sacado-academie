@@ -221,9 +221,9 @@ define(['jquery', 'bootstrap'], function ($) {
             )
         }); 
 
+ 
 
-
-
+        $('#submit_change' ).prop("disabled",true)
 
         $('.duration_change').on('change', function (event) {
 
@@ -297,7 +297,7 @@ define(['jquery', 'bootstrap'], function ($) {
                                 }
                                 else
                                 {
-                                $('#result_change_adhesion' ).html("").html("<div class='row' style='margin-bottom:100px'><div class='col-sm-12 col-md-12'><div class='alert alert-success'>Somme à payer : "+data.result+" €</div></div></div>");                            
+                                $('#result_change_adhesion' ).html("").html("<div class='row' style='margin-bottom:100px'><div class='col-sm-12 col-md-12'><div class='alert alert-success'>Adhésion demandée jusqu'au "+data.end_of_this_adhesion+".<br/>Somme à payer : "+data.result+" €</div></div></div>");
                                 }
                             }
                         }

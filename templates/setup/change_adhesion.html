@@ -21,7 +21,7 @@
 
 {% block page_title %}  
     
-    <i class='fa fa-audio-description'></i> Changer l'adhésion 
+    <i class='bi bi-badge-ad'></i> Gérer l'adhésion 
 {% endblock %}
 
 
@@ -36,7 +36,7 @@
 {% block body %}     
 <section class="content_main"> 
  
-    <form action="" method="POST">
+    <form action="{% url 'paiement' %}" method="POST">
         {% csrf_token %}
         <input name="student_id" id="student_id" value="{{student.user.id }}"  type="hidden"   />
         <input name="amount" id="amount" type="hidden"  />
@@ -53,12 +53,21 @@
             </div>
 
             <div class="row">
-                <div class="col-sm-12 col-md-12">
+                <div class="col-sm-6 col-md-6">
                     <h4>Adhésion actuelle  </h4>
                     <li class="sanspuce"><label>Niveau   : <span class="sacado_color_text">{{ student.level.name }}</span></label></li>
                     <li class="sanspuce"><label>Formule  : <span class="sacado_color_text">{{ adhesion.formule }}</span></label></li>
                     <li class="sanspuce"><label>Jusqu'au : <span class="sacado_color_text">{{ adhesion.stop|date:"d-m-Y" }}</span></label></li>
                 </div> 
+
+                <div class="col-sm-6 col-md-6" align="center">
+                {% if adhesion.formule.id == 1 %}<img src="{% static 'img/menu_autonomie.png' %}"  />
+                {% elif adhesion.formule.id == 2 %}<img src="{% static 'img/menu_suivi.png' %}" />
+                {% elif adhesion.formule.id == 3 %}<img src="{% static 'img/menu_exam.png' %}" />
+                {% else %}<img src="{% static 'img/prep_class.png' %}" />{% endif %}
+                </div> 
+
+
             </div>
 
             <hr/>

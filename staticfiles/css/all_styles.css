@@ -43,6 +43,23 @@ background-image:-webkit-gradient(linear, left bottom, right top, from(#6d327c),
     width: auto!important;  
 
 }
+
+.paiement_card {
+    text-align: left;
+    padding: 30px;
+    margin: 25px;
+    -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, .255);
+    box-shadow: 2px 2px 6px rgba(79, 73, 66, .255);
+    position: relative;
+    border: 1px solid #e6e2dd;
+    background-color: #FFF;
+    width:600px;
+    color:#5c5364;
+}
+
+.double_line{
+  line-height: 30px;
+}
 /********************************************************************/
 /*********   cke  ***************************************************/
 /********************************************************************/
@@ -131,6 +148,13 @@ a.no_underline:hover{
 .sacado_text_color {
     color: #A383D9 !important;
 }
+
+
+.font_sacado{
+  font-family: 'Roboto', cursive;
+  color: #5d4391;
+}
+
 
 .label-sacado {
     background-color: #5d4391 !important;

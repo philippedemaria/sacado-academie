@@ -1831,8 +1831,11 @@ def print_monthly_statistiques(request):
         ##########################################################################
         #### Gestion des labels à afficher
         ##########################################################################
-        labels = [str(student.user.last_name)+" "+str(student.user.first_name), "Classe de "+str(student.level)+", Du :"+str(date_start)+" au "+str(date_stop),"Temps de connexion : "+convert_seconds_in_time(duration), "Score moyen : "+str(average_score)+"%" , \
-                 "Exercices SACADO travaillés : " +str(nb_e)]
+        labels = [str(student.user.last_name)+" "+str(student.user.first_name), 
+                    "Classe de "+str(student.level)+". Période du : "+str(date_start)+" au "+str(date_stop),
+                    "Temps de connexion : "+convert_seconds_in_time(duration), 
+                    "Score moyen : "+str(average_score)+"%" , 
+                    "Exercices SACADO travaillés : " +str(nb_e)]
 
         spacers , titles,subtitles = [1,3] ,[0],[5]
 

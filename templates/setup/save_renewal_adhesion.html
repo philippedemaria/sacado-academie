@@ -58,53 +58,29 @@
     </div>
     <div class="row">
         <div class="col-sm-12 col-md-12">
-                    <!-- page de paiement en ligne -->
-                   <div id="partiePaiement">
-                    <div id="smart-button-container">
-                        <div style="text-align: center;">
-                          <div id="paypal-button-container"></div>
-                        </div>
-                    </div>
-				</div>
+            <form method="POST" action="https://recette-tpeweb.e-transactions.fr/php/">
+            <input type="hidden" name="PBX_SITE" value="{{ PBX_SITE }}">
+            <input type="hidden" name="PBX_RANG" value="{{PBX_RANG}}">
+            <input type="hidden" name="PBX_IDENTIFIANT" value="{{PBX_IDENTIFIANT}}">
+            <input type="hidden" name="PBX_EFFECTUE" value="{{PBX_EFFECTUE}}">
+            <input type="hidden" name="PBX_REFUSE" value="{{PBX_REFUSE}}">
+            <input type="hidden" name="PBX_ANNULE" value="{{PBX_ANNULE}}">
+            <input type="hidden" name="PBX_ATTENTE" value="{{PBX_ATTENTE}}">
+            <input type="hidden" name="PBX_SOURCE" value="RWD">
+            <input type="hidden" name="PBX_TOTAL" value="{{ somme_centimes }}"> <!-- montant en centimes -->
+            <input type="hidden" name="PBX_DEVISE" value="978">
+            <input type="hidden" name="PBX_CMD" value="{{ PBX_CMD }}"> <!-- référence de la transaction -->
+            <input type="hidden" name="PBX_PORTEUR" value="{{ PBX_PORTEUR }}">
+            <input type="hidden" name="PBX_RETOUR" value="Mt:M;Ref:R;Auto:A;Erreur:E">
+            <input type="hidden" name="PBX_HASH" value="SHA512">
+            <input type="hidden" name="PBX_SHOPPINGCART" value="{{ PBX_SHOPPINGCART }}">
+            <input type="hidden" name="PBX_BILLING" value="{{ PBX_BILLING }}">
+            <input type="hidden" name="PBX_TIME" value="{{ PBX_TIME }}">
+            <input type="hidden" name="PBX_HMAC" value="{{ PBX_HMAC|safe }}">
+            <input type="submit" value="Envoyer">
+            </form>
  
- <script src="https://www.paypal.com/sdk/js?client-id=AXACtNPjRo8Xi5W4Z3d8mvex4kxmjmEGQwxKAzJBDYp-OwF80Z50aQfxnqBEn9-BFm8LVA57z8u467Pu&currency=EUR" data-sdk-integration-source="button-factory"></script>
-<script>
-   var amount = "{{ somme|decimal2number }}";
-   console.log(amount);
-   paypal.Buttons({
-     style: {shape: 'rect', color: 'blue',layout: 'vertical',label: 'paypal'},
-     createOrder: 
-           function(data, actions) {
-               return actions.order.create({
-                    purchase_units: [{"amount":{"currency_code":"EUR","value": amount}
-                                    }] 
-                       });
-           },
-     
-     onApprove: 
-          function(data, actions){
-			    return actions.order.capture().then(
-			         function (details) {
-                        // Call your server to save the transaction
-                        console.log("paiement ok, details : ",details);
-                        return fetch('accept_renewal_adhesion',
-                                 { method: 'post',
-                                   headers: { 'content-type': 'application/json' ,
-											//'X-CSRF-Token':csrf
-											},
-                                   body: JSON.stringify({ 'orderID' : data.orderID })
-                                 }).then(function(reponse) {
-											if (reponse['ok']) {
-												paiement=document.getElementById("partiePaiement");
-												paiement.innerHTML='<div style="text-align:center">Paiement validé, Merci pour votre confiance</div>';
-									     }})
-                    });               
-           },
-
-     onError: function(err) {console.log("erreur",err);}
-   }).render('#paypal-button-container');
-                           
-  </script>
+ 
         </div>
     </div>
 </section>            
