@@ -203,7 +203,7 @@ Intro Section -
     <section class="container" id="menus">
         <div class="row">
             <div class="col-xs-12 col-md-12">
-                <h1 class="title_bloc_index_white">NOS MENUS <font style="font-size:14px;font-weight:100">Offre d'essai : 7 jours gratuits (hors visios)</font></h1>
+                <h1 class="title_bloc_index_white">NOS MENUS </h1>
             </div>
         </div>
         <div class="row">
@@ -211,18 +211,16 @@ Intro Section -
                 <div class="card border_card" >             
                     <div class="card-header">              
                         <div class="row">
-                            <div class="col-sm-4 col-md-3">
-                                <img src="{% static 'img/menu_autonomie.png' %}"  width="60px">
-                            </div>
-                            <div class="col-sm-8 col-md-9 font_white">
+                            <div class="col-sm-12 col-md-12 font_white" align="center">
+                                <img src="{% static 'img/menu_autonomie.png' %}"  width="60px"  style="float:left">                                
                              Menu<div class="sub_header">Autonomie</div> 
                             </div>
                         </div>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" style="background-image: url('static/img/fond_autonomie.png')">
                         <div class="this_price"> <span class="currency">5 €</span>/mois<br/><small style="font-size:12px">Sans engagement</small></div>
                         <div class="card-block plus">
-                            <p class="card-text">  <a href="#" data-toggle='modal' data-target='#Autonomie'  class="detail_index">  Plus de détails <i class="bi bi-question-circle"></i></a>  </p>
+                            <p class="card-text">  <a href="#" data-toggle='modal' data-target='#Autonomie'  class="detail_index"> Contenu de l'offre <i class="bi bi-question-circle"></i></a>  </p>
                         </div>
                         <div class="card-block plus">
                             <a href="{% url 'choice_menu' 1 %}" class="btn btn-asso">Choisir ce menu</a>
@@ -234,11 +232,9 @@ Intro Section -
                 <div class="card border_card" >             
                     <div class="card-header">              
                         <div class="row">
-                            <div class="col-sm-4 col-md-3">
-                                <img src="{% static 'img/menu_suivi.png' %}"  width="60px">
-                            </div>
-                            <div class="col-sm-8 col-md-9 font_white">
-                             Menu<div class="sub_header">Suivi</div> 
+                            <div class="col-sm-12 col-md-12 font_white" align="center">
+                                <img src="{% static 'img/menu_suivi.png' %}"  width="60px" style="float:left">
+                                Menu<div class="sub_header">Suivi</div> 
                             </div>
                         </div>
                     </div>
@@ -246,8 +242,7 @@ Intro Section -
                         <div class="this_price">dès <span class="currency">29 €</span>/mois<br/><small style="font-size:12px">Sans engagement</small></div>
                         <div class="card-block plus">
                             <p class="card-text">  
-                                <a href="#" data-toggle='modal' data-target='#Suivi'  class="detail_index"> Plus de détails <i class="bi bi-question-circle"></i></a>  
-                            </p>
+                                <a href="#" data-toggle='modal' data-target='#Suivi'  class="detail_index"> Contenu de l'offre <i class="bi bi-question-circle"></i></a>  
                         </div>                    
                         <div class="card-block plus">
                             <a href="{% url 'choice_menu' 2 %}" class="btn btn-asso">Choisir ce menu</a>
@@ -259,10 +254,8 @@ Intro Section -
                 <div class="card border_card" >             
                     <div class="card-header">              
                         <div class="row">
-                            <div class="col-sm-4 col-md-3">
-                                <img src="{% static 'img/menu_exam.png' %}"  width="60px">
-                            </div>
-                            <div class="col-sm-8 col-md-9 font_white">
+                            <div class="col-sm-12 col-md-12 font_white" align="center">
+                             <img src="{% static 'img/menu_exam.png' %}"  width="60px" style="float:left">   
                              Menu<div class="sub_header">Prép'Examen</div> 
                             </div>
                         </div>
@@ -271,7 +264,7 @@ Intro Section -
                         <div class="this_price"> dès <span class="currency">290 €<br/><small style="font-size:14px">(package de 10 visio-conférences)</small></div>
                         <div class="card-block plus">
                             <p class="card-text">  
-                                <a href="#" data-toggle='modal' data-target='#exam'  class="detail_index">  Plus de détails <i class="bi bi-question-circle"></i></a>  
+                                <a href="#" data-toggle='modal' data-target='#exam'  class="detail_index">  Contenu de l'offre <i class="bi bi-question-circle"></i></a>  
                             </p>
                         </div>
                         <div class="card-block plus">
@@ -323,9 +316,6 @@ Intro Section -
 
     </div>
 </div>
-
-
-
 
 
 
@@ -393,7 +383,7 @@ Intro Section -
             <div class="modal-body" id="indiv_this_exercise">
                 <div class="alert alert-sacado"  align="center">
                     <img src="{% static 'img/menu_autonomie.png' %}"  width="60px"/>  Menu <span class="">Autonomie</span> 
-                    <a href="#" id="detail_display_autonomie"  class="detail_index" style="font-size:12px;"><i class="bi bi-cursor"></i>  Plus de détails <i class="bi bi-question-circle"></i></a><br/>
+                    <a href="#" id="detail_display_autonomie"  class="detail_index" style="font-size:12px;"><i class="bi bi-cursor"></i>  Détails de l'offre <i class="bi bi-question-circle"></i></a><br/>
                 </div>
                 <div id="show_detail_display_autonomie"  style="font-size:12px;">
    
@@ -447,7 +437,7 @@ Intro Section -
             
                 <div class="alert alert-sacado"  align="center">
                     <img src="{% static 'img/menu_autonomie.png' %}"  width="60px"/>  Menu <span class="">Autonomie</span> 
-                    <a href="javascript:void();" id="detail_display_suivi"  class="detail_index" style="font-size:12px;"><i class="bi bi-cursor"></i>  Plus de détails <i class="bi bi-question-circle"></i></a><br/> 
+                    <a href="javascript:void();" id="detail_display_suivi"  class="detail_index" style="font-size:12px;"><i class="bi bi-cursor"></i>  Détails de l'offre <i class="bi bi-question-circle"></i></a><br/> 
                 </div>
 
                 <div id="show_detail_display_suivi" style="font-size:12px;">
@@ -502,7 +492,7 @@ Intro Section -
             
                 <div class="alert alert-sacado"  align="center">
                     <img src="{% static 'img/menu_autonomie.png' %}"  width="60px"/>  Menu <span class="">Autonomie</span> 
-                    <a href="javascript:void();" id="detail_display_perso"  class="detail_index" style="font-size:12px;"><i class="bi bi-cursor"></i>  Plus de détails <i class="bi bi-question-circle"></i></a><br/> 
+                    <a href="javascript:void();" id="detail_display_perso"  class="detail_index" style="font-size:12px;"><i class="bi bi-cursor"></i>   Détails de l'offre <i class="bi bi-question-circle"></i></a><br/> 
                 </div>
 
                 <div id="show_detail_display_perso" style="font-size:12px;">

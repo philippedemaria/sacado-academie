@@ -202,15 +202,23 @@ class DashboardView(TemplateView): # lorsque l'utilisateur vient de se connecter
 
 
 def end_of_adhesion(request):
-    
+
+    cause = False
+    reason = ""
     if request.user.is_student :
         student =  request.user.student
         last_adhesion = student.adhesions.last()
-        context = {'student': student, 'last_adhesion' : last_adhesion }
+        cause = False
+        today = time_zone_user(request.user)
+        if last_adhesion.stop > today and last_adhesion.is_active == 0 : 
+            reason , cause = "En attente de paiement" , True
+        elif last_adhesion.stop < today and last_adhesion.is_active == 1 : reason = "Fin de l'abonnement"
+
+        context = {'student': student, 'last_adhesion' : last_adhesion, 'reason' : reason , 'cause' : cause }
     elif request.user.is_parent : 
         parent   = request.user.parent
         students = parent.students.all()
-        context = {'parent': parent, 'students' : students }
+        context = {'parent': parent, 'students' : students, 'reason' : reason , 'cause' : cause  }
     return render(request, 'account/end_of_adhesion.html', context)
 
 ########################################            AVATAR                   #########################################

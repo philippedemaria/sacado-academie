@@ -35,8 +35,8 @@
     <section class="content_main"> 
         <div class="row">
             <div class="col-sm-12 col-md-12">
-                <form action="" method="POST" enctype='multipart/form-data'>
-                {% csrf_token %}
+
+                
                     <table class="table table-sacado table-hover standard_tab_sort">
                         <thead>
                         <tr>
@@ -60,9 +60,25 @@
                                     </td>
                                     <td class="right">
                                         {% for adh in facture.adhesions.all %}
+
                                             <li class="sanspuce">
+                                                <form action="{% url  'paiement' %}" method="POST" >{% csrf_token %}
                                                 {{ adh.student }}  - 
-                                                {{  adh.formule}}   <small>jusqu'au</small> {{adh.stop|date:"d-m-Y" }} - <a href="{% url 'change_adhesion' adh.student.user.id %}" style="text-decoration:underline">Gérer la formule</a>  
+                                                {{  adh.formule}}   <small>jusqu'au</small> {{adh.stop|date:"d-m-Y" }} - 
+                                                {% if adh.is_active %}
+                                                    <a href="{% url 'change_adhesion' adh.student.user.id %}" style="text-decoration:underline">Gérer la formule</a>                                                   
+                                                {% else %}
+                                                    
+                                                    <input name="student_id" id="student_id" value="{{ adh.student.user.id }}"  type="hidden"   />
+                                                    <input name="amount" id="amount"  value="{{ adh.amount }}" type="hidden"  />
+                                                    <input name="start" id="start" value="{{  adh.start|date:'Y-m-d' }}" type="hidden"  />
+                                                    <input name="stop" id="stop" value="{{  adh.stop|date:'Y-m-d' }}" type="hidden"  />           
+                                                    <input name="level_id" id="level_id"  value="{{ adh.student.level.id }}" type="hidden"  />
+                                                    <input name="formule" id="formule_id" value="{{ adh.formule.id }}" type="hidden"   />
+                                                    <button type="submit" class="btn btn-danger">Formule en attente de paiement</button> 
+                                                    
+                                                {% endif %}
+                                                </form>
                                             </li>
                                         {% endfor %}
                                     </td>
@@ -70,14 +86,14 @@
                             {% endfor %}
                         </tbody>
                     </table>
-                </form>
+
             </div>
         </div>
 
 
         <div class="row">
             <div class="col-sm-12 col-md-12">     
-                    <a href="javascript:history.back()"  class="btn btn-default " >Retour </a>
+                    <a href="javascript:history.back()"  class="btn btn-default" >Retour </a>
             </div>
         </div>
     </section>

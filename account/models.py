@@ -213,25 +213,20 @@ class User(AbstractUser):
     def is_in_academy(self):
         is_sacado = False
         today = time_zone_user(self) 
-
+        is_active = False
         if self.school_id == 50 :
             if self.is_parent  :
-                try :
-                    facture = self.factures.order_by("chrono").last()
-                    adhesions = facture.adhesions.all()
-                    for adhesion in adhesions :
-                        if today > adhesion.start and  today < adhesion.stop :
-                            is_sacado = True
-                            break
-                except :
-                    is_sacado = False
-                if self.closure > today :
-                    is_sacado = True
+                is_sacado = True
+                is_active = True
             elif self.is_student : 
                 try :
                     adhesion = self.student.adhesions.order_by("stop").last()
-                    if today > adhesion.start and  today < adhesion.stop :
+                    if today > adhesion.start and  today < adhesion.stop and adhesion.is_active :
                         is_sacado = True
+                        is_active = True
+                    elif today > adhesion.start and  today < adhesion.stop and not adhesion.is_active :
+                        is_sacado = True
+                        is_active = False
                 except:    
                     is_sacado = False
         
@@ -731,12 +726,16 @@ class Adhesion(models.Model):
     student    = models.ForeignKey(Student, related_name="adhesions", on_delete=models.CASCADE,  null=True, blank=True, editable= False)
     year       = models.PositiveIntegerField( default=2021,  editable= False)
 
+    is_active  = models.BooleanField(default=0, editable= False)
+
+
     def __str__(self):
         return "{} {} : {}€".format(self.student.user.last_name, self.student.user.first_name, self.amount)
 
     def formule(self):
         Formule = apps.get_model('setup', 'Formule')
         return Formule.objects.get(pk = int(self.formule_id))
+
 
 
 class Facture(models.Model):

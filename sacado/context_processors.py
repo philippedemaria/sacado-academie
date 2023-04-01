@@ -23,9 +23,11 @@ def is_sacado_asso(this_user, today):
     last_adhesion = this_user.student.adhesions.last()
     is_sacado = False
     is_active = False
-    if last_adhesion.stop > today :
+    if last_adhesion.stop > today and last_adhesion.is_active :
         is_sacado = True
         is_active = True
+    elif last_adhesion.stop > today and last_adhesion.is_active == 0 :
+        is_active = False
     return is_sacado, is_active
 
 ##############################################################################################################################################
@@ -100,7 +102,8 @@ def menu(request):
             return {
                 'is_gar_check' : is_gar_check,
                 'student': student,
-                'sacado_asso' : sacado_asso , 
+                'sacado_asso' : sacado_asso ,
+                'sacado_is_active' : sacado_is_active ,
                 'group' : group ,
                 'groups' : groups,
                 'teacher_to_student' : teacher_to_student ,   
@@ -114,9 +117,9 @@ def menu(request):
             return {
                 'this_user': this_user,
                 'sacado_asso' : sacado_asso , 
-                 'sacado_asso' : False , 
-                 'index_tdb' : False ,
-                 'is_gar_check' : None,
+                'sacado_is_active' : sacado_is_active , 
+                'index_tdb' : False ,
+                'is_gar_check' : None,
             }
 
 

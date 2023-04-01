@@ -836,16 +836,10 @@ def details_of_adhesion(request) :
 
     form = AuthenticationForm()
     np_form = NewpasswordForm()
-
-    if request.user.is_authenticated and request.user.is_in_academy :
-        adhesion = Adhesion.objects.filter(user = request.user).last()
-        context  = {  'formule' : formule , 'data_post' : data_post , "nb_child" : nb_child ,  'levels' : levels ,  'adhesion' : adhesion, "renewal" : True,   }
-        template    = 'setup/renewal_adhesion.html'
- 
-    else : 
-        userFormset = formset_factory(UserForm, extra = int(nb_child) + 1, max_num= int(nb_child) + 2, formset=BaseUserFormSet)
-        context     = {  'formule' : formule ,    'data_post' : data_post ,  'levels' : levels ,  'userFormset' : userFormset, "renewal" : False, "form" : form, "np_form" : np_form }
-        template    = 'setup/detail_of_adhesion.html'
+  
+    userFormset = formset_factory(UserForm, extra = int(nb_child) + 1, max_num= int(nb_child) + 2, formset=BaseUserFormSet)
+    context     = {  'formule' : formule ,    'data_post' : data_post ,  'levels' : levels ,  'userFormset' : userFormset, "renewal" : False, "form" : form, "np_form" : np_form }
+    template    = 'setup/detail_of_adhesion.html'
 
     return render(request, template , context)   
 
@@ -1180,10 +1174,6 @@ def attribute_group_to_student_by_level(level,student,formule_id) :
     return success
 
 
-
-
-
-
 def add_adhesion(request) :
     request.session["tdb"] = 'adhesion'
     form =  UserForm(request.POST or None)
@@ -1256,217 +1246,145 @@ def add_adhesion(request) :
 
 
 
+def get_the_formule_price(formule_id, duration, level_id ):
+    amount =  0
+    if   formule_id == 1 and duration == 1  : amount += 5
+    elif formule_id == 1 and duration == 3  : amount += 14 
+    elif formule_id == 1 and duration == 6  : amount += 26  
+    elif formule_id == 1 and duration == 12 : amount += 50 
+    elif formule_id == 2 and level_id < 6 : amount += 29*duration
+    elif formule_id == 2 and 5<level_id < 10 : amount += 39*duration
+    elif formule_id == 2 and 9<level_id < 13 : amount += 49*duration
+    elif formule_id == 3  and level_id < 6 : amount += 290 
+    elif formule_id == 3  and 5<level_id < 10 : amount += 390 
+    elif formule_id == 3  and 9<level_id < 13 : amount += 490 
+    elif formule_id == 4 : amount += 50 
+    else : amount += 0 
 
-
-
-def commit_adhesion(request) :
-
-    data_post   = request.POST
-    nb_child = int( data_post.get("nb_child") )
-    request.session["tdb"] = 'adhesion'
-    formule_id     = int(data_post.get("formule_id"))    
-    data_posted = {"total_price" : data_post.get('total_price'), "month_price" : data_post.get('month_price'), "nb_month" : data_post.get('nb_month'), "date_end" : data_post.get('date_end'), "formule_id" : formule_id , "nb_child" : nb_child }
- 
-    levels      = request.POST.getlist("level")
-
-    max_num     = nb_child + 2
-    userFormset = formset_factory(UserForm, extra = nb_child + 1, max_num = max_num , formset=BaseUserFormSet)
-    formset     = userFormset(data_post)
-
-    if int(formule_id) > 0 : formule = Formule.objects.get(pk = int(formule_id))
-    else :  
-        formule= None
-
-    parents  , students = [] , []
-    if formset.is_valid():
-        i = 0
-        for form in formset :
-            user = dict()
-            user["last_name"]  =  form.cleaned_data["last_name"]
-            user["first_name"] =  form.cleaned_data["first_name"]
-            user["username"]   =  form.cleaned_data["username"]
-            user["password_no_crypted"]  =  form.cleaned_data["password1"] 
-            user["password"]   =  make_password(form.cleaned_data["password1"])
-            user["email"]      =  form.cleaned_data["email"]   
-            if 1<= i <= nb_child : 
-                level          = Level.objects.get(pk = int(levels[i])).name
-                user["level"]  =  level
-                students.append(user)
-            else :
-                user["level"]      = "" 
-                parents.append(user)
-            i += 1
-
-        # mise en session des coordonnées des futurs membres  et  des détails de l'adhésion
- 
-        request.session["parents_of_adhesion"] = parents
-        request.session["students_of_adhesion"] = students
-        request.session["data_posted"] = data_posted 
- 
-        ############################################################
-    else:
-        for error in formset.errors :
-            print(request,error)
-
-
-
-    context = {'formule' : formule ,  'data_post' : data_posted , 'parents' : parents  , 'students' : students  }
- 
-    return render(request, 'setup/commit_adhesion.html', context)   
+    return amount
 
 
 
 
+def insertion_into_database(parents,students):
 
+    these_days = [31,31,29,31,30,31,30,31,31,30,31,30,31,31,29,31,30,31,30,31,31,30,31,30,31]
+    today = datetime.now()
+    today = today.replace(tzinfo=timezone.utc)
+    adhesions_in , students_in = [] , set()
+    
+    students_to_session , parents_to_session = [] , []
 
+    for s in students :
 
-def save_adhesion(request) :
+        duration_days = 0
+        level = s['level']
+        for i in range(s['duration']) :
+            duration_days += these_days[i+today.month]
+        date_end_dateformat = today + timedelta(days=duration_days)
 
-    parents_of_adhesion = request.session.get("parents_of_adhesion")
-    students_of_adhesion = request.session.get("students_of_adhesion")
-    data_posted = request.session.get("data_posted") # détails de l'adhésion
-    try : nb_child = int(data_posted.get("nb_child"))
-    except : nb_child = len(students_of_adhesion)
-    request.session["tdb"] = 'adhesion'
-    users = []
-
-    total_price = 0
-    formule          = Formule.objects.get(pk=data_posted['formule_id'])
-    formule_adhesion = " période d'essai "+ formule.name 
-    formule_name     = formule.name 
-    today = time_zone_user(request.user)
-    date_end_dateformat = today + timedelta(days=15)
-    #date_end_dateformat = datetime(2022,8,31)  
-    date_end = str(date_end_dateformat)
-    menu_id = 1
-    ##################################################################################################################
-    # Insertion dans la base de données
-    ##################################################################################################################
-    students_in , adhesions_in = [] , []
-    code = str(uuid.uuid4())[:8]
-    chrono = create_chrono(Facture,"F")
-    for s in students_of_adhesion :
-
-        last_name, first_name, username , password , email , level =  s["last_name"]  , s["first_name"] , s["username"] , s["password"] , s["email"] , s["level"]  
-        level = Level.objects.get(name = level)    
-        user, created = User.objects.update_or_create(username = username, password = password , user_type = 0 , defaults = { "last_name" : last_name , "first_name" : first_name  , "email" : email , "country_id" : 5 ,  "school_id" : 50 , "closure" : date_end_dateformat })
+        user, created = User.objects.update_or_create(username = s['username'], password = s['password'] , user_type = 0 , defaults = { "last_name" : s['last_name'] , "first_name" : s['first_name']  , "email" : s['email']  , "country_id" : 5 ,  "school_id" : 50 , "closure" : date_end_dateformat })
         student,created_s = Student.objects.update_or_create(user = user, defaults = { "task_post" : 1 , "level" : level })
-
 
         folders = Folder.objects.filter(level = level, teacher_id = 2480 , is_trash=0) # 2480 est SacAdoProf
         for f in folders :
             f.students.add(student)
 
         if created_s : 
-            students_in.append(student) # pour associer les enfants aux parents 
+            students_in.add(student) # pour associer les enfants aux parents 
 
- 
-        adhesion = Adhesion.objects.create( student = student , level = level , start = today , amount = total_price , stop = date_end_dateformat , formule_id  = formule.id , year  = today.year )
+        formule_id = s['formule'].id
+
+        adhesion = Adhesion.objects.create( student = student , level = level , start = today , amount = s['price'] , stop = date_end_dateformat , formule_id  = formule_id , year  = today.year , is_active = 0)
         adhesions_in.append(adhesion)
-        success = attribute_group_to_student_by_level(level,student,formule.id)
-    
-    i = 0
-    for p in parents_of_adhesion :
+        students_to_session.append({ 'student_id' :user.id , 'adhesion_id' : adhesion.id })
+        success = attribute_group_to_student_by_level(level,student,formule_id)
 
-        # if nb_child == 0 : # enfant émancipé ou majeur
-        #     Adhesion.objects.update_or_create(user = user, amount = total_price , menu = menu_id, defaults = { "file"  : creation_facture(user,data_posted,code), "date_end" : date_end_dateformat,  "children" : nb_child, "duration" : nb_month })
-        last_name, first_name, username , password , email =  p["last_name"]  , p["first_name"] , p["username"] , p["password"] , p["email"] 
-        user, created = User.objects.update_or_create(username = username, password = password , user_type = 1 , defaults = { "last_name" : last_name , "first_name" : first_name  , "email" : email , "country_id" : 5 ,  "school_id" : 50 ,  "closure" : date_end_dateformat })
+    loop = 0
+    for p in parents :
+        user, created = User.objects.update_or_create(username = p['username'], password = p['password'] , user_type = 1 , defaults = { "last_name" : p['last_name'] , "first_name" : p['first_name']  , "email" : p['email'] , "country_id" : 5 ,  "school_id" : 50 ,  "closure" : None })
         parent,create = Parent.objects.update_or_create(user = user, defaults = { "task_post" : 1 })
 
-        if i == 0 :
-            facture = Facture.objects.create(chrono = chrono , user = user, date = today ,    file = None , is_lesson = 0  )
-            # si non payement alors modifier e chrono en chrono de période d'essai.
-            facture.chrono = "Période d'essai "+str(facture.id)
-            facture.save()
-            new_facture = facture
-        else :
-            facture = new_facture
+        if loop == 0 :
+            username = p["username"]
+            password = p["password_no_crypted"]
+            user = authenticate(username=username, password=password)
+            login(request, user,  backend='django.contrib.auth.backends.ModelBackend' )
 
-        i += 1
-        
+        parents_to_session.append({ 'parent_id' : user.id }) 
 
         for adh in adhesions_in :
             facture.adhesions.add(adh)
 
-        for si in students_in :
-            parent.students.add(si)
+        parent.students.set(students_in)
+
+        loop +=1  
+
+    request.session["students_to_session"] = students_to_session
+    request.session["parents_to_session"]  = parents_to_session
+
+    return chrono
 
 
-        ##################################################################################################################
-        # Envoi du courriel
-        ##################################################################################################################
-        nbc = ""
-        if nb_child > 1 :
-            nbc = "s"
-            
-        msg = "Bonjour "+p["first_name"]+" "+p["last_name"]+",\n\nVous venez de souscrire à une adhésion "+formule_adhesion +" à la SACADO ACADEMIE avec le menu "+formule_name+". \n"
 
+def send_message_after_insertion(parents,students,chrono) :
 
-        msg += "Votre référence d'adhésion est "+chrono+".\n\n"
+    ##################################################################################################################
+    # Envoi du courriel
+    ##################################################################################################################
+
+    nbc = ""
+    if len(students) > 1 :
+        nbc = "s"
+
+    for p in parents :
+        msg = "Bonjour "+p["first_name"]+" "+p["last_name"]+",\n\nVous venez de souscrire à un menu "+ p['formule'].name+" à la SACADO ACADEMIE. \n\n"
+        msg += "Votre adhésion est en atente de paiement.\n\n"     ##"+chrono+".\n\n"
         msg += "Votre identifiant est "+p["username"]+" et votre mot de passe est "+p["password_no_crypted"]+"\n"
         msg += "Vous avez inscrit : \n"
         for s in students_of_adhesion :
-            msg += "- "+s["first_name"]+" "+s["last_name"]+", l'identifiant de connexion est : "+s["username"]+", le mot de passe est "+s["password_no_crypted"]+" \n"
+            msg += "- "+s["first_name"]+" "+s["last_name"]+", son identifiant de connexion est : "+s["username"]+", son mot de passe est "+s["password_no_crypted"]+" \n"
 
+        msg += "Leur accès est actuellement consultable mais leurs droits seront ouverts dès le paiement effectué. \n"
 
-        if data_posted['formule_id'] > 1 :
+        if p['formule'].id > 1 :
             msg += "Un.e enseignant.e de la SACADO ACADEMIE va vous contacter sous 24 heures par mail pour établir un plan de travail personnalisé.\n\n"
         #msg += "Pour établir des conseils personalisés, nous vous demandons à votre enfant de remplir un questionnaire à cette adresse : https://sacado-academie.fr/questionnaire\n\n"
 
         msg += "\n\nRetrouvez ces détails à partir de votre tableau de bord après votre connexion à https://sacado-academie.fr"
-
         msg += "\n\nL'équipe de SACADO ACADEMIE vous remercie de votre confiance.\n\n"
 
         ###### Quelques recommandations pour les parents
-
         msg += "Voici quelques conseils pour votre enfant :\n\nConnecte toi sur https://sacado-academie.fr\n\n"
-        msg += "Indique ton Nom d’utilisateur et ton Mot de passe\n\n"
+        msg += "Indique ton identifiant et ton mot de passe\n\n"
         msg += "Clique sur le bouton « connexion »   -> Tu arrives ensuite sur ton profil. \n\n"   
         msg += "Le menu est à gauche :\n\n"
         msg += "Sur ton tableau de bord, tu trouves les indications de tes options.\n\n"
 
-        send_mail("Inscription SACADO Académie", msg, settings.DEFAULT_FROM_EMAIL, [p["email"]] )
-        #########
-        # this_email=EmailMessage("Inscription SACADO ACADEMIE",msg,settings.DEFAULT_FROM_EMAIL,[email])
+        send_mail("Inscription SACADO ACADEMIE", msg, settings.DEFAULT_FROM_EMAIL, [p["email"]] )
 
-        # image=MIMEBase('application','octet-stream')
-        # nomImage="instruction.png"
-        # fichierImage=open(settings.STATIC_ROOT+"/img/"+nomImage,'rb')
-        # image.set_payload((fichierImage).read())
-        # encoders.encode_base64(image)
-        # image.add_header('Content-Disposition', "inline ; filename= %s" % nomImage)
-        
-        # this_email.attach(image)
-        
-        # this_email.send()
-        #####################"
-        # fin envoi du courriel 2e version, bêta
-        ##################################################
-       
-
-    for s in students_of_adhesion :
+    for s in students :
         srcv = []        
         if s["email"] : 
             srcv.append(s["email"])
-            smsg = "Bonjour "+s["first_name"]+" "+s["last_name"]+",\n\nvous venez de souscrire à une adhésion "+formule_adhesion +" à SACADO Académie avec le menu "+formule_name+". \n"
-            smsg += "votre référence d'adhésion est "+chrono+".\n\n"
-            smsg += "Votre identifiant est "+s["username"]+" et votre mot de passe est "+s["password_no_crypted"]+"\n\n"
-            smsg += "Il est possible de retrouver ces détails à partir de votre tableau de bord après votre connexion à https://sacado-academie.fr\n\n"
-            #smsg += "Pour établir des conseils personalisés, nous te demandons de remplir si tu le souhaites les questionnaire à cette adresse : https://sacado-academie.fr/questionnaire\n\n"
-            smsg += "\n\nL'équipe SACADO vous remercie de votre confiance.\n\n"
+            smsg = "Bonjour "+s["first_name"]+" "+s["last_name"]+",\n\nTu viens d'être inscrit au menu "+ p['formule'].name +" de la SACADO ACADEMIE. \n"
+            if s['formule'].id > 1 :
+                msg += "Un.e enseignant.e de la SACADO ACADEMIE va vous contacter sous 24 heures par mail pour établir un plan de travail personnalisé.\n\n"
+            smsg += "Ton identifiant est "+s["username"]+" et ton mot de passe est "+s["password_no_crypted"]+"\n\n"
+            smsg += "Il est possible de retrouver ces détails à partir de ton tableau de bord après ta connexion à https://sacado-academie.fr\n\n"
+            smsg += "\n\nL'équipe SACADO te remercie de ta confiance.... et en route vers la réussite \n\n"
 
-            send_mail("Inscription SACADO académie", smsg, settings.DEFAULT_FROM_EMAIL, srcv)
+            send_mail("Inscription SACADO ACADEMIE", smsg, settings.DEFAULT_FROM_EMAIL, srcv)
 
     # Envoi à SACADO
     sacado_rcv = ["sacado.asso@gmail.com"]
-    sacado_msg = "Une adhésion "+formule_adhesion +" SACADO vient d'être souscrite. \n\n"
+    sacado_msg = "Une adhésion "+s['formule'].name +" SACADO ACADEMIE vient d'être souscrite. \n\n"
 
     i,j = 1,1
-    for p in parents_of_adhesion :
+    for p in parents :
         sacado_msg += "Parent "+str(i)+" : "+p["first_name"]+" "+p["last_name"]+" adresse de courriel : "+p["email"]+". \n\n"
         i+=1
-    for s in students_of_adhesion :
+    for s in students :
         if s["email"] :
             adr = ", adresse de courriel : "+s["email"]
         else :
@@ -1474,18 +1392,228 @@ def save_adhesion(request) :
         sacado_msg += "Enfant "+str(j)+" : "+s["first_name"]+" "+s["last_name"]+" Niveau :" +s["level"]+adr+"\n\n"         
         j+=1
 
-    send_mail("Inscription SACADO Académie", sacado_msg, settings.DEFAULT_FROM_EMAIL, sacado_rcv)
-
+    send_mail("Inscription SACADO ACADEMIE", sacado_msg, settings.DEFAULT_FROM_EMAIL, sacado_rcv)
     #########################################################
-
-    username = parents_of_adhesion[0]["username"]
-    password = parents_of_adhesion[0]["password_no_crypted"]
-
-    user = authenticate(username=username, password=password)
-    login(request, user,  backend='django.contrib.auth.backends.ModelBackend' )
+ 
 
 
-    return redirect( 'index' )
+def commit_adhesion(request) :
+
+    request.session["tdb"] = 'adhesion'
+
+    data_post   = request.POST
+    nb_child    = int( data_post.get("nb_child") )
+    formule_id  = int(data_post.get("formule_id"))    
+    levels      = data_post.getlist("level")
+    userFormset = formset_factory(UserForm, extra = nb_child + 1, max_num = nb_child + 2 , formset=BaseUserFormSet)
+    formset     = userFormset(data_post)
+
+    formule = Formule.objects.get(pk = formule_id)
+
+
+    today = datetime.now()
+    today = today.replace(tzinfo=timezone.utc)
+    timestamp=datetime.today().isoformat()
+
+    amount = 0
+    parents , students = [], []
+
+    if formset.is_valid():
+        i = 0
+        for form in formset :
+
+            last_name  = form.cleaned_data["last_name"]
+            first_name = form.cleaned_data["first_name"]
+            username   = form.cleaned_data["username"]
+            password_no_crypted = form.cleaned_data["password1"] 
+            password  =  make_password(form.cleaned_data["password1"])
+            email     =  form.cleaned_data["email"]  
+
+            if 1<= i <= nb_child : 
+                level  = Level.objects.get(pk = int(levels[i]))
+                duration = int(data_post.get("duration"+str(i)))
+                price = get_the_formule_price( int(formule_id), int(duration), level.id )
+                amount += price
+                students.append({ "last_name" : last_name , "first_name" : first_name  , "email" : email , "level" : level , "username" : username , "password" : password , "password_no_crypted" : password_no_crypted  , "duration" : duration , "price" : price  , "formule" : formule  })
+            else :
+                if i == 0 :
+                    family_name ,family_fname , family_email = last_name , first_name , email
+                parents.append({ "last_name" : last_name , "first_name" : first_name  , "email" : email ,  "username" : username, "password" : password , "password_no_crypted" : password_no_crypted  , "formule" : formule })
+            i += 1
+
+        chrono = insertion_into_database(parents,students)
+        send_message_after_insertion(parents,students,chrono)
+
+    else:
+        for error in formset.errors :
+            print(request,error)
+
+
+    montant=int(float(amount)*100)
+    cmd="Abonnement "+formule.name+" " + str(datetime.now())
+    try :
+        PBX_SHOPPINGCART='<?xml version="1.0" encoding="utf-8" ?><shoppingcart><total><totalQuantity>{}</totalQuantity></total></shoppingcart>'.format(nb_child)
+        PBX_BILLING='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</Firstname><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format(family_name,family_fname)
+    except :
+        messages.error(request, "une erreur est survenue pedant votre inscritpion. Renouveler l'opération.")
+        return redirect('details_of_adhesion')
+
+    chaine='PBX_SITE={}&\
+PBX_RANG={}&\
+PBX_IDENTIFIANT={}&\
+PBX_EFFECTUE={}&\
+PBX_REFUSE={}&\
+PBX_ANNULE={}&\
+PBX_ATTENTE={}&\
+PBX_SOURCE=RWD&\
+PBX_TOTAL={}&\
+PBX_DEVISE=978&\
+PBX_CMD={}&\
+PBX_PORTEUR={}&\
+PBX_RETOUR=Mt:M;Ref:R;Auto:A;Erreur:E&\
+PBX_HASH=SHA512&\
+PBX_SHOPPINGCART={}&\
+PBX_BILLING={}&\
+PBX_TIME={}'.format(settings.PBX_SITE,settings.PBX_RANG,settings.PBX_IDENTIFIANT,settings.PBX_EFFECTUE,settings.PBX_REFUSE,settings.PBX_ANNULE,settings.PBX_ATTENTE,montant,cmd,family_email,PBX_SHOPPINGCART,PBX_BILLING,timestamp)
+    
+    HMAC=hmac.new(bytearray.fromhex(settings.PBX_CLE_HMAC),msg=chaine.encode("utf-8"),digestmod="sha512").hexdigest().upper()
+
+    context={ 'formule' : formule ,  'data_post' : data_post , 'parents' : parents  , 'students' : students , 'amount' : amount ,   'PBX_RANG':settings.PBX_RANG, 'PBX_SITE':settings.PBX_SITE, 'PBX_IDENTIFIANT':settings.PBX_IDENTIFIANT,
+             'PBX_EFFECTUE':settings.PBX_EFFECTUE,'PBX_REFUSE':settings.PBX_REFUSE,'PBX_ANNULE':settings.PBX_ANNULE,'PBX_ATTENTE':settings.PBX_ATTENTE,'PBX_TOTAL':montant,"PBX_CMD":cmd,'PBX_PORTEUR':family_email,'PBX_SHOPPINGCART':PBX_SHOPPINGCART,'PBX_BILLING':PBX_BILLING,'PBX_TIME':timestamp,"PBX_HMAC":HMAC}
+
+ 
+    return render(request, 'setup/commit_adhesion.html', context)   
+
+
+def paiement(request) :
+    """page de paiement 
+    request.POST contient une liste student_ids, une liste level, et des
+    listes "engagement"+student_ids"""
+    #----- on met les informations concernant le paiment dans session
+    #------------- extraction des infos pour les passer au template
+    student_id = request.POST.get('student_id')
+    amount     = request.POST.get('amount')
+    start      = request.POST.get('start')
+    stop       = request.POST.get('stop')
+    level_id   = request.POST.get('level_id')
+    formule_id = request.POST.get('formule')
+    user = request.user
+
+ 
+    request.session["details_of_student"] = {'student_id' : student_id , 'level_id' : level_id ,  'formule_id' : formule_id , 'amount' : amount , 'today' : start , 'end_day' : stop }
+
+    student = Student.objects.get(pk=student_id)
+    level   = Level.objects.get(pk=level_id)
+    formule = Formule.objects.get(pk=formule_id)
+
+    montant=int(float(amount)*100)
+    cmd="Abonnement "+formule.name+" :" + student.user.last_name + " "+student.user.first_name +" "+level.shortname
+    timestamp=datetime.today().isoformat()
+    email= user.email
+    PBX_SHOPPINGCART='<?xml version="1.0" encoding="utf-8" ?><shoppingcart><total><totalQuantity>1</totalQuantity></total></shoppingcart>' 
+    PBX_BILLING='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</Firstname><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format(user.first_name,user.last_name)
+
+    chaine='PBX_SITE={}&\
+PBX_RANG={}&\
+PBX_IDENTIFIANT={}&\
+PBX_EFFECTUE={}&\
+PBX_REFUSE={}&\
+PBX_ANNULE={}&\
+PBX_ATTENTE={}&\
+PBX_SOURCE=RWD&\
+PBX_TOTAL={}&\
+PBX_DEVISE=978&\
+PBX_CMD={}&\
+PBX_PORTEUR={}&\
+PBX_RETOUR=Mt:M;Ref:R;Auto:A;Erreur:E&\
+PBX_HASH=SHA512&\
+PBX_SHOPPINGCART={}&\
+PBX_BILLING={}&\
+PBX_TIME={}'.format(settings.PBX_SITE,settings.PBX_RANG,settings.PBX_IDENTIFIANT,settings.PBX_EFFECTUE,settings.PBX_REFUSE,settings.PBX_ANNULE,settings.PBX_ATTENTE,montant,cmd,email,PBX_SHOPPINGCART,PBX_BILLING,timestamp)
+    
+    HMAC=hmac.new(bytearray.fromhex(settings.PBX_CLE_HMAC),msg=chaine.encode("utf-8"),digestmod="sha512").hexdigest().upper()
+
+    try : y,m,d = stop.split("T")[0].split("-")
+    except : y,m,d = stop.split("-")
+    end_day = d+"-"+m+"-"+y
+    context={ 'formule' : formule , 'level' : level , 'student' : student ,  'amount' : amount , 'end_day' : end_day ,  'PBX_RANG':settings.PBX_RANG, 'PBX_SITE':settings.PBX_SITE, 'PBX_IDENTIFIANT':settings.PBX_IDENTIFIANT,
+             'PBX_EFFECTUE':settings.PBX_EFFECTUE,'PBX_REFUSE':settings.PBX_REFUSE,'PBX_ANNULE':settings.PBX_ANNULE,'PBX_ATTENTE':settings.PBX_ATTENTE,'PBX_TOTAL':montant,"PBX_CMD":cmd,'PBX_PORTEUR':email,'PBX_SHOPPINGCART':PBX_SHOPPINGCART,'PBX_BILLING':PBX_BILLING,'PBX_TIME':timestamp,"PBX_HMAC":HMAC}
+
+    return render(request, 'setup/brique_credit_agricole.html', context)  
+
+
+
+def retour_paiement(request,status):
+    # la banque appelle cette page lorsque la transaction est terminÃ©e
+    # status = 
+    context={}
+    erreur=request.GET.get('code_erreur',None)
+    numero_autorisation=request.GET.get("num_auto",None)
+
+    adhesion_in = set()
+    if status=="effectue" :
+        if erreur=="00000" and numero_autorisation != None : # tout va bien
+ 
+            students_to_session = request.session.get("students_to_session") 
+            parents_to_session  = request.session.get("parents_to_session") 
+            is_lesson_sum = 0
+            for detail in students_to_session :
+                student_id  = detail["student_id"]
+                adhesion_id = detail["adhesion_id"]
+                adhesion = Adhesion.objects.get(pk = adhesion_id,  is_active = 0 )
+                adhesion.is_active = 1 
+                adhesion.save() 
+                adhesion_in.add(adhesion)
+                formule_id = adhesion.formule_id
+
+                if formule_id > 3 : is_lesson_sum +=1
+
+            if is_lesson_sum > 0 : is_lesson = 1
+            else : is_lesson = 0
+
+            today = datetime.now()
+            today = today.replace(tzinfo=timezone.utc)
+            chrono = create_chrono(Facture,"F")
+            loop_parent = 0
+            for detail_p in  parents_to_session :
+                parent_id = detail_p["parent_id"]  
+                if loop_parent == 0 :
+                    facture  = Facture.objects.create(chrono = chrono , user_id = parent_id , file = "" , date = today , orderID = numero_autorisation , is_lesson = is_lesson  ) #orderID = Numéro de paiement donné par la banque"
+                    facture.adhesions.set(adhesion_in) 
+
+            try : 
+                request.session.pop('students_to_save', None) 
+                request.session.pop('parents_to_save', None) 
+            except : pass
+
+            return redirect ('index')
+
+        else :
+            f=open("logs/debug.log","a")
+            print("le status est 'effectué', pourtant il y a une erreur : erreur = {},numero_autor.={}".format(erreur,numero_autorisation), file=f)
+            
+    elif status=="annule":
+        pass
+    elif status=="refuse":
+        pass
+    elif status=="attente":
+        pass
+    else :
+        print("(retour_paiement) : je ne comprends pas le status de la réponse venant de la banque")
+    
+    return render(request,"setup/retour_paiement",context)
+        
+############## FIN CA  #########################
+
+
+
+
+
+
+
+
+
+
 
 
 def change_adhesion(request,ids):
@@ -1508,36 +1636,26 @@ def get_price_and_end_adhesion(formule_id, date_joined, today, duration, student
     data = {}
     formule = Formule.objects.get(pk=formule_id)
     price_a_month = formule.price
+
     try    : adhesion = student.adhesions.last()
     except : adhesion = None
+
+
     if today.month < 7 : this_year = today.year 
     else : this_year = today.year + 1
     end_of_this_adhesion = today + timedelta(days=30*int(duration))
 
-    if date_joined + timedelta(days=7) > today :
-        data["no_end"] = False
+    
 
-        if 6 < student.level.id < 10 and formule.id > 1 : price_a_month += 10
-        elif 9 < student.level.id  and formule.id > 1   : price_a_month += 20
-
-        if int(duration) == 12 : 
-            end_of_this_adhesion = datetime(this_year,7,7, tzinfo=pytz.timezone("Europe/Paris"))
-            price = (end_of_this_adhesion-today).days*price_a_month/31
-        else : 
-            price  = price_a_month * int(duration)
-
-
-    elif adhesion and end_of_this_adhesion < adhesion.stop and formule_id and adhesion.formule_id >= int(formule_id) :
+    if adhesion and end_of_this_adhesion <= adhesion.stop and formule_id and adhesion.formule_id >= int(formule_id) :
         data["no_end"] = True
         price = 0
 
+    else :
 
-
-    elif adhesion and end_of_this_adhesion < adhesion.stop :
         data["no_end"] = False
         if int(duration) == 12 : 
-            end_of_this_adhesion = datetime(this_year,7,7 , tzinfo=pytz.timezone("Europe/Paris"))
-            price = (end_of_this_adhesion-today).days*price_a_month/31
+            price = price_a_month * 10
         else : 
             price  = price_a_month * int(duration)
 
@@ -1547,7 +1665,10 @@ def get_price_and_end_adhesion(formule_id, date_joined, today, duration, student
         elif 9 < student.level.id  and formule.id > 1    : old_formule_price = old_formule.price +20
         else : old_formule_price = old_formule.price
         old_price = days_left.days * old_formule_price/30 # cout du relicat de jours
+
         price = max( price - old_price , 0 )
+
+    if price < 1 : data["no_end"] = True
 
     return data , round(price,2) , end_of_this_adhesion
 
@@ -1740,87 +1861,7 @@ def send_reports(request) :
 
 
 
-@login_required
-def questionnaire(request) :
-    """questionnaire après adhesion"""
-    student = request.user.student
 
-    form = DescriptionForm(request.POST or None )
- 
-    context = {    "form" : form   ,  "student" : student   }
-
-    return render(request, 'setup/questionnaire.html', context)
-
-
-
-
-##################################################################################################################
-##################################################################################################################
-##############################################  AJAX  ############################################################
-##################################################################################################################
-################################################################################################################## 
-
-def ajax_get_price(request):
-
-    nbr_students = request.POST.get("nbr_students",None)
-    data = {}
-    price = ""
-    if nbr_students :
-        if int(nbr_students) < 1500 : 
-            adhesion = Rate.objects.filter(quantity__gte=int(nbr_students)).first()
-            
-            today = datetime.now()
-
-            seuil = datetime(2021, 7, 1)
-
-            if today < seuil :
-                price = adhesion.discount
-            else :
-                price = adhesion.amount
-
-    data["price"] = price
-
-    return JsonResponse(data)
-
-
-
-def ajax_remboursement(request):
-    data_id = int(request.POST.get("data_id"))
-    adhesion = Adhesion.objects.get(pk=data_id)
-    data ={}
-    data["remb"] , data["jour"] = calcul_remboursement(adhesion)
-    return JsonResponse(data)
-
-
- 
-def ajax_changecoloraccount(request):
-    """
-    Appel Ajax pour afficher la liste des élèves du groupe sélectionné
-    """
-    if request.user.is_authenticated:
-        code = request.POST.get('code')
-
-    color = request.user.color
-    filename1 = "static/css/navbar-fixed-left.min.css"
-    filename2 = "static/css/AdminLTEperso.css"
-
-    User.objects.filter(pk=request.user.id).update(color=code)
-
-    change_color(filename1, color, code)
-    change_color(filename2, color, code)
-
-    return redirect("index")
-
-
-def change_color(filename, color, code):
-    # Read in the file
-    with open(filename, 'r') as file:
-        filedata = file.read()
-    # Replace the target string
-    filedata = filedata.replace(color, code)
-    # Write the file out again
-    with open(filename, 'w') as file:
-        file.write(filedata)
 
 
 @is_manager_of_this_school
@@ -1906,13 +1947,37 @@ def get_cookie(request):
     return redirect('index')
 
 
+
+
+@login_required
+def questionnaire(request) :
+    """questionnaire après adhesion"""
+    student = request.user.student
+
+    form = DescriptionForm(request.POST or None )
+ 
+    context = {    "form" : form   ,  "student" : student   }
+
+    return render(request, 'setup/questionnaire.html', context)
+
+
+
+
+
+
+
+##################################################################################################################
+##################################################################################################################
+#########################################  play_quizz  ###########################################################
+##################################################################################################################
+################################################################################################################## 
+
+
 def play_quizz(request):
 
     context = {}
     return render(request, 'tool/play_quizz.html', context)
 
-
- 
  
 def play_quizz_login(request):
 
@@ -1935,8 +2000,7 @@ def play_quizz_login(request):
     else :
         context = { 'error' : True}
         return render(request, 'tool/play_quizz.html', context)
-    
-
+ 
 
 def play_quizz_start(request):
 
@@ -1955,6 +2019,76 @@ def play_quizz_start(request):
     n +=1
     context = {  "quizz" : quizz , "question" : question , "n" : n}
     return render(request, 'tool/play_quizz_start.html', context)
+
+##################################################################################################################
+##################################################################################################################
+##############################################  AJAX  ############################################################
+##################################################################################################################
+################################################################################################################## 
+
+def ajax_get_price(request):
+
+    nbr_students = request.POST.get("nbr_students",None)
+    data = {}
+    price = ""
+    if nbr_students :
+        if int(nbr_students) < 1500 : 
+            adhesion = Rate.objects.filter(quantity__gte=int(nbr_students)).first()
+            
+            today = datetime.now()
+
+            seuil = datetime(2021, 7, 1)
+
+            if today < seuil :
+                price = adhesion.discount
+            else :
+                price = adhesion.amount
+
+    data["price"] = price
+
+    return JsonResponse(data)
+
+
+
+def ajax_remboursement(request):
+    data_id = int(request.POST.get("data_id"))
+    adhesion = Adhesion.objects.get(pk=data_id)
+    data ={}
+    data["remb"] , data["jour"] = calcul_remboursement(adhesion)
+    return JsonResponse(data)
+
+
+ 
+def ajax_changecoloraccount(request):
+    """
+    Appel Ajax pour afficher la liste des élèves du groupe sélectionné
+    """
+    if request.user.is_authenticated:
+        code = request.POST.get('code')
+
+    color = request.user.color
+    filename1 = "static/css/navbar-fixed-left.min.css"
+    filename2 = "static/css/AdminLTEperso.css"
+
+    User.objects.filter(pk=request.user.id).update(color=code)
+
+    change_color(filename1, color, code)
+    change_color(filename2, color, code)
+
+    return redirect("index")
+
+
+def change_color(filename, color, code):
+    # Read in the file
+    with open(filename, 'r') as file:
+        filedata = file.read()
+    # Replace the target string
+    filedata = filedata.replace(color, code)
+    # Write the file out again
+    with open(filename, 'w') as file:
+        file.write(filedata)
+
+
 
 ############################################################################################
 #######  WEBINAIRE
@@ -2047,6 +2181,9 @@ def webinaire_delete(request, id):
     else :
         return redirect('index') 
 
+############################################################################################
+#######  SET UP
+############################################################################################
 
 
 def rgpd(request):
@@ -2089,8 +2226,6 @@ def tweeters_public(request):
     tweeters = Tweeter.objects.all().order_by("-date_created")
     return render(request, 'setup/tweeters_public.html', {'tweeters': tweeters })
  
-
-
 def tweeter_create(request):
 
     if request.user.is_superuser :
@@ -2106,8 +2241,6 @@ def tweeter_create(request):
         return render(request, 'setup/form_tweeter.html', context)
     else :
         return redirect('index') 
-
-
 
 def tweeter_update(request, id):
 
@@ -2137,144 +2270,3 @@ def tweeter_delete(request, id):
         return redirect('tweeters')
     else :
         return redirect('index') 
-
-
-############## CA  #########################
-
-
-def paiement(request) :
-    """page de paiement 
-    request.POST contient une liste student_ids, une liste level, et des
-    listes "engagement"+student_ids"""
-    #----- on met les informations concernant le paiment dans session
-    #------------- extraction des infos pour les passer au template
-
-    user = request.user
-
-    student_id = request.POST.get('student_id')
-    amount     = request.POST.get('amount')
-    start      = request.POST.get('start')
-    stop       = request.POST.get('stop')
-    level_id   = request.POST.get('level_id')
-    formule_id = request.POST.get('formule')
- 
-    request.session["details_of_student"] = {'student_id' : student_id , 'level_id' : level_id ,  'formule_id' : formule_id , 'amount' : amount , 'today' : start , 'end_day' : stop }
-
-    student = Student.objects.get(pk=student_id)
-    level   = Level.objects.get(pk=level_id)
-    formule = Formule.objects.get(pk=formule_id)
-
-    montant=int(float(amount)*100)
-    cmd="Abonnement "+formule.name+" :" + student.user.last_name + " "+student.user.first_name +" "+level.shortname
-    timestamp=datetime.today().isoformat()
-    email= user.email
-    PBX_SHOPPINGCART='<?xml version="1.0" encoding="utf-8" ?><shoppingcart><total><totalQuantity>1</totalQuantity></total></shoppingcart>' 
-    PBX_BILLING='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</Firstname><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format(user.first_name,user.last_name)
-
-    chaine='PBX_SITE={}&\
-PBX_RANG={}&\
-PBX_IDENTIFIANT={}&\
-PBX_EFFECTUE={}&\
-PBX_REFUSE={}&\
-PBX_ANNULE={}&\
-PBX_ATTENTE={}&\
-PBX_SOURCE=RWD&\
-PBX_TOTAL={}&\
-PBX_DEVISE=978&\
-PBX_CMD={}&\
-PBX_PORTEUR={}&\
-PBX_RETOUR=Mt:M;Ref:R;Auto:A;Erreur:E&\
-PBX_HASH=SHA512&\
-PBX_SHOPPINGCART={}&\
-PBX_BILLING={}&\
-PBX_TIME={}'.format(settings.PBX_SITE,settings.PBX_RANG,settings.PBX_IDENTIFIANT,settings.PBX_EFFECTUE,settings.PBX_REFUSE,settings.PBX_ANNULE,settings.PBX_ATTENTE,montant,cmd,email,PBX_SHOPPINGCART,PBX_BILLING,timestamp)
-    
-    HMAC=hmac.new(bytearray.fromhex(settings.PBX_CLE_HMAC),msg=chaine.encode("utf-8"),digestmod="sha512").hexdigest().upper()
-
-
-    y,m,d = stop.split("T")[0].split("-")
-    end_day = d+"-"+m+"-"+y
-    context={ 'formule' : formule , 'level' : level , 'student' : student ,  'amount' : amount , 'end_day' : end_day ,  'PBX_RANG':settings.PBX_RANG, 'PBX_SITE':settings.PBX_SITE, 'PBX_IDENTIFIANT':settings.PBX_IDENTIFIANT,
-             'PBX_EFFECTUE':settings.PBX_EFFECTUE,'PBX_REFUSE':settings.PBX_REFUSE,'PBX_ANNULE':settings.PBX_ANNULE,'PBX_ATTENTE':settings.PBX_ATTENTE,'PBX_TOTAL':montant,"PBX_CMD":cmd,'PBX_PORTEUR':email,'PBX_SHOPPINGCART':PBX_SHOPPINGCART,'PBX_BILLING':PBX_BILLING,'PBX_TIME':timestamp,"PBX_HMAC":HMAC}
-
-    return render(request, 'setup/brique_credit_agricole.html', context)  
-
-
-
-#-------------------------------------------------------
-#  paiement avec la brique credit agricole
-
-# def paiement_old(request):
-#     montant=1717
-#     cmd="ref de la commande"
-#     timestamp=datetime.today().isoformat()
-#     timestamp="2023-03-30T19:28:23.506729"
-#     email="stephan.ceroi@gmail.com"
-
-#     PBX_SHOPPINGCART='<?xml version="1.0" encoding="utf-8" ?><shoppingcart><total><totalQuantity>12</totalQuantity></total></shoppingcart>'
-#     PBX_BILLING='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>Jean</Firstname><LastName>Dupont</LastName><Address1>12 rue Test</Address1><ZipCode>75001</ZipCode><City>Paris</City><CountryCode>250</CountryCode></Address></Billing>'
- 
-#     chaine='PBX_SITE={}&\
-# PBX_RANG={}&\
-# PBX_IDENTIFIANT={}&\
-# PBX_EFFECTUE={}&\
-# PBX_REFUSE={}&\
-# PBX_ANNULE={}&\
-# PBX_ATTENTE={}&\
-# PBX_SOURCE=RWD&\
-# PBX_TOTAL={}&\
-# PBX_DEVISE=978&\
-# PBX_CMD={}&\
-# PBX_PORTEUR={}&\
-# PBX_RETOUR=Mt:M;Ref:R;Auto:A;Erreur:E&\
-# PBX_HASH=SHA512&\
-# PBX_SHOPPINGCART={}&\
-# PBX_BILLING={}&\
-# PBX_TIME={}'.format(settings.PBX_SITE,settings.PBX_RANG,settings.PBX_IDENTIFIANT,settings.PBX_EFFECTUE,settings.PBX_REFUSE,settings.PBX_ANNULE,settings.PBX_ATTENTE,montant,cmd,email,PBX_SHOPPINGCART,PBX_BILLING,timestamp)
-    
-#     HMAC=hmac.new(bytearray.fromhex(settings.PBX_CLE_HMAC),msg=chaine.encode("utf-8"),digestmod="sha512").hexdigest().upper()
-#     context={'PBX_RANG':settings.PBX_RANG, 'PBX_SITE':settings.PBX_SITE, 'PBX_IDENTIFIANT':settings.PBX_IDENTIFIANT,
-#              'PBX_EFFECTUE':settings.PBX_EFFECTUE,'PBX_REFUSE':settings.PBX_REFUSE,'PBX_ANNULE':settings.PBX_ANNULE,'PBX_ATTENTE':settings.PBX_ATTENTE,'PBX_TOTAL':montant,"PBX_CMD":cmd,'PBX_PORTEUR':email,'PBX_SHOPPINGCART':PBX_SHOPPINGCART,'PBX_BILLING':PBX_BILLING,'PBX_TIME':timestamp,"PBX_HMAC":HMAC}
-
-#     return render(request,"setup/brique_credit_agricole.html",context)
-
-
-def retour_paiement(request,status):
-    # la banque appelle cette page lorsque la transaction est terminÃ©e
-    # status = 
-    context={}
-    erreur=request.GET.get('code_erreur',None)
-    numero_autorisation=request.GET.get("num_auto",None)
-    if status=="effectue" :
-        if erreur=="00000" and numero_autorisation != None : # tout va bien
- 
-            this_year  = detail["today"].year
-            detail = request.session.get("details_of_student")
-            Adhesion.objects.create(amount=detail["amount"] ,level_id = detail["level_id"], start =  detail["today"] , stop = detail["end_day"] , student_id = detail["student_id"] , formule_id = detail["formule_id"], year = this_year )
-            chrono   = create_chrono(Facture,"F")
-            facture  = Facture.objects.create(chrono = chrono , user = user , file = "" , date = start , orderID = "" , is_lesson = 0  ) #orderID = Numéro de paiement donné par la banque"
-            facture.adhesions.add(adhesion) 
-
-            try : request.session.pop('details_of_student', None) 
-            except : pass
-
-        else :
-            f=open("logs/debug.log","a")
-            print("le status est 'effectué', pourtant il y a une erreur : erreur = {},numero_autor.={}".format(erreur,numero_autorisation), file=f)
-            
-    elif status=="annule":
-        pass
-    elif status=="refuse":
-        pass
-    elif status=="attente":
-        pass
-    else :
-        print("(retour_paiement) : je ne comprends pas le status de la réponse venant de la banque")
-    
-    return render(request,"setup/retour_paiement",context)
-        
-        
-
-
-
-############## FIN CA  #########################

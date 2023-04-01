@@ -2,7 +2,7 @@
 {% load widget_tweaks %}
 {% load item_tags %}
 <div  class="box box-widget widget-user-2"  
-      style="{% if flashpack.vignette %}background-image: url('{{ flashpack.vignette.url }}');{% else %} background-image: url('{% static 'img/flashcard_img.jpg' %}');{% endif %} background-size: cover;">
+      style="{% if flashpack.vignette %}background-image: url('{{ flashpack.vignette.url }}');{% else %} background-image: url('{% static 'img/flash_accueil.png' %}');{% endif %} background-size: cover;">
     <div class="handler widget-user-header">
         <!-- Add signet to folder -->
         <div class="group_show  no_visu_on_load" id="bibliotex_show{{flashpack.id }}"> 

@@ -24,8 +24,11 @@
     <section class="content_list"> 
         <div class="row">
             <div class="col-xs-12">
-                <div class="alert alert-white"> 
+                <div class="alert alert-white">
+                    {{ reason }} 
+                    {% if not cause %} 
                     Votre adhésion est terminée depuis le {{ last_adhesion.stop|date:"d N Y"}}
+                    {% endif %}
                 </div>
             </div>
         </div>

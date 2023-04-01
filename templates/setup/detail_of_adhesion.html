@@ -19,10 +19,9 @@
                 <h4 class="title_page"> <img src="{% if formule.id == 1 %}{% static 'img/menu_autonomie.png' %}{% elif formule.id == 2 %}{% static 'img/menu_suivi.png' %}{% elif formule.id == 3 %}{% static 'img/menu_exam.png' %}{% else %}{% static 'img/menu_class.png' %}{% endif %}" width="60px" /> <span class="sub_header">Menu <span class="sub_header">{{ formule.name }}</span>  </span> </h4>
 
 
-                    L'adhésion est souscrite  
-                    pour <b>{{ data_post.children }}</b> enfant{{ data_post.children|pluralize }} <b>GRATUITEMENT pour une période d'essai d'une semaine.</b>
+                L'adhésion est souscrite pour <b>{{ data_post.children }}</b> enfant{{ data_post.children|pluralize }}.
 
-                <small class="title_page">Pour prolonger l'adhésion, un formulaire sera accessible depuis votre tableau de bord.</small>
+                <small class="title_page">Pour gérer les adhésions, un formulaire sera accessible depuis votre tableau de bord.</small>
 
             </div>
 
@@ -177,9 +176,22 @@
                                 {% endfor %}
                             </select>
                         </div>
+
+                        <div class="form-group">
+                            <label>Durée :</label><br/>
+                            <label><input type="radio" name="duration{{ forloop.counter0}}" value="1" /> 1 mois à 5€</label><br/>
+                            <label><input type="radio" name="duration{{ forloop.counter0}}" value="3" /> 3 mois à 14€, soit 6 jours gratuits</label><br/>
+                            <label><input type="radio" name="duration{{ forloop.counter0}}" value="6" /> 6 mois à 26€, soit 24 jours gratuits</label><br/>
+                            <label><input type="radio" name="duration{{ forloop.counter0}}" value="12" /> 12 mois à 50€, soit 60 jours gratuits</label>
+                        </div>
+
                         {% else %}
                             <input name="level" value="" type="hidden" />
                         {% endif %}
+
+
+
+
                         {% if forloop.counter == 1 %}
                         <div class="row">
                             <div class="col-sm-12 col-md-12">

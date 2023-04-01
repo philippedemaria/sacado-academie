@@ -13,27 +13,23 @@
         <div class="row">
             <div class="col-sm-12 col-md-12">
                 <div class="card_recapitulatif" > 
+                    <div class="row">
+                        <div class="col-sm-6 col-md-6">
+                            <img src="{% if formule.id == 1 %}{% static 'img/menu_autonomie.png' %}{% elif formule.id == 2 %}{% static 'img/menu_suivi.png' %}{% elif formule.id == 3 %}{% static 'img/menu_exam.png' %}{% else %}{% static 'img/menu_class.png' %}{% endif %}"  width="60px" style="float: left">
 
-                    <img src="{% if formule.id == 1 %}{% static 'img/menu_autonomie.png' %}{% elif formule.id == 2 %}{% static 'img/menu_suivi.png' %}{% elif formule.id == 3 %}{% static 'img/menu_exam.png' %}{% else %}{% static 'img/menu_class.png' %}{% endif %}"  width="60px" style="float: left">
-
-
-
-                    Menu  <b>{{ formule.name }}</b> <br/>
-                    Nombre d'enfant : <b>{{ data_post.nb_child }}</b> <br/><br/>
-                    {% comment %}
-                    Fin de l'adhésion : <b>{{ data_post.date_end }}</b>  <br/>
-                    Montant total de l'adhésion : <b class="line_through">{{ data_post.total_price }}€</b> = {{ data_post.nb_month }} mois x <span  class="line_through">{{ data_post.month_price }}€/mois </span><br/><br/>
-                    <small>Pour toute résiliation de l'adhésion avant la fin mentionnée ci-dessus, les frais de gestion s'élèvent à 5,99€.</small>
-                    {% endcomment %}
-                    7 jours gratuits pour tester la plateforme d'apprentissage. Pas besoin de payer maintenant. <br/><small>Si vous le souhaitez, dans 7 jours, vous devrez prolonger l'adhésion en vous connectant à votre interface et payer.</small>
+                            Menu  <b>{{ formule.name }}</b> <br/>
+                            Nombre d'enfant : <b>{{ data_post.nb_child }}</b> 
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                            <h3>Montant : {{ amount }}€ </h3>
+                        </div>
+                    </div>
                 </div>
             </div>
-
         </div> 
         <hr/>
  
-        <form action="{% url 'save_adhesion' %}"  >
-            {% csrf_token %}
+
             <input type="hidden" name="formule_id" value="{{ formule.id }}" />
             <input type="hidden" name="nb_child"  value="{{ data_post.nb_child }}" />
             <div class="row">
@@ -81,18 +77,20 @@
                              Prénom :  <b>{{ student.first_name }}</b>
                         </div>
                         <div class="form-group">
+                            Identifiant : <b>{{ student.username  }}</b> 
+                        </div>
+                        <div class="form-group">
                            Courriel <em>(facultatif)</em> : <b>{{ student.email }}</b> 
                         </div>
                         <div class="form-group">
                             Niveau favori :<b> {{ student.level }} </b>
                         </div>
-                        <div class="row"> 
-                            <div class="col-sm-12 col-md-11">
-                                <div class="form-group">
-                                    Identifiant : <b>{{ student.username  }}</b> 
-                                </div>
-                            </div>
-                        </div> 
+                        <div class="form-group">
+                            Formule :<b> {{ student.formule.name }} </b>
+                        </div>
+                        <div class="form-group">
+                            Durée :<b> {{ student.duration }} mois </b>
+                        </div>
                     </div>
                 </div>
                 {% endfor %}
@@ -103,15 +101,39 @@
                 <div class="col-sm-12 {% if data_post.nb_child == 1 %}col-md-6{% endif %}" align="center">
 
 
-                    <a href="{% url 'save_adhesion' %}" class="btn-asso" onclick="alert('... Merci de patienter pendant la création des exercices et les cours du niveau de votre/vos enfant.s ... Environ 5 minutes ...')">Confirmer l'inscription gratuite</a>
+                    <form method="POST" action="https://recette-tpeweb.e-transactions.fr/php/">
+                        <input type="hidden" name="PBX_SITE" value="{{ PBX_SITE }}">
+                        <input type="hidden" name="PBX_RANG" value="{{PBX_RANG}}">
+                        <input type="hidden" name="PBX_IDENTIFIANT" value="{{PBX_IDENTIFIANT}}">
+                        <input type="hidden" name="PBX_EFFECTUE" value="{{PBX_EFFECTUE}}">
+                        <input type="hidden" name="PBX_REFUSE" value="{{PBX_REFUSE}}">
+                        <input type="hidden" name="PBX_ANNULE" value="{{PBX_ANNULE}}">
+                        <input type="hidden" name="PBX_ATTENTE" value="{{PBX_ATTENTE}}">
+                        <input type="hidden" name="PBX_SOURCE" value="RWD">
+                        <input type="hidden" name="PBX_TOTAL" value="{{ PBX_TOTAL }}"> <!-- montant en centimes -->
+                        <input type="hidden" name="PBX_DEVISE" value="978">
+                        <input type="hidden" name="PBX_CMD" value="{{ PBX_CMD }}"> <!-- référence de la transaction -->
+                        <input type="hidden" name="PBX_PORTEUR" value="{{ PBX_PORTEUR }}">
+                        <input type="hidden" name="PBX_RETOUR" value="Mt:M;Ref:R;Auto:A;Erreur:E">
+                        <input type="hidden" name="PBX_HASH" value="SHA512">
+                        <input type="hidden" name="PBX_SHOPPINGCART" value="{{ PBX_SHOPPINGCART }}">
+                        <input type="hidden" name="PBX_BILLING" value="{{ PBX_BILLING }}">
+                        <input type="hidden" name="PBX_TIME" value="{{ PBX_TIME }}">
+                        <input type="hidden" name="PBX_HMAC" value="{{ PBX_HMAC|safe }}">
 
-                    <a href="javascript:history.back()" class="btn btn-default" />Annuler</a>
+
+                        <div >Montant  à régler : {{ amount }}€</div>
+
+                        <button type="submit" class="btn btn-violet">Allez sur le site de paiement <img src="{% static 'img/credit_agricole.png' %}" width="100px" /></button><br/>
+                    </form>
+
+                    <small>Redirection vers le site sécurisé du Crédit Agricole.</small>
+
+
+                    <a href="javascript:history.back()" class="btn btn-default" >Annuler</a>
                 </div>
             </div>
  
     </div>
 </section> 
-
-<section id="footer_asso">    
-</section>
 {% endblock %}
