@@ -96,8 +96,11 @@
                         {% endif %}
                     {% endif %}  
                       <a href="javascript:history.back()"><input type="button" value="Revenir aux exercices" class="btn btn-default "/></a>
+
+                      {% if relation.exercise.tools.count %}
                       <span style="cursor: pointer" id="use_tools" class="btn btn-quizz_bank" >Utiliser l'aide SACADO</span>            
-               
+                      {% endif %}
+
                       <!-- ligne d'enregistrement -->
                       <input id="relation" name="relation_id"  type="hidden" value="{{ relation.id }}"/>
                       <input id="start_time" name="start_time"  type="hidden" value="{{ start_time }}"/>
@@ -471,25 +474,25 @@
 
 
 
-    <div style="height:40px;clear: both"></div>
-     <div class="checkbox_no_display" id="draft" >
-          <div class="col-sm-0 col-md-1 col-lg-1"></div>
-          <div class="col-sm-12 col-md-11 col-lg-11">
-                <div style="left:800px;  position:absolute; z-index:1000;"><a href="#" id="close_draft"><i class="fa fa-times"></i></a></div>            
-                {% if sacado_asso  %}
-	{% comment %}
-                <iframe scrolling="no" title="Brouillon" src="https://www.geogebra.org/material/iframe/id/dwdmv846/width/750/height/550/border/888888/sfsb/false/smb/false/stb/true/stbh/false/ai/false/asb/false/sri/false/rc/false/ld/false/sdz/false/ctl/false" width="750px" height="550px" style="border:0px;"> </iframe>
-	{% endcomment %}
-                {% else  %}
-                   <div class="alert alert-danger">Pour utiliser la fonctionnalité Brouillon, votre établissement doit posséder la version Établissement</div> 
-                {% endif  %}
-          </div>
-      </div>
+<div style="height:40px;clear: both"></div>
+<div class="checkbox_no_display" id="draft" >
+    <div class="col-sm-0 col-md-1 col-lg-1"></div>
+    <div class="col-sm-12 col-md-11 col-lg-11">
+          <div style="left:800px;  position:absolute; z-index:1000;"><a href="#" id="close_draft"><i class="fa fa-times"></i></a></div>            
+          {% if sacado_asso  %}
+{% comment %}
+          <iframe scrolling="no" title="Brouillon" src="https://www.geogebra.org/material/iframe/id/dwdmv846/width/750/height/550/border/888888/sfsb/false/smb/false/stb/true/stbh/false/ai/false/asb/false/sri/false/rc/false/ld/false/sdz/false/ctl/false" width="750px" height="550px" style="border:0px;"> </iframe>
+{% endcomment %}
+          {% else  %}
+             <div class="alert alert-danger">Pour utiliser la fonctionnalité Brouillon, votre établissement doit posséder la version Établissement</div> 
+          {% endif  %}
+    </div>
+</div>
 <div class="modal fade" id="calculator" tabindex="-1" role="dialog" aria-labelledby="calculator">
     <div class="modal-dialog modal-maxsize" role="document">
         <div class="modal-content" >
             <div class="modal-header">
-                <h2  class='sacado'  >Calculatrice</span></h2>              
+                <h2  class='sacado'  >Calculatrice</h2>              
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button> 
