@@ -1305,13 +1305,7 @@ def insertion_into_database(parents,students):
         user, created = User.objects.update_or_create(username = p['username'], password = p['password'] , user_type = 1 , defaults = { "last_name" : p['last_name'] , "first_name" : p['first_name']  , "email" : p['email'] , "country_id" : 5 ,  "school_id" : 50 ,  "closure" : None })
         parent,create = Parent.objects.update_or_create(user = user, defaults = { "task_post" : 1 })
 
-        if loop == 0 :
-            username = p["username"]
-            password = p["password_no_crypted"]
-            user = authenticate(username=username, password=password)
-            login(request, user,  backend='django.contrib.auth.backends.ModelBackend' )
-
-        parents_to_session.append({ 'parent_id' : user.id }) 
+        parents_to_session.append({ 'parent_id' : user.id , 'password_no_crypted' : p['password_no_crypted']  }) 
 
         for adh in adhesions_in :
             facture.adhesions.add(adh)
@@ -1580,6 +1574,16 @@ def retour_paiement(request,status):
                 if loop_parent == 0 :
                     facture  = Facture.objects.create(chrono = chrono , user_id = parent_id , file = "" , date = today , orderID = numero_autorisation , is_lesson = is_lesson  ) #orderID = Numéro de paiement donné par la banque"
                     facture.adhesions.set(adhesion_in) 
+
+
+            parent_id = parents_to_session[0]["parent_id"]        
+            user = User.objects.get(pk=parent_id)
+
+            password = parents_to_session[0]["password_no_crypted"]
+            user = authenticate(username=user.username, password=password)
+            login(request, user,  backend='django.contrib.auth.backends.ModelBackend' )
+
+
 
             try : 
                 request.session.pop('students_to_save', None) 
