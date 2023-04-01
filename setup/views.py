@@ -1375,7 +1375,7 @@ def send_message_after_insertion(parents,students) :
             adr = ", adresse de courriel : "+s["email"]
         else :
             adr = "" 
-        sacado_msg += "Enfant "+str(j)+" : "+s["first_name"]+" "+s["last_name"]+" Niveau :" +s["level"]+adr+"\n\n"         
+        sacado_msg += "Enfant "+str(j)+" : "+s["first_name"]+" "+s["last_name"]+" Niveau :" +s["level"].name+adr+"\n\n"         
         j+=1
 
     send_mail("Inscription SACADO ACADEMIE", sacado_msg, settings.DEFAULT_FROM_EMAIL, sacado_rcv)
