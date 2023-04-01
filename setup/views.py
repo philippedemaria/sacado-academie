@@ -1296,7 +1296,6 @@ def insertion_into_database(parents,students):
         formule_id = s['formule'].id
 
         adhesion = Adhesion.objects.create( student = student , level = level , start = today , amount = s['price'] , stop = date_end_dateformat , formule_id  = formule_id , year  = today.year , is_active = 0)
-        adhesions_in.append(adhesion)
         students_to_session.append({ 'student_id' :user.id , 'adhesion_id' : adhesion.id })
         success = attribute_group_to_student_by_level(level,student,formule_id)
 
@@ -1306,10 +1305,6 @@ def insertion_into_database(parents,students):
         parent,create = Parent.objects.update_or_create(user = user, defaults = { "task_post" : 1 })
 
         parents_to_session.append({ 'parent_id' : user.id , 'password_no_crypted' : p['password_no_crypted']  }) 
-
-        for adh in adhesions_in :
-            facture.adhesions.add(adh)
-
         parent.students.set(students_in)
 
         loop +=1  
