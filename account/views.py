@@ -1277,7 +1277,7 @@ def ajax_get_details_graph(request):
     date_f = datetime(int(y),month,int(d))
     date_e = date_f + timedelta(days=1)
 
-    student_answers = Studentanswer.objects.filter( student_id  = student_id , date__gte  = date_f , date__lte  = date_e)
+    student_answers = Studentanswer.objects.filter( student_id  = student_id , date__gte  = date_f , date__lte  = date_e).exclude(exercise__knowledge_id=1792)
     timer    = student_answers.aggregate(duration = Sum('secondes'))
     duration = "<i class='bi bi-clock'></i> "
     if timer["duration"] > 60 : 
