@@ -1273,7 +1273,7 @@ def insertion_into_database(parents,students):
     today = today.replace(tzinfo=timezone.utc)
     adhesions_in , students_in = [] , set()
     
-    students_to_session , parents_to_session = [] , []
+    students_to_session , parents_to_session , adhesion_in = [] , [] ,set()
 
     for s in students :
 
@@ -1297,17 +1297,22 @@ def insertion_into_database(parents,students):
 
         adhesion = Adhesion.objects.create( student = student , level = level , start = today , amount = s['price'] , stop = date_end_dateformat , formule_id  = formule_id , year  = today.year , is_active = 0)
         students_to_session.append({ 'student_id' :user.id , 'adhesion_id' : adhesion.id })
+        adhesion_in.add(adhesion)
         success = attribute_group_to_student_by_level(level,student,formule_id)
 
     loop = 0
     for p in parents :
         user, created = User.objects.update_or_create(username = p['username'], password = p['password'] , user_type = 1 , defaults = { "last_name" : p['last_name'] , "first_name" : p['first_name']  , "email" : p['email'] , "country_id" : 5 ,  "school_id" : 50 ,  "closure" : None })
         parent,create = Parent.objects.update_or_create(user = user, defaults = { "task_post" : 1 })
-
-        parents_to_session.append({ 'parent_id' : user.id , 'password_no_crypted' : p['password_no_crypted']  }) 
         parent.students.set(students_in)
 
+        if loop == 0 :
+            facture = Facture.objects.create(chrono = "BL_" +  user.last_name +"_"+str(today) ,  user_id = parent_id , file = "" , date = today , orderID = "" , is_lesson = 0  ) #orderID = Numéro de paiement donné par la banque"
+            facture.adhesions.set(adhesion_in) 
+
         loop +=1  
+
+        parents_to_session.append({ 'parent_id' : user.id , 'password_no_crypted' : p['password_no_crypted'] , 'facture_id' : facture.id  }) 
 
     return students_to_session , parents_to_session
 
@@ -1318,7 +1323,6 @@ def send_message_after_insertion(parents,students) :
     ##################################################################################################################
     # Envoi du courriel
     ##################################################################################################################
-
     nbc = ""
     if len(students) > 1 :
         nbc = "s"
@@ -1565,25 +1569,24 @@ def retour_paiement(request,status):
             today = today.replace(tzinfo=timezone.utc)
             chrono = create_chrono(Facture,"F")
             loop_parent = 0
-            for detail_p in  parents_to_session :
-                parent_id = detail_p["parent_id"]  
-                if loop_parent == 0 :
-                    facture  = Facture.objects.create(chrono = chrono , user_id = parent_id , file = "" , date = today , orderID = numero_autorisation , is_lesson = is_lesson  ) #orderID = Numéro de paiement donné par la banque"
-                    facture.adhesions.set(adhesion_in) 
+ 
+            facture_id = parents_to_session[0]["facture_id"]  
+            facture = Facture.objects.get(pk=facture_id)
+            facture.chrono  = chrono
+            facture.orderID = numero_autorisation
+            facture.is_lesson = is_lesson   #orderID = Numéro de paiement donné par la banque"
+            facture.save()
 
 
-            parent_id = parents_to_session[0]["parent_id"]        
+            parent_id = parents_to_session[0]["parent_id"]  
             user = User.objects.get(pk=parent_id)
-
             password = parents_to_session[0]["password_no_crypted"]
             user = authenticate(username=user.username, password=password)
             login(request, user,  backend='django.contrib.auth.backends.ModelBackend' )
 
-
-
             try : 
-                request.session.pop('students_to_save', None) 
-                request.session.pop('parents_to_save', None) 
+                request.session.pop('students_to_session', None) 
+                request.session.pop('parents_to_session', None) 
             except : pass
 
             return redirect ('index')
