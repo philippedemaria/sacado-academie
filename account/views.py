@@ -974,7 +974,7 @@ def detail_student_all_views(request, id):
     student = user.student
     tracker_execute_exercise(False,user)
 
-    studentanswers = student.answers.all()
+    studentanswers = student.answers.exclude(exercise__knowledge_id=1792)
     today = time_zone_user(user)
     parcourses_tab, parcourses_set = [] , set()
     exercise_tab = []
@@ -1041,14 +1041,14 @@ def detail_student_all_views(request, id):
                 last_d = datetime( year , 12 , 1)
 
 
-        student_answers_global = Studentanswer.objects.filter( student  = student , date__gte  = begin , date__lte  = last_d )
+        student_answers_global = Studentanswer.objects.filter( student  = student , date__gte  = begin , date__lte  = last_d ).exclude(exercise__knowledge_id=1792)
         nb_exo_count_g = student_answers_global.count()
         data_g = student_answers_global.aggregate( duration = Sum("secondes"), average_score_g=Avg('point'))
         if data_g["average_score_g"] : average_score_g = int(data_g["average_score_g"]) 
         else : average_score_g = 0
         if data_g["duration"] : duration_g = data_g["duration"] 
         else : duration_g = 0
-        e_k_count_g = Studentanswer.objects.values_list("exercise__knowledge" ,flat =True).filter( student  = student , date__gte  = begin , date__lte  = last_d ).distinct().count()
+        e_k_count_g = Studentanswer.objects.values_list("exercise__knowledge" ,flat =True).filter( student  = student , date__gte  = begin , date__lte  = last_d ).exclude(exercise__knowledge_id=1792).distinct().count()
 
         for i in range(init,end):
             datas = {}
@@ -1137,7 +1137,7 @@ def detail_student_academy(request, id):
     student = user.student
     tracker_execute_exercise(False,user)
 
-    studentanswers = student.answers.all()
+    studentanswers = student.answers.exclude(exercise__knowledge_id=1792)
     today = time_zone_user(user)
     parcourses_tab, parcourses_set = [] , set()
     exercise_tab = []
@@ -1192,14 +1192,14 @@ def detail_student_academy(request, id):
             end += 1
             last_d = datetime( year , month+1 , 1)
 
-        student_answers_global = Studentanswer.objects.filter( student  = student , date__gte  = begin , date__lte  = last_d )
+        student_answers_global = Studentanswer.objects.filter( student  = student , date__gte  = begin , date__lte  = last_d ).exclude(exercise__knowledge_id=1792)
         nb_exo_count_g = student_answers_global.count()
         data_g = student_answers_global.aggregate( duration = Sum("secondes"), average_score_g=Avg('point'))
         if data_g["average_score_g"] : average_score_g = int(data_g["average_score_g"]) 
         else : average_score_g = 0
         if data_g["duration"] : duration_g = data_g["duration"] 
         else : duration_g = 0
-        e_k_count_g = Studentanswer.objects.values_list("exercise__knowledge" ,flat =True).filter( student  = student , date__gte  = begin , date__lte  = last_d ).distinct().count()
+        e_k_count_g = Studentanswer.objects.values_list("exercise__knowledge" ,flat =True).filter( student  = student , date__gte  = begin , date__lte  = last_d ).exclude(exercise__knowledge_id=1792).distinct().count()
 
         for i in range(init,end):
             datas = {}
@@ -1209,7 +1209,7 @@ def detail_student_academy(request, id):
                 test_date_last = datetime( year , mnth , 1)
             else : test_date_last = datetime( year , month , i+1)
 
-            student_answers    = Studentanswer.objects.filter( student  = student , date__gte  = test_date , date__lte  = test_date_last)
+            student_answers    = Studentanswer.objects.filter( student  = student , date__gte  = test_date , date__lte  = test_date_last).exclude(exercise__knowledge_id=1792)
             student_answers_nb = student_answers.count()
             average            = student_answers.aggregate( duration = Sum("secondes"), average_score=Avg('point'))
 
