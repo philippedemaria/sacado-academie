@@ -1309,11 +1309,11 @@ def insertion_into_database(parents,students):
 
         loop +=1  
 
-    return chrono , students_to_session , parents_to_session
+    return students_to_session , parents_to_session
 
 
 
-def send_message_after_insertion(parents,students,chrono) :
+def send_message_after_insertion(parents,students) :
 
     ##################################################################################################################
     # Envoi du courriel
@@ -1427,8 +1427,8 @@ def commit_adhesion(request) :
                 parents.append({ "last_name" : last_name , "first_name" : first_name  , "email" : email ,  "username" : username, "password" : password , "password_no_crypted" : password_no_crypted  , "formule" : formule })
             i += 1
 
-        chrono , students_to_session , parents_to_session = insertion_into_database(parents,students)
-        send_message_after_insertion(parents,students,chrono)
+        students_to_session , parents_to_session = insertion_into_database(parents,students)
+        send_message_after_insertion(parents,students)
 
         request.session["students_to_session"] = students_to_session
         request.session["parents_to_session"]  = parents_to_session
