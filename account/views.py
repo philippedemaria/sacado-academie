@@ -1061,7 +1061,7 @@ def detail_student_all_views(request, id):
                     test_date_last = datetime( year+1 , 1 , 1)
             else : test_date_last = datetime( year , month , i+1)
 
-            student_answers    = Studentanswer.objects.filter( student  = student , date__gte  = test_date , date__lte  = test_date_last)
+            student_answers    = Studentanswer.objects.filter( student  = student , date__gte  = test_date , date__lte  = test_date_last).exclude(exercise__knowledge_id=1792)
             student_answers_nb = student_answers.count()
             average            = student_answers.aggregate( duration = Sum("secondes"), average_score=Avg('point'))
 
