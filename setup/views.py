@@ -1309,10 +1309,7 @@ def insertion_into_database(parents,students):
 
         loop +=1  
 
-    request.session["students_to_session"] = students_to_session
-    request.session["parents_to_session"]  = parents_to_session
-
-    return chrono
+    return chrono , students_to_session , parents_to_session
 
 
 
@@ -1430,8 +1427,12 @@ def commit_adhesion(request) :
                 parents.append({ "last_name" : last_name , "first_name" : first_name  , "email" : email ,  "username" : username, "password" : password , "password_no_crypted" : password_no_crypted  , "formule" : formule })
             i += 1
 
-        chrono = insertion_into_database(parents,students)
+        chrono , students_to_session , parents_to_session = insertion_into_database(parents,students)
         send_message_after_insertion(parents,students,chrono)
+
+        request.session["students_to_session"] = students_to_session
+        request.session["parents_to_session"]  = parents_to_session
+
 
     else:
         for error in formset.errors :
