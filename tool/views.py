@@ -1904,6 +1904,7 @@ def my_results(request):
     for t in subtheme_tab :
 
         this_score = int(t["score"]//t["total"]) 
+        if this_score > 100 : this_score = 100
         if this_score > 90 : color = "darkgreen"
         elif this_score > 65 : color = "#62D85A"
         elif this_score > 40 : color = "orange"
