@@ -1328,7 +1328,7 @@ def send_message_after_insertion(parents,students) :
         msg += "Votre adhésion est en atente de paiement.\n\n"     ##"+chrono+".\n\n"
         msg += "Votre identifiant est "+p["username"]+" et votre mot de passe est "+p["password_no_crypted"]+"\n"
         msg += "Vous avez inscrit : \n"
-        for s in students_of_adhesion :
+        for s in students :
             msg += "- "+s["first_name"]+" "+s["last_name"]+", son identifiant de connexion est : "+s["username"]+", son mot de passe est "+s["password_no_crypted"]+" \n"
 
         msg += "Leur accès est actuellement consultable mais leurs droits seront ouverts dès le paiement effectué. \n"
