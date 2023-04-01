@@ -432,8 +432,8 @@ hr.divider {
 .detail_bar_score{
   bottom: 0px;
   position: absolute;
-  right:0px;
-  font-size:20px;
+  right:25px;
+  font-size:30px;
 }
 
 
