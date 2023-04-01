@@ -430,7 +430,7 @@ hr.divider {
 }
  
 .detail_bar_score{
-  bottom: 0px;
+  bottom: 30px;
   position: absolute;
   right:25px;
   font-size:30px;
