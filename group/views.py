@@ -1786,8 +1786,6 @@ def print_monthly_statistiques(request):
             ]
         )
 
-
-
     for student in students :
         #logo = Image('D:/uwamp/www/sacado/static/img/sacadoA1.png')
         logo = Image('https://sacado-academie.fr/static/img/sacadoA1.png')
@@ -1800,7 +1798,7 @@ def print_monthly_statistiques(request):
         ys , ms, ds = date_stop.split("-")
         date_stopped = datetime( int(ys) , int(ms), int(ds)) + timedelta(days =1)
 
-        studentanswers = student.answers.filter(date__lte = date_stopped , date__gte= date_start)
+        studentanswers = student.answers.filter(date__lte = date_stopped , date__gte= date_start).exclude(exercise__knowledge_id=1792)
 
         studentanswer_ids = studentanswers.values_list("exercise_id",flat=True).distinct() 
 
