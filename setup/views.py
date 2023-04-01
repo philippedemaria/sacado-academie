@@ -1307,7 +1307,7 @@ def insertion_into_database(parents,students):
         parent.students.set(students_in)
 
         if loop == 0 :
-            facture = Facture.objects.create(chrono = "BL_" +  user.last_name +"_"+str(today) ,  user_id = parent_id , file = "" , date = today , orderID = "" , is_lesson = 0  ) #orderID = Numéro de paiement donné par la banque"
+            facture = Facture.objects.create(chrono = "BL_" +  user.last_name +"_"+str(today) ,  user_id = user.id , file = "" , date = today , orderID = "" , is_lesson = 0  ) #orderID = Numéro de paiement donné par la banque"
             facture.adhesions.set(adhesion_in) 
 
         loop +=1  
