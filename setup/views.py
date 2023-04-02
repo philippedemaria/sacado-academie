@@ -230,7 +230,7 @@ def index(request):
             elif level.id == 7 : dico["exercise"] = Exercise.objects.filter(supportfile__code='6ba5ee87').first()
             elif level.id == 8 : dico["exercise"] = Exercise.objects.filter(supportfile__code='e9b62f68').first()
             elif level.id == 9 : dico["exercise"] = Exercise.objects.filter(supportfile__code='b1c4c33b').first()
-            elif level.id == 10 : dico["exercise"] = Exercise.objects.filter(supportfile__code='d3ec9103').first()
+            elif level.id == 10 : dico["exercise"] = Exercise.objects.filter(supportfile__code='45807f5d').first()
             elif level.id == 11 : dico["exercise"] = Exercise.objects.filter(supportfile__code='649bbb27').first()
             elif level.id == 12 : dico["exercise"] = Exercise.objects.filter(supportfile__code='58b1458d').first()
             else : dico["exercise"] = Exercise.objects.get(pk=pk_ids[i])
