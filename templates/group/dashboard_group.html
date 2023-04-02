@@ -18,19 +18,21 @@
 
 {% block page_title %}
 
-{% if student.nb_subjects > 2 %}
-    <span style="color:#5d4391"><i class='bi bi-markdown'></i> <a href="{% url 'index' %}" style="color:#5d4391"> Matières </a></span>  
-{% else %}
-    <span style="color:#5d4391"><i class="bi bi-graph-up-arrow icon_size"></i><a href="{% url 'index' %}" style="color:#5d4391"> Entrainement </a></span> 
-{% endif %}
+    {% if student.nb_subjects > 2 %}
+        <span style="color:#5d4391"><i class='bi bi-markdown'></i> <a href="{% url 'index' %}" style="color:#5d4391"> Matières </a></span>  
+    {% else %}
+        <span style="color:#5d4391"><i class="bi bi-graph-up-arrow icon_size"></i><a href="{% url 'index' %}" style="color:#5d4391"> Entrainement </a></span> 
+    {% endif %}
 
-<img src="{% static 'img/angle-right.png' %}"/> {% include 'breadcrumb_student.html' %}
+    <img src="{% static 'img/angle-right.png' %}"/> {% include 'breadcrumb_student.html' %}
 
 {% endblock %}
 
 
+{% block page_menu_right %}
 
-   
+    <span class="last_login">Dernière connexion : {{ request.user.last_login }}</span>
+{% endblock %}
 
 
 

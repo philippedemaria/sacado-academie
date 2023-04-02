@@ -9224,6 +9224,13 @@ a.crud{
   margin-top:3px;
 }
 
+.last_login{
+    font-weight: 100 ;
+    margin-top: 10px;
+    font-size:14px;
+    color : #998fa6;  
+}
+
 
 .bg-red,
 .bg-yellow,
