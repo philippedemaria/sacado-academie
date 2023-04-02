@@ -20,7 +20,7 @@
 
 {% block page_menu_right %}
  
-    <li  >{% if request.user.is_superuser and  '/admin' in request.path %}<a href="{% url 'create_supportfile' %}"   class="btn btn-new"><img width="25px" src="{% static 'img/plus.png' %}"/> Nouveau support GGB {% endif  %}</a> </li>
+    <li  >{% if request.user.is_superuser and  '/admin' in request.path %}<a href="{% url 'create_supportfile' 100 0 %}"   class="btn btn-new"><img width="25px" src="{% static 'img/plus.png' %}"/> Nouveau support GGB {% endif  %}</a> </li>
 
 {% endblock %}
 
