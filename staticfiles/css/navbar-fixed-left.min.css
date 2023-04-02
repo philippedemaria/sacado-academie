@@ -323,6 +323,17 @@ position: absolute;
       color : #5d4391  ;
     }
 
+
+    a.test_positionnement{
+      display : none;
+      color : #5d4391  ;
+    }
+
+    .content_list_positionnement {
+        margin-left: 0px!important;
+    }
+
+
  
     form.search_div{
       right:20px;

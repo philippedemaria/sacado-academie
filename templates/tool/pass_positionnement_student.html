@@ -1,4 +1,4 @@
-{% extends 'dashboard.html' %}
+{% extends 'base_positionnement.html' %}
 {% load static %}
 {% load widget_tweaks %}
 {% load item_tags %}
@@ -43,13 +43,8 @@
 
 
 {% block page_menu_right %} 
-
    <img width="25px" src="{% static 'img/angle-right.png' %}"/>  </small>  <label class="sacado_text_color">  {{ request.session.student_full_name }}</label>
-
- 
 {% endblock %}
-
-
 
 
 
@@ -99,33 +94,40 @@
     </div> 
 {% elif not end_of_quizz %}
 
-    <div class="row">  
-        <div class="col-sm-12 col-md-12" >
-            <div style="margin:10px 0px 30px 0px">
-            <img src="{% if question.calculator %}{% static 'img/calculator.png' %}{% else %}{% static 'img/no_calculator.png' %}{% endif %}" height="30px" style="float:left;margin-right:40px" />
-            <span style="font-size:20px">
-                {% if question.qtype == 1 %}
-                    <b>Vrai  ou  Faux ?</b>
-                {% elif question.qtype == 2 %}
-                    <b>Ecrire la bonne réponse</b>.
-                {% elif question.qtype == 3 %}
-                    <b> Choisir la seule bonne réponse </b>. 
-                {% elif question.qtype == 4 %}
-                    <b> Choisir la ou les bonnes réponses</b>. 
-                {% endif %}
-            </span>
-            </div>
-        </div>
-    </div> 
 
-    <div class="card card_passation">
-        <div class="row"   style="padding:10px ;  ">  
+    <div class="card_passation card_sacado_exo">
+        <div class="q_number">Question {{quizz_nav}}/25
+
+
+            
+
+         </div>
+
+<img src="{% static 'img/sacado-icon-couleur.jpg' %}" style="position :absolute ; top : 50px; left : 5px" />
+
+
+        <div class="row" class="this_question_text">  
             <div class="col-sm-12 col-md-12" >
-                <h1 style="font-size:1.5em"  >{{ question.title|safe }}  </h1>
-            </div>
 
+
+
+
+                <h1 class="question_title" >      {{ question.title|safe }}  </h1>
+
+                <div  class="global_consigne">
+                    {% if question.qtype == 1 %}
+                        <b>Vrai  ou  Faux ?</b>
+                    {% elif question.qtype == 2 %}
+                        <b>Ecrire la bonne réponse</b>
+                    {% elif question.qtype == 3 %}
+                        <b> Choisir la seule bonne réponse </b> 
+                    {% elif question.qtype == 4 %}
+                        <b> Choisir la ou les bonnes réponses</b> 
+                    {% endif %}
+                </div>
+            </div>
      
-        {% include 'tool/kind_of_question.html' %}
+            {% include 'tool/kind_of_question.html' %}
         </div>    
         <hr/> 
         {% if question.tool   %}  
@@ -137,7 +139,6 @@
             </div> 
         {% endif %}
 
-        
         {% if question.qtype == 1 %}
             <div class="row"> 
                 <div class="col-sm-12 col-md-6 bgcolorBlue white"  align="center" style="border-radius : 10px ">
@@ -150,7 +151,6 @@
                     <label style="font-size:3.5em" class="thin">FAUX <input type="radio" name="solution" value="0"  {% if 0 in this_answer.answer    %}checked{% endif %}  class="answer_quizz_vf"></label>  
                 </div> 
             </div> 
-        
         {% elif question.qtype == 2 %}
             
             <div class="row"> 
@@ -158,30 +158,27 @@
                     <input type="text" name="solution" id="solution" required class="quizz_box_answer quizz_font40"  value="{{ this_answer.answer }}" style="width:300px">
                 </div> 
             </div> 
-
         {% elif question.qtype == 3 or question.qtype == 4 %}
 
             {% for choice in question.choices.all %}
      
                 {% cycle 'A' 'B' 'C' 'D'  as choice_letter silent %}
-                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-6" style="margin-bottom: 5px ; font-size:1.2em; border-radius : 10px;background-color: #f1eef7 ;">
+                <div class="col-sm-12 col-md-12 col-lg-12 col-xl-6 qcm_choices">
                     <div class="row" >
 
-                        <div class="col-sm-12 col-md-12  col-lg-12 col-xl-6 {{ rowcolor }}"  
-                             style="color:#5d4391;  padding: 5px; font-size : 1.5em">  
-                             <input type="{% if question.qtype == 4 %}checkbox{% else %}radio{% endif %}" name="solution" value="{{ choice.id }}"  class="answer_quizz"> 
+                        <div class="col-sm-12 col-md-12  col-lg-12 col-xl-6 {{ rowcolor }}"  class="answer_label">  
+                            <label class="font_size_20"> <input type="{% if question.qtype == 4 %}checkbox{% else %}radio{% endif %}" name="solution" value="{{ choice.id }}"  > 
                              {{ choice.answer }}
                             
                              {% if choice.imageanswer %}
                              <img src="{{ choice.imageanswer.url }}" height="200px" />
-                             {% endif %}
+                             {% endif %}</label>
 
                         </div>
                     </div>  
                 </div> 
             {% endfor %}
             {% resetcycle %}
-
         {% elif question.qtype == 5 %}
             <label>Eléments</label>
             <div class="quizz_item select_items">
@@ -201,7 +198,6 @@
             {% endfor %}
             </div>
         {% elif question.qtype == 6 %}
-
             <label>Eléments</label>
             <div class="quizz_item select_items">
                 {% for subchoice in subchoices %}
@@ -219,7 +215,6 @@
             </div>
             {% endfor %}
             </div>
-
         {% elif question.qtype == 7 %}
             
          
@@ -239,7 +234,6 @@
                 </div>
             </div>
             {% endfor %}
-
         {% elif question.qtype == 8 %}
 
             <label>Eléments</label>
@@ -256,7 +250,6 @@
                     <input type="hidden" name="answers" value="" />
                 </div>
             </div>
-
         {% elif question.qtype == 9 %}
          
             {% for choice in question.choices.all %}
@@ -286,7 +279,6 @@
                 {% endif %}
 
             {% endfor %}
-
         {% elif question.qtype == 10 %}
 
          
@@ -316,14 +308,12 @@
                 </div>
             </div>
             {% endfor %}
-         
         {% elif question.qtype == 11 %}
 
             <div class="rquiz-crossword" >
             <h2 id="rquiz-crossword">Crossword Quiz</h2>
             <p>Click on a numer in the grid to be given a hint and the possibility to enter a solution!</p>
             </div>
-
         {% elif question.qtype == 12 %}
             
             <div class="row">
@@ -338,7 +328,6 @@
                 </div>
                 
             </div>
-
         {% elif question.qtype == 13 %}
 
 
@@ -367,7 +356,6 @@
                     {% endfor %}
                 </div>
             </div>
-
         {% elif question.qtype == 14 %}
          
                 <input id="length" type="hidden" value="{{ length }}"  />
@@ -387,8 +375,7 @@
                             </div>
                           </div>
                     </div>
-                {% endfor %}
-             
+                {% endfor %}   
         {% elif question.qtype == 20 %}
          
             {% for l in loops %} 
@@ -426,10 +413,9 @@
                     </div>  
                 </li> 
             {% endfor %}
-
         {% endif %}
+        <div style="clear:both"></div>
     </div>
-    <div style="height:40px"></div>
 
     <div class="row" align="center" > 
         <div class="col-sm-6 col-md-9" align="center"  ></div>
@@ -439,7 +425,7 @@
             {% endif %}  
         </div>
     </div> 
-    <div class="row" > 
+    <div class="row" align="center" > 
         <div class="form-group">
             <div class="col-sm-12 col-md-12" id="button_submit_div">
                 {% if question.has_choices_with_retroaction %}
@@ -451,6 +437,11 @@
             </div>
         </div>
     </div> 
+
+
+
+
+
 {% else %}
 
     <div class="row consigne_diapo"  align="center">  

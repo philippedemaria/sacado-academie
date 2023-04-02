@@ -1,0 +1,223 @@
+<html>
+<head>
+    <title>{% block titlepage %}SacAdo - Interface de {{ request.user.first_name }} {{ request.user.last_name }} {% endblock %}</title>
+    {% load bootstrap3 %}
+    {% load widget_tweaks %}
+    {% load item_tags %} 
+    {% load static %}
+ 
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/css/bootstrap.css' %}"/>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
+    <!-- Bootstrap Toggle -->
+    <link rel="stylesheet" href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css">
+
+    <link rel="stylesheet" href="{% static 'plugins/colorpicker/bootstrap-colorpicker.min.css' %}">
+
+    <!-- jQuery UI -->
+    <link href="{% static 'plugins/jqueryCustom/jquery-ui.min.css' %}">
+    <!-- Tabs -->
+    <link rel="stylesheet" href="{% static 'plugins/datatables/dataTables.bootstrap.css' %}">
+
+    <link rel="stylesheet" href="{% static 'plugins/datepicker/datepicker3.css' %}">
+ 
+    <link rel="stylesheet" href="{% static 'plugins/datepicker/datetimepicker.css' %}">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="{% static 'plugins/select2/select2.min.css' %}">
+
+    <!-- fichier personel -->
+
+    {% block python %}
+ 
+    {% endblock %}
+
+    <link rel="stylesheet" href="{% static 'css/AdminLTEperso.css' %}"> 
+    <link rel="stylesheet" href="{% static 'css/navbar-fixed-left.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/slide_menu.css' %}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css"
+          integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,900">
+ 
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Amatic+SC:400,900">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+ 
+    <link rel="stylesheet" href="{% static 'css/all_styles.css' %}"> 
+    {% block styleMk4ht %}
+    {% endblock %} 
+
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.ico' %}" />   
+    
+ 
+</head>
+ 
+
+<body style="margin-left: 0px;" >
+
+
+    <div class="content_list_positionnement" id="content_title_page">
+
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="navbar-header">         
+                            <h1 class="thin" style="padding-left:20px">
+                            {% block page_title %}
+
+                            {% endblock %}
+                            </h1>
+                        </div>
+                        <ul class="nav navbar-nav navbar-right">
+                        {% block page_menu_right %}
+  
+
+
+                        {% endblock %}
+                        </ul>
+
+
+                    </div>
+                </div>
+            </nav> 
+    </div>
+
+
+
+
+
+
+<div class="content-wrapper">     
+    {%  block body %}
+
+    {% endblock %}
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% block require %}
+        <script src="{% static 'js/require.js' %}" data-main="{% static 'js/dashboard.js' %}"></script>  
+{% endblock %}
+ 
+<script>
+   require(['script/ajax-dashboard']);
+</script>  
+ 
+{%  if request.user.is_student and student_index %}
+<script>
+   require(['script/ajax-dashboard_student']);
+</script>  
+{% endif %}
+
+{% block python_js %}
+{% endblock %}
+
+
+
+
+
+<div class="no_visu_on_load" id="helper_quizz_text">
+    
+    <div class="alert">
+
+        <p>Les quizz supportent 4 types de questions : 
+             <ol>
+                <li>réponse rédigée </li>
+                <li>Vrai/Faux </li>
+                <li>question à choix simple </li>
+                <li>question à choix multiples </li>
+            </ol>   
+        </p>
+        <p>Ils se déclinent en 2 types - papier ou numérique :
+         <ol>
+            <li><b>Quizz papier </b>   : L'élève répond sur sa feuille aux questions proposées. Ce type de quizz peut être utilisé en rituel en début de chaque séance pour réactiver les notions, les procédures par vidéo projection en classe.</li>
+            <li><b>Quizz numérique</b> :
+                 <ol>
+                    <li><b>Vidéo projeté </b>: Les élèves répondent sur leur SmartPhone. Les réponses sont enregistrées en temps réel. Le quizz devient un jeu. (En développement) </li>
+                    <li><b>Individuel</b>    : Les élèves répondent sur un ordinateur. L'ordre des questions et des réponses peut être définie comme aléatoire. Les réponses sont enregistrées pour récupérations des résultats.  (En développement)</li>
+                </ol>   
+            </li>
+        </ol>
+    </div>
+</div>
+
+
+<div class="no_visu_on_load" id="helper_flashpack_text">
+ 
+    <div class="alert">
+
+        <p>Un flashpack est un ensemble de flashcards (ou cartes mémoire). </p>
+        <p>Depuis plusieurs décennies, les neuroscientifiques, pédagogues, psychologues, informaticiens cherchent à déterminer une méthode efficace pour apprendre. Stanislas Dehaene bâtit une thèse sur ses <a href="http://parisinnovationreview.com/article/les-quatre-piliers-de-lapprentissage-stanislas-dehaene" target="_blank">4 piliers de l'apprentissage</a> :
+        <ol>
+          <li>L'attention</li>
+          <li>L'engagement actif</li>
+          <li>Le retour d’information</li>
+          <li>La consolidation</li>
+        </ol> 
+        </p>
+        <p>De son coté, <a href="https://supermemo.guru/wiki/Piotr_Wozniak" target="_blank">Piotr Wozniak</a> code dès 1985 un algorithme d'apprentissage par répétitions espacées, le <a href="https://www.supermemo.com/en/articles/history" target="_blank">SUPERMEMO</a>. Aujourd'hui cette base algorithmique est largement utilisée, amendée, recalculée et de nombreuses applications utilisent ce procédé.</p>
+        <p>SACADO se lance dans les répétitions espacées selon un algorithme simplifié de SUPERMEMO. Chaque enseignant peut alors choisir l'algorithme sur une période donnée. Il crée ses flashpacks à partir de flashcards existantes ou crée ses propres flashcards ou demandent à ses élèves de construire leurs cartes mémoires.  
+
+        <ol>Deux modes d'utilisation des flashpacks : 
+            <li>Répétitions espacées : SACADO prévient l'élève des dates de répétitions dès que l'élève se connecte à son espace.</li>
+            <li>Autonomie :  L'élève s'entraine à souhait sur son flashpack et à date échéance, son score est enregistré.</li>
+        </ol> 
+        </p>
+        <p>Convaincue de l'étude des neurosciences, l'équipe SACADO place les flashpacks dans son application pour permettre à chaque élève de s'engager dans son apprentissage encore un peu plus efficacement.</p>
+    </div> 
+</div>
+
+<div class="no_visu_on_load" id="helper_bibliotex_text">
+    <div class="alert">
+
+        <p>Une biblioTex est un ensemble d'exercices en $\LaTeX$.</p></div>
+    <div class="alert alert-warning"><p>Avant de commencer, vous devez bien connaitre le langage $\LaTeX$ et tester vos exercices <b>en local</b>. </p>
+        <p>Pour cela, télécharger le préamble .tex et l'installer sur votre ordinateur en local. <a href="https://sacado-academie.fr/ressources/tex/preambule_tex/preambule.tex" target="_blank"><i class="fa fa-save"></i></a></p>
+        <p>
+            <ol>
+                <li>Pour créer un exercice en $\LaTeX$, vous devez préalablement créer une biblioTex vide.</li>
+                <li>Lui ajouter des exercices.</li>
+                <li>Ecrire alors votre fichier source</li>
+                <li>Le compiler sur votre ordinateur.</li>
+                <li>Lorsque la compilation avec notre préambule SACADO fonctionne, vous pouvez le placer sur le serveur de SACADO.</li>
+            </ol>
+        </p>
+        <p><b>Pour les graphiques, seul le package TikZ fonctionne.</b></p>
+    </div> 
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

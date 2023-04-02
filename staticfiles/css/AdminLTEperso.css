@@ -4302,8 +4302,111 @@ table.table-bordered.dataTable {
 
 
 .card_passation *{
-    font-family:'MJXc-TeX-main-R', 'MJXc-TeX-main-Rw' ;
+    font-family:'MJXc-TeX-main-R', 'MJXc-TeX-main-Rw'!important ;
 }
+
+
+.card_passation img{
+   max-width:600px!important ;
+   height:auto!important ;
+}
+
+
+.card_sacado_exo{
+    width : 750px;
+    border :  thick double #5D4391;
+    font-size: 16px;
+    color: #5D4391;
+    margin-right: auto;
+    margin-left: auto;
+    background-color: white;
+    position: relative;
+}
+
+.global_consigne{
+    font-size:16px;
+    color : #00C9A5;
+}
+
+.q_number{
+  position: absolute;
+  left:0;
+  top:0px;
+  border-radius: 0px 0px 5px 0px;
+  border: #5D4391;
+  background-color: #0086D3;
+  color:white;
+  padding: 5px;
+}
+
+.answer_label{
+  color:#5d4391;  
+  padding: 5px; 
+  font-size : 1.5em
+}
+
+.this_question_text{
+  padding:10px ;
+}
+
+.question_title{
+   font-size:1.5em;
+   margin: 10px 0px;
+}
+
+.qcm_choices{
+    margin-bottom: 5px ; font-size:1.5em; border-radius : 10px;background-color: #f1eef7 ;
+}
+
+.font_size_20{
+    font-size: 30px;
+}
+
+@media (max-width: 767px) {
+
+
+    .card_sacado_exo{
+        width : 100%;
+        border :  thick double #5D4391;
+        font-size: 16px;
+        color: #5D4391;
+        margin-right: auto;
+        margin-left: auto;
+        background-color: white;
+        position: relative;
+    }
+
+    .answer_label{
+      color:#5d4391;  
+      padding: 5px; 
+      font-size : 1em
+    }
+
+    .card_passation img{
+        max-width: 250px!important;   
+        height:auto!important ;
+      }
+
+    .this_question_text *{
+      padding:10px ;
+      font-size : 0.85px;
+    }
+
+    .question_title{
+       font-size:1.2em ;
+    }
+
+    .qcm_choices{
+      margin-bottom: 5px ; font-size:1.5em; border-radius : 10px;background-color: #f1eef7 ;
+    }
+
+    .font_size_20{
+        font-size: 20px;
+    }
+
+}
+
+
 /********************************************* bleu :  #005e74 ************************************/
 /********************************************* violet hover :  #5d4391 ************************************/
 /********************************************* violet light :  #f1eef7 ************************************/

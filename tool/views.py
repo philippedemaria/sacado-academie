@@ -1602,6 +1602,7 @@ def goto_positionnement_student(request,id):
     #Génération des questions
     question_ids = list(positionnement.questions.values_list("id",flat=True).order_by("ranking"))
     quizz_id     = request.session.get("quizz_id",None) 
+ 
 
     positionnement_id = request.session.get("positionnement_id",None)
 
@@ -1667,7 +1668,7 @@ def goto_positionnement_student(request,id):
     quizz_nav += 1
     quizz_nav_prev = quizz_nav - 1
 
-    context = { "first_name" : first_name  , "last_name" : last_name ,  "positionnement" : positionnement , "question" : question , "quizz_nav" : quizz_nav, "quizz_nav_prev" : quizz_nav_prev ,"end_of_quizz" : end_of_quizz ,"stop_time" : stop_time , 'student' : student  }
+    context = { 'question_ids' : question_ids , "first_name" : first_name  , "last_name" : last_name ,  "positionnement" : positionnement , "question" : question , "quizz_nav" : quizz_nav, "quizz_nav_prev" : quizz_nav_prev ,"end_of_quizz" : end_of_quizz ,"stop_time" : stop_time , 'student' : student  }
 
     return render(request, 'tool/pass_positionnement_student.html', context)
 
