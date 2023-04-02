@@ -1953,12 +1953,12 @@ def get_out_test(request) :
         send_mail("SACADO ACADEMIE : Fin prématuré d'un test de positionnement ",
                   student +" - Niveau : "+level+", matière : "+subject,
                   settings.DEFAULT_FROM_EMAIL,
-                  ["info@sacado-academie.fr"])
+                  ["philippe.demaria83@gmail.com", "brunoserres33@gmail.com","sandyreb@hotmail.fr"])
     except:
         send_mail("SACADO ACADEMIE : Entrée et sortie directe d'un test de positionnement ",
                   "Test non démarré",
                   settings.DEFAULT_FROM_EMAIL,
-                  ["info@sacado-academie.fr"])
+                  ["philippe.demaria83@gmail.com", "brunoserres33@gmail.com","sandyreb@hotmail.fr"])
 
 
     return redirect('index')
