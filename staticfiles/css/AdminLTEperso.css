@@ -4362,6 +4362,10 @@ table.table-bordered.dataTable {
     font-size: 30px;
 }
 
+.answer_size{
+    width:300px;
+}
+
 @media (max-width: 767px) {
 
 
@@ -4403,7 +4407,9 @@ table.table-bordered.dataTable {
     .font_size_20{
         font-size: 20px;
     }
-
+    .answer_size{
+        width:100%;
+    }
 }
 
 
