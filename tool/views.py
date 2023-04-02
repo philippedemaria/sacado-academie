@@ -1867,6 +1867,34 @@ def pdf_to_create(request,theme_tab):
     return buffer.getvalue()
 
 
+def listing_of_answers(answerpositionnements):
+    test = ""
+    i = 1
+    for dico in answerpositionnements :
+        is_correct = dico[6]
+        if is_correct : so = "JUSTE"
+        else : so = "FAUSSE"
+        test += "Q{}. question id : {} , réponse donnée : {} ({}), score : {}, temps : {} sec. \n\n".format( i, dico[2] ,   dico[3] , so ,  dico[4] ,   dico[5]   )
+        i +=1
+    return test
+
+
+def sending_of_answers(answerpositionnements) :
+    try : 
+        positionnement_id = answerpositionnements[0][0]
+        positionnement = Positionnement.objects.get(pk=positionnement_id)
+        student = answerpositionnements[0][1]
+        of_answers = listing_of_answers(answerpositionnements)
+        send_mail("SACADO ACADEMIE : Fin prématuré d'un test de positionnement ",
+                  student +" - Niveau : "+positionnement.level.name+", matière : "+ positionnement.subject.name+"\n\n"+ of_answers,
+                  settings.DEFAULT_FROM_EMAIL,
+                  ["philippe.demaria83@gmail.com", "brunoserres33@gmail.com","sandyreb@hotmail.fr"])
+    except:
+        send_mail("SACADO ACADEMIE : Entrée et sortie directe d'un test de positionnement ",
+                  "Test non démarré",
+                  settings.DEFAULT_FROM_EMAIL,
+                  ["philippe.demaria83@gmail.com", "brunoserres33@gmail.com","sandyreb@hotmail.fr"])
+
 
 def my_results(request):
 
@@ -1929,13 +1957,7 @@ def my_results(request):
         pdf_to_send( pdf_to_create(request,theme_tab) , [email_to_send] , student_full_name)
 
 
-    try : 
-        send_mail("SACADO ACADEMIE : Fin d'un test de positionnement ",
-                  student +" - Niveau : "+positionnement.level.name+", matière : "+positionnement.subject.name,
-                  settings.DEFAULT_FROM_EMAIL,
-                  ["info@sacado-academie.fr"])
-    except:
-        pass
+    sending_of_answers(answerpositionnements) 
 
 
     context = { 'results' : results , 'theme_tab' : theme_tab , 'skill_tab' : skill_tab  , 'labels':labels , 'dataset' : dataset , 'brut' : brut , 'total' : loop }
@@ -1943,23 +1965,9 @@ def my_results(request):
 
 
 def get_out_test(request) :
-    try : 
-        answerpositionnements = request.session.get("answerpositionnement")
-        student = answerpositionnements[0][1]
-        level   = answerpositionnements[0][1]
-        subject = answerpositionnements[0][1]
 
-
-        send_mail("SACADO ACADEMIE : Fin prématuré d'un test de positionnement ",
-                  student +" - Niveau : "+level+", matière : "+subject,
-                  settings.DEFAULT_FROM_EMAIL,
-                  ["philippe.demaria83@gmail.com", "brunoserres33@gmail.com","sandyreb@hotmail.fr"])
-    except:
-        send_mail("SACADO ACADEMIE : Entrée et sortie directe d'un test de positionnement ",
-                  "Test non démarré",
-                  settings.DEFAULT_FROM_EMAIL,
-                  ["philippe.demaria83@gmail.com", "brunoserres33@gmail.com","sandyreb@hotmail.fr"])
-
+    answerpositionnements = request.session.get("answerpositionnement")
+    sending_of_answers(answerpositionnements) 
 
     return redirect('index')
 
