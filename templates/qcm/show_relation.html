@@ -6,8 +6,11 @@
 {% block page_title %}
  <a href="{% url 'show_parcours_student' relation.parcours.id %}" style="color:{{ parcours.color }}">
   <i class="fa fa-desktop"></i> {{ relation.parcours }}
-  </a> <img src="{% static 'img/angle-right.png' %}"/> 
+  </a> 
+  {% if relation.exercise.knowledge.id != 1792 %}
+  <img src="{% static 'img/angle-right.png' %}"/> 
   <small> {{ relation.exercise.knowledge.name }}</small>
+  {% endif %}
 {% endblock %}
 
 {% block page_menu_right %}
