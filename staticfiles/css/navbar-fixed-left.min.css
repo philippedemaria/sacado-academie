@@ -306,9 +306,6 @@ position: absolute;
     }
 
 
-    .content_title, .content_list {
-        margin-left: 20px!important;
-    }
 
     .navbarRight-nav{
       display:block;
@@ -321,6 +318,8 @@ position: absolute;
     a.mobile_version{
       display : inline;
       color : #5d4391  ;
+      margin-top: 20px;
+      margin-right: 10px;
     }
 
 

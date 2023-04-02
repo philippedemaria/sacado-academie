@@ -4410,6 +4410,11 @@ table.table-bordered.dataTable {
     .answer_size{
         width:100%;
     }
+
+    .badge_exercise{
+      display : none;
+    }
+
 }
 
 

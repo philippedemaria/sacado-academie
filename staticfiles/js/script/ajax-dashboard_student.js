@@ -10,7 +10,14 @@ define(['jquery', 'bootstrap', 'multislider' ], function ($) {
 
         maxHeight = Math.max.apply(null, heights) + 40;
 
-        $(".over_box").css('height' ,maxHeight) ;
+        if ($(window).width()> 800) {
+           $(".over_box").css('height' ,maxHeight) ; 
+        }
+        
+
+
+
+
 
 
         $('body').css("overflow-x","hidden");
