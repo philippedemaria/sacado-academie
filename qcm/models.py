@@ -8,7 +8,7 @@ from account.models import Student, Teacher, ModelWithCode, generate_code, User
 from socle.models import  Knowledge, Level , Theme, Skill , Subject
 from django.apps import apps
 from ckeditor_uploader.fields import RichTextUploadingField
-from django.db.models import Q, Min, Max ,Avg
+from django.db.models import Q, Min, Max ,Avg , Sum
 import os.path
 from django.utils import timezone
 from general_fonctions import *
@@ -1125,8 +1125,8 @@ class Parcours(ModelWithCode):
         today = timezone.now()
         if self.is_sequence :        
             Quizz = apps.get_model('tool', 'Quizz')
-            nb_exercises  = self.parcours_relationship.filter(type_id=0, students = student,is_publish = 1).count() 
-            relationships = self.parcours_relationship.filter(type_id=3, students = student,is_publish = 1)
+            nb_exercises  = self.parcours_relationship.filter(type_id=0, students = student,is_publish = 1).exclude(exercise__knowledge_id=1792).count() 
+            relationships = self.parcours_relationship.filter(type_id=3, students = student,is_publish = 1) 
             nb_q = 0
             for relationship in relationships :
                 quizz = Quizz.objects.get(pk=relationship.document_id)
@@ -1135,18 +1135,27 @@ class Parcours(ModelWithCode):
 
 
         else :
-            nb_exercises  = self.parcours_relationship.filter( exercise__supportfile__is_title=0 , students = student,is_publish = 1).count()  
+            nb_exercises  = self.parcours_relationship.filter( exercise__supportfile__is_title=0 , students = student,is_publish = 1).exclude(exercise__knowledge_id=1792).count()  
             quizzes       = self.quizz.filter( students = student)
             nb_q = 0
             for quizz in quizzes :
                 nb_q += quizz.questions.filter( students = student).values_list("id",flat=True).distinct().count() 
 
-        nb_answers   = self.answers.filter(student = student).values_list("exercise",flat=True).distinct().count() 
+
+        base = self.answers.filter(student = student).exclude(exercise__knowledge_id=1792) 
+
+        nb_answers   = base.values_list("exercise",flat=True).distinct().count() 
         nb_answers_q = student.questions_player.values_list("question",flat=True).distinct().count() 
+
+        answers_point = base.aggregate(avg_point=Avg("point"))
+        score_percent = answers_point["avg_point"]
+
+        answers_duration = base.aggregate(duration=Sum("point"))
+        sum_duration = answers_duration["duration"] 
 
         try :
             score = int( (nb_answers + nb_answers_q) / (nb_exercises + nb_q) * 100 )
-            data["nb_total"] = score
+            if score : data["nb_total"] = int(score)
 
 
             try :
@@ -1159,21 +1168,32 @@ class Parcours(ModelWithCode):
                 med = 65
                 low = 35
 
-            if score :
-                if score > up :
+            if score_percent :
+                if score_percent > up :
                     data["colored"] = "text_darkgreen"
-                elif score >  med :
+                elif score_percent >  med :
                     data["colored"] = "text_green"
-                elif score > low :
+                elif score_percent > low :
                     data["colored"] = "text_orange"
                 else :
                     data["colored"] = "text_red"
             else :
-                data["colored"] = "text_gray"
+                data["colored"]       = "text_gray"
+
+            data["nb_exercises"]      = nb_exercises
+            data["nb_exercises_done"] = nb_answers + nb_answers_q
+            if score_percent : data["score_percent"] =  int(score_percent)
+            else : data["score_percent"] =  0
+            data["sum_duration"] = sum_duration
 
         except :
-            data["nb_total"] = 0
-            data["color"]    = "text_gray"
+            data["nb_total"]          = 0
+            data["color"]             = "text_gray"
+            data["nb_exercises"]      = nb_exercises
+            data["nb_exercises_done"] = nb_answers + nb_answers_q
+            if score_percent : data["score_percent"] =  int(score_percent)
+            else : data["score_percent"] =  0
+            data["sum_duration"] = sum_duration
 
         return data
 

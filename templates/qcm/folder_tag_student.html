@@ -4,6 +4,114 @@
            
 {% get_min_score folder student as data_min %}
 
+<div class="col-md-6 col-lg-6 col-xs-12">
+    <div class="over_box">
+        <div class="box box-widget widget-user-2 folder_sorter new_design_box"  data-parcours_id ="{{folder.id}}"  style="background-color:{{folder.color }};">
+            <div class="handler new_design_handler">
+                <!-- Add signet to folder -->
+
+                 {% if  student.user.school %}  
+                    {% if  data_min.pc %}
+                    <div class="background_badge" >
+                    <i class="fa fa-trophy" style="color:{{ data_min.colored }};font-size: {{ data_min.size }};z-index:999999; "></i><br/><font style="font-size:12px;color:{{folder.color }};">{{ data_min.label }}</font>
+                    </div>
+                    {% endif  %}
+                {% endif  %}
+          
+                <div class="new_design_box_title_vignette" >
+ 
+                    <a href="{% if sacado_asso %}{% url 'list_sub_parcours_group_student'   group.id   folder.id %}{% else %}{% url 'end_of_adhesion'    %}{% endif %}"  style="color:{{ folder.color|contrast_color }};font-size:20px;font-weight: 100 ">
+ 
+                        <i class="bi bi-caret-right" ></i> {{ folder.title  }} 
+                    </a>
+
+                </div>
+            </div>
+            <!-- box-footer DES FONCTIONNALITES  -->
+            <div class="box-footer new_design_box-footer"  >
+
+
+                <div style="margin-bottom: 15px"><br/>
+                    {% for p in folder.parcours.all|dictsort:"ranking" %}
+                        {% get_percent_to_parcours p student as data  %}
+                        <li class="sanspuce new_design_li">
+                            {% if sacado_asso %}
+                            <a href="{% url 'show_parcours_student' p.id %}" class="sommaire"><b><i class="bi bi-check {{ data.colored }}" ></i></b>{{ p.title|truncatechars:40 }} 
+
+                                {% if data.nb_total %}
+                                <b class="badge_score {{ data.colored }}" title="Score du parcours">{{ data.score_percent }}%</b>   
+
+                                <span class="badge_exercise" title="Avancement du parcours">
+                                    <div class="progress this_progress">
+                                      <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:{{data.nb_total}}%;background-color: {{folder.color }}">
+                                        <span  title="Exercices faits">{{ data.nb_exercises_done }}</span>/<span  title="Exercices du parcours">{{ data.nb_exercises }}</span> 
+
+                                        {% if data.nb_total > 30 %}= {{data.nb_total}}% {% endif %}
+                                      </div>
+                                    </div>
+                                </span>
+
+                                <span class="badge_exercise badge_exercise_margin_top" title="Durée du travail du parcours">
+                                    {{ data.sum_duration|time_done}}
+                                </span>
+
+
+                                {% endif %}
+                            </a>
+                            {% else %}
+                            <a href="{% url 'end_of_adhesion' %}" class="sommaire" title="Adhésion expirée"><b><i class="bi bi-check {{ data.colored }}" ></i></b>{{ p.title|truncatechars:40 }}
+
+
+                                {% if data.nb_total %}
+
+                                <b class="badge_score {{ data.colored }}" title="Score">{{ data.score_percent }}%</b>                                
+
+                                <span class="badge_exercise" title="Avancement du parcours">
+                                    <div class="progress this_progress">
+                                      <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:{{data.nb_total}}%;background-color: {{folder.color }}">
+                                        <span  title="Exercices faits">{{ data.nb_exercises_done }}</span>/<span  title="Exercices du parcours">{{ data.nb_exercises }}</span> 
+
+                                        {% if data.nb_total > 30 %}= {{data.nb_total}}% {% endif %}
+                                      </div>
+                                    </div>
+                                </span>
+                                <span class="badge_exercise badge_exercise_margin_top" title="Durée du travail du parcours">
+                                    {{ data.sum_duration|time_done}}
+                                </span>
+                                {% endif %}
+                            </a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% comment %}
+
 <div  class="box box-widget widget-user-2 folder_sorter"  data-parcours_id ="{{folder.id}}"  
       style="cursor: move;{% if folder.vignette %}background-image: url('{{ folder.vignette.url }}'); background-size: cover; {% endif %}background-color:{{folder.color }};">
     <div class="handler widget-user-header">
@@ -56,58 +164,10 @@
                 </li>
             {% endfor %}
         </div>
-
-
-
-
-
-        {% comment %}
-        <div class="row dossier" style="padding-top: 3px;padding-bottom: 3px;"> 
-
-
-                <div class="col-xs-4 col-md-4 col-lg-4"> 
-                    {{  data_min.nb_parcours }} parcours <br/> 
-                    {% if data_min.nb_evaluations %}
-                    {{  data_min.nb_evaluations }} évaluations 
-                    {% endif %}
-                </div>
-                <div class="col-xs-4 col-md-4 col-lg-3">
-                    {% if data_min.nb_cours %}
-                    {{  data_min.nb_cours }} cours  
-                    {% endif %}<br/>
-                    {% if data_min.nb_quizz %}
-                    {{  data_min.nb_quizz }} quizz 
-                    {% endif %}
-                </div>
-
-                <div class="col-xs-4 col-md-4 col-lg-4"> 
-                    {% if data_min.nb_bibliotex %}
-                    {{  data_min.nb_bibliotex }} biblioTex 
-                    {% endif %}
-                    {% if data_min.nb_flashpack %}
-                    <br/>
-                    {{  data_min.nb_flashpack }} flashpack
-                    {% endif %}
-                </div>
-        </div>
-        <div class="row extend_student" style="margin-left: 5px"> 
-            <div class="col-xs-12 col-md-12 col-lg-12"> 
-                <div style="text-align: center;margin-bottom: 15px"><br/>
-                    <a href="{% url 'list_sub_parcours_group_student' group.id folder.id  %}"  class="btn btn-new-violet" style="width:200px; background-color: {{ folder.color }}; color:{{ folder.color|contrast_color }}" >  
-                        {%  if is_task_exists %}
-                            <i class="fa fa-calendar-check" style="color:red"></i>
-                        {% endif %} Accéder</a>
-                </div>
-            </div>
-        </div>
-        {% endcomment %}
-
-
     </div>
 </div>   
 
-
-
+{% endcomment %}
 
 
  

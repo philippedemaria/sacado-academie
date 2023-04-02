@@ -171,6 +171,7 @@ class User(AbstractUser):
             abonnement = self.school.abonnement.last()
             if today < abonnement.date_stop and abonnement.is_active :
                 is_sacado = True
+                is_active = True
         except :
             pass
         return is_sacado 
@@ -226,7 +227,7 @@ class User(AbstractUser):
                         is_active = True
                     elif today > adhesion.start and  today < adhesion.stop and not adhesion.is_active :
                         is_sacado = True
-                        is_active = False
+                        is_active = True
                 except:    
                     is_sacado = False
         

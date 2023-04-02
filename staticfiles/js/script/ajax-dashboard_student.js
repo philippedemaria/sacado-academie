@@ -3,6 +3,16 @@ define(['jquery', 'bootstrap', 'multislider' ], function ($) {
         console.log("chargement JS ajax-dashboard_student.js OK");
  
 
+        var heights = $(".box").map(function ()
+            {
+                return $(this).height();
+            }).get();
+
+        maxHeight = Math.max.apply(null, heights) + 40;
+
+        $(".over_box").css('height' ,maxHeight) ;
+
+
         $('body').css("overflow-x","hidden");
  
             var numItems = $('#mixedSlider .item').length ;

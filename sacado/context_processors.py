@@ -26,8 +26,6 @@ def is_sacado_asso(this_user, today):
     if last_adhesion.stop > today and last_adhesion.is_active :
         is_sacado = True
         is_active = True
-    elif last_adhesion.stop > today and last_adhesion.is_active == 0 :
-        is_active = False
     return is_sacado, is_active
 
 ##############################################################################################################################################
