@@ -312,12 +312,6 @@ def exercises_shower(request,idl):
 
 
 def logout_view(request):
-    try:
-        connexion = Connexion.objects.get(user=user)
-        connexion.delete()
-    except:
-        pass
-
     try :
         is_gar_check = request.session.get("is_gar_check",None)
         # récupérer le nameId qui permet de récupérer l'IDO puis déconnecter avec l'IDO
