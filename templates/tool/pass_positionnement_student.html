@@ -89,7 +89,7 @@
     <div class="row" align="right" > 
         <div class="col-sm-12 col-md-12" >
             <button type="submit" class="btn btn-primary"><i class="fa fa-caret-right"></i> Démarrer le quizz</button>
-            <input type="button" value="Retour à la page précédente" class="btn btn-default" onclick="javascript:history.back()"/>
+            <a href="{% url 'get_out_test' %}" class="btn btn-default"  >Sortir du test - Retour à la page d'accueil</a>
         </div>
     </div> 
 {% elif not end_of_quizz %}
@@ -433,7 +433,7 @@
                 {% else %}
                     <button type="submit" class="btn  btn-lg  btn-primary" style="width:240px"><i class="fa fa-caret-right" ></i> Enregistrer la réponse</button>
                 {% endif %}
-                <a href="{% url 'list_positionnements' %}" class="btn btn-lg  btn-default"  style="width:240px">Retour vers les tests</a>
+                <a href="{% url 'get_out_test' %}" class="btn btn-default"  >Sortir du test - Retour à la page d'accueil</a>
             </div>
         </div>
     </div> 
@@ -452,13 +452,13 @@
                 <br/><i class="bi bi-emoji-smile" ></i><br/>  
             </h1>
 
-            <span  style="font-size:2em" ><a href="{% url 'my_results' %}">Consulter mes résultats</a></span>
+            <span  style="font-size:2em" ><a href="{% url 'my_results' %}">Consulter mes résultats</a></span><br/>  <br/>  
 
-                
+            <a href="{% url 'list_positionnements' %}" class="btn   btn-default">Retour vers les tests</a> 
           
-
+            <a href="{% url 'index' %}" class="btn  btn-default" >Retour vers la page d'accueil</a>  
  
-
+            <a href="{% url 'index' %}#menus" class="btn   btn-primary">Retour vers nos menus</a>  
 
         </div>
     </div> 

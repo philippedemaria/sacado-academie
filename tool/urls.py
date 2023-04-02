@@ -76,7 +76,7 @@ urlpatterns = [
     path('start_positionnement_student/<int:id>', start_positionnement_student, name='start_positionnement_student'),
     path('my_results', my_results, name='my_results'), # résutats des tests
 
-
+    path('get_out_test', get_out_test, name='get_out_test'), # sortir du test
 
 
     path('quizz_actioner', quizz_actioner  , name='quizz_actioner'),

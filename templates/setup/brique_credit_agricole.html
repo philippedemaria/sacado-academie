@@ -43,32 +43,17 @@
                <p class="double_line"> valable jusqu'au <b class="font_sacado"> {{ end_day}}</b></p>
 
 
-               <h3 class="font_sacado">  Montant à régler :  {{ amount }} €</h3>
+               <h3 class="font_sacado">  Montant à  régler :  {{ amount }}€</h3>
 
 
 
 
 	        	<div    style="margin:30px 0px"  align="center">
-					<form method="POST" action="https://recette-tpeweb.e-transactions.fr/php/">
-					<input type="hidden" name="PBX_SITE" value="{{ PBX_SITE }}">
-					<input type="hidden" name="PBX_RANG" value="{{PBX_RANG}}">
-					<input type="hidden" name="PBX_IDENTIFIANT" value="{{PBX_IDENTIFIANT}}">
-					<input type="hidden" name="PBX_EFFECTUE" value="{{PBX_EFFECTUE}}">
-					<input type="hidden" name="PBX_REFUSE" value="{{PBX_REFUSE}}">
-					<input type="hidden" name="PBX_ANNULE" value="{{PBX_ANNULE}}">
-					<input type="hidden" name="PBX_ATTENTE" value="{{PBX_ATTENTE}}">
-					<input type="hidden" name="PBX_SOURCE" value="RWD">
-					<input type="hidden" name="PBX_TOTAL" value="{{ PBX_TOTAL }}"> <!-- montant en centimes -->
-					<input type="hidden" name="PBX_DEVISE" value="978">
-					<input type="hidden" name="PBX_CMD" value="{{ PBX_CMD }}"> <!-- référence de la transaction -->
-					<input type="hidden" name="PBX_PORTEUR" value="{{ PBX_PORTEUR }}">
-					<input type="hidden" name="PBX_RETOUR" value="Mt:M;Ref:R;Auto:A;Erreur:E">
-					<input type="hidden" name="PBX_HASH" value="SHA512">
-					<input type="hidden" name="PBX_SHOPPINGCART" value="{{ PBX_SHOPPINGCART }}">
-					<input type="hidden" name="PBX_BILLING" value="{{ PBX_BILLING }}">
-					<input type="hidden" name="PBX_TIME" value="{{ PBX_TIME }}">
-					<input type="hidden" name="PBX_HMAC" value="{{ PBX_HMAC|safe }}">
-					<button type="submit" class="btn btn-sacado">Allez sur le site de paiement <img src="{% static 'img/credit_agricole.png' %}" width="100px" /></button>
+			  <form method="POST" action="https://recette-tpeweb.e-transactions.fr/php/">
+			   {% for cv in champs_val %}<input type="hidden" name="PBX_{{cv.0}}" value="{{cv.1}}">
+			   {% endfor %}
+                         
+			<button type="submit" class="btn btn-sacado">Allez sur le site de paiement du CA <img src="{% static 'img/credit_agricole.png' %}" width="100px" /></button>
 					</form>
 	            </div>
 
@@ -82,3 +67,6 @@
 
 
 {% endblock %}
+
+
+

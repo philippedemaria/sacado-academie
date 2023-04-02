@@ -127,7 +127,7 @@ Intro Section -
                     <div class="row" align="center">
                     {% for data in dataset %}
                         <div class="col-xs-4 col-md-4">
-                            <a href="{% url 'show_this_index_exercise' data.exercise.id %}">{% if  data.exercise.supportfile.imagefile %} <img src="{{ data.exercise.supportfile.imagefile.url }}"  width="150px" /> {% endif %}</a>
+                            <a href="{% url 'exercises_shower' data.level.id %}">{% if  data.exercise.supportfile.imagefile %} <img src="{{ data.exercise.supportfile.imagefile.url }}"  width="150px" /> {% endif %}</a>
                             <div class="modal_title_level">{{ data.level.name }}</div>
                         </div>
                     {% endfor %}                        

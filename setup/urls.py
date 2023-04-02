@@ -20,7 +20,7 @@ urlpatterns = [
 
     path('admin_tdb', admin_tdb, name='admin_tdb'),
 
-
+    path('exercises_shower/<int:idl>', exercises_shower, name='exercises_shower'),
     ############################################################################################
     #######  SACADO Académie
     ############################################################################################

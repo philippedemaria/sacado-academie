@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+
+
+
+{% block body %}
+
+
+<section id="faq">
+    <div class="container bg_white">
+        <div class="row">
+            <div class="col-xs-12 col-md-12" >
+                <h1 class="title_bloc_index">Trois exercices pour tester ... </h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-12" >
+                Classe de {{level.name}} <img src="{% static 'img/angle-right.png' %}"/> <small style="color:#00B999">Clique sur un exercice pour le tester</small>
+            </div>
+        </div>
+        <div class="row margins">
+        {% for exercise in  exercises %}
+            <div class="col-xs-12 col-md-4">
+                <a href="{% url 'show_this_index_exercise' exercise.id %}">{% if exercise.supportfile.imagefile %} <img src="{{ exercise.supportfile.imagefile.url }}"  width="300px" /> {% endif %}</a>
+            </div>
+        {% endfor %}
+        </div>
+
+
+        <div class="row">
+            <div class="col-xs-12 col-md-12 telephonie"  >
+                Nos exercices ({{ nb }} sur ce niveau) sont à variables dynamiques aléatoires, c'est à dire que les valeurs se chargent au chargement et sont à chaque fois différentes. Un exercice comporte plusieurs situations immédiatement <span class="rose_light" >corrigées</span>. Ainsi les exercices ciblent la  méthode  et le  savoir faire  au lieu de ne cibler que le résultat : un des piliers de la <span class="rose_light" >méthode SACADO<sup><small><i class='fa fa-copyright'></i></small></sup></span>
+            </div>
+        </div>
+
+
+        <div class="row vspace">
+            <div class="col-xs-12" style="padding-top:20px;" >
+                <a href="{% url 'index' %}#interfaces" >Retour à la page d'accueil</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %} 

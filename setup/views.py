@@ -264,6 +264,36 @@ def dash_student(request):
  
  
 
+
+
+def exercises_shower(request,idl):
+    
+    request.session["tdb"] = "training"
+
+    if idl == 1   : supportfile_ids = ['1446','1426','1470']
+    elif idl == 2 : supportfile_ids = ['6022','1524','1493']
+    elif idl == 3 : supportfile_ids = ['1036','1107','1206']
+    elif idl == 4 : supportfile_ids = ['6118','1828','6334']
+    elif idl == 5 : supportfile_ids = ['1887','1882','1705']
+    elif idl == 6 : supportfile_ids = ['6884','106','4229']
+    elif idl == 7 : supportfile_ids = ['3023','3448','2897']
+    elif idl == 8 : supportfile_ids = ['4543','833','424']
+    elif idl == 9 : supportfile_ids = ['3552','354','5304']
+    elif idl == 10 : supportfile_ids = ['557','935','51']
+    elif idl == 11 : supportfile_ids = ['2543','726','642']
+    elif idl == 12 : supportfile_ids = ['2126','2408','2035']
+    elif idl == 14 : supportfile_ids = ['6107','4937','5039']
+
+    exercises = Exercise.objects.filter(level_id= idl, supportfile_id__in=supportfile_ids)
+    level = Level.objects.get(pk=idl)
+    nb = Exercise.objects.filter(supportfile__level_id = idl , supportfile__is_title=0).count()
+
+    context = { 'exercises' : exercises , 'nb' : nb , 'level' : level  }
+
+    return render(request, 'setup/exercises_shower.html', context)
+ 
+
+
  
 # def ajax_reponse_to_rgpd(request) :
 
@@ -1033,41 +1063,19 @@ def save_renewal_adhesion(request) :
 
     request.session["list_of_formules"] = students
 
-
-
-    montant=somme*100
-    cmd="Abonnement famille " + request.user.last_name
-    timestamp=datetime.today().isoformat()
+    montant=somme
+    timestamp=datetime.now().astimezone().replace(microsecond=0).isoformat()
+    cmd="Abonnement famille " + request.user.last_name+" "+timestamp
     email= user.email
-    PBX_SHOPPINGCART='<?xml version="1.0" encoding="utf-8" ?><shoppingcart><total><totalQuantity>{}</totalQuantity></total></shoppingcart>'.format(nbs)
-    PBX_BILLING='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</Firstname><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format(user.first_name,user.last_name)
+    billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</Firstname><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format(user.first_name,user.last_name)
+    champs_val=champs_briqueCA(montant,cmd,email,nbs,billing)
 
-    chaine='PBX_SITE={}&\
-PBX_RANG={}&\
-PBX_IDENTIFIANT={}&\
-PBX_EFFECTUE={}&\
-PBX_REFUSE={}&\
-PBX_ANNULE={}&\
-PBX_ATTENTE={}&\
-PBX_SOURCE=RWD&\
-PBX_TOTAL={}&\
-PBX_DEVISE=978&\
-PBX_CMD={}&\
-PBX_PORTEUR={}&\
-PBX_RETOUR=Mt:M;Ref:R;Auto:A;Erreur:E&\
-PBX_HASH=SHA512&\
-PBX_SHOPPINGCART={}&\
-PBX_BILLING={}&\
-PBX_TIME={}'.format(settings.PBX_SITE,settings.PBX_RANG,settings.PBX_IDENTIFIANT,settings.PBX_EFFECTUE,settings.PBX_REFUSE,settings.PBX_ANNULE,settings.PBX_ATTENTE,montant,cmd,email,PBX_SHOPPINGCART,PBX_BILLING,timestamp)
-    
-    HMAC=hmac.new(bytearray.fromhex(settings.PBX_CLE_HMAC),msg=chaine.encode("utf-8"),digestmod="sha512").hexdigest().upper()
-
-    somme = "{:.2f}".format(somme).replace(".",",") 
-
-    context={'somme' : somme , 'students' : students , 'PBX_RANG':settings.PBX_RANG, 'PBX_SITE':settings.PBX_SITE, 'PBX_IDENTIFIANT':settings.PBX_IDENTIFIANT,
-             'PBX_EFFECTUE':settings.PBX_EFFECTUE,'PBX_REFUSE':settings.PBX_REFUSE,'PBX_ANNULE':settings.PBX_ANNULE,'PBX_ATTENTE':settings.PBX_ATTENTE,'PBX_TOTAL':montant,"PBX_CMD":cmd,'PBX_PORTEUR':email,'PBX_SHOPPINGCART':PBX_SHOPPINGCART,'PBX_BILLING':PBX_BILLING,'PBX_TIME':timestamp,"PBX_HMAC":HMAC}
+    context={'somme' : somme , 'students' : students , 'champs_val':champs_val}
 
     return render(request, 'setup/save_renewal_adhesion.html', context)  
+  
+
+ 
 
 
 
@@ -1387,6 +1395,42 @@ def send_message_after_insertion(parents,students) :
  
 
 
+def champs_briqueCA(montant,cmd,email,nbr_articles,billing):
+    """rend deux listes contenant les cles/valeurs nÃ©cessaires pour la brique du credit agricole ; 
+    Ã  passer au template appelant cette brique, ces diffÃ©rents champs entrent dans le formulaire
+    cachÃ©"""
+    # calcul ou copie des differents champs, et calcul de chaine Ã  signer
+    chaine=""
+    champs_val=[]
+    montant=montant.replace(",",".")
+    try :
+        montant=str(int(float(montant)*100+0.5))
+    except :
+        with open("logs/debug.log","a") as f :
+            print("fonction champs_briqueCA : je ne peux pas lire le montant : ",montant,file=f)
+        return
+    timestamp=datetime.now().astimezone().replace(microsecond=0).isoformat()
+    cles=['SITE','RANG','IDENTIFIANT','ANNULE','REFUSE','ATTENTE','REPONDRE_A','SOURCE','TOTAL','DEVISE','CMD','PORTEUR','RETOUR','HASH','SHOPPINGCART','BILLING','TIME']
+    valeurs=[None,None,None,None,None,None,None,"RWD", montant,"978",cmd,email,"Mt:M;Ref:R;Auto:A;Erreur:E","SHA512",
+             '<?xml version="1.0" encoding="utf-8" ?><shoppingcart><total><totalQuantity>{}</totalQuantity></total></shoppingcart>'.format(nbr_articles),billing,timestamp]
+    
+    for i,c in enumerate(cles):
+       v=valeurs[i]
+       if v==None : v=eval("settings.PBX_"+c)
+       champs_val.append([c,v])
+       chaine+='PBX_'+c+"="+v + ("&" if i<len(cles)-1 else "")
+       
+    # calcul de la signature
+    HMAC=hmac.new(bytearray.fromhex(settings.PBX_CLE_HMAC),msg=chaine.encode("utf-8"),digestmod="sha512").hexdigest().upper()
+    cles.append("HMAC")
+    champs_val.append(["HMAC",HMAC])
+    with open("logs/debug.log","a") as f :
+        print("chaine a signer ",chaine,file=f)
+        
+    return champs_val
+
+
+
 def commit_adhesion(request) :
 
     request.session["tdb"] = 'adhesion'
@@ -1442,41 +1486,27 @@ def commit_adhesion(request) :
         for error in formset.errors :
             print(request,error)
 
-
     montant=int(float(amount)*100)
     cmd="Abonnement "+formule.name+" " + str(datetime.now())
     try :
-        PBX_SHOPPINGCART='<?xml version="1.0" encoding="utf-8" ?><shoppingcart><total><totalQuantity>{}</totalQuantity></total></shoppingcart>'.format(nb_child)
-        PBX_BILLING='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</Firstname><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format(family_name,family_fname)
+        billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</Firstname><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format(family_name,family_fname)
     except :
-        messages.error(request, "une erreur est survenue pedant votre inscritpion. Renouveler l'opération.")
+        messages.error(request, "Une erreur est survenue pendant votre inscription. Merci de renouveler l'opération.")
         return redirect('details_of_adhesion')
+    champs_val=_briqueCA(montant,cmd,family_email,nb_child,billing)
+    context={'formule':formule,'data_post':data_post,'parents':parents,'students':students,'champs_val':champs_val}
 
-    chaine='PBX_SITE={}&\
-PBX_RANG={}&\
-PBX_IDENTIFIANT={}&\
-PBX_EFFECTUE={}&\
-PBX_REFUSE={}&\
-PBX_ANNULE={}&\
-PBX_ATTENTE={}&\
-PBX_SOURCE=RWD&\
-PBX_TOTAL={}&\
-PBX_DEVISE=978&\
-PBX_CMD={}&\
-PBX_PORTEUR={}&\
-PBX_RETOUR=Mt:M;Ref:R;Auto:A;Erreur:E&\
-PBX_HASH=SHA512&\
-PBX_SHOPPINGCART={}&\
-PBX_BILLING={}&\
-PBX_TIME={}'.format(settings.PBX_SITE,settings.PBX_RANG,settings.PBX_IDENTIFIANT,settings.PBX_EFFECTUE,settings.PBX_REFUSE,settings.PBX_ANNULE,settings.PBX_ATTENTE,montant,cmd,family_email,PBX_SHOPPINGCART,PBX_BILLING,timestamp)
-    
-    HMAC=hmac.new(bytearray.fromhex(settings.PBX_CLE_HMAC),msg=chaine.encode("utf-8"),digestmod="sha512").hexdigest().upper()
-
-    context={ 'formule' : formule ,  'data_post' : data_post , 'parents' : parents  , 'students' : students , 'amount' : amount ,   'PBX_RANG':settings.PBX_RANG, 'PBX_SITE':settings.PBX_SITE, 'PBX_IDENTIFIANT':settings.PBX_IDENTIFIANT,
-             'PBX_EFFECTUE':settings.PBX_EFFECTUE,'PBX_REFUSE':settings.PBX_REFUSE,'PBX_ANNULE':settings.PBX_ANNULE,'PBX_ATTENTE':settings.PBX_ATTENTE,'PBX_TOTAL':montant,"PBX_CMD":cmd,'PBX_PORTEUR':family_email,'PBX_SHOPPINGCART':PBX_SHOPPINGCART,'PBX_BILLING':PBX_BILLING,'PBX_TIME':timestamp,"PBX_HMAC":HMAC}
-
- 
     return render(request, 'setup/commit_adhesion.html', context)   
+
+
+
+
+
+
+
+
+
+
 
 
 def paiement(request) :
@@ -1500,40 +1530,17 @@ def paiement(request) :
     level   = Level.objects.get(pk=level_id)
     formule = Formule.objects.get(pk=formule_id)
 
-    montant=int(float(amount)*100)
-    cmd="Abonnement "+formule.name+" :" + student.user.last_name + " "+student.user.first_name +" "+level.shortname
-    timestamp=datetime.today().isoformat()
+    cmd="Abonnement "+formule.name+" :" + student.user.last_name + " "+student.user.first_name +" "+level.shortname+str(datetime.now())
     email= user.email
-    PBX_SHOPPINGCART='<?xml version="1.0" encoding="utf-8" ?><shoppingcart><total><totalQuantity>1</totalQuantity></total></shoppingcart>' 
-    PBX_BILLING='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</Firstname><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format(user.first_name,user.last_name)
-
-    chaine='PBX_SITE={}&\
-PBX_RANG={}&\
-PBX_IDENTIFIANT={}&\
-PBX_EFFECTUE={}&\
-PBX_REFUSE={}&\
-PBX_ANNULE={}&\
-PBX_ATTENTE={}&\
-PBX_SOURCE=RWD&\
-PBX_TOTAL={}&\
-PBX_DEVISE=978&\
-PBX_CMD={}&\
-PBX_PORTEUR={}&\
-PBX_RETOUR=Mt:M;Ref:R;Auto:A;Erreur:E&\
-PBX_HASH=SHA512&\
-PBX_SHOPPINGCART={}&\
-PBX_BILLING={}&\
-PBX_TIME={}'.format(settings.PBX_SITE,settings.PBX_RANG,settings.PBX_IDENTIFIANT,settings.PBX_EFFECTUE,settings.PBX_REFUSE,settings.PBX_ANNULE,settings.PBX_ATTENTE,montant,cmd,email,PBX_SHOPPINGCART,PBX_BILLING,timestamp)
-    
-    HMAC=hmac.new(bytearray.fromhex(settings.PBX_CLE_HMAC),msg=chaine.encode("utf-8"),digestmod="sha512").hexdigest().upper()
-
+    billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</Firstname><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format(user.first_name,user.last_name)
     try : y,m,d = stop.split("T")[0].split("-")
     except : y,m,d = stop.split("-")
     end_day = d+"-"+m+"-"+y
-    context={ 'formule' : formule , 'level' : level , 'student' : student ,  'amount' : amount , 'end_day' : end_day ,  'PBX_RANG':settings.PBX_RANG, 'PBX_SITE':settings.PBX_SITE, 'PBX_IDENTIFIANT':settings.PBX_IDENTIFIANT,
-             'PBX_EFFECTUE':settings.PBX_EFFECTUE,'PBX_REFUSE':settings.PBX_REFUSE,'PBX_ANNULE':settings.PBX_ANNULE,'PBX_ATTENTE':settings.PBX_ATTENTE,'PBX_TOTAL':montant,"PBX_CMD":cmd,'PBX_PORTEUR':email,'PBX_SHOPPINGCART':PBX_SHOPPINGCART,'PBX_BILLING':PBX_BILLING,'PBX_TIME':timestamp,"PBX_HMAC":HMAC}
-
+    champs_val=champs_briqueCA(amount,cmd,email,1,billing)
+    
+    context={ 'formule' : formule , 'level' : level , 'student' : student ,  'amount' : amount , 'end_day' : end_day , 'champs_val':champs_val}
     return render(request, 'setup/brique_credit_agricole.html', context)  
+
 
 
 

@@ -1874,6 +1874,7 @@ def my_results(request):
     student_full_name     = request.session.get("student_full_name")
     email_to_send =  request.session.get("email_to_send",None) 
 
+
     results , themes ,  final_skills , skill_tab , subskill_tab  = []  , [] ,  [] ,  [] ,  []
     brut = 0
     loop = 0
@@ -1887,6 +1888,8 @@ def my_results(request):
         if loop == 0 : 
             Positionnement.objects.filter(pk=a_p[0]).update(nb_done=F('nb_done') + 1)
         loop+=1
+
+
 
     try : positionnement = Positionnement.objects.get(pk=dico["positionnement_id"])
     except : pass
@@ -1925,15 +1928,42 @@ def my_results(request):
     if email_to_send :
         pdf_to_send( pdf_to_create(request,theme_tab) , [email_to_send] , student_full_name)
 
-    try :
+
+    try : 
         send_mail("SACADO ACADEMIE : Fin d'un test de positionnement ",
                   student +" - Niveau : "+positionnement.level.name+", matière : "+positionnement.subject.name,
                   settings.DEFAULT_FROM_EMAIL,
                   ["info@sacado-academie.fr"])
-    except : pass
+    except:
+        pass
+
 
     context = { 'results' : results , 'theme_tab' : theme_tab , 'skill_tab' : skill_tab  , 'labels':labels , 'dataset' : dataset , 'brut' : brut , 'total' : loop }
     return render(request, 'tool/positionnement_results.html', context)
+
+
+def get_out_test(request) :
+    try : 
+        answerpositionnements = request.session.get("answerpositionnement")
+        student = answerpositionnements[0][1]
+        level   = answerpositionnements[0][1]
+        subject = answerpositionnements[0][1]
+
+
+        send_mail("SACADO ACADEMIE : Fin prématuré d'un test de positionnement ",
+                  student +" - Niveau : "+level+", matière : "+subject,
+                  settings.DEFAULT_FROM_EMAIL,
+                  ["info@sacado-academie.fr"])
+    except:
+        send_mail("SACADO ACADEMIE : Entrée et sortie directe d'un test de positionnement ",
+                  "Test non démarré",
+                  settings.DEFAULT_FROM_EMAIL,
+                  ["info@sacado-academie.fr"])
+
+
+    return redirect('index')
+
+
 
 ############################################################################################################
 ############################################################################################################
