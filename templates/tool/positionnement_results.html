@@ -74,7 +74,7 @@ Mes résultats
                                 <input type="hidden" id="dataset" value="{{ dataset }}"/>
                                 <label>Nous estimons le seuil de réussite des connaissances à 80%  pour maîtriser les notions d'un thème. Ce seuil est matérialisé par le polygone vert.</label>
 
-                                <a href="{% url 'choice_menu' 2 %}" class="btn btn-primary">Menu Adaptatif proposé à 5€/mois, je m'abonne</a>
+                                <a href="{% url 'choice_menu' 2 %}" class="btn btn-primary">Menu Autonomie proposé à 5€/mois, je m'abonne</a>
                             </div>
                             {% comment %}
                             <div class="col-sm-12 col-md-6">
@@ -106,9 +106,9 @@ Mes résultats
                 <div class="col-sm-12 col-md-12">
                     <p style="width:200px;padding:10px;background-color: white;border-radius:5px 5px 0px 0px;margin:0px"><b>Nos conseils</b></p>
                     <div style="width:95%;padding:10px;background-color: white;border-radius:0px 5px 5px  5px">
-                        <p>Les exercices de Sacado Académie favorisent l'apprentissage des méthodes et des automatismes, qui sont les deux piliers d'un apprentissage durable des mathématiques.La correction immédiate des exercices améliore la mémorisation à terme. Cette rétroaction permet de comprendre sans délai, les erreurs, et la répétition des 5 exercices ancre durablement les stratégies de résolution. </p> 
+                        <p style="margin-bottom:15px">Les exercices de Sacado Académie favorisent l'apprentissage des méthodes et des automatismes, qui sont les deux piliers d'un apprentissage durable des mathématiques. La correction immédiate des exercices améliore la mémorisation à terme. Cette rétroaction permet de comprendre sans délai, les erreurs, et la répétition des 5 exercices ancre durablement les stratégies de résolution. </p> 
                         {% for data  in theme_tab %}
-                            <p>
+                            <p  style="margin-bottom:15px">
                                 {% if data.score < 40 %} 
                                     Tu dois porter une attention particulière au thème <b class="sacado_color">{{ data.theme }}</b> dont les résultats restent largement inférieurs aux attentes. Il faudra effectuer tous les exercices avec beaucoup d'application et comprendre les corrections expliquées. Dans un premier temps, n'hésite pas à résoudre un nombre de situations plus important qu'initialement prévu.<br/>Avec un entraînement régulier (au moins 10 min par jour) tu vas t’améliorer, courage ! 
                                 {% elif data.score < 65 %}
@@ -134,7 +134,7 @@ Mes résultats
                         {% endfor %}
                         {% endcomment %}
 
-                            <a href="{% url 'choice_menu' 2 %}" class="btn btn-primary">Menu Adaptatif proposé à 5€/mois, je m'abonne</a>
+                            <a href="{% url 'choice_menu' 2 %}" class="btn btn-primary">Menu Autonomie proposé à 5€/mois, je m'abonne</a>
                     </div>
                 </div>
             </div>
@@ -236,7 +236,7 @@ Mes résultats
 
     <div class="row"> 
         <div class="col-sm-12">                            
-            <a href="{% url 'choice_menu' 2 %}" class="btn btn-primary">Menu Adaptatif proposé à 5€/mois, je m'abonne</a>
+            <a href="{% url 'choice_menu' 2 %}" class="btn btn-primary">Menu Autonomie proposé à 5€/mois, je m'abonne</a>
             <a href="{% url 'index' %}" class="btn btn-sacado">Retour à l'accueil</a>
         </div>
     </div>
