@@ -1396,9 +1396,9 @@ def champs_briqueCA(montant,cmd,email,nbr_articles,billing):
     # calcul ou copie des differents champs, et calcul de chaine Ã  signer
     chaine=""
     champs_val=[]
-    montant=montant.replace(",",".")
     try :
-        montant=str(int(float(montant)*100+0.5))
+        print(montant)
+        montant=str(float(montant)*100).replace(",",".")
     except :
         with open("logs/debug.log","a") as f :
             print("fonction champs_briqueCA : je ne peux pas lire le montant : ",montant,file=f)
@@ -1487,7 +1487,7 @@ def commit_adhesion(request) :
     except :
         messages.error(request, "Une erreur est survenue pendant votre inscription. Merci de renouveler l'opération.")
         return redirect('details_of_adhesion')
-    champs_val=_briqueCA(montant,cmd,family_email,nb_child,billing)
+    champs_val=champs_briqueCA(montant,cmd,family_email,nb_child,billing)
     context={'formule':formule,'data_post':data_post,'parents':parents,'students':students,'champs_val':champs_val}
 
     return render(request, 'setup/commit_adhesion.html', context)   
