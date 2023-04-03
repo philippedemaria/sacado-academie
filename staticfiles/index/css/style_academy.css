@@ -2408,6 +2408,11 @@ a.detail_index:hover{
     width: 300px;
   }
 
+  .clic_bloc{
+    display:block;
+    font-size : 14px;
+  }
+
 }
 
 

@@ -82,14 +82,14 @@
 .navbarLeft-nav > .active > a, 
 .navbarLeft-nav > .active > a:focus, 
 .navbarLeft-nav > .active > a:hover{
-    color: #ffb914!important ;
+    color: #FFC05C!important ;
     background-color: #FFF  !important; 
     border-radius: 0px;
 }
 
 
 a.active_selected {
-    color: #ffb914!important;
+    color: #FFC05C!important;
     background-color: #FFF !important;
     border-radius: 0px;
 }
@@ -101,7 +101,7 @@ a.inside_volet{
 
 a.inside_volet:hover {
     text-decoration: none;
-    color: #ffb914;
+    color: #FFC05C;
 }
 
 

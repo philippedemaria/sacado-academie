@@ -6,6 +6,11 @@ urlpatterns = [
  
 
     path('list_tools', list_tools, name='list_tools'),
+
+    path('student_tools', student_tools, name='student_tools'),
+
+
+    
     path('new', create_tool, name='create_tool'),
     path('update/<int:id>', update_tool, name='update_tool'),
     path('delete/<int:id>', delete_tool, name='delete_tool'),

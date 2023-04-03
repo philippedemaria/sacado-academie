@@ -32,12 +32,20 @@
             <a href="{% url 'index' %}" class="student_init">
                 <i class="bi bi-grid icon_size"></i> <label class="big_size margin_bottom20"> Tableau de bord</label><br/>Sur cet écran, tu as un accès direct à tous les modules.
             </a>
+
+            {% if request.user.student.level.id < 7 %}
+            <a href="{% if sacado_asso %}{% url 'student_tools' %}{% else %}{% url 'end_of_adhesion' %}{% endif %}" class="student_init">
+                <i class="bi bi-tools icon_size"></i> <label class="big_size margin_bottom20"> Outils</label><br/>Module pour découvrir des notions et t’entraîner librement.
+            </a>
+            {% endif %}
+
             <a href="{% if sacado_asso %}{% url 'dash_student' %}{% else %}{% url 'end_of_adhesion' %}{% endif %}" class="student_init">
-                <i class="bi bi-graph-up-arrow icon_size"></i> <label class="big_size margin_bottom20"> Entraînement</label><br/>Module pour t’entrainer
+                <i class="bi bi-graph-up-arrow icon_size"></i> <label class="big_size margin_bottom20"> Entraînement</label><br/>Module pour t’entraîner
                             10 min par jour aux
-                            différents chapitres,
+                            différents exercices,
                             classés par thèmes.
             </a>
+
             <a href="{% if sacado_asso %}{% url 'detail_student_all_views' user.id %}{% else %}{% url 'end_of_adhesion' %}{% endif %}" class="student_init">
                 <i class="bi bi-clipboard-data icon_size"></i> <label class="big_size margin_bottom20"> Suivis</label><br/>Module pour suivre les
                     résultats de tes
@@ -79,7 +87,7 @@
         {% if prepevals %}
         <div class="col-sm-6 col-md-4">
             {% for prepaval in prepevals %}
-            <a href="{% url 'show_prepeval' prepaval.id %}" class="student_init_dashboard">
+            <a href="{% url 'show_prepeval' prepaval.id %}" class="student_init_dashboard_prepeval">
                 <i class="bi bi-calendar-week icon_size"></i> <label class="big_size margin_bottom20"> En cours... Prép' éval</label>
                 <h3>{{ prepaval.date|date:"d N Y" }}</h3>
             </a>

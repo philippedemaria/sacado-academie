@@ -1,0 +1,58 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+{% load item_tags %}
+{% load widget_tweaks %}
+ 
+{% block require %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common2.js' %}"></script>
+
+
+    <script>
+        require(['script/ajax-tool']);
+    </script> 
+
+{% endblock %}
+
+
+
+{% block page_title %}
+      <i class="bi bi-tools font_sacado"></i>  Outils 
+{% endblock %}
+
+{% block page_menu_right %}
+
+ 
+ 
+{% endblock %}
+
+
+
+
+{% block body %}
+
+ 
+ 
+
+    <section class="content_main"> 
+        <div class="row">
+            
+
+            {% for tool in tools %}
+                <div class="col-sm-6 col-md-4  col-md-3 student_tools">
+                    <a href="{% url 'show_tool' tool.id  %}"><img src="{{ tool.imagefile.url }}" class="student_tools_image" /></a> 
+                </div>
+            {% endfor %}
+
+
+        </div>
+ 
+        <div class="row">
+            <div class="col-sm-12 col-md-12">     
+                    <a href="javascript:history.back()"  class="btn btn-default " >Retour </a>
+            </div>
+        </div>
+    </section>
+
+
+
+{% endblock %}

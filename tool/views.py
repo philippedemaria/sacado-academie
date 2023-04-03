@@ -117,6 +117,22 @@ def list_tools(request):
     return render(request, 'tool/list_tools.html', {'form': form , 'tools' : tools })
 
 
+ 
+ 
+def student_tools(request):
+
+    request.session["tdb"] = 'tools' # permet l'activation du surlignage de l'icone dans le menu gauche
+
+    tools = Tool.objects.filter(is_publish=1, is_ebep=0).exclude(pk__in=[1,7,11,15,18,25])
+
+    return render(request, 'tool/student_tools.html', { 'tools' : tools })
+
+
+
+
+
+
+
 
 def create_tool(request):
 
