@@ -66,7 +66,7 @@ Mes résultats
                                 {% for data  in theme_tab %}
                                     <li class="sanspuce">
                                         <label>{{ data.theme }}</label> <br/>    
-                                        <div class="progress">
+                                        <div class="progress_result">
                                           <div class="progress-bar" role="progressbar" style="width: {{ data.score }}%;background-color:{{ data.color }}" aria-valuenow='{{ data.score }}' aria-valuemin="0" aria-valuemax="100">{{ data.score }}%</div>
                                         </div>
                                     </li>
@@ -82,7 +82,7 @@ Mes résultats
                                 {% for data  in skill_tab %}
                                     <li class="sanspuce">
                                         <label>{{ data.skill }}</label>  <br/>    
-                                        <div class="progress">
+                                        <div class="progress_result">
                                           <div class="progress-bar" role="progressbar" style="width: {{ data.score }}%; background-color: {{ data.color }}" aria-valuenow='{{ data.score }}' aria-valuemin="0" aria-valuemax="100">{{ data.score }}%</div>
                                         </div>
                                     </li>

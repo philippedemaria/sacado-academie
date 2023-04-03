@@ -6611,6 +6611,7 @@ li .list_no_indent{
 .progress_result > .progress-bar .progress-bar {
   border-radius: 1px;
   width:100%;
+  height:20px;
 }
 
 /* size variation */
