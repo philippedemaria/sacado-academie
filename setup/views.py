@@ -1330,8 +1330,8 @@ def send_message_after_insertion(parents,students) :
         nbc = "s"
 
     for p in parents :
-        msg = "Bonjour "+p["first_name"]+" "+p["last_name"]+",\n\nVous venez de souscrire à un menu "+ p['formule'].name+" à la SACADO ACADEMIE. \n\n"
-        msg += "Votre adhésion est en atente de paiement.\n\n"     ##"+chrono+".\n\n"
+        msg = "Bonjour "+p["first_name"]+" "+p["last_name"]+",\n\nVous venez de souscrire à un menu "+ p['formule'].name+" à la SACADO ACADÉMIE. \n\n"
+        msg += "Votre adhésion est en attente de paiement.\n\n"     ##"+chrono+".\n\n"
         msg += "Votre identifiant est "+p["username"]+" et votre mot de passe est "+p["password_no_crypted"]+"\n"
         msg += "Vous avez inscrit : \n"
         for s in students :
@@ -1344,7 +1344,7 @@ def send_message_after_insertion(parents,students) :
         #msg += "Pour établir des conseils personalisés, nous vous demandons à votre enfant de remplir un questionnaire à cette adresse : https://sacado-academie.fr/questionnaire\n\n"
 
         msg += "\n\nRetrouvez ces détails à partir de votre tableau de bord après votre connexion à https://sacado-academie.fr"
-        msg += "\n\nL'équipe de SACADO ACADEMIE vous remercie de votre confiance.\n\n"
+        msg += "\n\nL'équipe de SACADO ACADÉMIE vous remercie de votre confiance.\n\n"
 
         ###### Quelques recommandations pour les parents
         msg += "Voici quelques conseils pour votre enfant :\n\nConnecte toi sur https://sacado-academie.fr\n\n"
@@ -1353,24 +1353,24 @@ def send_message_after_insertion(parents,students) :
         msg += "Le menu est à gauche :\n\n"
         msg += "Sur ton tableau de bord, tu trouves les indications de tes options.\n\n"
 
-        send_mail("Inscription SACADO ACADEMIE", msg, settings.DEFAULT_FROM_EMAIL, [p["email"]] )
+        send_mail("Inscription SACADO ACADÉMIE", msg, settings.DEFAULT_FROM_EMAIL, [p["email"]] )
 
     for s in students :
         srcv = []        
         if s["email"] : 
             srcv.append(s["email"])
-            smsg = "Bonjour "+s["first_name"]+" "+s["last_name"]+",\n\nTu viens d'être inscrit au menu "+ p['formule'].name +" de la SACADO ACADEMIE. \n"
+            smsg = "Bonjour "+s["first_name"]+" "+s["last_name"]+",\n\nTu viens d'être inscrit au menu "+ p['formule'].name +" de la SACADO ACADÉMIE. \n"
             if s['formule'].id > 1 :
-                msg += "Un.e enseignant.e de la SACADO ACADEMIE va vous contacter sous 24 heures par mail pour établir un plan de travail personnalisé.\n\n"
+                msg += "Un.e enseignant.e de la SACADO ACADÉMIE va vous contacter sous 24 heures par mail pour établir un plan de travail personnalisé.\n\n"
             smsg += "Ton identifiant est "+s["username"]+" et ton mot de passe est "+s["password_no_crypted"]+"\n\n"
             smsg += "Il est possible de retrouver ces détails à partir de ton tableau de bord après ta connexion à https://sacado-academie.fr\n\n"
             smsg += "\n\nL'équipe SACADO te remercie de ta confiance.... et en route vers la réussite \n\n"
 
-            send_mail("Inscription SACADO ACADEMIE", smsg, settings.DEFAULT_FROM_EMAIL, srcv)
+            send_mail("Inscription SACADO ACADÉMIE", smsg, settings.DEFAULT_FROM_EMAIL, srcv)
 
     # Envoi à SACADO
     sacado_rcv = ["sacado.asso@gmail.com"]
-    sacado_msg = "Une adhésion "+s['formule'].name +" SACADO ACADEMIE vient d'être souscrite. \n\n"
+    sacado_msg = "Une adhésion "+s['formule'].name +" SACADO ACADÉMIE vient d'être souscrite. \n\n"
 
     i,j = 1,1
     for p in parents :
@@ -1384,7 +1384,7 @@ def send_message_after_insertion(parents,students) :
         sacado_msg += "Enfant "+str(j)+" : "+s["first_name"]+" "+s["last_name"]+" Niveau :" +s["level"].name+adr+"\n\n"         
         j+=1
 
-    send_mail("Inscription SACADO ACADEMIE", sacado_msg, settings.DEFAULT_FROM_EMAIL, sacado_rcv)
+    send_mail("Inscription SACADO ACADÉMIE", sacado_msg, settings.DEFAULT_FROM_EMAIL, sacado_rcv)
     #########################################################
  
 

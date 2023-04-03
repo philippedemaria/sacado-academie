@@ -1785,13 +1785,14 @@ def pdf_to_send(fichiers,destinataires,student):
     destinataires : une liste de chaines contenant les destinataires"""
     #------------
     texte = """Bonjour,
-veuillez trouver en pièce jointe les résultats du test de positionnemnet de {}.
+veuillez trouver en pièce jointe les résultats du test de positionnement de {}.
 
 Très cordialement,
 
-L'équipe Sacado Académie""".format(student)
+L'équipe SACADO ACADÉMIE
+https://sacado-academie.fr""".format(student)
 
-    msg = EmailMessage("SACADO ACADEMIE : Test de positionnement "+student, texte, settings.DEFAULT_FROM_EMAIL, destinataires)
+    msg = EmailMessage("SACADO ACADÉMIE : Test de positionnement "+student, texte, settings.DEFAULT_FROM_EMAIL, destinataires)
     msg.attach('resultats.pdf', fichiers, 'application/pdf')
     msg.send()
 
@@ -1830,7 +1831,7 @@ def pdf_to_create(request,theme_tab):
  
     #logo = Image('D:/uwamp/www/sacado/static/img/sacadoA1.png')
     logo = Image('https://sacado-academie.fr/static/img/sacadoA1.png')
-    logo_tab = [[logo, "SACADO ACADEMIE\nRésultats du test de positionnement de "+student_full_name ]]
+    logo_tab = [[logo, "SACADO ACADÉMIE\nRésultats du test de positionnement de "+student_full_name ]]
     logo_tab_tab = Table(logo_tab, hAlign='LEFT', colWidths=[0.7*inch,5*inch])
     logo_tab_tab.setStyle(TableStyle([ ('TEXTCOLOR', (0,0), (-1,0), colors.HexColor("#8262c2") )]))
     elements.append(logo_tab_tab)
@@ -1901,12 +1902,12 @@ def sending_of_answers(answerpositionnements) :
         positionnement = Positionnement.objects.get(pk=positionnement_id)
         student = answerpositionnements[0][1]
         of_answers = listing_of_answers(answerpositionnements)
-        send_mail("SACADO ACADEMIE : Fin prématuré d'un test de positionnement ",
+        send_mail("SACADO ACADÉMIE : Fin prématuré d'un test de positionnement ",
                   student +" - Niveau : "+positionnement.level.name+", matière : "+ positionnement.subject.name+"\n\n"+ of_answers,
                   settings.DEFAULT_FROM_EMAIL,
                   ["philippe.demaria83@gmail.com", "brunoserres33@gmail.com","sandyreb@hotmail.fr"])
     except:
-        send_mail("SACADO ACADEMIE : Entrée et sortie directe d'un test de positionnement ",
+        send_mail("SACADO ACADÉMIE : Entrée et sortie directe d'un test de positionnement ",
                   "Test non démarré",
                   settings.DEFAULT_FROM_EMAIL,
                   ["philippe.demaria83@gmail.com", "brunoserres33@gmail.com","sandyreb@hotmail.fr"])
