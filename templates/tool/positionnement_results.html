@@ -15,7 +15,8 @@
 {% block page_title %}
 Mes résultats  
     {% if request.session.email_to_send %}
-    <a href="#" onclick="window.print()" class="btn btn-primary"><i class="bi bi-printer"></i> Imprimer les résultats</a>
+    <a href="#" onclick="window.print()" class="btn btn-primary"><i class="bi bi-printer"></i> Imprimer les résultats</a> 
+                                <a href="{% url 'choice_menu' 1 %}" class="btn btn-primary">Menu Autonomie proposé à 5€/mois, je m'abonne</a>
     {% endif %}
 {% endblock %}
 
@@ -133,7 +134,7 @@ Mes résultats
                         {% endfor %}
                         {% endcomment %}
 
-                            <a href="{% url 'choice_menu' 2 %}" class="btn btn-primary">Menu Autonomie proposé à 5€/mois, je m'abonne</a>
+                            <a href="{% url 'choice_menu' 1 %}" class="btn btn-primary">Menu Autonomie proposé à 5€/mois, je m'abonne</a>
                     </div>
                 </div>
             </div>
@@ -235,7 +236,7 @@ Mes résultats
 
     <div class="row"> 
         <div class="col-sm-12">                            
-            <a href="{% url 'choice_menu' 2 %}" class="btn btn-primary">Menu Autonomie proposé à 5€/mois, je m'abonne</a>
+            <a href="{% url 'choice_menu' 1 %}" class="btn btn-primary">Menu Autonomie proposé à 5€/mois, je m'abonne</a>
             <a href="{% url 'index' %}" class="btn btn-sacado">Retour à l'accueil</a>
         </div>
     </div>
