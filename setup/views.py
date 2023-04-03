@@ -225,7 +225,7 @@ def index(request):
         for level in levels :
             dico = {}
             dico["level"] = level
-            if level.id == 4 : dico["exercise"] = Exercise.objects.filter(supportfile__code='7c1af8fe').first()
+            if level.id == 4 : dico["exercise"] = Exercise.objects.filter(supportfile__code='29e3ea76').first()
             elif level.id == 5 : dico["exercise"] = Exercise.objects.filter(supportfile__code='a2cb5280').first()
             elif level.id == 7 : dico["exercise"] = Exercise.objects.filter(supportfile__code='6ba5ee87').first()
             elif level.id == 8 : dico["exercise"] = Exercise.objects.filter(supportfile__code='e9b62f68').first()
