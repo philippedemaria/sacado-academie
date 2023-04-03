@@ -271,7 +271,7 @@ def exercises_shower(request,idl):
     request.session["tdb"] = "training"
 
     if idl == 1   : supportfile_ids = ['1432','1426','1470']
-    elif idl == 2 : supportfile_ids = ['6022','1651','1493']
+    elif idl == 2 : supportfile_ids = ['6022','1020','1493']
     elif idl == 3 : supportfile_ids = ['1036','1149','1427']
     elif idl == 4 : supportfile_ids = ['6118','1195','6334']
     elif idl == 5 : supportfile_ids = ['1887','1787','1560']
