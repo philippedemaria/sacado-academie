@@ -37,7 +37,7 @@
 </li>
 
 
-{% if request.user.student.level.id < 7 %}
+{% if request.user.student.level.id < 7 and request.user.student.level.id == 14 %}
 <li class="dropdown {% if  request.session.tdb == 'tools' %}active{% endif %}">
     <a href="{% if sacado_asso %}{% url 'student_tools' %}{% else %}{% url 'end_of_adhesion' %}{% endif %}" class="main" >
         <i class="bi bi-tools icon_size"></i> 
