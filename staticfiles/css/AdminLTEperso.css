@@ -6588,6 +6588,7 @@ li .list_no_indent{
   -webkit-box-shadow: none;
   box-shadow: none;
 }
+
 .progress,
 .progress > .progress-bar,
 .progress .progress-bar,
@@ -6596,6 +6597,22 @@ li .list_no_indent{
   width:150px;
   height:10px;
 }
+
+
+.progress_result,
+.progress_result > .progress-bar {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.progress_result,
+.progress_result > .progress-bar,
+.progress_result .progress-bar,
+.progress_result > .progress-bar .progress-bar {
+  border-radius: 1px;
+  width:100%;
+}
+
 /* size variation */
 .progress.sm,
 .progress-sm {
