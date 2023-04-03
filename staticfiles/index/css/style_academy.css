@@ -2376,8 +2376,12 @@ a.detail_index:hover{
 }
 
 .modal_title_level{
-  padding:10px;
+  padding-bottom:20px;
+}
 
+.modal_title_level a{
+  text-decoration: none;
+  color:white;
 }
 
 

@@ -231,7 +231,7 @@ def index(request):
             elif level.id == 8 : dico["exercise"] = Exercise.objects.filter(supportfile__code='e9b62f68').first()
             elif level.id == 9 : dico["exercise"] = Exercise.objects.filter(supportfile__code='b1c4c33b').first()
             elif level.id == 10 : dico["exercise"] = Exercise.objects.filter(supportfile__code='45807f5d').first()
-            elif level.id == 11 : dico["exercise"] = Exercise.objects.filter(supportfile__code='649bbb27').first()
+            elif level.id == 11 : dico["exercise"] = Exercise.objects.filter(supportfile__code='9c02d47c').first()
             elif level.id == 12 : dico["exercise"] = Exercise.objects.filter(supportfile__code='58b1458d').first()
             else : dico["exercise"] = Exercise.objects.get(pk=pk_ids[i])
             dataset.append(dico)
@@ -270,21 +270,21 @@ def exercises_shower(request,idl):
     
     request.session["tdb"] = "training"
 
-    if idl == 1   : supportfile_ids = ['1446','1426','1470']
-    elif idl == 2 : supportfile_ids = ['6022','1524','1493']
-    elif idl == 3 : supportfile_ids = ['1036','1107','1206']
-    elif idl == 4 : supportfile_ids = ['6118','1828','6334']
-    elif idl == 5 : supportfile_ids = ['1887','1882','1705']
-    elif idl == 6 : supportfile_ids = ['6884','106','4229']
-    elif idl == 7 : supportfile_ids = ['3023','3448','2897']
-    elif idl == 8 : supportfile_ids = ['4543','833','424']
-    elif idl == 9 : supportfile_ids = ['3552','354','5304']
-    elif idl == 10 : supportfile_ids = ['557','935','51']
-    elif idl == 11 : supportfile_ids = ['2543','726','642']
+    if idl == 1   : supportfile_ids = ['1432','1426','1470']
+    elif idl == 2 : supportfile_ids = ['6022','1651','1493']
+    elif idl == 3 : supportfile_ids = ['1036','1149','1427']
+    elif idl == 4 : supportfile_ids = ['6118','1195','6334']
+    elif idl == 5 : supportfile_ids = ['1887','1787','1560']
+    elif idl == 6 : supportfile_ids = ['6118','106','4229']
+    elif idl == 7 : supportfile_ids = ['3023','3448','4265']
+    elif idl == 8 : supportfile_ids = ['4543','3420','424']
+    elif idl == 9 : supportfile_ids = ['2814','354','194']
+    elif idl == 10 : supportfile_ids = ['5641','935','51']
+    elif idl == 11 : supportfile_ids = ['2543','669','642']
     elif idl == 12 : supportfile_ids = ['2126','2408','2035']
-    elif idl == 14 : supportfile_ids = ['6107','4937','5039']
+    elif idl == 14 : supportfile_ids = ['4817','4937','5039']
 
-    exercises = Exercise.objects.filter(level_id= idl, supportfile_id__in=supportfile_ids)
+    exercises = Exercise.objects.filter(level_id= idl, supportfile_id__in=supportfile_ids).order_by("supportfile_id")
     level = Level.objects.get(pk=idl)
     nb = Exercise.objects.filter(supportfile__level_id = idl , supportfile__is_title=0).count()
 

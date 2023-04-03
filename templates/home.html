@@ -121,14 +121,20 @@ Intro Section -
             <div class="modal-content" >
                 <div class="modal-header">
 
-                    <h2 class="font_sacado">Choisir votre niveau</h2>
+                    <h2 class="font_sacado" style="margin-bottom:0px;">Choisir votre niveau</h2>
+                    <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+
+
                 </div>
                 <div class="modal-body modal_level">
                     <div class="row" align="center">
                     {% for data in dataset %}
-                        <div class="col-xs-4 col-md-4">
-                            <a href="{% url 'exercises_shower' data.level.id %}">{% if  data.exercise.supportfile.imagefile %} <img src="{{ data.exercise.supportfile.imagefile.url }}"  width="150px" /> {% endif %}</a>
-                            <div class="modal_title_level">{{ data.level.name }}</div>
+                        <div class="col-xs-4 col-md-4 modal_title_level">
+                            <a href="{% url 'exercises_shower' data.level.id %}">{% if  data.exercise.supportfile.imagefile %} <img src="{{ data.exercise.supportfile.imagefile.url }}"  width="150px" /> {% endif %}
+                            <br/>{{ data.level.name }}
+                            </a>
                         </div>
                     {% endfor %}                        
                     </div>
