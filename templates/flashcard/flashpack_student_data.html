@@ -47,20 +47,22 @@
         </div>
         {% endif %}
         <div class="row"  style="padding-top:10px;"> 
-           <div class="col-lg-6 col-xs-6">
+           <div class="col-lg-12">
                 {{ flashpack.flashcards.count}} flashcards
-            </div>  
-           <div class="col-lg-6 col-xs-6" align="right">
+            </div>                                     
+        </div>
+        <div class="row"> 
+           <div class="col-lg-12">
                 {% if flashpack.is_creative %} 
-                <a href="{% url 'set_flashcards_to_flashpack' flashpack.id %}" >
+                <a href="{% url 'set_flashcards_to_flashpack' flashpack.id %}"  style=" font-size:14px;">
+                    {% if flashpack.is_comments %}  
                     <span class="helper_tip" style=" font-size:14px;"> 
-                        {% if flashpack.is_comments %} 
-                        <i class="bi bi-cloud-plus-fill font_sacado"></i>
-                        <div class="helper_tip_text_right" style="font-size:14px;">Lire les commentaires des flashcards</div>
-                        {% else %}
-                        <i class="bi bi-gear  font_sacado"></i>Ajouter/modifier une carte
-                        {% endif %}
+                    <i class="bi bi-cloud-plus-fill font_sacado"></i>
+                    <div class="helper_tip_text_right" style="font-size:14px;">Lire les commentaires des flashcards</div>
                     </span>
+                    {% else %}
+                    <i class="bi bi-gear  font_sacado"></i>Ajouter/modifier une carte
+                    {% endif %}
                 </a>
                 {% endif %}                                
             </div>                                   
