@@ -33,7 +33,7 @@
                 <i class="bi bi-grid icon_size"></i> <label class="big_size margin_bottom20"> Tableau de bord</label><br/>Sur cet écran, tu as un accès direct à tous les modules.
             </a>
 
-            {% if request.user.student.level.id < 7 and request.user.student.level.id == 14 %}
+            {% if request.user.student.level.id < 7 or request.user.student.level.id == 14 %}
             <a href="{% if sacado_asso %}{% url 'student_tools' %}{% else %}{% url 'end_of_adhesion' %}{% endif %}" class="student_init">
                 <i class="bi bi-tools icon_size"></i> <label class="big_size margin_bottom20"> Outils</label><br/>Module pour découvrir des notions et t’entraîner librement.
             </a>
