@@ -29,13 +29,6 @@
         
         {% if not request.user.is_in_academy %}
         <div class="col-sm-12 col-md-6">
-            {% comment %}
-            <div class="row  form-group" id="display_more_details">
-                <div class="col-sm-12">
-                     <i class="bi bi-plus-circle-dotted"></i> Plus d'options
-                </div>
-            </div>
-            {% endcomment %}
             <div class="row display_more_details form-group">
                 <div class="col-sm-12">
                     <label>Titre  <em>(optionnel)</em></label><br/>
@@ -127,9 +120,13 @@
     <div class="row"  style="margin-top:30px;">
         <div class="col-sm-12 col-md-12"> 
             <div class="form-group">
-                <input value="Enregistrer" type="submit" class="btn btn-primary"/>
-                {% if flashcard %}<input value="Valider" type="submit" name="validate" class="btn btn-info"/>{% endif %}
-                <a href="javascript:history.back()"><input type="button" value="Annuler" class="btn btn-default "/></a>
+                {% if flashcard %}
+                    <input value="Enregistrer" type="submit" name="validate" class="btn btn-primary"/>
+                {% else %}
+                    <input value="Enregistrer" type="submit" class="btn btn-primary"/>
+                {% endif %}
+                <a href="javascript:history.back()" class="btn btn-default"/>Annuler</a>
+                <a href="{% url 'flashpacks' %}" class="btn btn-primary"> Retour vers mes flashcards</a>
             </div>
         </div>    
     </div>

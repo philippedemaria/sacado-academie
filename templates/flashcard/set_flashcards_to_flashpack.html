@@ -36,8 +36,6 @@
     {% if request.user.is_teacher %}
     <a href="{% url 'show_flashpack' flashpack.id %}" target="_blank" class="btn btn-new-violet">Lancer le flashpack</a>
     <a href="{% url 'my_flashpacks'  %}" target="_blank" class="btn btn-new-violet">Mes flashpacks</a>
-    {% else %}
-    <a href="javascript:history.back()"><input type="button" value="Retour" class="btn btn-default "/></a>
     {% endif %}
 {% endblock %}
 

@@ -17,7 +17,7 @@
         <div class="row"> 
             <div class="col-xs-2 col-md-2" class="delete_question_div"><hr style="border-color: transparent"/>
                 {% if request.user.is_in_academy %}                   
-                    <a href="{% url 'update_flashcard' flashcard.id %}" class="delete_question"  ><i class="fa fa-edit"></i></a><br/><br/> 
+                    <a href="{% url 'update_flashcard' flashcard.id %}" class="delete_question" title="Modifier" ><i class="fa fa-edit"></i></a><br/><br/> 
 
                     <a href="{% url 'clone_flashcard' flashpack.id  flashcard.id %}" class="edit" title="Dupliquer"><i class="fa fa-copy"></i></a> <br/><br/>
 
@@ -26,7 +26,7 @@
                     {% if not flashcard.is_validate %}
                     <div class="flashcard_validate"><a href="{% url 'update_flashcard' flashcard.id %}"> En attente de validation </a></div> 
                 
-                    <a href="{% url 'update_flashcard' flashcard.id %}" class="delete_question"  ><i class="fa fa-edit"></i></a><br/><br/> 
+                    <a href="{% url 'update_flashcard' flashcard.id %}" class="delete_question"  title="Modifier" ><i class="fa fa-edit"></i></a><br/><br/> 
 
                     <a href="{% url 'clone_flashcard' flashpack.id  flashcard.id %}" class="edit" title="Dupliquer"><i class="fa fa-copy"></i></a> <br/><br/>
 
