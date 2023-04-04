@@ -1970,8 +1970,8 @@ def my_results(request):
         theme_tab.append({ "theme" : t["theme"] , "score" : this_score , 'color' : color })
 
 
-    if email_to_send :
-        pdf_to_send( pdf_to_create(request,theme_tab) , [email_to_send] , student_full_name)
+    # if email_to_send :
+    #     pdf_to_send( pdf_to_create(request,theme_tab) , [email_to_send] , student_full_name)
 
 
     sending_of_answers(answerpositionnements) 
