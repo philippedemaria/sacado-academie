@@ -175,51 +175,89 @@ define(['jquery', 'bootstrap'], function ($) {
             });
 
 
-            $("#formule_id").on('change', function () {
+
+            $(".duration_ch").on('change', function () {
+                $("#div_display").show() 
+                $("#div_duration").show();
+                $("#verif_duration").html( $(this).val() + " mois " );
+            });
+
+
+            $(".formule_change").on('change', function () {
                 $("#div_display").show() 
                 $("#div_formule").show();
-                if ( $("#formule_id").val() == 1) { f = "Autonomie"}
-                else if ( $("#formule_id").val() == 2) {f = "IA"}
-                else if ( $("#formule_id").val() == 3) {f = "Suivi"}
-                else  {f = "Personnalisé"}
 
+                if ( $(this).val() == 1) { f = "Autonomie"}
+                else if ( $(this).val() == 2) {f = "Suivi"}
+                else if ( $(this).val() == 3) {f = "Prép'Examen"}
+                else  {f = "PrépaClasse"}
 
                 $("#verif_formule").html( f );
             });
 
-        $('.formule').on('change', function (event) {
-            let formule_id = $(this).val();
+
+
+
+         $('.new_params').on('change', function (event) {
+            let formule_id = $('input[name="formule_id"]:checked').val();
             let csrf_token = $("input[name='csrfmiddlewaretoken']").val();
-            let student_id = $(this).data("user");
+            let level_id = $("#id_level").val();
+            let duration = $('input[name="duration"]:checked').val();
 
-
-            $.ajax(
-                {
-                    type: "POST",
-                    dataType: "json",
-                    data: {
-                        'formule_id': formule_id,
-                        'student_id': student_id,
-                        csrfmiddlewaretoken: csrf_token
-                    },
-                    url: "ajax_prices_formule",
-                    success: function (data) {
-                        $('#engage'+student_id).html("");
-                        // Remplir la liste des choix avec le résultat de l'appel Ajax
-                        let prices = data["prices"];
-                        for (let i = 0; i < prices.length; i++) {
-
-                            let price_id   = prices[i].price;
-                            let price_name =  prices[i].nb_month;
-
-                            $('#engage'+student_id).append('<label for="engagement'+student_id+'"><input type="radio" id="engagement'+student_id+'" name="engagement'+student_id+'" value="'+ price_id +'-'+price_name+'" /> '+price_name+' mois - '+ price_id +'€</label><br/>')
-                                
- 
-                        }
-                    }
-                }
-            )
+            if (  formule_id && duration )
+            {
+                $.ajax(
+                            {
+                                type: "POST",
+                                dataType: "json",
+                                data: {
+                                    'formule_id': formule_id,
+                                    'level_id'  : level_id,
+                                    'duration'  : duration,
+                                    csrfmiddlewaretoken: csrf_token
+                                },
+                                url: "ajax_tarifications_formule",
+                                success: function (data) {
+                                    $("#div_price").show();
+                                    $("#verif_price").html(data.price + "€") ;
+                                    $("#id_save").show();
+                                }
+                            }
+                        )
+            }
         }); 
+
+
+        // $('.formule').on('change', function (event) {
+        //     let formule_id = $(this).val();
+        //     let csrf_token = $("input[name='csrfmiddlewaretoken']").val();
+        //     let student_id = $(this).data("user");
+
+        //     $.ajax(
+        //         {
+        //             type: "POST",
+        //             dataType: "json",
+        //             data: {
+        //                 'formule_id': formule_id,
+        //                 'student_id': student_id,
+        //                 csrfmiddlewaretoken: csrf_token
+        //             },
+        //             url: "ajax_prices_formule",
+        //             success: function (data) {
+        //                 $('#engage'+student_id).html("");
+        //                 // Remplir la liste des choix avec le résultat de l'appel Ajax
+        //                 let prices = data["prices"];
+        //                 for (let i = 0; i < prices.length; i++) {
+
+        //                     let price_id   = prices[i].price;
+        //                     let price_name =  prices[i].nb_month;
+
+        //                     $('#engage'+student_id).append('<label for="engagement'+student_id+'"><input type="radio" id="engagement'+student_id+'" name="engagement'+student_id+'" value="'+ price_id +'-'+price_name+'" /> '+price_name+' mois - '+ price_id +'€</label><br/>')    
+        //                 }
+        //             }
+        //         }
+        //     )
+        // }); 
 
  
 

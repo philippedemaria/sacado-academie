@@ -1905,12 +1905,12 @@ def sending_of_answers(answerpositionnements) :
         send_mail("SACADO ACADÉMIE : Fin prématuré d'un test de positionnement ",
                   student +" - Niveau : "+positionnement.level.name+", matière : "+ positionnement.subject.name+"\n\n"+ of_answers,
                   settings.DEFAULT_FROM_EMAIL,
-                  ["philippe.demaria83@gmail.com", "brunoserres33@gmail.com","sandyreb@hotmail.fr"])
+                  ["philippe.demaria83@gmail.com", "brunoserres33@gmail.com","sandyreb@hotmail.fr","nicolas.villemain@gmail.com"])
     except:
         send_mail("SACADO ACADÉMIE : Entrée et sortie directe d'un test de positionnement ",
                   "Test non démarré",
                   settings.DEFAULT_FROM_EMAIL,
-                  ["philippe.demaria83@gmail.com", "brunoserres33@gmail.com","sandyreb@hotmail.fr"])
+                  ["philippe.demaria83@gmail.com", "brunoserres33@gmail.com","sandyreb@hotmail.fr","nicolas.villemain@gmail.com"])
 
 
 def my_results(request):

@@ -43,7 +43,7 @@ urlpatterns = [
     path('logout_academy', logout_academy , name='logout_academy'), 
     path('renewal_adhesion', renewal_adhesion, name='renewal_adhesion'),
     path('ajax_prices_formule', ajax_prices_formule, name='ajax_prices_formule'),
-
+    path('ajax_tarifications_formule', ajax_tarifications_formule, name='ajax_tarifications_formule'),
     
     path('questionnaire', questionnaire, name='questionnaire'),
     ############################################################################################

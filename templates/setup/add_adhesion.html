@@ -47,7 +47,7 @@
 
     <div class="row">
         <form action="" method="POST">{% csrf_token %}
-            <div class="col-sm-12 col-md-6">
+            <div class="col-sm-12 col-md-5">
                 <div class="card card_adhesion">
                     <div class="form-group">
                         {{ form.last_name.label_tag }}
@@ -66,23 +66,11 @@
                     </div>
                     <div class="form-group">
                         <label>Niveau souhaité :</label>
-                        <select name="level" id="id_level" class="form-control select2">
+                        <select name="level" id="id_level" class="form-control select2 new_params">
                             {% for l in levels %}
                                 <option value="{{ l.id }}">{{ l.name }}</option>
                             {% endfor %}
                         </select>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-12 col-md-6">
-                            <div class="form-group">                     
-                                <label>Formule souhaitée :</label>
-                                <select name="formule_id" id="formule_id" class="form-control select2">
-                                    {% for f in formules  %}
-                                        <option value="{{ f.id }}">{{ f.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
                     </div>
                     <div class="row"> 
                         <div class="col-sm-12 col-md-12">
@@ -110,37 +98,64 @@
                             </div>
                         </div>
                     </div> 
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">                     
+                                <label>Formule souhaitée :</label>
+                                    {% for f in formules  %}
+                                        <li class="sanspuce"><label><input type="radio" value="{{ f.id }}" class="formule_change new_params"  name="formule_id"> <span class="sacado_color_text">{{ f.name }}</span></label></li>
+                                    {% endfor %}
+                            </div>    
+                        </div> 
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">                     
+                                <label>Durée :</label>
+                                <li class="sanspuce"><label><input type="radio" value="1" name="duration" class="duration_ch new_params"> <span class="sacado_color_text">1 mois</span></label></li>
+                                <li class="sanspuce"><label><input type="radio" value="3" name="duration" class="duration_ch new_params"> <span class="sacado_color_text">3 mois</span></label></li>
+                                <li class="sanspuce"><label><input type="radio" value="12" name="duration" class="duration_ch new_params"> <span class="sacado_color_text">12 mois</span>
+                                </label></li>
+                            </div>    
+                        </div> 
+                    </div> 
+                    <div id="result_change_adhesion">                      
+                    </div>   
                 </div>
 
             </div> 
                
 
-            <div class="col-sm-12 col-md-6">
+            <div class="col-sm-12 col-md-5">
                 <div class="card card_adhesion not_allowed_display" id="div_display">
                     <div class="form-group not_allowed_display" id="div_last_name">
-                        <label>Nom : </label><span id="verif_last_name"></span>
+                        <label>Nom : </label> <span id="verif_last_name"></span>
                     </div>     
                     <div class="form-group not_allowed_display" id="div_first_name">
-                        <label>Prénom : </label><span id="verif_first_name"></span>
+                        <label>Prénom : </label> <span id="verif_first_name"></span>
                     </div>
                     <div class="form-group not_allowed_display" id="div_email">
-                        <label>Email : </label><span id="verif_email"></span>
+                        <label>Email : </label> <span id="verif_email"></span>
                     </div>
                     <div class="form-group not_allowed_display" id="div_username">
-                        <label>Identifiant : </label><span id="verif_username"></span>
+                        <label>Identifiant : </label> <span id="verif_username"></span>
                     </div>
                     <div class="form-group not_allowed_display" id="div_level">
-                        <label>Niveau Souhaité : </label><span id="verif_level"></span>
+                        <label>Niveau Souhaité : </label> <span id="verif_level"></span>
                     </div>
                     <div class="form-group not_allowed_display" id="div_formule">
-                        <label>Formule : </label><span id="verif_formule"></span>
+                        <label>Formule : </label> <span id="verif_formule"></span>
+                    </div>
+                    <div class="form-group not_allowed_display" id="div_duration">
+                        <label>Durée : </label> <span id="verif_duration"></span>
+                    </div>
+                    <div class="form-group not_allowed_display" id="div_price">
+                        <label>Montant : </label> <span id="verif_price"></span>
                     </div>
                 </div>
 
                 <div class="row not_allowed_display" id="id_save">
                     <div class="col-sm-12 col-md-12">
      
-                        <button type="submit" class="btn btn-primary">Valider l'inscription gratuite, période d'essai </button>   
+                        <button type="submit" class="btn btn-primary">Valider l'inscription</button>   
      
  
                     </div>

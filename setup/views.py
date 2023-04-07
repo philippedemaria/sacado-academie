@@ -890,6 +890,34 @@ def ajax_prices_formule(request) :
 
     return JsonResponse(data) 
 
+ 
+def get_price_by_formules(formule_id,duration,level_id):
+
+    formule = Formule.objects.get(pk=formule_id)
+
+    if formule.id > 1 and 5 < int(level_id) <10  :  price = formule.price + 10
+    elif formule.id > 1 and 9 < int(level_id) <13:  price = formule.price +20 
+    else : price = formule.price
+
+    price_dico = { '1' : 5.00 , '3' : 14.00 , '6' : 26.00 , '12' : 50.00  }
+
+    if formule.id == 1 :
+        total_price = price_dico[str(duration)]
+    else : total_price = int(duration)*price
+    return total_price
+
+
+
+ 
+def ajax_tarifications_formule(request) :
+ 
+    formule_id = request.POST.get("formule_id",None)
+    duration   = request.POST.get("duration",None)
+    level_id   = request.POST.get("level_id",None)
+    data = {}
+    data['price'] = "{:.2f}".format(get_price_by_formules(formule_id,duration,level_id))
+
+    return JsonResponse(data) 
 
 
 def creation_facture(facture):
@@ -1150,6 +1178,12 @@ def accept_renewal_adhesion(request) :
         return HttpResponse("ok")
 
 
+
+
+
+
+
+
 def attribute_all_documents_to_student_by_level(level,student) :
 
     teacher_ids = ["0" ,89513,89507,89508,89510, 89511, 46245  , 46242 , 46246  , 46247, 46222, 46243, 46244,"", 130243]
@@ -1185,8 +1219,12 @@ def add_adhesion(request) :
 
     if request.method == "POST" :
         if form.is_valid():
-            end = today + timedelta(days=15)
-            #end = datetime(2022,8,31) 
+            duration = int(request.POST.get("duration"))
+
+            today = datetime.now()
+            today = today.replace(tzinfo=timezone.utc)
+            d,m,y = today.day , (today.month - 1 + duration)%12 + 1 , today.year + (today.month - 1 + duration)//12
+            end = datetime(y,m,d).replace(tzinfo=timezone.utc)
             form_user = form.save(commit=False)
             form_user.closure = end
             form_user.school_id = 50
@@ -1205,21 +1243,22 @@ def add_adhesion(request) :
                 u_p.parent.students.add(student)
                 u_p_mails.append(u_p.email)
 
-            chrono = create_chrono(Facture,"F")
+            chrono = "BL_" +  request.user.last_name +"_"+str(today)
 
-            adhesion = Adhesion.objects.create(start = today, stop = end, student = student , level_id = level_id  , amount = 0  , formule_id = formule_id ) 
-            facture = Facture.objects.create(chrono = chrono, file = "" , user = request.user , date = today , is_lesson = 0    ) 
-            facture.chrono = "Période d'essai "+ str(facture.id)
-            facture.save()
-            facture.adhesions.add(adhesion)
+            amount = get_price_by_formules( int(formule_id), int(duration), level.id )
+
             success = attribute_group_to_student_by_level(level,student,formule_id)
+            adhesion = Adhesion.objects.create(start = today, stop = end, student = student , level_id = level_id  , amount = amount  , formule_id = formule_id , is_active = 0 ) 
+            facture  = Facture.objects.create(chrono = chrono, file = "" , user = request.user , date = today , is_lesson = 0    ) 
+            facture.adhesions.add(adhesion)
 
-            msg = "Bonjour,\n\nVous venez de souscrire à une adhésion à la SACADO Académie. \n"
-            msg += "Votre référence d'adhésion est "+facture.chrono+".\n\n"
+
+            msg = "Bonjour,\n\nVous venez de souscrire à une adhésion à la SACADO ACADEMIE. \n"
+            msg += "Votre référence d'adhésion est "+facture.chrono+". Vous etes en attente de paiement.\n\n"
             msg += "Vous avez inscrit : \n"
             msg += "- "+student.user.first_name+" "+student.user.last_name+", l'identifiant de connexion est : "+student.user.username +" \n"
             msg += "\n\nRetrouvez ces détails à partir de votre tableau de bord après votre connexion à https://sacado-academie.fr"
-            msg += "\n\nL'équipe de SACADO Académie vous remercie de votre confiance.\n\n"
+            msg += "\n\nL'équipe de SACADO ACADEMIE vous remercie de votre confiance.\n\n"
 
 
 
@@ -1237,36 +1276,25 @@ def add_adhesion(request) :
             msg += "« Flashpack » : permet de créer des propres cartes de révision, pour entraîner ta mémoire.\n\n"
 
                 
-            send_mail("Inscription SACADO Académie", msg, settings.DEFAULT_FROM_EMAIL, u_p_mails )
+            send_mail("Inscription SACADO ACADEMIE", msg, settings.DEFAULT_FROM_EMAIL, u_p_mails )
 
-            return redirect("index")
- 
+            formule = Formule.objects.get(pk=formule_id)
+            cmd="Abonnement "+formule.name+" " + str(datetime.now())
+
+            billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</Firstname><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format(request.user.last_name,request.user.first_name)
+
+            champs_val=champs_briqueCA(amount,cmd,request.user.email,1,billing)
+            context={ 'formule' : formule , 'level' : level , 'student' : student ,  'amount' : amount , 'end_day' : end , 'champs_val':champs_val}
+            return render(request, 'setup/brique_credit_agricole.html', context)  
+
+
+
+
     context = {  "renewal" : True, "form" : form, "formules" : formules  ,   'levels' : levels , }
     return render(request, 'setup/add_adhesion.html', context)   
  
         
-
-
-
-def get_the_formule_price(formule_id, duration, level_id ):
-    amount =  0
-    if   formule_id == 1 and duration == 1  : amount += 5
-    elif formule_id == 1 and duration == 3  : amount += 14 
-    elif formule_id == 1 and duration == 6  : amount += 26  
-    elif formule_id == 1 and duration == 12 : amount += 50 
-    elif formule_id == 2 and level_id < 6 : amount += 29*duration
-    elif formule_id == 2 and 5<level_id < 10 : amount += 39*duration
-    elif formule_id == 2 and 9<level_id < 13 : amount += 49*duration
-    elif formule_id == 3  and level_id < 6 : amount += 290 
-    elif formule_id == 3  and 5<level_id < 10 : amount += 390 
-    elif formule_id == 3  and 9<level_id < 13 : amount += 490 
-    elif formule_id == 4 : amount += 50 
-    else : amount += 0 
-
-    return amount
-
-
-
+ 
 
 def insertion_into_database(parents,students):
 
@@ -1310,11 +1338,8 @@ def insertion_into_database(parents,students):
 
         if loop == 0 :
             facture = Facture.objects.create(chrono = "BL_" +  user.last_name +"_"+str(today) ,  user_id = user.id , file = "" , date = today , orderID = "" , is_lesson = 0  ) #orderID = Numéro de paiement donné par la banque"
-            facture.adhesions.set(adhesion_in) 
-
-        loop +=1  
-
-        parents_to_session.append({ 'parent_id' : user.id , 'password_no_crypted' : p['password_no_crypted'] , 'facture_id' : facture.id  }) 
+            facture.adhesions.set(adhesion_in)
+            parents_to_session.append({ 'parent_id' : user.id , 'password_no_crypted' : p['password_no_crypted'] , 'facture_id' : facture_id }) 
 
     return students_to_session , parents_to_session
 
@@ -1397,8 +1422,7 @@ def champs_briqueCA(montant,cmd,email,nbr_articles,billing):
     chaine=""
     champs_val=[]
     try :
-        print(montant)
-        montant=str(float(montant)*100).replace(",",".")
+        montant=str(int(float(montant)*100+0.5))
     except :
         with open("logs/debug.log","a") as f :
             print("fonction champs_briqueCA : je ne peux pas lire le montant : ",montant,file=f)
@@ -1460,7 +1484,7 @@ def commit_adhesion(request) :
             if 1<= i <= nb_child : 
                 level  = Level.objects.get(pk = int(levels[i]))
                 duration = int(data_post.get("duration"+str(i)))
-                price = get_the_formule_price( int(formule_id), int(duration), level.id )
+                price = get_price_by_formules( int(formule_id), int(duration), level.id )
                 amount += price
                 students.append({ "last_name" : last_name , "first_name" : first_name  , "email" : email , "level" : level , "username" : username , "password" : password , "password_no_crypted" : password_no_crypted  , "duration" : duration , "price" : price  , "formule" : formule  })
             else :
@@ -1480,26 +1504,16 @@ def commit_adhesion(request) :
         for error in formset.errors :
             print(request,error)
 
-    montant=int(float(amount)*100)
     cmd="Abonnement "+formule.name+" " + str(datetime.now())
     try :
         billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</Firstname><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format(family_name,family_fname)
     except :
         messages.error(request, "Une erreur est survenue pendant votre inscription. Merci de renouveler l'opération.")
         return redirect('details_of_adhesion')
-    champs_val=champs_briqueCA(montant,cmd,family_email,nb_child,billing)
+    champs_val=champs_briqueCA(amount,cmd,family_email,nb_child,billing)
     context={'formule':formule,'data_post':data_post,'parents':parents,'students':students,'champs_val':champs_val}
 
     return render(request, 'setup/commit_adhesion.html', context)   
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1608,16 +1622,6 @@ def retour_paiement(request,status):
     return render(request,"setup/retour_paiement",context)
         
 ############## FIN CA  #########################
-
-
-
-
-
-
-
-
-
-
 
 
 def change_adhesion(request,ids):

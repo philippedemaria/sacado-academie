@@ -918,18 +918,15 @@ class Parent(models.Model):
 
     def is_lesson(self):
         test = False
-        for student in self.students.all() :
-            adhesion = student.adhesions.last()
-            if adhesion.formule_id == 4:
-                test = True
-                break
+        try :
+            for student in self.students.all() :
+                adhesion = student.adhesions.last()
+                if adhesion.formule_id == 2:
+                    test = True
+                    break
+        except :
+            pass
         return test
-
-
-
-
-
-
 
 class Response(models.Model):
 
