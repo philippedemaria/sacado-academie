@@ -1387,9 +1387,14 @@ def commit_adhesion(request) :
         request.session["parents_to_session"]  = parents_to_session
 
 
-    else:
+    else
+        error_str = ""
         for error in formset.errors :
             print(request,error)
+            error_str += str(error)+" - "
+
+        messages.error(request,"Erreur d'inscription" + )
+        redirect('index')
     
     cmd=cmd_abonnement(formule,parents_to_session[0]['facture_id'])
     billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Academie","SANS PB")
