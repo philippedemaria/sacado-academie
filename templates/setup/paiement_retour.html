@@ -1,0 +1,58 @@
+{% extends 'academy.html' %}
+
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+
+
+
+{% block body %}
+
+<section id="get_detail">
+    <div class="container"> 
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <div class="card_recapitulatif" > 
+                    <div class="row">                        
+                    	<div class="col-sm-12">
+            			{% if statut == 'repondre_a' %}
+                    	<div class="alert alert-success">
+ 							Transaction acceptée. Les droits sont maintenant ouverts. Bonne révision.<br/><br/> Merci pour avoir choisi la SACADO ACADEMIE.
+                        </div>
+		                {% elif statut == 'annule'   %}
+                    	<div class="alert alert-danger">
+ 							Transaction annulée. Reprendre la procédure. Cordialement.
+                        </div>
+		                {% elif statut == 'refuse'   %}
+                    	<div class="alert alert-danger">
+ 							Transaction refusée. Reprendre la procédure. Cordialement.
+                        </div>
+		                {% elif statut == 'attente'   %}
+                    	<div class="alert alert-warning">
+ 							Transaction en attente. Vos droits seront ouverts dès que la transaction sera acceptée. Cordialement.
+                        </div>
+		                {% else   %}
+                    	<div class="alert alert-danger">
+ 							Transaction ne s'est pas déroulée comme prévue. Contacter la SACADO ACADEMIE.
+                        </div>
+		                {% endif   %}
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:40px">                        
+                    	<div class="col-sm-12">
+ 							<a href="{% url 'index' %}"> 
+		            			{% if statut == 'repondre_a' %}
+		 							Vers mon tableau de bord
+				                {% else   %}
+		 							Retour à la page d'accueil du site
+				                {% endif   %}
+ 							</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+    </div>
+</section> 
+{% endblock %}
+

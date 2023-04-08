@@ -1517,6 +1517,17 @@ def paiement_retour(request,status):
         facture_id=request.GET.get("facture")
         print(ip,status, erreur,montant,idtrans,facture_id,file=f)
         facture_id=request.GET.get("facture")
+
+        facture = Facture.objects.get(pk=facture_id)
+        for adhesion in facture.Adhesions.all() :
+            adhesion.is_active=1
+            adhesion.save()
+
+        facture.chrono  = create_chrono(Facture,"F")
+        facture.orderID = autorisation
+        fature.save()
+ 
+
     elif status=="annule":
         pass
     elif status=="refuse":
@@ -1525,6 +1536,8 @@ def paiement_retour(request,status):
         pass
     else :
         print("(retour_paiement) : je ne comprends pas le status de la réponse venant de la banque", file=f)
+    context['statut']=status
+    
     context['status']=status+" "+str(erreur)+" "+str(autorisation)
     print('status : ',status,"erreur : ",erreur, file=f)
     msg=request.get_full_path()  #l'url complete avec les données get
