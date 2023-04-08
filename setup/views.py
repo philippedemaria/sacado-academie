@@ -1387,7 +1387,7 @@ def commit_adhesion(request) :
         request.session["parents_to_session"]  = parents_to_session
 
 
-    else
+    else :
         error_str = ""
         for error in formset.errors :
             print(request,error)
