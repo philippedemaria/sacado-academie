@@ -1393,7 +1393,7 @@ def commit_adhesion(request) :
             print(request,error)
             error_str += str(error)+" - "
 
-        messages.error(request,"Erreur d'inscription" + )
+        messages.error(request,"Erreur d'inscription" + error_str)
         redirect('index')
     
     cmd=cmd_abonnement(formule,parents_to_session[0]['facture_id'])
