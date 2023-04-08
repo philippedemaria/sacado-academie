@@ -61,7 +61,7 @@ urlpatterns = [
     #######  Paiement CA
     ############################################################################################
     path("paiement",paiement,name="paiement"),
-    path("retour_paiement/<str:status>",retour_paiement,name="retour_paiement")
+    path("paiement_retour/<str:status>",paiement_retour,name="paiement_retour")
 
 ]
 

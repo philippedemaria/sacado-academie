@@ -56,7 +56,15 @@ import os
 import fileinput 
 import json
 
+# le necessaire pour le module de paiement du CA
 import hmac
+from Crypto.Signature import PKCS1_v1_5
+from Crypto.PublicKey import RSA
+from Crypto.Hash import SHA
+from urllib.parse import unquote
+import base64
+
+
 ##############   bibliothèques pour les impressions pdf    #########################
 import os
 from pdf2image import convert_from_path # convertit un pdf en autant d'images que de pages du pdf
@@ -1039,61 +1047,7 @@ def all_from_parent_user(user) :
 
 
 def save_renewal_adhesion(request) :
-    """page de paiement 
-    request.POST contient une liste student_ids, une liste level, et des
-    listes "engagement"+student_ids"""
-    #----- on met les informations concernant le paiment dans session
-    #------------- extraction des infos pour les passer au template
-    somme = 0
-    students = []
-
-    user = request.user
-
-    nbs = 0
-    for student_id in request.POST.getlist('student_ids') :
-        nbs += 1
-        engagement  = request.POST.get('engagement'+student_id,None) 
-        formule_id  = request.POST.get('formule'+student_id,None)  
-        level_id  = request.POST.get('level'+student_id,None) 
-
-        try :
-            formule = Formule.objects.get(pk=formule_id)
-            engagement_si_tab = request.POST.get('engagement'+student_id)
-            amount, duration = engagement_si_tab.split("-")
-            amount=amount.replace(",",".")
-            somme +=  float(amount)
-            student  = Student.objects.get(user_id = student_id)
-            level    = Level.objects.get(pk = level_id)
-
-            if duration == 12 : duration = 10
-            if level_id < 6    : price = formule.price * duration
-            elif level_id < 10 : price = (formule.price +10) * duration
-            else               : price = (formule.price +20) * duration
-
-            students.append({
-                'duration'   : duration,
-                'student_id' : student.user.id,
-                'name'       : student.user.first_name +" " +student.user.last_name,
-                'formule'    : formule.name,
-                'formule_id' : formule.id,                
-                'level_name' : level.name,
-                'level_id'   : level_id,
-                'price'      : price  } 
-                )
-        except :	
-            pass
-
-    request.session["list_of_formules"] = students
-
-    montant=somme
-    timestamp=datetime.now().astimezone().replace(microsecond=0).isoformat()
-    cmd="Abonnement famille " + request.user.last_name+" "+timestamp
-    email= user.email
-    billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</Firstname><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format(user.first_name,user.last_name)
-    champs_val=champs_briqueCA(montant,cmd,email,nbs,billing)
-
-    context={'somme' : somme , 'students' : students , 'champs_val':champs_val}
-
+    
     return render(request, 'setup/save_renewal_adhesion.html', context)  
   
 
@@ -1103,79 +1057,7 @@ def save_renewal_adhesion(request) :
 
 @csrf_exempt
 def accept_renewal_adhesion(request) :
-   
-    body=json.loads(request.body)
-    #---------- Vérification du paiement auprès de paypal
-    orderID = body['orderID'] 
-    #print("https://api-m.sandbox.paypal.com/v2/checkout/orders/"+orderID)
-    #r = requests.post("https://api-m.sandbox.paypal.com/v2/checkout/orders/"+orderID )
-    #print(r.content)
-    #print(request.session.keys())
-    #print(request.session['paypal_payment'])
-    ok=True
-    if ok :
-        parent=request.user
-        adh=request.session['detail_adhesions']
-
-        code = str(uuid.uuid4())[:8]
-        chrono = create_chrono(Facture,"F")
-        #-----------creation d'une nouvelle facture
-        new_fact=Facture()
-        new_fact.chrono=chrono
-        new_fact.user=parent
-        new_fact.orderID=orderID
-        new_fact.is_lesson = 0
-        new_fact.date=datetime.now()
-        new_fact.save() #il faut sauver avant de pouvoir ajouter les adhesions 
-        #-------- modification de la closure des students
-        for i,student_id in enumerate(adh['student_ids']) :
-            student_user = User.objects.get(pk = student_id)
-            eng = adh['engagements'][i].split("-")  # mois-prix 
-            duration = int(eng[0]) * 31
-            closure = student_user.closure
-
-            if closure :    #il y a deja un abonnement en cours : le debut
-            				#du nouvel abonnement commence le lendemain de la fin
-            	debut = closure+timedelta(days=1)
-            else : 
-            	debut = time_zone_user(request.user)
-            	
-            new_closure = debut + timedelta(days = duration)
-            User.objects.filter(pk = student_id).update(closure=new_closure)
-
-            #-----------creation d'une nouvelle adhésion
-            new_adh=Adhesion()
-            new_adh.amount=float(eng[1].replace(",","."))
-            #new_adh.formule_id = eng[0]
-            new_adh.start      = debut
-            new_adh.stop       = new_closure
-            new_adh.level      = Level.objects.filter(id=adh['level'][i])[0]
-            new_adh.student    = Student.objects.get(user_id=student_id)
-            new_adh.save()
-            new_fact.adhesions.add(new_adh)
-            #for pid in paypal_payment.getlist("user") :
-            #Adhesion.objects.filter(user_id = pid).update(date_end=new_closure)
-            #Adhesion.objects.filter(user_id = pid).update(file = creation_facture(user,data_posted,code))
-        new_fact.save()
-        new_fact.file=creation_facture(new_fact)
-
-        #     user = User.objects.get(pk = pid)
-
-        #     ##################################################################################################################
-        #     # Envoi du courriel
-        #     ##################################################################################################################
-        #     msg = "Bonjour "+ user.first_name +" "+ user.last_name +",\n\n vous venez de souscrire à un prolongement de l'abonnement à la SACADO Académie. \n"
-        #     msg += "votre référence d'adhésion est "+chrono+".\n\n"
-        #     msg += "Les identifiants de connexion n'ont pas changé.\n"
-        #     msg += "L'équipe de SACADO Académie vous remercie de votre confiance.\n\n"
-        #     send_mail("Inscription SACADO Académie", msg, settings.DEFAULT_FROM_EMAIL, [ user.email ]
-        # # Envoi à SACADO
-        # sacado_rcv = ["philippe.demaria83@gmail.com","brunoserres33@gmail.com","sacado.asso@gmail.com"]
-        # sacado_msg = "Renouvellement d'adhésion après période d'essai : user_id"+ user.id +" : "+ user.first_name +" "+ user.last_name 
-        # send_mail("Renouvellement d'adhésion après période d'essai", sacado_msg, settings.DEFAULT_FROM_EMAIL, sacado_rcv)
-        data={"ok":True} 
-        #return JsonResponse(data,safe=True)
-        return HttpResponse("ok")
+    return HttpResponse("ok")
 
 
 
@@ -1281,9 +1163,9 @@ def add_adhesion(request) :
             formule = Formule.objects.get(pk=formule_id)
             cmd="Abonnement "+formule.name+" " + str(datetime.now())
 
-            billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</Firstname><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format(request.user.last_name,request.user.first_name)
+            billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Academie","SANS PB")
 
-            champs_val=champs_briqueCA(amount,cmd,request.user.email,1,billing)
+            champs_val=champs_briqueCA(amount,cmd,request.user.email,1,billing,facture.id)
             context={ 'formule' : formule , 'level' : level , 'student' : student ,  'amount' : amount , 'end_day' : end , 'champs_val':champs_val}
             return render(request, 'setup/brique_credit_agricole.html', context)  
 
@@ -1339,7 +1221,7 @@ def insertion_into_database(parents,students):
         if loop == 0 :
             facture = Facture.objects.create(chrono = "BL_" +  user.last_name +"_"+str(today) ,  user_id = user.id , file = "" , date = today , orderID = "" , is_lesson = 0  ) #orderID = Numéro de paiement donné par la banque"
             facture.adhesions.set(adhesion_in)
-            parents_to_session.append({ 'parent_id' : user.id , 'password_no_crypted' : p['password_no_crypted'] , 'facture_id' : facture_id }) 
+            parents_to_session.append({ 'parent_id' : user.id , 'password_no_crypted' : p['password_no_crypted'] , 'facture_id' : facture.id }) 
 
     return students_to_session , parents_to_session
 
@@ -1413,39 +1295,44 @@ def send_message_after_insertion(parents,students) :
     #########################################################
  
 
-
 def champs_briqueCA(montant,cmd,email,nbr_articles,billing):
-    """rend deux listes contenant les cles/valeurs nÃ©cessaires pour la brique du credit agricole ; 
-    Ã  passer au template appelant cette brique, ces diffÃ©rents champs entrent dans le formulaire
-    cachÃ©"""
-    # calcul ou copie des differents champs, et calcul de chaine Ã  signer
+    """rend un tableau de  cles/valeurs nécessaires pour la brique du credit agricole ; 
+    À passer au template appelant cette brique, ces différents champs entrent dans le formulaire
+    caché"""
+    # calcul ou copie des differents champs, et calcul de chaine à signer
     chaine=""
     champs_val=[]
     try :
+        print(montant)
         montant=str(int(float(montant)*100+0.5))
     except :
         with open("logs/debug.log","a") as f :
             print("fonction champs_briqueCA : je ne peux pas lire le montant : ",montant,file=f)
         return
+    sc='<?xml version="1.0" encoding="utf-8" ?><shoppingcart><total><totalQuantity>{}</totalQuantity></total></shoppingcart>'.format(nbr_articles) 
+
     timestamp=datetime.now().astimezone().replace(microsecond=0).isoformat()
     cles=['SITE','RANG','IDENTIFIANT','ANNULE','REFUSE','ATTENTE','REPONDRE_A','SOURCE','TOTAL','DEVISE','CMD','PORTEUR','RETOUR','HASH','SHOPPINGCART','BILLING','TIME']
-    valeurs=[None,None,None,None,None,None,None,"RWD", montant,"978",cmd,email,"Mt:M;Ref:R;Auto:A;Erreur:E","SHA512",
-             '<?xml version="1.0" encoding="utf-8" ?><shoppingcart><total><totalQuantity>{}</totalQuantity></total></shoppingcart>'.format(nbr_articles),billing,timestamp]
+    valeurs=[None,None,None,None,None,None,None,"RWD", montant,"978",cmd,email,"Mt:M;Cmd:R;Auto:A;Erreur:E;idtrans:S;sig:K","SHA512",sc,billing,timestamp]
     
     for i,c in enumerate(cles):
        v=valeurs[i]
        if v==None : v=eval("settings.PBX_"+c)
        champs_val.append([c,v])
+           
        chaine+='PBX_'+c+"="+v + ("&" if i<len(cles)-1 else "")
        
     # calcul de la signature
     HMAC=hmac.new(bytearray.fromhex(settings.PBX_CLE_HMAC),msg=chaine.encode("utf-8"),digestmod="sha512").hexdigest().upper()
     cles.append("HMAC")
     champs_val.append(["HMAC",HMAC])
+    #htmlentities sur les champs shoppingcart et billing
+    
     with open("logs/debug.log","a") as f :
         print("chaine a signer ",chaine,file=f)
         
     return champs_val
+
 
 
 
@@ -1503,21 +1390,21 @@ def commit_adhesion(request) :
     else:
         for error in formset.errors :
             print(request,error)
-
-    cmd="Abonnement "+formule.name+" " + str(datetime.now())
-    try :
-        billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</Firstname><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format(family_name,family_fname)
-    except :
-        messages.error(request, "Une erreur est survenue pendant votre inscription. Merci de renouveler l'opération.")
-        return redirect('details_of_adhesion')
+    
+    cmd=cmd_abonnement(formule,parents_to_session[0]['facture_id'])
+    billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Academie","SANS PB")
     champs_val=champs_briqueCA(amount,cmd,family_email,nb_child,billing)
-    context={'formule':formule,'data_post':data_post,'parents':parents,'students':students,'champs_val':champs_val}
+    context={'formule':formule,'data_post':data_post,'parents':parents,'students':students,'champs_val':champs_val , 'amount' : amount}
 
     return render(request, 'setup/commit_adhesion.html', context)   
 
 
+def cmd_abonnement(formule,facture_id):
+    today = datetime.now().replace(tzinfo=timezone.utc)
+    date="{}-{:02}-{:02}".format(today.year,today.month,today.day)
+    return "Abonnement "+formule.name+"_" + date + "_"+ str(facture_id)
 
-def paiement(request) :
+def paiement(request) :  
     """page de paiement 
     request.POST contient une liste student_ids, une liste level, et des
     listes "engagement"+student_ids"""
@@ -1529,6 +1416,8 @@ def paiement(request) :
     stop       = request.POST.get('stop')
     level_id   = request.POST.get('level_id')
     formule_id = request.POST.get('formule')
+    facture_id = request.POST.get('facture_id',None)
+    
     user = request.user
 
  
@@ -1537,10 +1426,10 @@ def paiement(request) :
     student = Student.objects.get(pk=student_id)
     level   = Level.objects.get(pk=level_id)
     formule = Formule.objects.get(pk=formule_id)
+    cmd=cmd_abonnement(formule,facture_id)
 
-    cmd="Abonnement "+formule.name+" :" + student.user.last_name + " "+student.user.first_name +" "+level.shortname+str(datetime.now())
-    email= user.email
-    billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</Firstname><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format(user.first_name,user.last_name)
+    email= "stephan.ceroi@gmail.com" #user.email
+    billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Academie","SANS PB")
     try : y,m,d = stop.split("T")[0].split("-")
     except : y,m,d = stop.split("-")
     end_day = d+"-"+m+"-"+y
@@ -1551,22 +1440,23 @@ def paiement(request) :
 
 
 
-
-def retour_paiement(request,status):
-    # la banque appelle cette page lorsque la transaction est terminÃ©e
+def paiement_retour(request,status):
+    # la banque appelle cette page lorsque la transaction est terminée
     # status = 
     context={}
-    erreur=request.GET.get('code_erreur',None)
-    numero_autorisation=request.GET.get("num_auto",None)
+    erreur=request.GET.get('Erreur',None)
+    autorisation=request.GET.get("Auto",None)
+    facture_id=request.GET.get("Cmd",None)
+    f=open("logs/debug.log","a")
 
     adhesion_in = set()
     if status=="effectue" :
-        if erreur=="00000" and numero_autorisation != None : # tout va bien
- 
+        if erreur=="00000" and autorisation != None : # tout va bien
             students_to_session = request.session.get("students_to_session") 
             parents_to_session  = request.session.get("parents_to_session") 
             is_lesson_sum = 0
-            for detail in students_to_session :
+            # a revoir : students_to_session est None
+            """for detail in students_to_session :
                 student_id  = detail["student_id"]
                 adhesion_id = detail["adhesion_id"]
                 adhesion = Adhesion.objects.get(pk = adhesion_id,  is_active = 0 )
@@ -1576,7 +1466,7 @@ def retour_paiement(request,status):
                 formule_id = adhesion.formule_id
 
                 if formule_id > 3 : is_lesson_sum +=1
-
+            """
             if is_lesson_sum > 0 : is_lesson = 1
             else : is_lesson = 0
 
@@ -1588,7 +1478,7 @@ def retour_paiement(request,status):
             facture_id = parents_to_session[0]["facture_id"]  
             facture = Facture.objects.get(pk=facture_id)
             facture.chrono  = chrono
-            facture.orderID = numero_autorisation
+            facture.orderID = autorisation
             facture.is_lesson = is_lesson   #orderID = Numéro de paiement donné par la banque"
             facture.save()
 
@@ -1607,9 +1497,21 @@ def retour_paiement(request,status):
             return redirect ('index')
 
         else :
-            f=open("logs/debug.log","a")
-            print("le status est 'effectué', pourtant il y a une erreur : erreur = {},numero_autor.={}".format(erreur,numero_autorisation), file=f)
-            
+                print("le status est 'effectué', pourtant il y a une erreur : erreur = {},numero_autor.={}".format(erreur,autorisation), file=f)
+    elif status=="repondre_a" : # envoyé directement par le CA, c'est le seul retour fiable
+        ip=request.META.get('HTTP_X_FORWARDED_FOR')
+        if ip!="195.25.67.22" and ip!="194.2.122.190" :
+            print("ip emetteur : ",ip,"n'est pas dans la liste des ip autorisées",file=f)
+            return
+        montant=request.GET.get("Mt")
+        if erreur!="00000" :
+            print("transaction a echoué, code erreur=",erreur, file=f)
+        # verifier le montant
+        idtrans=request.GET.get("idtrans")
+        signature=request.GET.get("sig")
+        facture_id=request.GET.get("facture")
+        print(ip,status, erreur,montant,idtrans,facture_id,file=f)
+        facture_id=request.GET.get("facture")
     elif status=="annule":
         pass
     elif status=="refuse":
@@ -1617,11 +1519,40 @@ def retour_paiement(request,status):
     elif status=="attente":
         pass
     else :
-        print("(retour_paiement) : je ne comprends pas le status de la réponse venant de la banque")
-    
-    return render(request,"setup/retour_paiement",context)
+        print("(retour_paiement) : je ne comprends pas le status de la réponse venant de la banque", file=f)
+    context['status']=status+" "+str(erreur)+" "+str(autorisation)
+    print('status : ',status,"erreur : ",erreur, file=f)
+    msg=request.get_full_path()  #l'url complete avec les données get
+    print(msg,file=f)
+    deb=msg.find("?")
+    fin=msg.find("&sig=")
+    if deb==-1 or fin==-1 :
+        print("Impossible d'extraire la signature à partir de l'url", file=f)
+        f.close()
+        return
+    # ref : https://www.ca-moncommerce.com/espace-client-mon-commerce/up2pay-e-transactions/ma-documentation/manuel-dintegration-up2pay-e-transactions/chapitre-6-authentification-des-messages-re%C3%A7us/
+    signature=msg[fin+5:]
+    msg=msg[deb+1:fin]
+    h=SHA.new(msg.encode())
+    key=RSA.importKey(open(settings.PBX_CLE_PUBLIQUE_CA).read())
+    verificateur= PKCS1_v1_5.new(key)
+    signature = base64.b64decode(unquote(signature))
+    if verificateur.verify(h,signature) :
+        print("signature authentique",file=f)
+        #----- recuperer le numero de facture
+        # --- is_active à 1
+        
+    else :
+        print("problème signature", file=f)
+        print(msg,signature,file=f)
+
+        f.close()
+        return 
+    f.close()
+    return render(request,"setup/paiement_retour.html",context)
         
 ############## FIN CA  #########################
+
 
 
 def change_adhesion(request,ids):
