@@ -105,7 +105,7 @@
 			   {% for cv in champs_val %}<input type="hidden" name="PBX_{{cv.0}}" value="{{cv.1}}">
 			   {% endfor %}
 
-                        <div >Montant  à régler : {{ amount }}€</div>
+                        <div >Montant  à régler : {{ amount|floatformat:"2" }}€</div>
 
                         <button type="submit" class="btn btn-violet">Allez sur le site de paiement <img src="{% static 'img/credit_agricole.png' %}" width="100px" /></button><br/>
                     </form>
