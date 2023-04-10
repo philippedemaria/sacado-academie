@@ -1161,7 +1161,7 @@ def add_adhesion(request) :
             formule = Formule.objects.get(pk=formule_id)
             cmd="Abonnement "+formule.name+" " + str(datetime.now())
 
-            billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Academie","SANS PB")
+            billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Academie","SACADO ACADEMIE")
 
             champs_val=champs_briqueCA(amount,cmd,request.user.email,1,billing,facture.id)
             context={ 'formule' : formule , 'level' : level , 'student' : student ,  'amount' : amount , 'end_day' : end , 'champs_val':champs_val}
@@ -1376,7 +1376,7 @@ def commit_adhesion(request) :
                 level  = Level.objects.get(pk = int(levels[i]))
                 duration = int(data_post.get("duration"+str(i)))
                 price = get_price_by_formules( int(formule_id), int(duration), level.id )
-                amount += 1#price
+                amount += price
                 students.append({ "last_name" : last_name , "first_name" : first_name  , "email" : email , "level" : level , "username" : username , "password" : password , "password_no_crypted" : password_no_crypted  , "duration" : duration , "price" : price  , "formule" : formule  })
             else :
                 if i == 0 :
@@ -1401,7 +1401,7 @@ def commit_adhesion(request) :
         return redirect('index')
     
     cmd=cmd_abonnement(formule,parents_to_session[0]['facture_id'])
-    billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Academie","SANS PB")
+    billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Academie","SACADO ACADEMIE")
     champs_val=champs_briqueCA(amount,cmd,family_email,nb_child,billing)
     context={'formule':formule,'data_post':data_post,'parents':parents,'students':students,'champs_val':champs_val , 'amount' : amount}
 
@@ -1441,7 +1441,7 @@ def paiement_change_adhesion(request) :
     cmd     = cmd_abonnement(formule,facture.id)
 
     email= "stephan.ceroi@gmail.com" #user.email
-    billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Academie","SANS PB")
+    billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Academie","SACADO ACADEMIE")
     try : y,m,d = stop.split("T")[0].split("-")
     except : y,m,d = stop.split("-")
     end_day = d+"-"+m+"-"+y
@@ -1477,7 +1477,7 @@ def paiement(request) :
 
 
     email=  request.user.email
-    billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Academie","SANS PB")
+    billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Academie","SACADO ACADEMIE")
     try : y,m,d = stop.split("T")[0].split("-")
     except : y,m,d = stop.split("-")
     end_day = d+"-"+m+"-"+y
