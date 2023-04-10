@@ -1146,16 +1146,12 @@ def add_adhesion(request) :
 
             msg += "Voici quelques conseils pour votre enfant :\n\nConnecte toi sur https://sacado-academie.fr\n\n"
             msg += "Indique ton Nom d’utilisateur et ton Mot de passe\n\n"
-            msg += "Clique sur le bouton « connexion »   -> Tu arrives ensuite sur ton profil. \n\n"   
-            msg += "Le menu est à gauche :\n\n"
-            msg += "« Compte » permet de changer ton mot de passe, te déconnecter et choisir ton avatar.\n\n"
-            msg += "« Matières » te permet d’accéder à tes parcours d’exercices. Tu cliques sur « accéder » pour entrer dans le dossier, puis tu choisis un thème."
-            msg += "A l’intérieur, tu auras tous les exercices.\n\n"
-            msg += "Tu vas à ton rythme, tu choisis les exercices que tu as besoin de travailler, de réviser…\n\n"
-            msg += "Tu enregistres quand tu as fait au moins 5 situations (parfois 10), si tu as fait des erreurs, c’est normal parce que tu apprends, essaie de bien comprendre la correction proposée, puis continue les exercices suivants pour améliorer ton score."
-            msg += "Une pastille de couleur sur un exercice permet de voir que tu l’as déjà fait (% de réussite).\n\n"
-            msg += "« Suivi » permet de voir ton évolution. Clique en bas sur les différents bilans et en haut à droite pour la synthèse.\n\n"
-            msg += "« Flashpack » : permet de créer des propres cartes de révision, pour entraîner ta mémoire.\n\n"
+            msg += "Clique sur le bouton « connexion » \n\n"
+            msg += "Indique ton identifaint et ton mot de passe \n\n" 
+            msg += "-> Tu arrives ensuite sur ton tableau de bord avec tous les modules de ta formule. \n\n"   
+            msg += "Tu peux y accéder aussi avec le menu à gauche :\n\n"
+            msg += "Clique sur « entraînement » pour commencer les exercices classés par thème. \n\n" 
+            msg += "Pense à t’entraîner au moins 10 minutes chaque jour pour fixer les notions, maîtriser les méthodes de base et construire des savoirs solides..\n\n"
 
                 
             send_mail("Inscription SACADO ACADEMIE", msg, settings.DEFAULT_FROM_EMAIL, u_p_mails )
@@ -1254,11 +1250,17 @@ def send_message_after_insertion(parents,students) :
         msg += "\n\nL'équipe de SACADO ACADÉMIE vous remercie de votre confiance.\n\n"
 
         ###### Quelques recommandations pour les parents
+
         msg += "Voici quelques conseils pour votre enfant :\n\nConnecte toi sur https://sacado-academie.fr\n\n"
-        msg += "Indique ton identifiant et ton mot de passe\n\n"
-        msg += "Clique sur le bouton « connexion »   -> Tu arrives ensuite sur ton profil. \n\n"   
-        msg += "Le menu est à gauche :\n\n"
-        msg += "Sur ton tableau de bord, tu trouves les indications de tes options.\n\n"
+        msg += "Indique ton Nom d’utilisateur et ton Mot de passe\n\n"
+        msg += "Clique sur le bouton « connexion » \n\n"
+        msg += "Indique ton identifaint et ton mot de passe \n\n" 
+        msg += "-> Tu arrives ensuite sur ton tableau de bord avec tous les modules de ta formule. \n\n"   
+        msg += "Tu peux y accéder aussi avec le menu à gauche :\n\n"
+        msg += "Clique sur « entraînement » pour commencer les exercices classés par thème. \n\n" 
+        msg += "Pense à t’entraîner au moins 10 minutes chaque jour pour fixer les notions, maîtriser les méthodes de base et construire des savoirs solides..\n\n"
+
+                
 
         send_mail("Inscription SACADO ACADÉMIE", msg, settings.DEFAULT_FROM_EMAIL, [p["email"]] )
 
