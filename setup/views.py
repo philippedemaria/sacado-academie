@@ -1144,14 +1144,16 @@ def add_adhesion(request) :
 
 
 
-            msg += "Voici quelques conseils pour votre enfant :\n\nConnecte toi sur https://sacado-academie.fr\n\n"
-            msg += "Indique ton Nom d’utilisateur et ton Mot de passe\n\n"
-            msg += "Clique sur le bouton « connexion » \n\n"
-            msg += "Indique ton identifaint et ton mot de passe \n\n" 
-            msg += "-> Tu arrives ensuite sur ton tableau de bord avec tous les modules de ta formule. \n\n"   
-            msg += "Tu peux y accéder aussi avec le menu à gauche :\n\n"
+            msg += "Voici quelques conseils pour votre enfant :\n\nConnecte-toi sur https://sacado-academie.fr\n"
+            msg += "Indique ton Nom d’utilisateur et ton Mot de passe\n"
+            msg += "Clique sur le bouton « connexion » \n"
+            msg += "Indique ton identifiant et ton mot de passe \n" 
+            msg += "-> Tu arrives ensuite sur ton tableau de bord avec tous les modules de ta formule. \n"   
+            msg += "Tu peux y accéder aussi avec le menu à gauche :\n"
             msg += "Clique sur « entraînement » pour commencer les exercices classés par thème. \n\n" 
-            msg += "Pense à t’entraîner au moins 10 minutes chaque jour pour fixer les notions, maîtriser les méthodes de base et construire des savoirs solides..\n\n"
+            msg += "Pense à t’entraîner au moins 10 minutes chaque jour pour fixer les notions, maîtriser les méthodes de base et construire des savoirs solides..\n"
+
+                
 
                 
             send_mail("Inscription SACADO ACADEMIE", msg, settings.DEFAULT_FROM_EMAIL, u_p_mails )
@@ -1251,14 +1253,14 @@ def send_message_after_insertion(parents,students) :
 
         ###### Quelques recommandations pour les parents
 
-        msg += "Voici quelques conseils pour votre enfant :\n\nConnecte toi sur https://sacado-academie.fr\n\n"
-        msg += "Indique ton Nom d’utilisateur et ton Mot de passe\n\n"
-        msg += "Clique sur le bouton « connexion » \n\n"
-        msg += "Indique ton identifaint et ton mot de passe \n\n" 
-        msg += "-> Tu arrives ensuite sur ton tableau de bord avec tous les modules de ta formule. \n\n"   
-        msg += "Tu peux y accéder aussi avec le menu à gauche :\n\n"
+        msg += "Voici quelques conseils pour votre enfant :\n\nConnecte-toi sur https://sacado-academie.fr\n"
+        msg += "Indique ton Nom d’utilisateur et ton Mot de passe\n"
+        msg += "Clique sur le bouton « connexion » \n"
+        msg += "Indique ton identifiant et ton mot de passe \n" 
+        msg += "-> Tu arrives ensuite sur ton tableau de bord avec tous les modules de ta formule. \n"   
+        msg += "Tu peux y accéder aussi avec le menu à gauche :\n"
         msg += "Clique sur « entraînement » pour commencer les exercices classés par thème. \n\n" 
-        msg += "Pense à t’entraîner au moins 10 minutes chaque jour pour fixer les notions, maîtriser les méthodes de base et construire des savoirs solides..\n\n"
+        msg += "Pense à t’entraîner au moins 10 minutes chaque jour pour fixer les notions, maîtriser les méthodes de base et construire des savoirs solides..\n"
 
                 
 
@@ -1270,10 +1272,10 @@ def send_message_after_insertion(parents,students) :
             srcv.append(s["email"])
             smsg = "Bonjour "+s["first_name"]+" "+s["last_name"]+",\n\nTu viens d'être inscrit au menu "+ p['formule'].name +" de la SACADO ACADÉMIE. \n"
             if s['formule'].id > 1 :
-                msg += "Un.e enseignant.e de la SACADO ACADÉMIE va vous contacter sous 24 heures par mail pour établir un plan de travail personnalisé.\n\n"
-            smsg += "Ton identifiant est "+s["username"]+" et ton mot de passe est "+s["password_no_crypted"]+"\n\n"
-            smsg += "Il est possible de retrouver ces détails à partir de ton tableau de bord après ta connexion à https://sacado-academie.fr\n\n"
-            smsg += "\n\nL'équipe SACADO te remercie de ta confiance.... et en route vers la réussite \n\n"
+                msg += "Un.e enseignant.e de la SACADO ACADÉMIE va vous contacter sous 24 heures par mail pour établir un plan de travail personnalisé.\n"
+            smsg += "Ton identifiant est "+s["username"]+" et ton mot de passe est "+s["password_no_crypted"]+"\n"
+            smsg += "Il est possible de retrouver ces détails à partir de ton tableau de bord après ta connexion à https://sacado-academie.fr\n"
+            smsg += "\n\nL'équipe SACADO te remercie de ta confiance.... et en route vers la réussite \n"
 
             send_mail("Inscription SACADO ACADÉMIE", smsg, settings.DEFAULT_FROM_EMAIL, srcv)
 
