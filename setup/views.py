@@ -1450,6 +1450,45 @@ def paiement_change_adhesion(request) :
 
 
 
+
+def paiement(request) :  
+    """page de paiement 
+    request.POST contient une liste student_ids, une liste level, et des
+    listes "engagement"+student_ids"""
+    #----- on met les informations concernant le paiment dans session
+    #------------- extraction des infos pour les passer au template
+    student_id = request.POST.get('student_id')
+    amount     = request.POST.get('amount')
+    start      = request.POST.get('start')
+    stop       = request.POST.get('stop')
+    level_id   = request.POST.get('level_id')
+    formule_id = request.POST.get('formule')
+    today = datetime.now().replace(tzinfo=timezone.utc)
+
+    student = Student.objects.get(pk=student_id)
+    level   = Level.objects.get(pk=level_id)
+    formule = Formule.objects.get(pk=formule_id)
+    cmd     = cmd_abonnement(formule,facture.id)
+
+
+    request.session["details_of_student"] = {'student_id' : student_id , 'level_id' : level_id ,  'formule_id' : formule_id , 'amount' : amount , 'today' : start , 'end_day' : stop }
+
+
+    email= "stephan.ceroi@gmail.com" #user.email
+    billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Academie","SANS PB")
+    try : y,m,d = stop.split("T")[0].split("-")
+    except : y,m,d = stop.split("-")
+    end_day = d+"-"+m+"-"+y
+    champs_val=champs_briqueCA(amount,cmd,email,1,billing)
+    
+    context={ 'formule' : formule , 'level' : level , 'student' : student ,  'amount' : amount , 'end_day' : end_day , 'champs_val':champs_val}
+    return render(request, 'setup/brique_credit_agricole.html', context)  
+
+
+
+
+
+
 def find_facture(facture_id, autorisation ):
 
     chrono  = create_chrono(Facture,"F")
