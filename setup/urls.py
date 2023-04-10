@@ -60,7 +60,7 @@ urlpatterns = [
     ############################################################################################
     #######  Paiement CA
     ############################################################################################
-    path("paiement",paiement,name="paiement"),
+    path("paiement_change_adhesion",paiement_change_adhesion,name="paiement_change_adhesion"),
     path("paiement_retour/<str:status>",paiement_retour,name="paiement_retour")
 
 ]

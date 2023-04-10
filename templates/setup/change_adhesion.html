@@ -36,7 +36,7 @@
 {% block body %}     
 <section class="content_main"> 
  
-    <form action="{% url 'paiement' %}" method="POST">
+    <form action="{% url 'paiement_change_adhesion' %}" method="POST">
         {% csrf_token %}
         <input name="student_id" id="student_id" value="{{student.user.id }}"  type="hidden"   />
         <input name="amount" id="amount" type="hidden"  />

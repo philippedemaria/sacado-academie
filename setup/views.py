@@ -1411,7 +1411,9 @@ def cmd_abonnement(formule,facture_id):
     date="{}-{:02}-{:02}".format(today.year,today.month,today.day)
     return "Abonnement "+formule.name+"_" + date + "_"+ str(facture_id)
 
-def paiement(request) :  
+
+
+def paiement_change_adhesion(request) :  
     """page de paiement 
     request.POST contient une liste student_ids, une liste level, et des
     listes "engagement"+student_ids"""
@@ -1423,15 +1425,18 @@ def paiement(request) :
     stop       = request.POST.get('stop')
     level_id   = request.POST.get('level_id')
     formule_id = request.POST.get('formule')
-    facture_id = request.POST.get('facture_id',None)
-    
+
+    facture = Facture.objects.create(chrono = "BL_" +  user.last_name +"_"+str(today) ,  user_id = user.id , file = "" , date = today , orderID = "" , is_lesson = 1 ) #orderID = Numéro de paiement donné par la banque"
+    adhesion = adhesion.objects.create(amount = amount , student_id = student_id , formule_id = formule_id , start = start , stop = stop , level_id = level_id , year = this_year , is_active = 0 )
+    facture.adhesions.add(adhesion)
+
     user = request.user
     request.session["details_of_student"] = {'student_id' : student_id , 'level_id' : level_id ,  'formule_id' : formule_id , 'amount' : amount , 'today' : start , 'end_day' : stop }
 
     student = Student.objects.get(pk=student_id)
     level   = Level.objects.get(pk=level_id)
     formule = Formule.objects.get(pk=formule_id)
-    cmd=cmd_abonnement(formule,facture_id)
+    cmd     = cmd_abonnement(formule,facture_id)
 
     email= "stephan.ceroi@gmail.com" #user.email
     billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Academie","SANS PB")
