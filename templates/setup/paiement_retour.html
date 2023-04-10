@@ -15,7 +15,7 @@
                 <div class="card_recapitulatif" > 
                     <div class="row">                        
                     	<div class="col-sm-12">
-            			{% if statut == 'repondre_a' %}
+            			{% if statut == 'effectue' %}
                     	<div class="alert alert-success">
  							Transaction acceptée. Les droits sont maintenant ouverts. Bonne révision.<br/><br/> Merci pour avoir choisi la SACADO ACADEMIE.
                         </div>
@@ -31,17 +31,17 @@
                     	<div class="alert alert-warning">
  							Transaction en attente. Vos droits seront ouverts dès que la transaction sera acceptée. Cordialement.
                         </div>
-		                {% else   %}
+		                {% else %}
                     	<div class="alert alert-danger">
- 							Transaction ne s'est pas déroulée comme prévue. Contacter la SACADO ACADEMIE.
+ 							La transaction ne s'est pas déroulée comme prévue. Contacter la SACADO ACADEMIE.
                         </div>
-		                {% endif   %}
+		                {% endif %}
                         </div>
                     </div>
                     <div class="row" style="margin-top:40px">                        
                     	<div class="col-sm-12">
  							<a href="{% url 'index' %}"> 
-		            			{% if statut == 'repondre_a' %}
+		            			{% if statut == 'effectue' %}
 		 							Vers mon tableau de bord
 				                {% else   %}
 		 							Retour à la page d'accueil du site

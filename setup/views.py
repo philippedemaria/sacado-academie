@@ -1426,8 +1426,6 @@ def paiement(request) :
     facture_id = request.POST.get('facture_id',None)
     
     user = request.user
-
- 
     request.session["details_of_student"] = {'student_id' : student_id , 'level_id' : level_id ,  'formule_id' : formule_id , 'amount' : amount , 'today' : start , 'end_day' : stop }
 
     student = Student.objects.get(pk=student_id)
@@ -1447,48 +1445,35 @@ def paiement(request) :
 
 
 
+def find_facture(facture_id, autorisation ):
+
+    chrono  = create_chrono(Facture,"F")
+    facture = Facture.objects.get(pk=facture_id)
+    facture.chrono  = chrono
+    facture.orderID = autorisation
+    facture.save()
+
+    for adhesion in facture.Adhesions.all() :
+        adhesion.is_active=1
+        adhesion.save()
+
+ 
+
+
 def paiement_retour(request,status):
     # la banque appelle cette page lorsque la transaction est terminée
     # status = 
     context={}
     erreur=request.GET.get('Erreur',None)
     autorisation=request.GET.get("Auto",None)
-    facture_id=request.GET.get("Cmd",None)
+    cmd = request.GET.get("Cmd",None)
     f=open("logs/debug.log","a")
 
-    adhesion_in = set()
     if status=="effectue" :
         if erreur=="00000" and autorisation != None : # tout va bien
+
             students_to_session = request.session.get("students_to_session") 
             parents_to_session  = request.session.get("parents_to_session") 
-            is_lesson_sum = 0
-            # a revoir : students_to_session est None
-            """for detail in students_to_session :
-                student_id  = detail["student_id"]
-                adhesion_id = detail["adhesion_id"]
-                adhesion = Adhesion.objects.get(pk = adhesion_id,  is_active = 0 )
-                adhesion.is_active = 1 
-                adhesion.save() 
-                adhesion_in.add(adhesion)
-                formule_id = adhesion.formule_id
-
-                if formule_id > 3 : is_lesson_sum +=1
-            """
-            if is_lesson_sum > 0 : is_lesson = 1
-            else : is_lesson = 0
-
-            today = datetime.now()
-            today = today.replace(tzinfo=timezone.utc)
-            chrono = create_chrono(Facture,"F")
-            loop_parent = 0
- 
-            facture_id = parents_to_session[0]["facture_id"]  
-            facture = Facture.objects.get(pk=facture_id)
-            facture.chrono  = chrono
-            facture.orderID = autorisation
-            facture.is_lesson = is_lesson   #orderID = Numéro de paiement donné par la banque"
-            facture.save()
-
 
             parent_id = parents_to_session[0]["parent_id"]  
             user = User.objects.get(pk=parent_id)
@@ -1501,10 +1486,10 @@ def paiement_retour(request,status):
                 request.session.pop('parents_to_session', None) 
             except : pass
 
-            return redirect ('index')
+        else : print("le status est 'effectué', pourtant il y a une erreur : erreur = {},numero_autor.={}".format(erreur,autorisation), file=f)
+    
+        f.close()        
 
-        else :
-                print("le status est 'effectué', pourtant il y a une erreur : erreur = {},numero_autor.={}".format(erreur,autorisation), file=f)
     elif status=="repondre_a" : # envoyé directement par le CA, c'est le seul retour fiable
         ip=request.META.get('HTTP_X_FORWARDED_FOR')
         if ip!="195.25.67.22" and ip!="194.2.122.190" :
@@ -1514,21 +1499,33 @@ def paiement_retour(request,status):
         if erreur!="00000" :
             print("transaction a echoué, code erreur=",erreur, file=f)
         # verifier le montant
-        idtrans=request.GET.get("idtrans")
-        signature=request.GET.get("sig")
-        facture_id=request.GET.get("facture")
-        print(ip,status, erreur,montant,idtrans,facture_id,file=f)
-        facture_id=request.GET.get("facture")
-
-        facture = Facture.objects.get(pk=facture_id)
-        for adhesion in facture.Adhesions.all() :
-            adhesion.is_active=1
-            adhesion.save()
-
-        facture.chrono  = create_chrono(Facture,"F")
-        facture.orderID = autorisation
-        fature.save()
  
+        signature=request.GET.get("sig")
+        facture_id = cmd.split("_")[2]
+ 
+        msg=request.get_full_path()  #l'url complete avec les données get
+        print(msg,file=f)
+        deb=msg.find("?")
+        fin=msg.find("&sig=")
+        if deb==-1 or fin==-1 :
+            print("Impossible d'extraire la signature à partir de l'url", file=f)
+            f.close()
+            return render(request,"setup/paiement_retour_vide.html",{})
+        signature=msg[fin+5:]
+        msg=msg[deb+1:fin]
+        h=SHA.new(msg.encode())
+        key=RSA.importKey(open(settings.PBX_CLE_PUBLIQUE_CA).read())
+        verificateur= PKCS1_v1_5.new(key)
+        signature = base64.b64decode(unquote(signature))
+
+        if verificateur.verify(h,signature) :
+            find_facture(facture_id, autorisation )
+        else :
+            print("problème signature", file=f)
+            print(msg,signature,file=f)
+            f.close()
+            return render(request,"setup/paiement_retour_vide.html",{})
+        return render(request,"setup/paiement_retour_vide.html",{})
 
     elif status=="annule":
         pass
@@ -1538,37 +1535,8 @@ def paiement_retour(request,status):
         pass
     else :
         print("(retour_paiement) : je ne comprends pas le status de la réponse venant de la banque", file=f)
+
     context['statut']=status
-
-    context['status']=status+" "+str(erreur)+" "+str(autorisation)
-    print('status : ',status,"erreur : ",erreur, file=f)
-    msg=request.get_full_path()  #l'url complete avec les données get
-    print(msg,file=f)
-    deb=msg.find("?")
-    fin=msg.find("&sig=")
-    if deb==-1 or fin==-1 :
-        print("Impossible d'extraire la signature à partir de l'url", file=f)
-        f.close()
-        return
-    # ref : https://www.ca-moncommerce.com/espace-client-mon-commerce/up2pay-e-transactions/ma-documentation/manuel-dintegration-up2pay-e-transactions/chapitre-6-authentification-des-messages-re%C3%A7us/
-    signature=msg[fin+5:]
-    msg=msg[deb+1:fin]
-    h=SHA.new(msg.encode())
-    key=RSA.importKey(open(settings.PBX_CLE_PUBLIQUE_CA).read())
-    verificateur= PKCS1_v1_5.new(key)
-    signature = base64.b64decode(unquote(signature))
-    if verificateur.verify(h,signature) :
-        print("signature authentique",file=f)
-        #----- recuperer le numero de facture
-        # --- is_active à 1
-        
-    else :
-        print("problème signature", file=f)
-        print(msg,signature,file=f)
-
-        f.close()
-        return 
-    f.close()
     return render(request,"setup/paiement_retour.html",context)
         
 ############## FIN CA  #########################
