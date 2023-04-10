@@ -1432,8 +1432,6 @@ def paiement_change_adhesion(request) :
     adhesion = Adhesion.objects.create(amount = amount , student_id = student_id , formule_id = formule_id , start = start , stop = stop , level_id = level_id , year = this_year , is_active = 0 )
     facture.adhesions.add(adhesion)
 
-    
-    request.session["details_of_student"] = {'student_id' : student_id , 'level_id' : level_id ,  'formule_id' : formule_id , 'amount' : amount , 'today' : start , 'end_day' : stop }
 
     student = Student.objects.get(pk=student_id)
     level   = Level.objects.get(pk=level_id)
@@ -1479,14 +1477,15 @@ def paiement_retour(request,status):
     if status=="effectue" :
         if erreur=="00000" and autorisation != None : # tout va bien
 
-            students_to_session = request.session.get("students_to_session") 
-            parents_to_session  = request.session.get("parents_to_session") 
+            students_to_session = request.session.get("students_to_session",None) 
+            parents_to_session  = request.session.get("parents_to_session",None) 
 
-            parent_id = parents_to_session[0]["parent_id"]  
-            user = User.objects.get(pk=parent_id)
-            password = parents_to_session[0]["password_no_crypted"]
-            user = authenticate(username=user.username, password=password)
-            login(request, user,  backend='django.contrib.auth.backends.ModelBackend' )
+            if parents_to_session :
+                parent_id = parents_to_session[0]["parent_id"]
+                user = User.objects.get(pk=parent_id)
+                password = parents_to_session[0]["password_no_crypted"]
+                user = authenticate(username=user.username, password=password)
+                login(request, user,  backend='django.contrib.auth.backends.ModelBackend' )                
 
             try : 
                 request.session.pop('students_to_session', None) 
