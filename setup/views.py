@@ -1470,11 +1470,9 @@ def paiement(request) :
     formule = Formule.objects.get(pk=formule_id)
     cmd     = cmd_abonnement(formule,facture.id)
 
-
     request.session["details_of_student"] = {'student_id' : student_id , 'level_id' : level_id ,  'formule_id' : formule_id , 'amount' : amount , 'today' : start , 'end_day' : stop }
 
-
-    email= "stephan.ceroi@gmail.com" #user.email
+    email=  request.user.email
     billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Academie","SANS PB")
     try : y,m,d = stop.split("T")[0].split("-")
     except : y,m,d = stop.split("-")
@@ -1536,7 +1534,7 @@ def paiement_retour(request,status):
 
     elif status=="repondre_a" : # envoyé directement par le CA, c'est le seul retour fiable
         ip=request.META.get('HTTP_X_FORWARDED_FOR')
-        if ip!="195.25.67.22" and ip!="194.2.122.190" :
+        if ip!="194.2.160.85" and ip!="194.2.122.190" :
             print("ip emetteur : ",ip,"n'est pas dans la liste des ip autorisées",file=f)
             return
         montant=request.GET.get("Mt")
