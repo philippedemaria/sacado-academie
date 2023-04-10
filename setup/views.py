@@ -1504,6 +1504,7 @@ def paiement_retour(request,status):
         facture_id = cmd.split("_")[2]
  
         msg=request.get_full_path()  #l'url complete avec les données get
+        print("================ PAIEMENT REPONDRE_A ================",file=f)
         print(msg,file=f)
         deb=msg.find("?")
         fin=msg.find("&sig=")
