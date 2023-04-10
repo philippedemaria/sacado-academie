@@ -1376,7 +1376,7 @@ def commit_adhesion(request) :
                 level  = Level.objects.get(pk = int(levels[i]))
                 duration = int(data_post.get("duration"+str(i)))
                 price = get_price_by_formules( int(formule_id), int(duration), level.id )
-                amount += price
+                amount += 1#price
                 students.append({ "last_name" : last_name , "first_name" : first_name  , "email" : email , "level" : level , "username" : username , "password" : password , "password_no_crypted" : password_no_crypted  , "duration" : duration , "price" : price  , "formule" : formule  })
             else :
                 if i == 0 :
@@ -1422,7 +1422,7 @@ def paiement_change_adhesion(request) :
     #----- on met les informations concernant le paiment dans session
     #------------- extraction des infos pour les passer au template
     student_id = request.POST.get('student_id')
-    amount     = 1#request.POST.get('amount')
+    amount     = request.POST.get('amount')
     start      = request.POST.get('start')
     stop       = request.POST.get('stop')
     level_id   = request.POST.get('level_id')
@@ -1460,7 +1460,7 @@ def paiement(request) :
     #----- on met les informations concernant le paiment dans session
     #------------- extraction des infos pour les passer au template
     student_id = request.POST.get('student_id')
-    amount     = 1#request.POST.get('amount')
+    amount     = request.POST.get('amount')
     start      = request.POST.get('start')
     stop       = request.POST.get('stop')
     level_id   = request.POST.get('level_id')
