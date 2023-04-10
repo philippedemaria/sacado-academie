@@ -1425,12 +1425,13 @@ def paiement_change_adhesion(request) :
     stop       = request.POST.get('stop')
     level_id   = request.POST.get('level_id')
     formule_id = request.POST.get('formule')
-
+    
+    user = request.user
     facture = Facture.objects.create(chrono = "BL_" +  user.last_name +"_"+str(today) ,  user_id = user.id , file = "" , date = today , orderID = "" , is_lesson = 1 ) #orderID = Numéro de paiement donné par la banque"
     adhesion = adhesion.objects.create(amount = amount , student_id = student_id , formule_id = formule_id , start = start , stop = stop , level_id = level_id , year = this_year , is_active = 0 )
     facture.adhesions.add(adhesion)
 
-    user = request.user
+    
     request.session["details_of_student"] = {'student_id' : student_id , 'level_id' : level_id ,  'formule_id' : formule_id , 'amount' : amount , 'today' : start , 'end_day' : stop }
 
     student = Student.objects.get(pk=student_id)
