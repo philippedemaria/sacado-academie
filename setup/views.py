@@ -1486,11 +1486,10 @@ def paiement_retour(request,status):
                 password = parents_to_session[0]["password_no_crypted"]
                 user = authenticate(username=user.username, password=password)
                 login(request, user,  backend='django.contrib.auth.backends.ModelBackend' )                
-
-            try : 
-                request.session.pop('students_to_session', None) 
-                request.session.pop('parents_to_session', None) 
-            except : pass
+                try : 
+                    request.session.pop('students_to_session', None) 
+                    request.session.pop('parents_to_session', None) 
+                except : pass
 
         else : print("le status est 'effectué', pourtant il y a une erreur : erreur = {},numero_autor.={}".format(erreur,autorisation), file=f)
     
