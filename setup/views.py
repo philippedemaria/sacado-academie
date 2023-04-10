@@ -1425,6 +1425,7 @@ def paiement_change_adhesion(request) :
     stop       = request.POST.get('stop')
     level_id   = request.POST.get('level_id')
     formule_id = request.POST.get('formule')
+    today = datetime.now().replace(tzinfo=timezone.utc)
     
     user = request.user
     facture = Facture.objects.create(chrono = "BL_" +  user.last_name +"_"+str(today) ,  user_id = user.id , file = "" , date = today , orderID = "" , is_lesson = 1 ) #orderID = Numéro de paiement donné par la banque"
