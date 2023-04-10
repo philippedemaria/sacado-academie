@@ -1453,7 +1453,7 @@ def find_facture(facture_id, autorisation ):
     facture.orderID = autorisation
     facture.save()
 
-    for adhesion in facture.Adhesions.all() :
+    for adhesion in facture.adhesions.all() :
         adhesion.is_active=1
         adhesion.save()
 
@@ -1549,8 +1549,8 @@ def change_adhesion(request,ids):
     user     = request.user
     formules = Formule.objects.filter(is_sale=1)
     student  = Student.objects.get(user_id=ids)
-    adhesion  = student.adhesions.last()    
-    today = time_zone_user(student.user)
+    adhesion = student.adhesions.last()    
+    today    = time_zone_user(student.user)
     if today.month < 7 : this_year = today.year 
     else : this_year = today.year + 1
  
