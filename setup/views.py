@@ -1420,7 +1420,7 @@ def paiement_change_adhesion(request) :
     #----- on met les informations concernant le paiment dans session
     #------------- extraction des infos pour les passer au template
     student_id = request.POST.get('student_id')
-    amount     = request.POST.get('amount')
+    amount     = 1#request.POST.get('amount')
     start      = request.POST.get('start')
     stop       = request.POST.get('stop')
     level_id   = request.POST.get('level_id')
@@ -1458,7 +1458,7 @@ def paiement(request) :
     #----- on met les informations concernant le paiment dans session
     #------------- extraction des infos pour les passer au template
     student_id = request.POST.get('student_id')
-    amount     = 1#request.POST.get('amount')
+    amount     = request.POST.get('amount')
     start      = request.POST.get('start')
     stop       = request.POST.get('stop')
     level_id   = request.POST.get('level_id')
