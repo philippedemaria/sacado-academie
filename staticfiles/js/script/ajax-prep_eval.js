@@ -9,7 +9,7 @@ define(['jquery', 'bootstrap','ui'], function ($) {
                 $('#id_date').val(selected);
                 var this_date = selected.split("-");
                 months = ["","janvier", "février", "avril", "mai", "juin", "Juillet", "août", "septembre", "octobre", "novembre", "décembre", ]
-                this_day = this_date[2] + " " +months[parseInt(this_date[1])] +" "+ this_date[0]
+                this_day = this_date[2] + " " +months[parseInt(this_date[1])-1] +" "+ this_date[0]
                 $("#madate").html(this_day);
             });
 
