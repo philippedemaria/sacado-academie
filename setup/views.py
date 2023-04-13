@@ -1474,7 +1474,7 @@ def paiement(request) :
     this_year = today.year
 
  
-    adhesion = Adhesion.objects.get(amount = amount , student_id = student_id , formule_id = formule_id , start = start , stop = stop , level_id =  level_id , is_active = 0 )
+    adhesion = Adhesion.objects.filter(amount = amount , student_id = student_id , formule_id = formule_id, level_id =  level_id , is_active = 0 ).last()
     facture = adhesion.factures.first()
     cmd     = cmd_abonnement(formule,facture.id)
  
