@@ -1470,11 +1470,15 @@ def paiement(request) :
     student = Student.objects.get(pk=student_id)
     level   = Level.objects.get(pk=level_id)
     formule = Formule.objects.get(pk=formule_id)
+    user = request.user
+    this_year = today.year
+
+ 
+    adhesion = Adhesion.objects.get(amount = amount , student_id = student_id , formule_id = formule_id , start = start , stop = stop , level_id =  level_id , is_active = 0 )
+    facture = adhesion.factures.first()
     cmd     = cmd_abonnement(formule,facture.id)
-
-
+ 
     request.session["details_of_student"] = {'student_id' : student_id , 'level_id' : level_id ,  'formule_id' : formule_id , 'amount' : amount , 'today' : start , 'end_day' : stop }
-
 
     email=  request.user.email
     billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Academie","SACADO ACADEMIE")
