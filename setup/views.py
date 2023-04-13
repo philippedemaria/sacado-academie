@@ -1163,7 +1163,7 @@ def add_adhesion(request) :
 
             billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Academie","SACADO ACADEMIE")
 
-            champs_val=champs_briqueCA(amount,cmd,request.user.email,1,billing,facture.id)
+            champs_val=champs_briqueCA(amount,cmd,request.user.email,1,billing)
             context={ 'formule' : formule , 'level' : level , 'student' : student ,  'amount' : amount , 'end_day' : end , 'champs_val':champs_val}
             return render(request, 'setup/brique_credit_agricole.html', context)  
 
