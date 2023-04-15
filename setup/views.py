@@ -1643,9 +1643,9 @@ def get_price_and_end_adhesion(formule_id, today, duration, student ):
     if adhesion :
         data["no_end"] = True
         try    : 
-            start_str = str(adhesion.start).split(" ")[0]
+            start_str = str(adhesion.stop).split(" ")[0]
             data["date"] = start_str.split("-")[2] +"-"+start_str.split("-")[1]+"-"+start_str.split("-")[0]
-        except : data["date"] = str(adhesion.start)
+        except : data["date"] = str(adhesion.stop)
 
     else :
         data["no_end"] = False
