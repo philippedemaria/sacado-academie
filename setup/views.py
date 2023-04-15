@@ -1652,7 +1652,7 @@ def get_price_and_end_adhesion(formule_id, today, duration, student ):
         data["date"] = str(end_of_this_adhesion)
 
     price = get_price_by_formules( int(formule_id), int(duration), student.level.id )
-    return data , int(price) , end_of_this_adhesion
+    return data , str(int(price))+",00 " , end_of_this_adhesion
 
 
 
