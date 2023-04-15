@@ -35,6 +35,12 @@
 <section class="content_main">
     <div class="row">
         <div class="col-xs-12">
+            <div style="float:left;width:350px;padding:10px;background-color: white;border-radius: 5px;color:#5d4391;font-size:13px">
+            Clique sur les jours du planning ci-contre, pour commencer tes exercices (10 min par jour) mais tu peux aussi
+            cliquer sur le bouton « Pour en faire plus ? » pour t’entraîner davantage.
+            </div>
+
+
             <div style="float:right">
                 {% for slot in slots %}
                 <a href="#" class="prep_day {% if slot.date == today %}prep_day_today{% endif %}" data-toggle="tab" data-panel="{{ forloop.counter }}">

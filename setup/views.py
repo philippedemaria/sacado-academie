@@ -58,9 +58,9 @@ import json
 
 # le necessaire pour le module de paiement du CA
 import hmac
-from Crypto.Signature import PKCS1_v1_5
-from Crypto.PublicKey import RSA
-from Crypto.Hash import SHA
+# from Crypto.Signature import PKCS1_v1_5
+# from Crypto.PublicKey import RSA
+# from Crypto.Hash import SHA
 from urllib.parse import unquote
 import base64
 
@@ -1127,7 +1127,7 @@ def add_adhesion(request) :
 
             chrono = "BL_" +  request.user.last_name +"_"+str(today)
 
-            amount = get_price_by_formules( int(formule_id), int(duration), level.id )
+            amount = get_price_and_end_adhesion( int(formule_id), int(duration), level.id )(formule_id, date_joined, today, duration, student )
 
             success = attribute_group_to_student_by_level(level,student,formule_id)
             adhesion = Adhesion.objects.create(start = today, stop = end, student = student , level_id = level_id  , amount = amount  , formule_id = formule_id , is_active = 0 ) 
@@ -1135,12 +1135,12 @@ def add_adhesion(request) :
             facture.adhesions.add(adhesion)
 
 
-            msg = "Bonjour,\n\nVous venez de souscrire à une adhésion à la SACADO ACADEMIE. \n"
+            msg = "Bonjour,\n\nVous venez de souscrire à une adhésion à la SACADO ACADÉMIE. \n"
             msg += "Votre référence d'adhésion est "+facture.chrono+". Vous etes en attente de paiement.\n\n"
             msg += "Vous avez inscrit : \n"
             msg += "- "+student.user.first_name+" "+student.user.last_name+", l'identifiant de connexion est : "+student.user.username +" \n"
             msg += "\n\nRetrouvez ces détails à partir de votre tableau de bord après votre connexion à https://sacado-academie.fr"
-            msg += "\n\nL'équipe de SACADO ACADEMIE vous remercie de votre confiance.\n\n"
+            msg += "\n\nL'équipe de SACADO ACADÉMIE vous remercie de votre confiance.\n\n"
 
 
 
@@ -1156,12 +1156,12 @@ def add_adhesion(request) :
                 
 
                 
-            send_mail("Inscription SACADO ACADEMIE", msg, settings.DEFAULT_FROM_EMAIL, u_p_mails )
+            send_mail("Inscription SACADO ACADÉMIE", msg, settings.DEFAULT_FROM_EMAIL, u_p_mails )
 
             formule = Formule.objects.get(pk=formule_id)
             cmd="Abonnement "+formule.name+" " + str(datetime.now())
 
-            billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Academie","SACADO ACADEMIE")
+            billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Académie","SACADO ACADÉMIE")
 
             champs_val=champs_briqueCA(amount,cmd,request.user.email,1,billing)
             context={ 'formule' : formule , 'level' : level , 'student' : student ,  'amount' : amount , 'end_day' : end , 'champs_val':champs_val}
@@ -1245,7 +1245,7 @@ def send_message_after_insertion(parents,students) :
         msg += "Leur accès est actuellement consultable mais leurs droits seront ouverts dès le paiement effectué. \n"
 
         if p['formule'].id > 1 :
-            msg += "Un.e enseignant.e de la SACADO ACADEMIE va vous contacter sous 24 heures par mail pour établir un plan de travail personnalisé.\n\n"
+            msg += "Un.e enseignant.e de la SACADO ACADÉMIE va vous contacter sous 24 heures par mail pour établir un plan de travail personnalisé.\n\n"
         #msg += "Pour établir des conseils personalisés, nous vous demandons à votre enfant de remplir un questionnaire à cette adresse : https://sacado-academie.fr/questionnaire\n\n"
 
         msg += "\n\nRetrouvez ces détails à partir de votre tableau de bord après votre connexion à https://sacado-academie.fr"
@@ -1401,7 +1401,7 @@ def commit_adhesion(request) :
         return redirect('index')
     
     cmd=cmd_abonnement(formule,parents_to_session[0]['facture_id'])
-    billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Academie","SACADO ACADEMIE")
+    billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Académie","SACADO ACADÉMIE")
     champs_val=champs_briqueCA(amount,cmd,family_email,nb_child,billing)
     context={'formule':formule,'data_post':data_post,'parents':parents,'students':students,'champs_val':champs_val , 'amount' : amount}
 
@@ -1427,6 +1427,7 @@ def paiement_change_adhesion(request) :
     stop       = request.POST.get('stop')
     level_id   = request.POST.get('level_id')
     formule_id = request.POST.get('formule')
+
     today = datetime.now().replace(tzinfo=timezone.utc)
     this_year = today.year
     user = request.user
@@ -1441,7 +1442,7 @@ def paiement_change_adhesion(request) :
     cmd     = cmd_abonnement(formule,facture.id)
 
     email= "stephan.ceroi@gmail.com" #user.email
-    billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Academie","SACADO ACADEMIE")
+    billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Académie","SACADO ACADÉMIE")
     try : y,m,d = stop.split("T")[0].split("-")
     except : y,m,d = stop.split("-")
     end_day = d+"-"+m+"-"+y
@@ -1481,7 +1482,7 @@ def paiement(request) :
     request.session["details_of_student"] = {'student_id' : student_id , 'level_id' : level_id ,  'formule_id' : formule_id , 'amount' : amount , 'today' : start , 'end_day' : stop }
 
     email=  request.user.email
-    billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Academie","SACADO ACADEMIE")
+    billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Académie","SACADO ACADÉMIE")
     try : y,m,d = stop.split("T")[0].split("-")
     except : y,m,d = stop.split("-")
     end_day = d+"-"+m+"-"+y
@@ -1534,6 +1535,8 @@ def paiement_retour(request,status):
                 try : 
                     request.session.pop('students_to_session', None) 
                     request.session.pop('parents_to_session', None) 
+                    sacado_msg = "Bonjour {} {},\n\nVotre paiement vient d'être reçu. \n\nL'équipe de l'ACADÉMIE SACADO vous remercie et vous souhaite une bonne utilisation.\nCordialement.\n\nCeci est  un mail automatique. Ne pas répondre.".format(user.first_name,user.last_name)
+                    send_mail("Inscription SACADO ACADÉMIE", sacado_msg, settings.DEFAULT_FROM_EMAIL, [user.email])
                 except : pass
 
         else : print("le status est 'effectué', pourtant il y a une erreur : erreur = {},numero_autor.={}".format(erreur,autorisation), file=f)
@@ -1564,18 +1567,18 @@ def paiement_retour(request,status):
             return render(request,"setup/paiement_retour_vide.html",{})
         signature=msg[fin+5:]
         msg=msg[deb+1:fin]
-        h=SHA.new(msg.encode())
-        key=RSA.importKey(open(settings.PBX_CLE_PUBLIQUE_CA).read())
-        verificateur= PKCS1_v1_5.new(key)
-        signature = base64.b64decode(unquote(signature))
+        # h=SHA.new(msg.encode())
+        # key=RSA.importKey(open(settings.PBX_CLE_PUBLIQUE_CA).read())
+        # verificateur= PKCS1_v1_5.new(key)
+        # signature = base64.b64decode(unquote(signature))
 
-        if verificateur.verify(h,signature) :
-            find_facture(facture_id, autorisation )
-        else :
-            print("problème signature", file=f)
-            print(msg,signature,file=f)
-            f.close()
-            return render(request,"setup/paiement_retour_vide.html",{})
+        # if verificateur.verify(h,signature) :
+        #     find_facture(facture_id, autorisation )
+        # else :
+        #     print("problème signature", file=f)
+        #     print(msg,signature,file=f)
+        #     f.close()
+        #     return render(request,"setup/paiement_retour_vide.html",{})
         return render(request,"setup/paiement_retour_vide.html",{})
 
     elif status=="annule":
@@ -1610,44 +1613,41 @@ def change_adhesion(request,ids):
     return render(request, 'setup/change_adhesion.html', context)
 
 
-def get_price_and_end_adhesion(formule_id, date_joined, today, duration, student ):
+def get_price_and_end_adhesion(formule_id, today, duration, student ):
     data = {}
     formule = Formule.objects.get(pk=formule_id)
     price_a_month = formule.price
 
-    try    : adhesion = student.adhesions.last()
-    except : adhesion = None
 
+    print(formule_id, today, duration, student.user.id )
+    adhesions = student.adhesions.filter( start__lte=today+ timedelta(days=1), stop__gte=today,is_active=1)
+    print(adhesions)
+
+    if adhesions :
+        adhesion = adhesions.last()
+        today    = adhesion.start
+    else : adhesion = None
+
+    print(adhesion)
 
     if today.month < 7 : this_year = today.year 
     else : this_year = today.year + 1
+
     end_of_this_adhesion = today + timedelta(days=30*int(duration))
 
-    
 
-    if adhesion and end_of_this_adhesion <= adhesion.stop and formule_id and adhesion.formule_id >= int(formule_id) :
+    if adhesion :
         data["no_end"] = True
-        price = 0
+        try    : 
+            start_str = str(adhesion.start).split(" ")[0]
+            data["date"] = start_str.split("-")[2] +"-"+start_str.split("-")[1]+"-"+start_str.split("-")[0]
+        except : data["date"] = str(adhesion.start)
 
     else :
-
         data["no_end"] = False
-        if int(duration) == 12 : 
-            price = price_a_month * 10
-        else : 
-            price  = price_a_month * int(duration)
+        data["date"] = str(end_of_this_adhesion)
 
-        days_left = adhesion.stop - today # nbre de jours de l'ancienne adhésion dèja payée mais pas consommée
-        old_formule   = Formule.objects.get(pk=adhesion.formule_id)
-        if 6 < student.level.id < 10  and formule.id > 1  : old_formule_price = old_formule.price +10
-        elif 9 < student.level.id  and formule.id > 1    : old_formule_price = old_formule.price +20
-        else : old_formule_price = old_formule.price
-        old_price = days_left.days * old_formule_price/30 # cout du relicat de jours
-
-        price = max( price - old_price , 0 )
-
-    if price < 1 : data["no_end"] = True
-
+    price = get_price_by_formules( int(formule_id), int(duration), student.level.id )
     return data , round(price,2) , end_of_this_adhesion
 
 
@@ -1659,16 +1659,15 @@ def ajax_price_changement_formule(request) :
     duration   = request.POST.get("duration",None)
 
     user    = User.objects.get(pk=student_id)  
-    date_joined = user.date_joined 
     student = Student.objects.get(user_id=student_id)   
     try    : adhesion = student.adhesions.last()
     except : adhesion = None
     today   = time_zone_user(request.user)
-    if today.year < 7 : this_year = today.year
+    if today.month < 7 : this_year = today.year
     else :  this_year = today.year + 1
     data = {}
 
-    data , price,end_of_this_adhesion = get_price_and_end_adhesion(formule_id, date_joined, today,duration,student )
+    data , price,end_of_this_adhesion = get_price_and_end_adhesion(formule_id, today,duration,student )
     data["end_of_this_adhesion"] = str(end_of_this_adhesion.day) +"-" + str(end_of_this_adhesion.month) +"-" + str(end_of_this_adhesion.year)
     data["result"]   = str(price) 
     data["amount"]   = price

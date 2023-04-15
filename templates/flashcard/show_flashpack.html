@@ -37,16 +37,17 @@
                 <li class="my_slide">
                     <div class="row consigne_diapo"  align="center">  
                         <div class="col-sm-12 col-md-12">
-                            <h1 style="font-size:4em"> 
+                            <h1 style="font-size:4em; color:#5d4391"> 
                                 {{ flashpack.title}} 
                             </h1>
-                            <div style="text-align: left">
+                            <div style="text-align: left; color:#5d4391">
                             {% block revision %}
-                            <i class="fa fa-fw fa-database"></i> Vous devrez répondre aux {% block nb_flashcard_student %}
+                            <i class="fa fa-fw fa-warning sacado_text_color"></i> Pour un travail efficace, le flashcard doit être lancé régulièrement. Les cartes les moins connues seront davantage proposées pour une sollicitation accrue de la mémorie jusqu'à apprentissage de la notion.<br/><br/>
+                            <i class="fa fa-fw fa-database sacado_text_color"></i> Vous devrez répondre aux {% block nb_flashcard_student %}
                                                                                             {{ flashpack.flashcards.count }} carte{{ flashpack.flashcards.count|pluralize }}
                                                                                           {% endblock %} qui vont vous être présentées.<br/><br/>
-                            <i class="fa fa-fw fa-mortar-board"></i> Vous êtes seul juge de vos connaissances.<br/><br/>
-                            <i class="fa fa-fw fa-refresh"></i> Il vous appartient de jauger au mieux vos réponses pour avoir un retour le plus juste possible de vos acquis. <br/><br/>
+                            <i class="fa fa-fw fa-mortar-board sacado_text_color"></i> Vous êtes seul juge de vos connaissances.<br/><br/>
+                            <i class="fa fa-fw fa-refresh sacado_text_color"></i> Il vous appartient de jauger au mieux vos réponses pour avoir un retour le plus juste possible de vos acquis. <br/><br/>
                             {% endblock %}
                             </div>                           
                             {% if flashpack.vignette %}<img src="{{ flashpack.vignette.url }}" width="350px"  />{% else %}<img src="{% static 'img/flash_accueil.png' %}" width="200px"  />{% endif %}

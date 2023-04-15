@@ -213,10 +213,10 @@ define(['jquery', 'bootstrap'], function ($) {
                                 data: {
                                     'formule_id': formule_id,
                                     'level_id'  : level_id,
-                                    'duration'  : duration,
+                                    'duration'  : duration, 
                                     csrfmiddlewaretoken: csrf_token
                                 },
-                                url: "ajax_tarifications_formule",
+                                url: "ajax_price_changement_formule",
                                 success: function (data) {
                                     $("#div_price").show();
                                     $("#verif_price").html(data.price + "€") ;
@@ -284,21 +284,19 @@ define(['jquery', 'bootstrap'], function ($) {
                     success: function (data) {
 
                         if (data.no_end){
-                        $('#result_change_adhesion' ).html("").html("<div class='row'><div class='col-sm-12 col-md-12'><div class='alert alert-danger'>Dans votre intérêt, vous ne devez pas souscrire cet abonnement.</div></div></div>" );
-                        $('#submit_change' ).prop("disabled",true)
+                        $('#result_change_adhesion' ).html("").html("<div class='row'><div class='col-sm-12 col-md-12'><div class='alert alert-danger'>Vous avez souscrit une adhesion jusqu'au "+ data.date +". Cette nouvelle adhésion commencera au "+data.date+" jusqu'au "+data.end_of_this_adhesion+".</div></div></div>" );
                         }
                         else
                         {
                         $('#result_change_adhesion' ).html("").html("<div class='row' style='margin-bottom:100px'><div class='col-sm-12 col-md-12'><div class='alert alert-success'>Adhésion demandée jusqu'au "+data.end_of_this_adhesion+".<br/>Somme à payer : "+data.result+" €</div></div></div>");                            
-                        $('#submit_change' ).prop("disabled",false)
+                        }
 
                         $('#amount' ).val(data.amount);
                         $('#start' ).val(data.start);
                         $('#stop' ).val(data.stop);
                         $('#year' ).val(data.year);
                         $('#level_id' ).val(data.level_id);
-
-                        }
+                        $('#submit_change' ).prop("disabled",false)
                     }
                 }
             )

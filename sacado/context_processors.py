@@ -20,10 +20,9 @@ from datetime import datetime
 
 def is_sacado_asso(this_user, today):
 
-    last_adhesion = this_user.student.adhesions.last()
     is_sacado = False
     is_active = False
-    if last_adhesion.stop > today and last_adhesion.is_active :
+    if this_user.student.adhesions.filter(start__lte=today, stop__gte=today,is_active=1) :
         is_sacado = True
         is_active = True
     return is_sacado, is_active

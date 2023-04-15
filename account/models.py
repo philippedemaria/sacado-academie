@@ -221,8 +221,7 @@ class User(AbstractUser):
                 is_active = True
             elif self.is_student : 
                 try :
-                    adhesion = self.student.adhesions.last()
-                    if  today < adhesion.stop and adhesion.is_active :
+                    if self.student.adhesions.filter(start__lte=today, stop__gte=today, is_active=1)  :
                         is_sacado = True
                         is_active = True
                 except:    
