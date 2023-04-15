@@ -1637,7 +1637,7 @@ def get_price_and_end_adhesion(formule_id, today, duration, student ):
         nb_days += days_list[today.month+i-1]
 
 
-    end_of_this_adhesion = today + timedelta(days=nb_days)
+    end_of_this_adhesion = today + timedelta(days=nb_days+1)
 
 
     if adhesion :
