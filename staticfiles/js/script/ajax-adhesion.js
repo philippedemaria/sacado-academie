@@ -284,7 +284,7 @@ define(['jquery', 'bootstrap'], function ($) {
                     success: function (data) {
 
                         if (data.no_end){
-                        $('#result_change_adhesion' ).html("").html("<div class='row'><div class='col-sm-12 col-md-12'><div class='alert alert-danger'>Vous avez souscrit une adhesion jusqu'au "+ data.date +". Cette nouvelle adhésion commencera au "+data.date+" jusqu'au "+data.end_of_this_adhesion+".</div></div></div>" );
+                        $('#result_change_adhesion' ).html("").html("<div class='row'><div class='col-sm-12 col-md-12'><div class='alert alert-success'>Vous avez souscrit une adhesion jusqu'au "+ data.date +".<br/> Cette nouvelle adhésion commencera au "+data.date+" jusqu'au "+data.end_of_this_adhesion+".<br/>Somme à payer : "+data.result+" €</div></div></div>" );
                         }
                         else
                         {
