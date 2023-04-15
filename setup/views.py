@@ -1618,22 +1618,26 @@ def get_price_and_end_adhesion(formule_id, today, duration, student ):
     formule = Formule.objects.get(pk=formule_id)
     price_a_month = formule.price
 
-
-    print(formule_id, today, duration, student.user.id )
     adhesions = student.adhesions.filter( start__lte=today+ timedelta(days=1), stop__gte=today,is_active=1)
-    print(adhesions)
 
     if adhesions :
         adhesion = adhesions.last()
-        today    = adhesion.start
-    else : adhesion = None
-
-    print(adhesion)
+        today    = adhesion.stop
+    else : 
+        adhesion = None
 
     if today.month < 7 : this_year = today.year 
     else : this_year = today.year + 1
 
-    end_of_this_adhesion = today + timedelta(days=30*int(duration))
+    if(this_year%4==0 and this_year%100!=0 or this_year%400==0) : days_list = [31,29,31,30,31,30,31,31,30,31,30,31,31,29,31,30,31,30,31,31,30,31,30,31]
+    else   : days_list = [31,28,31,30,31,30,31,31,30,31,30,31,31,28,31,30,31,30,31,31,30,31,30,31]
+
+    nb_days = 0
+    for i in range(int(duration)) :
+        nb_days += days_list[today.month+i-1]
+
+
+    end_of_this_adhesion = today + timedelta(days=nb_days)
 
 
     if adhesion :
