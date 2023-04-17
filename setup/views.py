@@ -245,7 +245,10 @@ def index(request):
             dataset.append(dico)
             i+=1
 
-        context = { 'nb_exercises' : nb_exercises , 'form' : form , 'np_form' : np_form , 'levels' : levels , 'nb_students' : nb_students , 'formules'  :  formules , 'image_accueil' : image_accueil , 'dataset' : dataset }
+        cookie_rgpd_accepted = request.COOKIES.get('cookie_rgpd_accepted',None)
+        cookie_rgpd_accepted = not ( cookie_rgpd_accepted  == "True" )
+
+        context = {  'cookie_rgpd_accepted' : cookie_rgpd_accepted ,  'nb_exercises' : nb_exercises , 'form' : form , 'np_form' : np_form , 'levels' : levels , 'nb_students' : nb_students , 'formules'  :  formules , 'image_accueil' : image_accueil , 'dataset' : dataset }
  
         response = render(request, 'home.html', context)
         return response
