@@ -26,7 +26,23 @@
   font-weight: 100;
   color: #5d4391;
 }
- 
+
+
+#display_rgpd{
+  position: fixed;
+  background-color: #5d4391 ; /*#5d4391; */
+  bottom : 0px;
+  left:0px;
+  width:100%;
+  margin-left: auto;
+  margin-right: auto;
+  min-height : 200px;
+  color :  #FFF ;
+  padding:20px;
+  z-index: 9999999;
+  text-align: center;
+}
+
 .vspace{
   margin-top:40px;
 }
