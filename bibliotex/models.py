@@ -43,7 +43,7 @@ class Exotex(models.Model):
     date_modified = models.DateTimeField(auto_now=True, verbose_name="Date de modification")
  
     duration = models.PositiveIntegerField(default=15, blank=True, verbose_name="Durée estimée - en minutes")
-
+    point = models.PositiveIntegerField(  default=0,  blank=True, null=True ,  verbose_name="Points") 
     ###### Socle
     subject = models.ForeignKey(Subject, default =1 , on_delete=models.PROTECT,  related_name='subject_exotexs', verbose_name="Enseignement associé")
     knowledge = models.ForeignKey(Knowledge, on_delete=models.PROTECT,  related_name='knowledge_exotexs', verbose_name="Savoir faire associé")
@@ -175,7 +175,7 @@ class Relationtex(models.Model):
     date_modified = models.DateTimeField(auto_now=True, verbose_name="Date de modification")
  
     duration = models.PositiveIntegerField(default=15, blank=True, verbose_name="Durée estimée - en minutes")
-
+    point = models.PositiveIntegerField(  default=0,  blank=True, null=True ,  verbose_name="Points") 
     ###### Socle
     skills = models.ManyToManyField(Skill, blank=True, related_name='relationtexs', verbose_name="Compétences ciblées")
     knowledges = models.ManyToManyField(Knowledge, related_name='relationtexs', verbose_name="Savoir faire associés complémentaires")

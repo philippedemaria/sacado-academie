@@ -67,7 +67,7 @@ class BibliotexForm(forms.ModelForm):
 class RelationtexForm(forms.ModelForm):
 	class Meta:
 		model = Relationtex 
-		fields = ('content','calculator','duration','skills','knowledges','is_python','is_scratch','is_tableur','start','stop','correction','is_publish_cor')
+		fields = ('content','calculator','duration','skills','knowledges','is_python','is_scratch','is_tableur','start','stop','correction','is_publish_cor','point')
 
 	def __init__(self, *args, **kwargs):
 		teacher = kwargs.pop('teacher')

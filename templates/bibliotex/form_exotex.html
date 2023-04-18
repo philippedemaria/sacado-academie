@@ -70,20 +70,27 @@ ul#id_skills li{
             {% csrf_token %}
             <div class="row" id="standard_layer">
                 {% if knowledge %}
-                        <input value="{{ knowledge.theme.subject.id }}" name="subject" id="id_subject" type="hidden" />
-                        <input value="{{ knowledge.level.id }}" name="level" id="id_level" type="hidden" />
-                        <input value="{{ knowledge.theme.id }}" name="theme" id="id_theme" type="hidden" />
-                        <input value="{{ knowledge.id }}" name="knowledge" id="id_knowledge" type="hidden" />
+                    <input value="{{ knowledge.theme.subject.id }}" name="subject" id="id_subject" type="hidden" />
+                    <input value="{{ knowledge.level.id }}" name="level" id="id_level" type="hidden" />
+                    <input value="{{ knowledge.theme.id }}" name="theme" id="id_theme" type="hidden" />
+                    <input value="{{ knowledge.id }}" name="knowledge" id="id_knowledge" type="hidden" />
 
-                <div class="row">
-                    <div class="col-sm-12 col-md-4">
-                        <div class="form-group">
-                            {{ form.title.label_tag }} <small>Optionnel</small> 
-                            {{ form.title |add_class:"form-control"  }}
-                            {{ form.title.errors }}
+                    <div class="row">
+                        <div class="col-sm-12 col-md-4">
+                            <div class="form-group">
+                                {{ form.title.label_tag }} <small>Optionnel</small> 
+                                {{ form.title |add_class:"form-control"  }}
+                                {{ form.title.errors }}
+                            </div>
                         </div>
-                    </div>
-                </div> 
+                        <div class="col-sm-12 col-md-2">
+                            <div class="form-group">
+                                {{ form.point.label_tag }} <small>Optionnel</small> 
+                                {{ form.point |add_class:"form-control"  }}
+                                {{ form.point.errors }}
+                            </div>
+                        </div>
+                    </div> 
 
 
                 {% else %}  
@@ -109,6 +116,11 @@ ul#id_skills li{
                             {{ form.title.label_tag }} <small>Optionnel</small> 
                             {{ form.title |add_class:"form-control"  }}
                             {{ form.title.errors }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.point.label_tag }} <small>Optionnel</small> 
+                            {{ form.point |add_class:"form-control"  }}
+                            {{ form.point.errors }}
                         </div>
                     </div>
                     <div class="col-sm-12 col-md-8">
