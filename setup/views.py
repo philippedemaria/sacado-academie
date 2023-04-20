@@ -1139,7 +1139,7 @@ def add_adhesion(request) :
 
 
             msg = "Bonjour,\n\nVous venez de souscrire à une adhésion à la SACADO ACADÉMIE. \n"
-            msg += "Votre référence d'adhésion est "+facture.chrono+". Vous etes en attente de paiement.\n\n"
+            msg += "Votre référence d'adhésion est "+facture.chrono+". Vous êtes en attente de paiement.\n\n"
             msg += "Vous avez inscrit : \n"
             msg += "- "+student.user.first_name+" "+student.user.last_name+", l'identifiant de connexion est : "+student.user.username +" \n"
             msg += "\n\nRetrouvez ces détails à partir de votre tableau de bord après votre connexion à https://sacado-academie.fr"
@@ -1536,8 +1536,10 @@ def paiement_retour(request,status):
                 user = authenticate(username=user.username, password=password)
                 login(request, user,  backend='django.contrib.auth.backends.ModelBackend' )                
                 try : 
+                    facture_id = cmd.split("-")[2]
+                    find_facture(facture_id, autorisation )
                     request.session.pop('students_to_session', None) 
-                    request.session.pop('parents_to_session', None) 
+                    request.session.pop('parents_to_session', None)
                     sacado_msg = "Bonjour {} {},\n\nVotre paiement vient d'être reçu. \n\nL'équipe de l'ACADÉMIE SACADO vous remercie et vous souhaite une bonne utilisation.\nCordialement.\n\nCeci est  un mail automatique. Ne pas répondre.".format(user.first_name,user.last_name)
                     send_mail("Inscription SACADO ACADÉMIE", sacado_msg, settings.DEFAULT_FROM_EMAIL, [user.email])
                 except : pass
@@ -1570,18 +1572,7 @@ def paiement_retour(request,status):
             return render(request,"setup/paiement_retour_vide.html",{})
         signature=msg[fin+5:]
         msg=msg[deb+1:fin]
-        # h=SHA.new(msg.encode())
-        # key=RSA.importKey(open(settings.PBX_CLE_PUBLIQUE_CA).read())
-        # verificateur= PKCS1_v1_5.new(key)
-        # signature = base64.b64decode(unquote(signature))
-
-        # if verificateur.verify(h,signature) :
-        #     find_facture(facture_id, autorisation )
-        # else :
-        #     print("problème signature", file=f)
-        #     print(msg,signature,file=f)
-        #     f.close()
-        #     return render(request,"setup/paiement_retour_vide.html",{})
+ 
         return render(request,"setup/paiement_retour_vide.html",{})
 
     elif status=="annule":
