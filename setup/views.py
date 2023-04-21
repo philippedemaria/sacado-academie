@@ -1528,11 +1528,6 @@ def paiement_retour(request,status):
 
             students_to_session = request.session.get("students_to_session",None) 
             parents_to_session  = request.session.get("parents_to_session",None) 
-            try : 
-                facture_id = cmd.split("-")[2]
-                find_facture(facture_id, autorisation )
-            except :
-                pass
 
             if parents_to_session :
                 parent_id = parents_to_session[0]["parent_id"]
@@ -1563,7 +1558,7 @@ def paiement_retour(request,status):
  
         signature=request.GET.get("sig")
         facture_id = cmd.split("_")[2]
- 
+        find_facture(facture_id, autorisation )
         msg=request.get_full_path()  #l'url complete avec les données get
         print("================ PAIEMENT REPONDRE_A ================",file=f)
         print(msg,file=f)
