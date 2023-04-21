@@ -1528,6 +1528,11 @@ def paiement_retour(request,status):
 
             students_to_session = request.session.get("students_to_session",None) 
             parents_to_session  = request.session.get("parents_to_session",None) 
+            try : 
+                facture_id = cmd.split("-")[2]
+                find_facture(facture_id, autorisation )
+            except :
+                pass
 
             if parents_to_session :
                 parent_id = parents_to_session[0]["parent_id"]
@@ -1536,8 +1541,6 @@ def paiement_retour(request,status):
                 user = authenticate(username=user.username, password=password)
                 login(request, user,  backend='django.contrib.auth.backends.ModelBackend' )                
                 try : 
-                    facture_id = cmd.split("-")[2]
-                    find_facture(facture_id, autorisation )
                     request.session.pop('students_to_session', None) 
                     request.session.pop('parents_to_session', None)
                     sacado_msg = "Bonjour {} {},\n\nVotre paiement vient d'être reçu. \n\nL'équipe de l'ACADÉMIE SACADO vous remercie et vous souhaite une bonne utilisation.\nCordialement.\n\nCeci est  un mail automatique. Ne pas répondre.".format(user.first_name,user.last_name)
