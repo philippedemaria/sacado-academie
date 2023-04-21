@@ -1143,6 +1143,7 @@ def add_adhesion(request) :
             msg += "Vous avez inscrit : \n"
             msg += "- "+student.user.first_name+" "+student.user.last_name+", l'identifiant de connexion est : "+student.user.username +" \n"
             msg += "\n\nRetrouvez ces détails à partir de votre tableau de bord après votre connexion à https://sacado-academie.fr"
+            msg += "\n\nPour accéder aux exercices, vous devez utiliser l'interface de votre enfant."
             msg += "\n\nL'équipe de SACADO ACADÉMIE vous remercie de votre confiance.\n\n"
 
 
@@ -1250,8 +1251,8 @@ def send_message_after_insertion(parents,students) :
         if p['formule'].id > 1 :
             msg += "Un.e enseignant.e de la SACADO ACADÉMIE va vous contacter sous 24 heures par mail pour établir un plan de travail personnalisé.\n\n"
         #msg += "Pour établir des conseils personalisés, nous vous demandons à votre enfant de remplir un questionnaire à cette adresse : https://sacado-academie.fr/questionnaire\n\n"
-
         msg += "\n\nRetrouvez ces détails à partir de votre tableau de bord après votre connexion à https://sacado-academie.fr"
+        msg += "\n\nPour accéder aux exercices, vous devez utiliser l'interface de votre enfant."
         msg += "\n\nL'équipe de SACADO ACADÉMIE vous remercie de votre confiance.\n\n"
 
         ###### Quelques recommandations pour les parents

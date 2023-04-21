@@ -9,8 +9,7 @@ from socle.models import Level
 from school.models import School
 from group.models import Group
 from tool.models import Tool
-from datetime import datetime 
-
+from datetime import datetime , timedelta ,date
 ##############################################################################################################################################
 ##############################################################################################################################################
 ###              L'établissement est-t-il membre sacado 
@@ -22,6 +21,7 @@ def is_sacado_asso(this_user, today):
 
     is_sacado = False
     is_active = False
+    today = today - timedelta(days=-1)
     if this_user.student.adhesions.filter(start__lte=today, stop__gte=today,is_active=1) :
         is_sacado = True
         is_active = True
