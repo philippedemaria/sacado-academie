@@ -378,7 +378,7 @@ def send_message(request):
                 send_mail(subject,
                             message+" \n\n Ce mail est envoyé à partir de l'adresse : " + email + "\n\n" + school_datas,
                           settings.DEFAULT_FROM_EMAIL,
-                          ["sacado.asso@gmail.com" ])
+                          ["sacado.academie@gmail.com" ])
                 messages.success(request,"Message envoyé..... Merci. L'équipe Sacado.")
 
         else :
@@ -468,7 +468,7 @@ def school_adhesion(request):
                     send_mail("Demande d'adhésion à la version établissement",
                               "Bonjour l'équipe SACADO, \nl'établissement suivant demande la version établissement :\n"+ school_datas +"\n\nCotisation : "+str(school_exists.fee())+" €.\n\nEnregistrement de l'étalissement dans la base de données.\nEn attente de paiement. \nhttps://sacado-academie.fr . Ne pas répondre.",
                               settings.DEFAULT_FROM_EMAIL,
-                              ['sacado.asso@gmail.com'])
+                              ['sacado.academie@gmail.com'])
 
                     send_mail("Demande d'adhésion à la version établissement",
                               "Bonjour "+user.first_name+" "+user.last_name +", \nVous avez demandé la version établissement pour :\n"+ school_datas +"\n\nCotisation : "+str(school_exists.fee())+" €. \nEn attente de paiement. \nL'équipe SACADO vous remercie de votre confiance. \nCeci est un mail automatique. Ne pas répondre. ",
@@ -522,7 +522,7 @@ def iban_asking(request,school_id,user_id):
     send_mail("Demande d'IBAN",
                 "Bonjour l'équipe SACADO, \nJe souhaiterais recevoir un IBAN de votre compte pour procéder à un virement bancaire en faveur de mon établissement :\nIdentifiant : "+ str(school.id) +"\nUAI : "+ school.code_acad +"\n"+ school.name +"\n"+ school.town +","+ school.country.name +"\n\nNe pas répondre.",
                     settings.DEFAULT_FROM_EMAIL,
-                    [user.email,'sacado.asso@gmail.com'])
+                    [user.email,'sacado.academie@gmail.com'])
 
     messages.success(request,"Demande d'IBAN envoyée")
     return redirect('index')
@@ -542,7 +542,7 @@ def delete_school_adhesion(request):
             send_mail("Suppression d'adhésion",
                     "Bonjour l'équipe SACADO, \nJe souhaite annuler la demande d'adhésion :\n\n"+ school.name +"\n"+ school.town +","+ school.country.name +"\n\nNe pas répondre.",
                         settings.DEFAULT_FROM_EMAIL,
-                        ['sacado.asso@gmail.com'])
+                        ['sacado.academie@gmail.com'])
         except :
             pass
 
@@ -558,7 +558,7 @@ def delete_school_adhesion(request):
             send_mail("Suppression d'adhésion",
                     "Bonjour l'équipe SACADO, \nJe souhaite annuler la demande d'adhésion :\n\n"+ school.name +"\n"+ school.town +","+ school.country.name +"\n\nNe pas répondre.",
                         settings.DEFAULT_FROM_EMAIL,
-                        ['sacado.asso@gmail.com'])
+                        ['"sacado.academie@gmail.com"'])
         except :
             pass            
 
@@ -1123,7 +1123,7 @@ def add_adhesion(request) :
             student = Student.objects.create(user=form_user, level = level)
             u_parents = all_from_parent_user(request.user)
 
-            u_p_mails = []
+            u_p_mails = ["sacado.academie@gmail.com"]
             for u_p in u_parents : 
                 u_p.parent.students.add(student)
                 u_p_mails.append(u_p.email)
@@ -1267,10 +1267,10 @@ def send_message_after_insertion(parents,students) :
 
                 
 
-        send_mail("Inscription SACADO ACADÉMIE", msg, settings.DEFAULT_FROM_EMAIL, [p["email"]] )
+        send_mail("Inscription SACADO ACADÉMIE", msg, settings.DEFAULT_FROM_EMAIL, [p["email"],"sacado.academie@gmail.com"] )
 
     for s in students :
-        srcv = []        
+        srcv = ["sacado-academie@gmail.com"]        
         if s["email"] : 
             srcv.append(s["email"])
             smsg = "Bonjour "+s["first_name"]+" "+s["last_name"]+",\n\nTu viens d'être inscrit au menu "+ p['formule'].name +" de la SACADO ACADÉMIE. \n"
@@ -1283,7 +1283,7 @@ def send_message_after_insertion(parents,students) :
             send_mail("Inscription SACADO ACADÉMIE", smsg, settings.DEFAULT_FROM_EMAIL, srcv)
 
     # Envoi à SACADO
-    sacado_rcv = ["sacado.asso@gmail.com"]
+    sacado_rcv = ["sacado.academie@gmail.com"]
     sacado_msg = "Une adhésion "+s['formule'].name +" SACADO ACADÉMIE vient d'être souscrite. \n\n"
 
     i,j = 1,1
@@ -1539,7 +1539,7 @@ def paiement_retour(request,status):
                     request.session.pop('students_to_session', None) 
                     request.session.pop('parents_to_session', None)
                     sacado_msg = "Bonjour {} {},\n\nVotre paiement vient d'être reçu. \n\nL'équipe de l'ACADÉMIE SACADO vous remercie et vous souhaite une bonne utilisation.\nCordialement.\n\nCeci est  un mail automatique. Ne pas répondre.".format(user.first_name,user.last_name)
-                    send_mail("Inscription SACADO ACADÉMIE", sacado_msg, settings.DEFAULT_FROM_EMAIL, [user.email])
+                    send_mail("Inscription SACADO ACADÉMIE", sacado_msg, settings.DEFAULT_FROM_EMAIL, [user.email,"sacado.academie@gmail.com"])
                 except : pass
 
         else : print("le status est 'effectué', pourtant il y a une erreur : erreur = {},numero_autor.={}".format(erreur,autorisation), file=f)
@@ -1725,7 +1725,7 @@ def delete_adhesion(request):
     msg += "La référence d'adhésion est "+adhesion.code+" et son id est "+adhesion.id+".\n\n"
     msg += "Le montant du remboursement est de "+remb+"€ au pro-rata des jours adhérés." 
 
-    send_mail("Demande d'annulation d'adhésion SACADO", msg, settings.DEFAULT_FROM_EMAIL, ["sacado.asso@gmail.com"])
+    send_mail("Demande d'annulation d'adhésion SACADO", msg, settings.DEFAULT_FROM_EMAIL, ["sacado.academie@gmail.com"])
 
     return redirect("adhesions")
 
