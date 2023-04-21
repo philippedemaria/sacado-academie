@@ -1118,10 +1118,12 @@ def detail_student_all_views(request, id):
                    'student': student, 'parcours': None, 'sprev_id': None, 'snext_id': None, 'score_bool' : score_bool  ,  'maxiset' : maxiset  }
 
 
-        if request.user.is_teacher  :
-
-            nav = navigation(group, id)
-            context.update({ 'sprev_id': nav[0], 'snext_id': nav[1]   })
+        try : 
+            if request.user.is_teacher  :
+                nav = navigation(group, id)
+                context.update({ 'sprev_id': nav[0], 'snext_id': nav[1]   })
+        except :
+            pass
 
 
     return render(request, 'account/detail_student_all_views.html', context)
