@@ -1096,6 +1096,7 @@ def attribute_group_to_student_by_level(level,student,formule_id) :
 
 
 def add_adhesion(request) :
+    
     request.session["tdb"] = 'adhesion'
     form =  UserForm(request.POST or None)
     formules = Formule.objects.filter(is_sale=1)
