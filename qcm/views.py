@@ -889,7 +889,7 @@ def ajax_populate(request):
     statut = request.POST.get("statut") 
     data = {}    
 
-    teacher = Teacher.objects.get(user= request.user)    
+    teacher = Teacher.objects.get(user= request.user)  
 
     if statut=="true" or statut == "True":
 
