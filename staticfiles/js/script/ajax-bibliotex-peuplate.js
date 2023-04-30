@@ -76,7 +76,7 @@ define(['jquery', 'bootstrap'], function ($) {
             let theme_id = param1.val();
             let bibliotex_id = $("#bibliotex_id").val();
             let subject_id = $("#id_subject").val();
-
+            if ( $("#is_annale").is(":checked")) { var is_annale = "yes" ;} else { var is_annale = "no" ;}  
             let csrf_token = $("input[name='csrfmiddlewaretoken']").val();
 
             url= "../ajax_level_exotex" ; 
@@ -94,6 +94,7 @@ define(['jquery', 'bootstrap'], function ($) {
                         'theme_id': theme_id,
                         'subject_id': subject_id,
                         'bibliotex_id': bibliotex_id,
+                        'is_annale': is_annale,
                         csrfmiddlewaretoken: csrf_token
                     },
                     url: url,
@@ -141,7 +142,9 @@ define(['jquery', 'bootstrap'], function ($) {
         let theme_id = $("#id_theme").val();
         let skill_id = $(this).val();
         let bibliotex_id = $("#bibliotex_id").val();
+        if ( $("#is_annale").is(":checked")) { var is_annale = "yes" ;} else { var is_annale = "no" ;}       
         let csrf_token = $("input[name='csrfmiddlewaretoken']").val();
+
 
         $.ajax(
             {
@@ -154,6 +157,7 @@ define(['jquery', 'bootstrap'], function ($) {
                     'skill_id'  : skill_id,   
                     'theme_id': theme_id, 
                     'bibliotex_id': bibliotex_id,
+                    'is_annale': is_annale, 
                     csrfmiddlewaretoken: csrf_token
                 },
                 url : "../ajax_level_exotex" ,
@@ -175,8 +179,10 @@ define(['jquery', 'bootstrap'], function ($) {
         let keyword = $(this).val();
         let theme_id = $("#id_theme").val();
         let bibliotex_id = $("#bibliotex_id").val();
+        if ( $("#is_annale").is(":checked")) { var is_annale = "yes" ;} else { var is_annale = "no" ;}         
         let csrf_token = $("input[name='csrfmiddlewaretoken']").val();
-        
+
+
         $.ajax(
             {
                 type: "POST",
@@ -189,6 +195,8 @@ define(['jquery', 'bootstrap'], function ($) {
                     'keyword'   : keyword, 
                     'theme_id': theme_id,
                     'bibliotex_id': bibliotex_id,
+                    'is_annale': is_annale,
+
                     csrfmiddlewaretoken: csrf_token
                 },
                 url : "../ajax_level_exotex" ,
@@ -200,6 +208,51 @@ define(['jquery', 'bootstrap'], function ($) {
             }
         )
     });
+
+
+
+    $('#is_annale').on('change', function (event) {
+
+        var level_id = $("#id_level").val();
+        var subject_id = $("#id_subject").val();
+        var skill_id =  $("#id_skill").val();
+        var keyword = $(this).val();
+        var theme_id = $("#id_theme").val();
+        var bibliotex_id = $("#bibliotex_id").val();      
+        var csrf_token = $("input[name='csrfmiddlewaretoken']").val();
+        
+        if ( $("#is_annale").is(":checked")) { var is_annale = "yes" ;} else { var is_annale = "no" ;}  
+
+
+        $.ajax(
+            {
+                type: "POST",
+                dataType: "json",
+                traditional: true,
+                data: {
+                    'level_id'  : level_id,
+                    'subject_id': subject_id,  
+                    'skill_id'  : skill_id,   
+                    'keyword'   : keyword, 
+                    'theme_id': theme_id,
+                    'bibliotex_id': bibliotex_id,
+                    'is_annale': is_annale ,
+
+                    csrfmiddlewaretoken: csrf_token
+                },
+                url : "../ajax_level_exotex" ,
+                success: function (data) {
+
+                    $("#content_exercises").html(data.html) ;
+
+                }
+            }
+        )
+    });
+
+
+
+
 
 
     $('body').on('click', '.show_by_popup' , function (event) {

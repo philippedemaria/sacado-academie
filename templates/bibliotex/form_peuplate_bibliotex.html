@@ -57,7 +57,11 @@
                     </div>
                 </div>
 
-
+                <div class="col-sm-3 col-md-1 col-lg-1">
+                    <div class="form-group"><small>Annale ?</small>
+                        <input name="is_annale" id="is_annale" type="checkbox" />
+                    </div>
+                </div>
 
 
                 <div class="col-sm-12 col-md-4 col-lg-4">
@@ -68,16 +72,17 @@
                 </div>
 
 
-                <div class="col-sm-9 col-md-3 col-lg-3">
+                <div class="col-sm-9 col-md-2 col-lg-2">
                     <div class="form-group">
                         <select id="id_skill" name="skill" class="form-control select2">
-                                <option value="">Choisir une compétence</option>
+                                <option value="">Compétence ?</option>
                             {% for s in skills %}
                                 <option value="{{ s.id }}">{{ s.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
                 </div>
+
 
                 <div class="col-sm-3 col-md-1 col-lg-1">
                     <div class="form-group">

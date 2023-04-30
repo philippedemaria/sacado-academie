@@ -1192,22 +1192,46 @@ def ajax_level_exotex(request):
     skill_id     = request.POST.get("skill_id",None)
     keyword      = request.POST.get("keyword",None)
     bibliotex_id = request.POST.get("bibliotex_id",None)
+    is_annale    = request.POST.get("is_annale",None)
+
 
     teacher_id = get_teacher_id_by_subject_id(subject_id)
 
+
+    if int(level_id) > 0 :
+        level = Level.objects.get(pk=int(level_id))
+        subject = Subject.objects.get(pk=int(subject_id))
+        thms  = level.themes.values_list('id', 'name').filter(subject_id=subject_id).order_by("name")
+        data['themes'] = list(thms) 
+
+
     if bibliotex_id :
 
- 
         bibliotex = Bibliotex.objects.get(pk=bibliotex_id)
+
+        print( bibliotex_id , is_annale , level_id )
  
         teacher = request.user.teacher 
-        data = {}
+ 
         data['knowledges']       =  None
         data['knowledges_level'] =  None
 
-        base = Exotex.objects.filter(Q(author__user__school = teacher.user.school)| Q(author__user_id = teacher.user.id)|Q(author__user_id=teacher_id), theme__subject_id = subject_id).exclude(bibliotexs=bibliotex)
- 
+        base = Exotex.objects.filter(theme__subject_id = subject_id).exclude(bibliotexs=bibliotex)
+        if is_annale == 'yes' : 
+            base = base.filter(is_annals=1)
+
+        print( base )
+
         if theme_ids : 
+            knowledges = set()
+            for theme_id in theme_ids :
+                try :
+                    theme = Theme.objects.get(pk=int(theme_id))
+                    knowledges.update( theme.knowledges.values_list('id', 'name').filter(level_id = level_id ) )
+                except :
+                    knowledges = []
+            data['knowledges']  =  list(knowledges)
+
             if level_id and theme_ids[0] != "" and skill_id  : 
                 skill = Skill.objects.get(pk=skill_id)
                 exotexs = base.filter( level_id = level_id , theme_id__in= theme_ids, skills = skill ).order_by("theme","knowledge__waiting","knowledge","ranking")
@@ -1226,9 +1250,7 @@ def ajax_level_exotex(request):
                 exotexs = base.filter(Q(title__icontains=keyword)| Q(content_html__icontains=keyword), theme_id__in = theme_ids).order_by("theme","knowledge__waiting","knowledge","ranking")
 
             elif keyword   : 
-                print(keyword)
                 exotexs = base.filter(Q(title__icontains=keyword)| Q(content_html__icontains=keyword) ).order_by("theme","knowledge__waiting","knowledge","ranking")
-                print(exotexs)
 
             elif level_id   : 
                 exotexs = base.filter(  level_id= level_id ).order_by("theme","knowledge__waiting","knowledge","ranking")
@@ -1246,10 +1268,13 @@ def ajax_level_exotex(request):
             elif keyword and skill_id  : 
                 skill = Skill.objects.get(pk=skill_id)
                 exotexs =  base.filter(Q(title__icontains=keyword)| Q(content_html__icontains=keyword), skills= skill  ).order_by("theme","knowledge__waiting","knowledge","ranking")
+            elif level_id  : 
+                exotexs =  base.filter(level_id= level_id  )
             else :
                 exotexs = base
         data['html'] = render_to_string('bibliotex/ajax_list_exercises.html', { 'bibliotex_id': bibliotex_id , 'exotexs': exotexs , "teacher" : teacher  })
     
+
     else :
         knowledges = Knowledge.objects.values_list("id","name").filter(theme_id__in=theme_ids, level_id = level_id  ) 
         knowledges_level = Knowledge.objects.values_list("id","name").filter(theme__subject__id = subject_id,  level_id = level_id  ) 
@@ -1257,7 +1282,7 @@ def ajax_level_exotex(request):
         data['knowledges_level'] =  list( knowledges_level )
     return JsonResponse(data)
 
-
+ 
  
 def ajax_charge_folders(request):  
 
