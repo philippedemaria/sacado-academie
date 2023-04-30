@@ -115,8 +115,6 @@ class Bibliotex(models.Model):
     ranking = models.PositiveIntegerField(  default=0,  blank=True, null=True, editable=False)
 
 
-
-
     def __str__(self):    
         return "{}".format(self.title)
 

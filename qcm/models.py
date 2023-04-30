@@ -590,7 +590,7 @@ class Parcours(ModelWithCode):
     is_testpos = models.BooleanField(default=0, verbose_name="Test de positionnement ?", editable=False)
     target_id  = models.PositiveIntegerField( blank=True, null=True, editable=False , verbose_name="Parcours cible") 
 
-    
+
     def __str__(self):
         flds = ""
         for f in self.folders.all():
@@ -1237,7 +1237,10 @@ class Folder(models.Model):
 
 
     def __str__(self):
-        return "{}>{}".format( self.groups.last().name ,self.title)
+        try :
+            return "{}>{}".format( self.groups.last().name ,self.title)
+        except :
+            return "{}".format(self.title)
 
  
 
