@@ -11556,7 +11556,7 @@ def only_update_course(request,idc):
             nf.teacher = teacher
             nf.author = teacher
             nf.save()
-            return redirect('courses')
+            messages.success(request,"Modification réussie. Fermer l'onglet ou cliquez sur l'onglet précédent.")
         else:
             print(form.errors)
 
