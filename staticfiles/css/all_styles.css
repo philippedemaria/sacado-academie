@@ -1918,12 +1918,18 @@ input[type=range].form-range {
 /********************************************************************************************************************/
 /****************************              Exotex              ******************************************************/
 /********************************************************************************************************************/
+.fond_exotex{
+  background-color: white ;
+}
+
 .show_exotex_knowledges{
     position:relative;
     display: inline;
     font-size:16px;
     cursor:help;
 }
+
+
 
 .show_exotex_knowledges:hover .exotex_knowledges{
     font-size:16px; 
