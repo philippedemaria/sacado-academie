@@ -1629,15 +1629,8 @@ def ajax_built_diaporama(request):
 
 
 
-def delete_exo():
-    Relationship.objects.filter(exercise__supportfile__code="f0600d3c").delete()
-
-
-
 @login_required(login_url= 'index')
 def list_folders(request):
-
-    delete_exo()
 
     try :
         teacher = request.user.teacher
