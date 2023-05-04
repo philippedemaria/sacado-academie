@@ -135,6 +135,8 @@ class Supportfile(models.Model):
     dragZoom = models.BooleanField(default=0, verbose_name="Zoom/déplacement ?")
 
     is_title = models.BooleanField(default=0, editable=False, verbose_name="titre pour l'organisation des parcours")
+    is_paper = models.BooleanField(default=0, blank=True, verbose_name="Nécessite l'utilisation d'une feuille de papier")
+
     is_subtitle = models.BooleanField(default=0 , verbose_name="sous-titre pour l'organisation des parcours")
     attach_file = models.FileField(upload_to=file_attach_path, blank=True,  verbose_name="Fichier pdf attaché", default="")
 
@@ -1650,6 +1652,7 @@ class Relationship(models.Model):
     
     coefficient = models.DecimalField(default=1,  max_digits=4, decimal_places=2, verbose_name="Coefficient")
     is_calculator = models.BooleanField(default=0, editable=False  )
+    is_paper      = models.BooleanField(default=0, editable=False)
     
     # document : type du doc et id du doc ( exercice = 0 , custom = 1 , cours = 2 , quizz= 3 , biblio = 4 , flash = 5)
     document_id = models.IntegerField(  default=0,  blank=True, null=True, editable=False)    

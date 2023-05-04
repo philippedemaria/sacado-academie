@@ -205,6 +205,13 @@
             {% endif %}
             <tr>
                 <td> 
+                    <label>{{ form.is_paper.label_tag }}</label> 
+                </td>
+                <td width="100px">{{ form.is_paper  |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}</td>
+                <td>{{ form.is_paper.errors }}</td>
+            </tr>
+            <tr>
+                <td> 
                     <label>{{ form.duration.label_tag }}</label> 
                 </td>
                 <td width="100px">{{ form.duration |add_class:"form-control" }} </td>

@@ -92,6 +92,11 @@
                 {{ form.calculator |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}
                 {{ form.calculator.errors }}
             </div>
+            <div class="form-group">
+                {{ form.is_paper.label_tag }}
+                {{ form.is_paper |attr:"data-toggle:toggle" |attr:"data-onstyle:primary"|attr:"data-offstyle:default"|attr:"data-on:Oui"|attr:"data-off:Non"}}
+                {{ form.is_paper.errors }}
+            </div> 
         </div>
     </div>
     <div class="col-sm-12 col-md-6 col-lg-3">
