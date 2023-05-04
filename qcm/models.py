@@ -1654,6 +1654,7 @@ class Relationship(models.Model):
     is_calculator = models.BooleanField(default=0, editable=False  )
     is_paper      = models.BooleanField(default=1, editable=False)
 
+
     # document : type du doc et id du doc ( exercice = 0 , custom = 1 , cours = 2 , quizz= 3 , biblio = 4 , flash = 5)
     document_id = models.IntegerField(  default=0,  blank=True, null=True, editable=False)    
     type_id = models.IntegerField(  default=0,  blank=True, null=True, editable=False)
