@@ -1131,7 +1131,8 @@ def add_adhesion(request) :
 
             chrono = "BL_" +  request.user.last_name +"_"+str(today)
 
-            amount = get_price_and_end_adhesion( int(formule_id), int(duration), level.id )(formule_id, date_joined, today, duration, student )
+            amount = get_price_and_end_adhesion(formule_id,  today, duration, student )
+
 
             success = attribute_group_to_student_by_level(level,student,formule_id)
             adhesion = Adhesion.objects.create(start = today, stop = end, student = student , level_id = level_id  , amount = amount  , formule_id = formule_id , is_active = 0 ) 
