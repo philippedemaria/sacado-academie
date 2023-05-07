@@ -48,6 +48,7 @@ from itertools import chain
 from general_fonctions import *
 from payment_fonctions import *
 
+from decimal import Decimal
 import random
 import pytz
 import uuid
@@ -1437,6 +1438,7 @@ def paiement_change_adhesion(request) :
     today = datetime.now().replace(tzinfo=timezone.utc)
     this_year = today.year
     user = request.user
+    amount = Decimal(amount)
     facture = Facture.objects.create(chrono = "BL_" +  user.last_name +"_"+str(today) ,  user_id = user.id , file = "" , date = today , orderID = "" , is_lesson = 1 ) #orderID = Numéro de paiement donné par la banque"
     adhesion = Adhesion.objects.create(amount = amount , student_id = student_id , formule_id = formule_id , start = start , stop = stop , level_id = level_id , year = this_year , is_active = 0 )
     facture.adhesions.add(adhesion)
