@@ -1131,11 +1131,11 @@ def add_adhesion(request) :
 
             chrono = "BL_" +  request.user.last_name +"_"+str(today)
 
-            amount = get_price_and_end_adhesion(formule_id,  today, duration, student )
-
+            data , amount , end_of_this_adhesion = get_price_and_end_adhesion(formule_id,  today, duration, student )
+ 
 
             success = attribute_group_to_student_by_level(level,student,formule_id)
-            adhesion = Adhesion.objects.create(start = today, stop = end, student = student , level_id = level_id  , amount = amount  , formule_id = formule_id , is_active = 0 ) 
+            adhesion = Adhesion.objects.create(start = today, stop = end_of_this_adhesion, student = student , level_id = level_id  , amount = amount  , formule_id = formule_id , is_active = 0 ) 
             facture  = Facture.objects.create(chrono = chrono, file = "" , user = request.user , date = today , is_lesson = 1   ) 
             facture.adhesions.add(adhesion)
 
@@ -1648,7 +1648,7 @@ def get_price_and_end_adhesion(formule_id, today, duration, student ):
         data["date"] = str(end_of_this_adhesion)
 
     price = get_price_by_formules( int(formule_id), int(duration), student.level.id )
-    return data , str(int(price))+",00 " , end_of_this_adhesion
+    return data , str(int(price))+",00" , end_of_this_adhesion
 
 
 
