@@ -218,8 +218,11 @@ define(['jquery', 'bootstrap'], function ($) {
                                 },
                                 url: "ajax_price_changement_formule",
                                 success: function (data) {
+ 
                                     $("#div_price").show();
-                                    $("#verif_price").html(data.price + "€") ;
+
+                                    $("#verif_price").html(data.amount + "€") ;
+
                                     $("#id_save").show();
                                 }
                             }
@@ -269,6 +272,7 @@ define(['jquery', 'bootstrap'], function ($) {
             let csrf_token = $("input[name='csrfmiddlewaretoken']").val();
             let duration   = $(this).val();
             let student_id = $("#student_id").val();
+            let level_id   = $("#id_level").val();
 
             $.ajax(
                 {
@@ -278,6 +282,7 @@ define(['jquery', 'bootstrap'], function ($) {
                         'student_id': student_id,
                         'formule_id': formule_id,
                         'duration'  : duration,
+                        'level_id'  : level_id,
                         csrfmiddlewaretoken: csrf_token
                     },
                     url: "../ajax_price_changement_formule",
@@ -311,6 +316,7 @@ define(['jquery', 'bootstrap'], function ($) {
             let csrf_token = $("input[name='csrfmiddlewaretoken']").val();
             let formule_id = $(this).val();
             let student_id = $("#student_id").val();
+            let level_id   = $("#id_level").val();
 
             if (duration)
 
@@ -323,12 +329,12 @@ define(['jquery', 'bootstrap'], function ($) {
                                 'student_id': student_id,
                                 'formule_id': formule_id,
                                 'duration'  : duration,
+                                'level_id'  : level_id,
                                 csrfmiddlewaretoken: csrf_token
                             },
                             url: "../ajax_price_changement_formule",
                             success: function (data) {
-        
-
+    
                                 $('#result_change_adhesion' ).html("").html("<div class='row' style='margin-bottom:100px'><div class='col-sm-12 col-md-12'><div class='alert alert-success'>Adhésion demandée jusqu'au "+data.end_of_this_adhesion+".<br/>Somme à payer : "+data.result+" €</div></div></div>");
                   
                             }

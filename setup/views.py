@@ -1131,8 +1131,8 @@ def add_adhesion(request) :
 
             chrono = "BL_" +  request.user.last_name +"_"+str(today)
 
-            data , amount , end_of_this_adhesion = get_price_and_end_adhesion(formule_id,  today, duration, student )
- 
+            data , amount , end_of_this_adhesion = get_price_and_end_adhesion(formule_id,  today, duration, student,level.id )
+            amount = float(amount.replace(",","."))
 
             success = attribute_group_to_student_by_level(level,student,formule_id)
             adhesion = Adhesion.objects.create(start = today, stop = end_of_this_adhesion, student = student , level_id = level_id  , amount = amount  , formule_id = formule_id , is_active = 0 ) 
@@ -1166,6 +1166,10 @@ def add_adhesion(request) :
             cmd="Abonnement "+formule.name+" " + str(datetime.now())
 
             billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Académie","SACADO ACADÉMIE")
+
+
+
+
 
             champs_val=champs_briqueCA(amount,cmd,request.user.email,1,billing)
             context={ 'formule' : formule , 'level' : level , 'student' : student ,  'amount' : amount , 'end_day' : end , 'champs_val':champs_val}
@@ -1606,13 +1610,13 @@ def change_adhesion(request,ids):
     return render(request, 'setup/change_adhesion.html', context)
 
 
-def get_price_and_end_adhesion(formule_id, today, duration, student ):
+def get_price_and_end_adhesion(formule_id, today, duration, student,level_id ):
     data = {}
     formule = Formule.objects.get(pk=formule_id)
     price_a_month = formule.price
 
-    adhesions = student.adhesions.filter( start__lte=today+ timedelta(days=1), stop__gte=today,is_active=1)
-
+    if student : adhesions = student.adhesions.filter( start__lte=today+ timedelta(days=1), stop__gte=today,is_active=1)
+    else : adhesions = None
     if adhesions :
         adhesion = adhesions.last()
         today    = adhesion.stop
@@ -1643,8 +1647,9 @@ def get_price_and_end_adhesion(formule_id, today, duration, student ):
     else :
         data["no_end"] = False
         data["date"] = str(end_of_this_adhesion)
-
-    price = get_price_by_formules( int(formule_id), int(duration), student.level.id )
+    if student : price = get_price_by_formules( int(formule_id), int(duration), student.level.id )
+    else :  price = get_price_by_formules( int(formule_id), int(duration), level_id )
+    
     return data , str(int(price))+",00" , end_of_this_adhesion
 
 
@@ -1654,25 +1659,35 @@ def ajax_price_changement_formule(request) :
     student_id = request.POST.get("student_id",None)
     formule_id = request.POST.get("formule_id",None)
     duration   = request.POST.get("duration",None)
+    level_id   = request.POST.get("level_id",None)
+    today   = time_zone_user(request.user)
 
-    user    = User.objects.get(pk=student_id)  
-    student = Student.objects.get(user_id=student_id)   
+ 
+    if student_id : student = Student.objects.get(user_id=student_id)   
+    else : student = None
+    
+    dataset , price,end_of_this_adhesion = get_price_and_end_adhesion(formule_id, today,duration,student,level_id )
+    amount = float(price.replace(",","."))
+    
     try    : adhesion = student.adhesions.last()
     except : adhesion = None
-    today   = time_zone_user(request.user)
+
+
     if today.month < 7 : this_year = today.year
     else :  this_year = today.year + 1
     data = {}
-
-    data , price,end_of_this_adhesion = get_price_and_end_adhesion(formule_id, today,duration,student )
     data["end_of_this_adhesion"] = str(end_of_this_adhesion.day) +"-" + str(end_of_this_adhesion.month) +"-" + str(end_of_this_adhesion.year)
     data["result"]   = str(price) 
-    data["amount"]   = price
+    data["amount"]   = amount
     data["start"]    = today
     data["stop"]     = end_of_this_adhesion
-    data["year"]     = adhesion.year
-    data["level_id"] = adhesion.level.id
- 
+    if adhesion:
+        data["year"]     = adhesion.year
+        data["level_id"] = adhesion.level.id
+    else :
+        data["year"]     = this_year
+        data["level_id"] = level_id
+
     return JsonResponse(data)
 
 
