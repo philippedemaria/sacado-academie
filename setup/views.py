@@ -1140,13 +1140,13 @@ def add_adhesion(request) :
             facture.adhesions.add(adhesion)
 
 
-            msg = "Bonjour,\n\nVous venez de souscrire à une adhésion à la SACADO ACADÉMIE. \n"
+            msg = "Bonjour,\n\nVous venez de souscrire à une adhésion à la SACADO ACADÉMIE. \n\n"
             msg += "Votre référence d'adhésion est "+facture.chrono+". Vous êtes en attente de paiement.\n\n"
             msg += "Vous avez inscrit : \n"
             msg += "- "+student.user.first_name+" "+student.user.last_name+", l'identifiant de connexion est : "+student.user.username +" \n"
-            msg += "\n\nRetrouvez ces détails à partir de votre tableau de bord après votre connexion à https://sacado-academie.fr"
-            msg += "\n\nPour accéder aux exercices, vous devez utiliser l'interface de votre enfant."
-            msg += "\n\nL'équipe de SACADO ACADÉMIE vous remercie de votre confiance.\n\n"
+            msg += "\nRetrouvez ces détails à partir de votre tableau de bord après votre connexion à https://sacado-academie.fr"
+            msg += "\nPour accéder aux exercices, vous devez utiliser l'interface de votre enfant."
+            msg += "\nL'équipe de SACADO ACADÉMIE vous remercie de votre confiance.\n\n"
 
 
 
@@ -1159,9 +1159,7 @@ def add_adhesion(request) :
             msg += "Clique sur « entraînement » pour commencer les exercices classés par thème. \n\n" 
             msg += "Pense à t’entraîner au moins 10 minutes chaque jour pour fixer les notions, maîtriser les méthodes de base et construire des savoirs solides..\n"
 
-                
-
-                
+    
             send_mail("Inscription SACADO ACADÉMIE", msg, settings.DEFAULT_FROM_EMAIL, u_p_mails )
 
             formule = Formule.objects.get(pk=formule_id)
@@ -1262,7 +1260,6 @@ def send_message_after_insertion(parents,students) :
         msg += "Voici quelques conseils pour votre enfant :\n\nConnecte-toi sur https://sacado-academie.fr\n"
         msg += "Indique ton Nom d’utilisateur et ton Mot de passe\n"
         msg += "Clique sur le bouton « connexion » \n"
-        msg += "Indique ton identifiant et ton mot de passe \n" 
         msg += "-> Tu arrives ensuite sur ton tableau de bord avec tous les modules de ta formule. \n"   
         msg += "Tu peux y accéder aussi avec le menu à gauche :\n"
         msg += "Clique sur « entraînement » pour commencer les exercices classés par thème. \n\n" 
