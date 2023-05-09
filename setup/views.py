@@ -1163,7 +1163,7 @@ def add_adhesion(request) :
             send_mail("Inscription SACADO ACADÉMIE", msg, settings.DEFAULT_FROM_EMAIL, u_p_mails )
 
             formule = Formule.objects.get(pk=formule_id)
-            cmd =  cmd_abonnement(formule,facture.id):
+            cmd =  cmd_abonnement(formule,facture.id)
 
             billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Académie","SACADO ACADÉMIE")
 
