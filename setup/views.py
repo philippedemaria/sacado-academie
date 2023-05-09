@@ -203,7 +203,7 @@ def index(request):
             if request.session.get('student_id',None) : # Sert pour la réservation de leçon
                 del request.session['student_id']
 
-            parent = Parent.objects.get(user=request.user)
+            parent = request.user.parent
             students = parent.students.order_by("user__first_name")
             context = {'parent': parent, 'students': students, 'today' : today , 'index_tdb' : index_tdb, }
             template = 'dashboard.html'
@@ -1163,12 +1163,9 @@ def add_adhesion(request) :
             send_mail("Inscription SACADO ACADÉMIE", msg, settings.DEFAULT_FROM_EMAIL, u_p_mails )
 
             formule = Formule.objects.get(pk=formule_id)
-            cmd="Abonnement "+formule.name+" " + str(datetime.now())
+            cmd =  cmd_abonnement(formule,facture.id):
 
             billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Académie","SACADO ACADÉMIE")
-
-
-
 
 
             champs_val=champs_briqueCA(amount,cmd,request.user.email,1,billing)
@@ -1566,6 +1563,7 @@ def paiement_retour(request,status):
         find_facture(facture_id, autorisation )
         msg=request.get_full_path()  #l'url complete avec les données get
         print("================ PAIEMENT REPONDRE_A ================",file=f)
+        print(facture_id,file=f)
         print(msg,file=f)
         deb=msg.find("?")
         fin=msg.find("&sig=")
@@ -1668,7 +1666,7 @@ def ajax_price_changement_formule(request) :
     
     dataset , price,end_of_this_adhesion = get_price_and_end_adhesion(formule_id, today,duration,student,level_id )
     amount = float(price.replace(",","."))
-    
+
     try    : adhesion = student.adhesions.last()
     except : adhesion = None
 
