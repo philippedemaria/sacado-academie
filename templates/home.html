@@ -48,22 +48,24 @@ Intro Section -
             <div class="bandeau_accueil_title">
                 Les rituels <br/>pour réussir  en Mathématiques
             </div>
-            <div class="bandeau_accueil_subtitle">
-            10 minutes chaque jour avec la   <a href="#" data-toggle='modal' data-target='#div_methode_sacado' class="rose_light" ><b>méthode SACADO</b><sup><small><i class='fa fa-copyright'></i></small></sup> </a>
-            </div>
         </div>
         <div class="col-xs-12 col-md-12 col-lg-6" >
             <img src="{% static 'img/accueil_0.png'  %}" class="img_if_small" />
-            <div align="center" class="bigger_size" style="color:white">
-                Je souhaite passer un <a href="{% url 'advises_index' %}" class="white">test de positionnement</a> GRATUITEMENT.
-                <div class="img_if_small_bandeau_accueil_subtitle"  style="margin:20px 0px">
-                10 minutes chaque jour avec la   <a href="#" data-toggle='modal' data-target='#div_methode_sacado' class="rose_light" ><b>méthode SACADO<sup><small><i class='fa fa-copyright'></i></small></sup></b> </a>
-                </div>
-            </div>
         </div> 
     </div>
  
-
+    <div class="row">
+        <div class="col-xs-12 col-md-12 col-lg-6" >
+            <div class="bandeau_accueil_subtitle">
+                <i class="bi bi-clock-history"></i> <a href="#" data-toggle='modal' data-target='#div_methode_sacado' class="rose_light" >Méthode SACADO<sup><small><i class='fa fa-copyright'></i></small></sup></a>  : 10 minutes chaque jour
+            </div>
+        </div>
+        <div class="col-xs-12 col-md-12 col-lg-6" >
+            <div align="center" class="bandeau_accueil_subtitle" style="color:white;">
+                Gratuit : <a href="{% url 'advises_index' %}" class="rose_light">test de positionnement</a>
+            </div>
+        </div> 
+    </div>
 
 
     <div class="modal fade" id="div_methode_sacado" tabindex="-1" role="dialog" aria-labelledby="div_methode_sacado">
