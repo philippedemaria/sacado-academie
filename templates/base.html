@@ -68,7 +68,7 @@ gtag('config', 'G-VGYLB40P61');
 
             <nav class="main-nav float-right d-none d-lg-block">
                 <ul style="color:#5d4391 ;">
-
+                    <li class="min_width"> <a href="{% url 'numeric' %}" class="detail_index_menu{% if 'parents' in request.path %}_active{% endif %}"  >Contenu pédagogique</a></li>
                     <li class="min_width"> <a href="{% url 'parents' %}" class="detail_index_menu{% if 'parents' in request.path %}_active{% endif %}"  >Espace Parent</a></li>
                     <li class="min_width"> <a href="{% url 'contact' %}"  class="detail_index_menu{% if 'contact' in request.path %}_active{% endif %}" >Contact</a></li>
                     <li><a href="#menus" class="btn-inscription">Inscription</a></li>
