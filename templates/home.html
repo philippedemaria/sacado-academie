@@ -62,13 +62,8 @@ Intro Section -
             </div>
         </div> 
     </div>
-    <div class="row">
-        <div class="col-xs-12 col-md-12" align="center" >
-            <a href="#" data-toggle='modal' data-target='#div_levels' class="white bigger_size"><img src="{% static 'img/target.png' %}"></i>
-                <br/>Essayer nos exercices
-            </a>
-        </div>
-    </div>
+ 
+
 
 
     <div class="modal fade" id="div_methode_sacado" tabindex="-1" role="dialog" aria-labelledby="div_methode_sacado">
@@ -114,118 +109,14 @@ Intro Section -
         </div>
     </div>
 
-    <div class="modal fade" id="div_levels" tabindex="-1" role="dialog" aria-labelledby="div_levels">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content" >
-                <div class="modal-header">
-
-                    <h2 class="font_sacado" style="margin-bottom:0px;">Choisir votre niveau</h2>
-                    <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-
-
-                </div>
-                <div class="modal-body modal_level">
-                    <div class="row" align="center">
-                    {% for data in dataset %}
-                        <div class="col-xs-4 col-md-4 modal_title_level">
-                            <a href="{% url 'exercises_shower' data.level.id %}">{% if  data.exercise.supportfile.imagefile %} <img src="{{ data.exercise.supportfile.imagefile.url }}"  width="150px" /> {% endif %}
-                            <br/>{{ data.level.name }}
-                            </a>
-                        </div>
-                    {% endfor %}                        
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
+ 
 
 </section>
-
-<div class="background_accueil">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12 col-md-12">
-                <h1 class="title_bloc_index" style="font-variant: small-caps;">L'entraînement</h1>
-                <p class="p_index"><b class="rose">10 minutes</b> chaque jour, pour fixer les notions, maîtriser les méthodes de base et construire des savoirs solides.</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-md-12">
-                <img src="{% static 'img/training_1.jpg' %}"  class="img_training_if_small"  />
-                <p class="p_index">Une <b class="rose">interface d'entraînement</b> complète avec tous les thèmes, les chapitres et les scores directement affichés. <br/>Le temps passé par journée est affiché pour contrôler effectivement la durée d'apprentissage. <br/><small>(Niveau affiché CM2)</small></p>
-            </div>
-        </div>
-        <div class="row" class="for_small">
-            <div class="col-xs-12 col-md-7">
-                <p class="p_index">Des chapitres complets  avec des parties de <b class="rose">cours interactifs</b> et des <b class="rose">exercices d'application directe</b> qui reprennent les objectifs des programmes de l'Education Nationale.<small>(Niveau affiché Troisième)</small></p><div class="v_space_2br"></div>
-                <img src="{% static 'img/training_2.jpg' %}" class="_img_training_if_small"  />
-            </div>
-            <div class="col-xs-12 col-md-5">
-                <p class="p_index">Des exercices entièrement <b class="rose">corrigés</b> et <b class="rose">interactifs</b> qui reprennent les énoncés d'examen et Les attendus des programmes. <small>(Niveau affiché Première)</small></p><div class="v_space_2br"></div>
-                <img src="{% static 'img/training_3.jpg' %}" class="_img_training_if_small" />
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-<div class="background_accueil">
-    <div class="container" id="tools">
-
-        <div class="row">
-            <div class="col-xs-12 col-md-12">
-                <h1 class="title_bloc_index" style="font-variant: small-caps;">Nos outils</h1>
-
-                <p class="p_index"> SACADO ACADÉMIE propose des outils interactifs pour découvrir les <b class="rose">notions essentielles</b> des programmes de la Maternelle à la Sixième.</p>
-                <p class="p_index"><img src="{% static 'img/tools.jpg' %}" width="100%" />  </p>
-            </div>
-        </div>
-
-    </div>
-</div>
-
-<div class="background_accueil">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12 col-md-12">
-                <h1 class="title_bloc_index" style="font-variant: small-caps;">Les Prép'éval</h1>
-                <p class="p_index">Choisis la date de ton évaluation, les thèmes à réviser et <span class="sacado">SACADO</span> confectionne ton <b class="rose">programme de révision</b> jour par jour, avec suivi de progression, jusqu'au jour J.</p>
-                <p class="p_index"> <b>En trois clics....</b> </p>
-                <img src="{% static 'img/prep_1.png' %}" width="330px" />
-                <img src="{% static 'img/prep_2.png' %}" width="330px" />
-                <img src="{% static 'img/prep_3.png' %}" width="330px" />
-
-                <p class="p_index"><b>Génération du programme de révision</b> </p>
-                <img src="{% static 'img/prep_4.png' %}" width="100%"   />
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<div class="background_accueil">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12 col-md-12">
-                <h1 class="title_bloc_index" style="font-variant: small-caps;">Notre méthode</h1>
-                <p class="p_index">  Votre enfant progresse à son rythme avec des exercices interactifs, corrigés immédiatement, qu’il peut recommencer sans limitation. Les variables des exercices sont aléatoires pour <b class="rose">ancrer les procédures en mémoire</b>.</p>
-                <p class="p_index"><img src="{% static 'img/image_a.png' %}" style="float:right" />  Chaque jour, <b class="rose">10 minutes</b> d'entrainement sur nos exercices structurés en parcours permettent de reprendre les procédures et techniques et de les fixer dans la mémoire. Ces rituels facilitent la maîtrise des <b class="rose">automatismes</b> à la base de l'apprentissage des mathématiques.</p>
-
-                <p class="p_index"> De la maternelle à la terminale, SACADO Académie propose des parcours<b class="rose"> 100% mathématiques</b> conformes aux réformes et aux programmes scolaires en vigueur de l’Éducation Nationale.</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="fond_bis" style="margin-top:80px">
+ 
     <section class="container" id="menus">
         <div class="row">
             <div class="col-xs-12 col-md-12">
-                <h1 class="title_bloc_index_white"  style="font-variant: small-caps;">Nos menus </h1>
+                <h1 class="title_bloc_index"  style="font-variant: small-caps;">Nos menus </h1>
             </div>
         </div>
         <div class="row">
@@ -297,9 +188,105 @@ Intro Section -
             </div>
         </div>
     </section>
+
+<section class="fond_bis" style="margin-top:80px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <h1 class="title_bloc_index_white"  style="font-variant: small-caps;">Nos exercices à l'essai</h1>
+            </div>
+        </div>
+        <div class="row" align="center">
+        {% for data in dataset %}
+            <div class="col-xs-3 col-md-2 modal_title_level">
+                <a href="{% url 'exercises_shower' data.level.id %}">{% if  data.exercise.supportfile.imagefile %} <img src="{{ data.exercise.supportfile.imagefile.url }}"  width="150px" /> {% endif %}
+                <br/>{{ data.level.name }}
+                </a>
+            </div>
+        {% endfor %}                        
+        </div>
+    </div>
+</section>
+
+<div class="background_accueil">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <h1 class="title_bloc_index" style="font-variant: small-caps;">L'entraînement</h1>
+                <p class="p_index"><b class="rose">10 minutes</b> chaque jour, pour fixer les notions, maîtriser les méthodes de base et construire des savoirs solides.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <img src="{% static 'img/training_1.jpg' %}"  class="img_training_if_small"  />
+                <p class="p_index">Une <b class="rose">interface d'entraînement</b> complète avec tous les thèmes, les chapitres et les scores directement affichés. <br/>Le temps passé par journée est affiché pour contrôler effectivement la durée d'apprentissage. <br/><small>(Niveau affiché CM2)</small></p>
+            </div>
+        </div>
+        <div class="row" class="for_small">
+            <div class="col-xs-12 col-md-7">
+                <p class="p_index">Des chapitres complets  avec des parties de <b class="rose">cours interactifs</b> et des <b class="rose">exercices d'application directe</b> qui reprennent les objectifs des programmes de l'Education Nationale.<small>(Niveau affiché Troisième)</small></p><div class="v_space_2br"></div>
+                <img src="{% static 'img/training_2.jpg' %}" class="_img_training_if_small"  />
+            </div>
+            <div class="col-xs-12 col-md-5">
+                <p class="p_index">Des exercices entièrement <b class="rose">corrigés</b> et <b class="rose">interactifs</b> qui reprennent les énoncés d'examen et Les attendus des programmes. <small>(Niveau affiché Première)</small></p><div class="v_space_2br"></div>
+                <img src="{% static 'img/training_3.jpg' %}" class="_img_training_if_small" />
+            </div>
+        </div>
+    </div>
 </div>
 
 
+
+
+<div class="background_accueil">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <h1 class="title_bloc_index" style="font-variant: small-caps;">Les Prép'éval</h1>
+                <p class="p_index">Choisis la date de ton évaluation, les thèmes à réviser et <span class="sacado">SACADO</span> confectionne ton <b class="rose">programme de révision</b> jour par jour, avec suivi de progression, jusqu'au jour J.</p>
+                <p class="p_index"> <b>En trois clics....</b> </p>
+                <img src="{% static 'img/prep_1.png' %}" width="330px" />
+                <img src="{% static 'img/prep_2.png' %}" width="330px" />
+                <img src="{% static 'img/prep_3.png' %}" width="330px" />
+
+                <p class="p_index"><b>Génération du programme de révision</b> </p>
+                <img src="{% static 'img/prep_4.png' %}" width="100%"   />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="background_accueil">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <h1 class="title_bloc_index" style="font-variant: small-caps;">Notre méthode</h1>
+                <p class="p_index">  Votre enfant progresse à son rythme avec des exercices interactifs, corrigés immédiatement, qu’il peut recommencer sans limitation. Les variables des exercices sont aléatoires pour <b class="rose">ancrer les procédures en mémoire</b>.</p>
+                <p class="p_index"><img src="{% static 'img/image_a.png' %}" style="float:right" />  Chaque jour, <b class="rose">10 minutes</b> d'entrainement sur nos exercices structurés en parcours permettent de reprendre les procédures et techniques et de les fixer dans la mémoire. Ces rituels facilitent la maîtrise des <b class="rose">automatismes</b> à la base de l'apprentissage des mathématiques.</p>
+
+                <p class="p_index"> De la maternelle à la terminale, SACADO Académie propose des parcours<b class="rose"> 100% mathématiques</b> conformes aux réformes et aux programmes scolaires en vigueur de l’Éducation Nationale.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="background_accueil">
+    <div class="container" id="tools">
+
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <h1 class="title_bloc_index" style="font-variant: small-caps;">Nos outils</h1>
+
+                <p class="p_index"> SACADO ACADÉMIE propose des outils interactifs pour découvrir les <b class="rose">notions essentielles</b> des programmes de la Maternelle à la Sixième.</p>
+                <p class="p_index"><img src="{% static 'img/tools.jpg' %}" width="100%" />  </p>
+            </div>
+        </div>
+
+    </div>
+</div>
 
 
 <div class="background_accueil">
