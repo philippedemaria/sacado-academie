@@ -2109,6 +2109,7 @@ a.select_correction:focus {
     background-color: white;
     border-radius: 4px;
     padding:10px;
+  font-family:'MJXc-TeX-main-R', 'MJXc-TeX-main-Rw' ;
 }
 
 
