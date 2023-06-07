@@ -539,15 +539,6 @@ def delete_exotex(request, id):
     return redirect('admin_exotexs', level_id)
 
 
- 
-
-def ajax_action_exotex(request, id):
-    pass
- 
-
-
-
- 
 def update_relationtex(request, id):
 
     relationtex = Relationtex.objects.get(id=id)
@@ -605,7 +596,6 @@ def bibliotexs(request):
     return render(request, 'bibliotex/all_bibliotexs.html', {'bibliotexs': bibliotexs,'teacher': teacher,   })
 
 
- 
 def my_bibliotexs(request):
 
     request.session["folder_id"] = None
@@ -635,7 +625,6 @@ def my_bibliotexs(request):
  
     nb_archive = dataset_user.filter(  is_archive=1).count()
     return render(request, 'bibliotex/list_bibliotexs.html', { 'list_folders': list_folders , 'bibliotexs': bibliotexs , 'teacher': teacher,  'groups': groups,   'nb_archive' : nb_archive  })
-
 
 
 def my_bibliotex_archives(request):
@@ -668,7 +657,6 @@ def my_bibliotex_archives(request):
     return render(request, 'bibliotex/list_bibliotexs_archives.html', { 'list_folders': list_folders , 'bibliotexs': bibliotexs , 'teacher': teacher,  'groups': groups  })
 
 
-
 def ajax_my_bibliotexs(request):
 
     level_id = request.POST.get("level_id")
@@ -683,7 +671,6 @@ def ajax_my_bibliotexs(request):
     data['html'] = render_to_string('bibliotex/ajax_list_bibliotexs.html', {'bibliotexs' : bibliotexs , })
 
     return JsonResponse(data)
-
 
 
 def create_bibliotex_sequence(request,id):
@@ -728,9 +715,6 @@ def create_bibliotex_sequence(request,id):
     return render(request, 'bibliotex/form_bibliotex.html', context)
 
 
-
-
-
 def ajax_find_peuplate_sequence(request):
 
     id_parcours = request.POST.get("id_parcours",0)
@@ -766,7 +750,6 @@ def ajax_find_peuplate_sequence(request):
     return JsonResponse(data)  
 
 
-
 def clone_bibliotex_sequence(request, idb):
     """ cloner un parcours """
 
@@ -796,12 +779,6 @@ def clone_bibliotex_sequence(request, idb):
 
     return redirect('show_parcours' , 0, parcours_id )
 
-
-
-
-
-
- 
 
 def ajax_search_bibliotex(request):
 
@@ -864,8 +841,6 @@ def ajax_search_bibliotex(request):
     return JsonResponse(data)
 
 
- 
-
 def create_bibliotex(request,idf=0):
 
 
@@ -905,8 +880,6 @@ def create_bibliotex(request,idf=0):
     context = {'form': form, 'bibliotex': None, 'folder': folder, 'group': group  }
 
     return render(request, 'bibliotex/form_bibliotex.html', context)
-
-
 
 
 def update_bibliotex(request, id):
@@ -951,10 +924,6 @@ def update_bibliotex(request, id):
     return render(request, 'bibliotex/form_bibliotex.html', context)
 
 
-
- 
-
-
 def create_bibliotex_from_parcours(request,idp=0):
 
 
@@ -993,12 +962,6 @@ def create_bibliotex_from_parcours(request,idp=0):
     return render(request, 'bibliotex/form_bibliotex.html', context)
 
 
-
-
-
-
-
-
 def peuplate_bibliotex_parcours(request,idp):
 
     teacher = request.user.teacher
@@ -1009,14 +972,6 @@ def peuplate_bibliotex_parcours(request,idp):
     context = {'parcours': parcours, 'teacher': teacher , 'bibliotexs' : bibliotexs , 'type_of_document' : 5 }
 
     return render(request, 'bibliotex/form_peuplate_bibliotex_parcours.html', context)
-
-
-
-
-
-
-
-
 
 
 
@@ -1161,6 +1116,7 @@ def real_time_bibliotex(request, id):
     pass
  
 
+ 
 
 def  ajax_chargethemes(request):
     level_id =  request.POST.get("id_level")
@@ -1715,3 +1671,26 @@ def print_bibliotex_by_student(request,id):
     return printer_bibliotex_by_student(bibliotex) 
 
  
+
+def annales(request, idl):
+
+    level = Level.objects.get(pk=idl)
+    bibliotexs = Bibliotex.objects.filter( levels = level )
+
+
+ 
+    context = {'bibliotexs': bibliotexs,  }
+
+    return render(request, 'bibliotex/annales.html', context)
+
+
+
+def show_this_annale(request, idb):
+
+    bibliotex    = Bibliotex.objects.get(pk=idb)
+    relationtexs = bibliotex.relationtexs.order_by("ranking")
+
+    context = { 'bibliotex': bibliotex  ,  'relationtexs': relationtexs,  }
+
+    return render(request, 'bibliotex/show_this_annale.html', context)
+

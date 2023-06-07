@@ -74,6 +74,12 @@
                 <i class="bi bi-envelope icon_size"></i> <label class="big_size margin_bottom20"> Messages</label><br/>C'est la page d'accueil. On y accède dès notre arrivée mais on y retrouve tous les liens utiles.
             </a>
             {% endif %}
+            {% if request.user.is_in_academy and request.user.student.level.id == 9 or request.user.student.level.id == 12 or request.user.student.level.id == 11 %}
+            <a href="{% url 'annales' request.user.student.level.id %}" class="student_init">
+                <i class="bi bi-envelope icon_size"></i> <label class="big_size margin_bottom20"> Annales DNB</label><br/>Toutes les annales corrigées de la dernière session.
+            </a>
+            {% endif %}
+
     </div>
     <div class="row" align="center">
         {% if parcours %}

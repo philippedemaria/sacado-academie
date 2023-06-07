@@ -79,17 +79,13 @@ urlpatterns = [
     path('ajax_affectation_to_group', ajax_affectation_to_group, name='ajax_affectation_to_group'), 
     path('ajax_sharer_parcours', ajax_sharer_parcours, name='ajax_sharer_parcours'), 
  
-
-
     path('ajax_sort_exotexs_in_bibliotex', ajax_sort_exotexs_in_bibliotex, name='ajax_sort_exotexs_in_bibliotex'), 
  
-
-
     path('ajax_find_peuplate_sequence', ajax_find_peuplate_sequence, name='ajax_find_peuplate_sequence'),
     path('clone_bibliotex_sequence/<int:idb>', clone_bibliotex_sequence, name='clone_bibliotex_sequence'),
 
-
-
+    path('annales/<int:idl>', annales, name='annales'), 
+    path('show_this_annale/<int:idb>', show_this_annale, name='show_this_annale'), 
 
 
  ]

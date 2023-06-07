@@ -1,0 +1,46 @@
+{% extends 'dashboard.html' %}
+
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+
+
+{% block styleMk4ht %}
+    <link rel="stylesheet" href="{% static 'css/styleMk4ht.css' %}"> 
+{% endblock %} 
+
+
+
+   
+{% block require %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common3.js' %}"></script>
+    <script>
+        require(['script/ajax-bibliotex']);
+    </script> 
+{% endblock %} 
+
+  
+{% block page_title %}
+    {% include 'bibliotex/logo.html' %} Les annales <img src="{% static 'img/angle-right.png' %}"/> 
+{% endblock %}
+
+
+{% block page_menu_right %}
+
+
+{% endblock %}
+
+
+{% block body %}
+<section class="content_container">
+    <div class="row">
+        <div class="col-xs-12">
+            {% for b in bibliotexs %}
+                <a href="{% url 'show_this_annale' b.id %}" target="_blank" class="annale">{{ b }}</a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}                        
+ 
+ 

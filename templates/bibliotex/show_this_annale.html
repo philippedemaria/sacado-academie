@@ -1,0 +1,220 @@
+{% extends 'dashboard.html' %}
+
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+
+
+{% block styleMk4ht %}
+    <link rel="stylesheet" href="{% static 'css/styleMk4ht.css' %}"> 
+{% endblock %} 
+
+
+
+   
+{% block require %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common3.js' %}"></script>
+    <script>
+        require(['script/ajax-bibliotex']);
+    </script> 
+{% endblock %} 
+
+  
+{% block page_title %}
+    {% include 'bibliotex/logo.html' %} {{ bibliotex.title }} <img src="{% static 'img/angle-right.png' %}"/> 
+{% endblock %}
+
+
+{% block page_menu_right %}
+
+
+{% endblock %}
+
+
+{% block body %}
+
+<section class="content_container"  id="bibliotex_sortable">
+
+{% for r in relationtexs %} 
+    <div class="row relationtex_sorter" style="margin-bottom:20px">
+        <div class="col-sm-12 col-md-6 col-lg-6 exercice_annale" > 
+            <div> 
+                <span class="exotex_show_exercice"><i class="fa fa-sort"></i> Exercice {{ forloop.counter}}.</span> <label> {{ r.exotex.title }} 
+                    {% if r.calculator  %}
+                         <img src="{% static 'img/calculator.png' %}" width="25px" />
+                    {% else %}
+                         <img src="{% static 'img/no_calculator.png' %}" width="25px" />
+                    {% endif %}
+                    {% if r.is_python  %}
+                          <img src="{% static 'img/is_python.png' %}" width="25px" />
+                    {% endif %}
+                    {% if r.is_scratch  %}
+                          <img src="{% static 'img/is_scratch.png' %}" width="25px" />
+                    {% endif %}
+                    {% if r.is_tableur  %}
+                          <img src="{% static 'img/is_tableur.png' %}" width="25px" />
+                    {% endif %}
+                    <i class="bi bi-clock-history"></i> {{ r.duration }} min.</label>
+                    {% if r.correction  or r.exotex.correction  %}
+                        <a href="javascript:void();" data-r_id="{{ r.id }}" class="select_correction" >  <i class="fa fa-copyright" title="correction"></i></a>
+                    {% endif %}
+                    <small class="pull-right">
+                        {% for s in r.exotex.skills.all %}
+                            {{ s.name }}.
+                        {% endfor %}
+                    </small>
+            </div> 
+            <div class="exotex_knowledges">
+                {{ r.exotex.knowledge.name }} {% if r.exotex.knowledges.all|length > 0 %}<br/>{% endif %}
+                {% for k in r.exotex.knowledges.all %}
+                    {{ k.name }} {% if not forloop.last %}<br/> {% endif %}
+                {% endfor %}
+            </div>
+            <div id="content{{ r.exotex.id }}">
+                {% if r.content_html %}
+                {{ r.content_html|safe }}
+                {% else %}
+                {{ r.exotex.content_html|safe }}
+                {% endif %}
+            </div>
+            <div class="no_visu_on_load" id="correction{{ r.id }}"> 
+                <div class="exotex_correction"> 
+                    <label>Corrigé.</label><br/>
+                    {% if r.correction_html %}
+                        {{ r.correction_html|safe }} 
+                    {% else %}
+                        {{ r.exotex.correction_html|safe }} 
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="parcours_is_stop" id="tex_{{ r.id }}"><pre>{{ r.exotex.content }}</pre></div>
+        </div>  
+    </div>
+{% endfor %} 
+</form>
+
+
+<input type="button" value="Retour à la page précédente" class="btn btn-default" onclick="javascript:window.close()"/>
+
+
+
+</section>
+
+
+
+
+<div class="modal fade" id="print_exotex" tabindex="-1" role="dialog" aria-labelledby="print_exotex">
+    <div class="modal-dialog" role="document" style="width:70%">
+        <div class="modal-content" >
+
+            <form action="{% url 'print_exotex' %}" method="POST" enctype='multipart/form-data'> 
+                {% csrf_token %}
+                <div class="modal-header">     
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button> 
+                    <h2 id="print_exotex_title">  </h2> 
+                    <input type="hidden" id="print_exotex_id"  name="print_exotex_id">  
+                </div>
+                <div class="modal-body" id="print_exotex_body">
+     
+                </div>
+            </form>
+
+        </div>
+    </div> 
+</div>
+
+ 
+
+<div class="modal fade" id="print_bibliotex" tabindex="-1" role="dialog" aria-labelledby="print_bibliotex">
+    <div class="modal-dialog" role="document" style="width:70%">
+        <div class="modal-content" >
+
+            <form action="{% url 'print_bibliotex' %}" method="POST" enctype='multipart/form-data'> 
+                {% csrf_token %}
+                <div class="modal-header">     
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button> 
+                    <h2 id="print_bibliotex_title">  </h2> 
+                    <input type="hidden" id="print_bibliotex_id"  name="print_bibliotex_id">  
+                </div>
+                <div class="modal-body" id="print_bibliotex_body">
+     
+                </div>
+            </form>
+
+        </div>
+    </div> 
+</div>
+
+
+
+<div class="modal fade" id="individualise_exotex" tabindex="-1" role="dialog" aria-labelledby="individualise_exotex">
+    <div class="modal-dialog" role="document" style="width:70%">
+        <div class="modal-content" >
+
+            <form action="#" method="POST" enctype='multipart/form-data'> 
+                {% csrf_token %}
+                <div class="modal-header">     
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button> 
+                    <h2 id="individualise_exotex_title">  </h2> 
+                    <input type="hidden" id="individualise_exotex_id"  name="individualise_exotex_id">  
+                </div>
+                <div class="modal-body" id="individualise_exotex_body">
+     
+                </div>
+            </form>
+
+        </div>
+    </div> 
+</div>
+
+
+<div class="modal fade" id="results_exotex" tabindex="-1" role="dialog" aria-labelledby="results_exotex">
+    <div class="modal-dialog" role="document" style="width:70%">
+        <div class="modal-content" >
+
+            <form action="#" method="POST" enctype='multipart/form-data'> 
+                {% csrf_token %}
+                <div class="modal-header">     
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button> 
+                    <h2 id="results_exotex_title">  </h2> 
+                    <input type="hidden" id="results_exotex_id"  name="results_exotex_id">  
+                </div>
+                <div class="modal-body" id="results_exotex_body">
+     
+                </div>
+            </form>
+
+        </div>
+    </div> 
+</div>
+
+
+
+<div class="modal fade" id="print_tex" tabindex="-1" role="dialog" aria-labelledby="print_tex">
+    <div class="modal-dialog" role="document" style="width:70%">
+        <div class="modal-content" >
+            <div class="modal-header">   Copier et coller le code source  
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button> 
+                <h2 id="print_exotex_title">  </h2>  
+            </div>
+            <div class="modal-body" id="print_tex_body">
+ 
+            </div>
+        </div>
+    </div> 
+</div>
+
+{% endblock %}                        
+ 
+ 
