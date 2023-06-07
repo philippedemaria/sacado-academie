@@ -56,7 +56,7 @@
                     {% endif %}
                     <i class="bi bi-clock-history"></i> {{ r.duration }} min.</label>
                     {% if r.correction  or r.exotex.correction  %}
-                        <a href="javascript:void();" data-r_id="{{ r.id }}" class="select_correction" >  <i class="fa fa-copyright" title="correction"></i></a>
+                        <a href="javascript:void();" data-r_id="{{ r.id }}" class="text-success select_correction" >  <i class="fa fa-copyright" title="correction"></i> Correction</a>
                     {% endif %}
                     <small class="pull-right">
                         {% for s in r.exotex.skills.all %}
