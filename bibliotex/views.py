@@ -1675,7 +1675,7 @@ def print_bibliotex_by_student(request,id):
 def annales(request, idl):
 
     level = Level.objects.get(pk=idl)
-    bibliotexs = Bibliotex.objects.filter( levels = level )
+    bibliotexs = Bibliotex.objects.filter( levels = level, is_annal =1 )
 
 
  

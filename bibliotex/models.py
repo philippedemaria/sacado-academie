@@ -97,6 +97,7 @@ class Bibliotex(models.Model):
 
     is_favorite = models.BooleanField(default=0, verbose_name="Favori ?")
     is_share = models.BooleanField(default=0, verbose_name="Mutualisé ?")
+    is_annal = models.BooleanField(default=0,  blank=True, null=True, verbose_name="Annale ?") 
     is_archive  = models.BooleanField(default=0, verbose_name="Archivé ?")
     is_publish = models.BooleanField(default=0, verbose_name="Publié ?")
     start = models.DateTimeField(null=True, blank=True, verbose_name="A partir de")
