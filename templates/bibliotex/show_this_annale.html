@@ -39,7 +39,7 @@
     <div class="row relationtex_sorter" style="margin-bottom:20px">
         <div class="col-sm-12 col-md-12 col-lg-12 exercice_annale" > 
             <div> 
-                <span class="exotex_show_exercice"><i class="fa fa-sort"></i> Exercice {{ forloop.counter}}.</span> <label> {{ r.exotex.title }} 
+                <span class="exotex_show_exercice">Exercice {{ forloop.counter}}.</span> <label> {{ r.exotex.title }} 
                     {% if r.calculator  %}
                          <img src="{% static 'img/calculator.png' %}" width="25px" />
                     {% else %}
