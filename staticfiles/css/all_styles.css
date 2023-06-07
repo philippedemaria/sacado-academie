@@ -2096,12 +2096,13 @@ a.select_correction:focus {
 
 
 .annale {
-    border: 1px solid #0093CA;
+    border: 2px solid #0093CA;
     background-color: white;
     border-radius: 4px;
     padding:10px;
     margin: 15px; 
     width:300px;
+    display:block;
 }
 
 .exercice_annale {
@@ -2109,8 +2110,6 @@ a.select_correction:focus {
     background-color: white;
     border-radius: 4px;
     padding:10px;
-    margin: 15px;
-    max-height:600px;
 }
 
 
