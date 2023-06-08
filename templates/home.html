@@ -130,81 +130,96 @@ Intro Section -
 
 </section>
  
-    <section class="container" id="menus">
-        <div class="row">
-            <div class="col-xs-12 col-md-12">
-                <h1 class="title_bloc_index"  style="font-variant: small-caps;">Nos menus </h1>
-            </div>
+<section class="container" id="menus">
+    <div class="row">
+        <div class="col-xs-12 col-md-12">
+            <h1 class="title_bloc_index"  style="font-variant: small-caps;">Présentation </h1>
         </div>
-        <div class="row">
-            <div class="col-xs-12 col-md-4"  align="center">
-                <div class="card border_card" >             
-                    <div class="card-header">              
-                        <div class="row">
-                            <div class="col-sm-12 col-md-12 font_white" align="center">
-                                <img src="{% static 'img/menu_autonomie.png' %}"  width="60px"  style="float:left">                                
-                             Menu<div class="sub_header">Autonomie</div> 
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body" style="background-image: url('static/img/fond_autonomie.png')">
-                        <div class="this_price"> <span class="currency">5 €</span>/mois<br/><small style="font-size:12px">Sans engagement</small></div>
-                        <div class="card-block plus">
-                            <p class="card-text">  <a href="#" data-toggle='modal' data-target='#Autonomie'  class="detail_index"> Contenu de l'offre <i class="bi bi-question-circle"></i></a>  </p>
-                        </div>
-                        <div class="card-block plus">
-                            <a href="{% url 'choice_menu' 1 %}" class="btn btn-asso">Choisir ce menu</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xs-12 col-md-4"  align="center">
-                <div class="card border_card" >             
-                    <div class="card-header">              
-                        <div class="row">
-                            <div class="col-sm-12 col-md-12 font_white" align="center">
-                                <img src="{% static 'img/menu_suivi.png' %}"  width="60px" style="float:left">
-                                Menu<div class="sub_header">Suivi</div> 
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="this_price">dès <span class="currency">29 €</span>/mois<br/><small style="font-size:12px">Sans engagement</small></div>
-                        <div class="card-block plus">
-                            <p class="card-text">  
-                                <a href="#" data-toggle='modal' data-target='#Suivi'  class="detail_index"> Contenu de l'offre <i class="bi bi-question-circle"></i></a>  
-                        </div>                    
-                        <div class="card-block plus">
-                            <a href="{% url 'choice_menu' 2 %}" class="btn btn-asso">Choisir ce menu</a>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-md-4"  align="center">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/eiQrDK3s83Y?rel=0" title="Présentation de nos apports" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+
+    </div>
+</section>
+
+
+<section class="container" id="menus">
+    <div class="row">
+        <div class="col-xs-12 col-md-12">
+            <h1 class="title_bloc_index"  style="font-variant: small-caps;">Nos menus </h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-md-4"  align="center">
+            <div class="card border_card" >             
+                <div class="card-header">              
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 font_white" align="center">
+                            <img src="{% static 'img/menu_autonomie.png' %}"  width="60px"  style="float:left">                                
+                         Menu<div class="sub_header">Autonomie</div> 
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-xs-12 col-md-4"  align="center">
-                <div class="card border_card" >             
-                    <div class="card-header">              
-                        <div class="row">
-                            <div class="col-sm-12 col-md-12 font_white" align="center">
-                             <img src="{% static 'img/menu_exam.png' %}"  width="60px" style="float:left">   
-                             Menu<div class="sub_header">Prép'Examen</div> 
-                            </div>
-                        </div>
+                <div class="card-body" style="background-image: url('static/img/fond_autonomie.png')">
+                    <div class="this_price"> <span class="currency">5 €</span>/mois<br/><small style="font-size:12px">Sans engagement</small></div>
+                    <div class="card-block plus">
+                        <p class="card-text">  <a href="#" data-toggle='modal' data-target='#Autonomie'  class="detail_index"> Contenu de l'offre <i class="bi bi-question-circle"></i></a>  </p>
                     </div>
-                    <div class="card-body">
-                        <div class="this_price"> dès <span class="currency">290 €<br/><small style="font-size:14px">(package de 10 visio-conférences)</small></div>
-                        <div class="card-block plus">
-                            <p class="card-text">  
-                                <a href="#" data-toggle='modal' data-target='#exam'  class="detail_index">  Contenu de l'offre <i class="bi bi-question-circle"></i></a>  
-                            </p>
-                        </div>
-                        <div class="card-block plus">
-                            <a href="{% url 'choice_menu' 3 %}" class="btn btn-asso">Choisir ce menu</a>
-                        </div>
+                    <div class="card-block plus">
+                        <a href="{% url 'choice_menu' 1 %}" class="btn btn-asso">Choisir ce menu</a>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+        <div class="col-xs-12 col-md-4"  align="center">
+            <div class="card border_card" >             
+                <div class="card-header">              
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 font_white" align="center">
+                            <img src="{% static 'img/menu_suivi.png' %}"  width="60px" style="float:left">
+                            Menu<div class="sub_header">Suivi</div> 
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="this_price">dès <span class="currency">29 €</span>/mois<br/><small style="font-size:12px">Sans engagement</small></div>
+                    <div class="card-block plus">
+                        <p class="card-text">  
+                            <a href="#" data-toggle='modal' data-target='#Suivi'  class="detail_index"> Contenu de l'offre <i class="bi bi-question-circle"></i></a>  
+                    </div>                    
+                    <div class="card-block plus">
+                        <a href="{% url 'choice_menu' 2 %}" class="btn btn-asso">Choisir ce menu</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-md-4"  align="center">
+            <div class="card border_card" >             
+                <div class="card-header">              
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 font_white" align="center">
+                         <img src="{% static 'img/menu_exam.png' %}"  width="60px" style="float:left">   
+                         Menu<div class="sub_header">Prép'Examen</div> 
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="this_price"> dès <span class="currency">290 €<br/><small style="font-size:14px">(package de 10 visio-conférences)</small></div>
+                    <div class="card-block plus">
+                        <p class="card-text">  
+                            <a href="#" data-toggle='modal' data-target='#exam'  class="detail_index">  Contenu de l'offre <i class="bi bi-question-circle"></i></a>  
+                        </p>
+                    </div>
+                    <div class="card-block plus">
+                        <a href="{% url 'choice_menu' 3 %}" class="btn btn-asso">Choisir ce menu</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <section class="fond_bis" style="margin-top:80px;">
     <div class="container">
