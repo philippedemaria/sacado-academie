@@ -2843,7 +2843,6 @@ def create_all_holidays_book(request):
             p.teacher_id = teachers[t]
             p.save()
             p.groups.add(group)
-            p.students.add(student)
         t += 1
 
 
