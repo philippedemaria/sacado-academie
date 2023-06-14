@@ -2823,11 +2823,25 @@ def create_all_holidays_book(request):
     t  = 0
     for level_id in levels_ids :
         group ,c  = Group.objects.get_or_create(name="Cahier Vacances", level_id = level_id , defaults={ 'color' : '#46119c' , 'teacher_id' : teachers[t] ,  'subject_id' : 1 , 'school_id' : 50 , 'formule_id' : 5 })
+
+
+        first_name = "SacAdo"
+        last_name  = "Prof" 
+        name       = "SacAdoProf"+str(level_id)+"_e-test"
+        username   = get_username_teacher(request,name)
+        password   = make_password("sacado2020")  
+        email      = ""
+
+        user,created_u = User.objects.get_or_create(username=username , defaults= { 'last_name' : last_name, 'first_name' : first_name,  'password' : password , 'email' : email, 'user_type' : 0})
+        student        = Student.objects.create(user=user, level_id=level_id, code= str(uuid.uuid4())[:8]  )
+        group.students.add(student)
+
         for i in range(1,21):
             vignette = "vignettes/46247/J"+str(i)+"_3.png"
             colors   = ['#9100cb','#d000c0','#E700E3','#FF0000','#781798','#2759F6','#007CFF','#70DD7F','#FF00AF','#008bff','#0CB4A6','#ffb100','#3ad3bd','#ff00fb','#3e7fb7','#00c8ff','#4a9b85','#FB009D','#74ea5d','#008bff']
-            p = Parcours.objects.create( title = "Jour"+str(i) , color = colors[i-1] , author_id = 2480 , teacher_id = 2480 ,  subject_id = 1 ,  level_id = level_id , vignette =  vignette , is_sequence =1) 
+            p ,created = Parcours.objects.get_or_create( title = "Jour"+str(i) , color = colors[i-1] , author_id = 2480 , teacher_id = 2480 ,  subject_id = 1 ,  level_id = level_id , vignette =  vignette , is_sequence = 1) 
             p.groups.add(group)
+            p.students.add(student)
         t += 1
 
 
