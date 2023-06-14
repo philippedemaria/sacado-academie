@@ -176,15 +176,17 @@
                                 {% endfor %}
                             </select>
                         </div>
-
-                        <div class="form-group">
-                            <label>Durée :</label><br/>
-                            <label><input type="radio" name="duration{{ forloop.counter0}}" value="1" /> 1 mois à 5€</label><br/>
-                            <label><input type="radio" name="duration{{ forloop.counter0}}" value="3" /> 3 mois à 14€, soit 6 jours gratuits</label><br/>
-                            <label><input type="radio" name="duration{{ forloop.counter0}}" value="6" /> 6 mois à 26€, soit 24 jours gratuits</label><br/>
-                            <label><input type="radio" name="duration{{ forloop.counter0}}" value="12" /> 12 mois à 50€, soit 60 jours gratuits</label>
-                        </div>
-
+                            {% if formule.id == 2 %}
+                            <div class="form-group">
+                                <label>Durée :</label><br/>
+                                <label><input type="radio" name="duration{{ forloop.counter0}}" value="1" /> 1 mois à 5€</label><br/>
+                                <label><input type="radio" name="duration{{ forloop.counter0}}" value="3" /> 3 mois à 14€, soit 6 jours gratuits</label><br/>
+                                <label><input type="radio" name="duration{{ forloop.counter0}}" value="6" /> 6 mois à 26€, soit 24 jours gratuits</label><br/>
+                                <label><input type="radio" name="duration{{ forloop.counter0}}" value="12" /> 12 mois à 50€, soit 60 jours gratuits</label>
+                            </div>
+                            {% elif formule.id == 5 %}
+                                <input name="duration" value="2" type="hidden" />
+                            {% endif %}
                         {% else %}
                             <input name="level" value="" type="hidden" />
                         {% endif %}

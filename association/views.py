@@ -17,7 +17,8 @@ from django.contrib.auth.decorators import  permission_required,user_passes_test
 from association.models import Accounting,Associate , Voting , Document, Section , Detail , Rate  , Holidaybook, Abonnement , Activeyear, Plancomptable , Accountancy  
 from association.forms import AccountingForm,AssociateForm,VotingForm, DocumentForm , SectionForm, DetailForm , RateForm , AbonnementForm , HolidaybookForm ,  ActiveyearForm, AccountancyForm
 from account.models import User, Student, Teacher, Parent ,  Response
-from qcm.models import Exercise, Studentanswer , Customanswerbystudent , Writtenanswerbystudent , Supportfile
+from group.models import Group
+from qcm.models import Exercise, Studentanswer , Customanswerbystudent , Writtenanswerbystudent , Supportfile , Parcours
 from school.models import School
 from school.forms import SchoolForm
 from setup.models import Formule
@@ -2809,5 +2810,30 @@ def reset_all_students_sacado(request):
 
 
 
+
+
+@user_passes_test(user_is_board)
+def create_all_holidays_book(request):
+
+    levels_ids = [1,2,3,4,5,6,7,8,9,10,11,14]
+    teachers   = [89513,89507,89508,89510,89511,46245,46242,46246,46247,46222,46243,130243]
+    
+
+
+    t  = 0
+    for level_id in levels_ids :
+        group ,c  = Group.objects.get_or_create(name="Cahier Vacances", level_id = level_id , defaults={ 'color' : '#46119c' , 'teacher_id' : teachers[t] ,  'subject_id' : 1 , 'school_id' : 50 , 'formule_id' : 5 })
+        for i in range(1,21):
+            vignette = "vignettes/46247/J"+str(i)+"_3.png"
+            colors   = ['#9100cb','#d000c0','#E700E3','#FF0000','#781798','#2759F6','#007CFF','#70DD7F','#FF00AF','#008bff','#0CB4A6','#ffb100','#3ad3bd','#ff00fb','#3e7fb7','#00c8ff','#4a9b85','#FB009D','#74ea5d','#008bff']
+            p = Parcours.objects.create( title = "Jour"+str(i) , color = colors[i-1] , author_id = 2480 , teacher_id = 2480 ,  subject_id = 1 ,  level_id = level_id , vignette =  vignette , is_sequence =1) 
+            p.groups.add(group)
+        t += 1
+
+
+    messages.success(request,"Création des groupes et séquences effectuée avec succès.")
+
+
+    return redirect('association_index')
 
  
