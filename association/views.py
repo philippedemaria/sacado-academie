@@ -2825,15 +2825,15 @@ def create_all_holidays_book(request):
         group   = Group.objects.filter(name="Cahier Vacances", level_id = level_id , subject_id= 1).last()
 
 
-        first_name = "SacAdo"
-        last_name  = "Prof" 
-        username   = "SacAdoProf"+str(level_id)+"_e-test"
-        password   = make_password("sacado2020")  
-        email      = ""
+        # first_name = "SacAdo"
+        # last_name  = "Prof" 
+        # username   = "SacAdoProf"+str(level_id)+"_e-test"
+        # password   = make_password("sacado2020")  
+        # email      = ""
 
-        user,created_u = User.objects.get_or_create(username=username , defaults= { 'last_name' : last_name, 'first_name' : first_name,  'password' : password , 'email' : email, 'user_type' : 0})
-        student        = Student.objects.create(user=user, level_id=level_id, code= str(uuid.uuid4())[:8]  )
-        group.students.add(student)
+        # user,created_u = User.objects.get_or_create(username=username , defaults= { 'last_name' : last_name, 'first_name' : first_name,  'password' : password , 'email' : email, 'user_type' : 0})
+        # student ,cr    = Student.objects.get_or_create(user=user, level_id=level_id, code= str(uuid.uuid4())[:8]  )
+        # group.students.add(student)
 
         for i in range(1,21):
             vignette = "vignettes/46247/J"+str(i)+"_3.png"
