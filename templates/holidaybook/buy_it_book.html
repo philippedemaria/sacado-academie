@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+ 
+
+
+{% block body %}
+    <section class="container"> 
+        <form action="" id="get_detail">
+        <div class="row">
+            <div class="col-sm-8 col-md-8"  style="margin-top:30px;padding:0px 30px"> 
+                <h1>{{ group.name }} {{ group.level.shortname_full|safe  }}  </h1>
+                <span class="rose_light"><b>5,00 €</b></span> pour les 2 mois de Juillet et Aout.<br/></span>
+                <div class="rose_light"><b>Préparation à la classe de {{ classe_sup }}</b></div>
+                <div><small>20 séances préparées pour revisiter l'ensemble des savoir faire de ton année. </small></div>
+            </div>
+            <div class="col-sm-4 col-md-4"> 
+                <div class="hbook" style='background: url({{ hbook.vignette.url }})'>
+                    {{ hbook.title }}
+                    <div class="level_hbook">{{ hbook.level.shortname }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 col-md-6"  style="margin-top:30px;padding:0px 30px" >
+                <div class="card">
+                    <h4  class="title_page violet">
+                        <b>Responsable légal</b> 
+                    </h4>
+                    <div class="form-group">
+                        {{ parent_form.last_name.label_tag }}
+                        {{ parent_form.last_name |add_class:"form-control id_last_name"|attr:"required" }}
+                        {{ parent_form.last_name.errors }}
+                    </div>     
+                    <div class="form-group">
+                        {{ parent_form.first_name.label_tag }}
+                        {{ parent_form.first_name |add_class:"form-control id_first_name"|attr:"required" }}
+                        {{ parent_form.first_name.errors }}
+                    </div>
+                    <div class="form-group">
+                        {{ parent_form.email.label_tag }} 
+                        {{ parent_form.email |add_class:"form-control email"}}
+                        {{ parent_form.email.errors }}
+                    </div>
+                    <div class="row"> 
+                        <div class="col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <label>Choisir un identifiant :</label>
+                                {{ parent_form.username |add_class:"form-control username"|attr:"required" }}
+                                <span id="ajaxresult{{ forloop.counter0 }}" class="ajaxresult"></span>
+                                {{ parent_form.username.errors }}
+                            </div>
+                        </div>  
+                    </div>       
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+                                {{ parent_form.password1.label_tag }} <small><em>Au moins 8 caractères</em></small>
+                                {{ parent_form.password1 |add_class:"form-control"|attr:"required" }}
+                                {{ parent_form.password1.errors }}
+                            </div>
+                        </div>  
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+                                {{ parent_form.password2.label_tag }}
+                                {{ parent_form.password2 |add_class:"form-control"|attr:"required" }}
+                                {{ parent_form.password2.errors }}
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <label>{{ parent_form.cgu|attr:"required" }}   Je reconnais avoir lu et compris les <a href="#" data-target="#cgu" data-toggle='modal'>conditions générales d'utilisation</a> et je les accepte.</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-md-6"   style="margin-top:30px;padding:0px 30px">
+                <div class="card">
+                    <h4  class="title_page violet">
+                        <b>Enfant</b> 
+                    </h4>
+                    <div class="form-group">
+                        {{ student_form.last_name.label_tag }}
+                        {{ student_form.last_name |add_class:"form-control id_last_name"|attr:"required" }}
+                        {{ student_form.last_name.errors }}
+                    </div>     
+                    <div class="form-group">
+                        {{ student_form.first_name.label_tag }}
+                        {{ student_form.first_name |add_class:"form-control id_first_name"|attr:"required" }}
+                        {{ student_form.first_name.errors }}
+                    </div>
+                    <div class="form-group">
+                        {{ student_form.email.label_tag }} <em>facultatif </em>
+                        {{ student_form.email |add_class:"form-control email"}}
+                        {{ student_form.email.errors }}
+                    </div>
+                    <div class="row"> 
+                        <div class="col-sm-12 col-md-12">
+                            <div class="form-group">
+                                <label>Choisir un identifiant :</label>
+                                {{ student_form.username |add_class:"form-control username"|attr:"required" }}
+                                <span id="ajaxresult{{ forloop.counter0 }}" class="ajaxresult"></span>
+                                {{ student_form.username.errors }}
+                            </div>
+                        </div>  
+                    </div>       
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+                                {{ student_form.password1.label_tag }} <small><em>Au moins 8 caractères</em></small>
+                                {{ student_form.password1 |add_class:"form-control"|attr:"required" }}
+                                {{ student_form.password1.errors }}
+                            </div>
+                        </div>  
+                        <div class="col-sm-12 col-md-6">
+                            <div class="form-group">
+                                {{ student_form.password2.label_tag }}
+                                {{ student_form.password2 |add_class:"form-control"|attr:"required" }}
+                                {{ student_form.password2.errors }}
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="form-group">
+                        <label>Niveau :</label>
+                        <select name="level" class="form-control select2" required>
+                            {% for l in levels|dictsort:"ranking" %}
+                                <option value="{{ l.id }}">{{ l.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-12">   
+
+                <button type="submit" class="btn btn-primary" >Acheter le cahier vacances {{ group.level.shortname_full|safe  }}</button>
+
+                <a href="javascript:history.back()"  class="btn btn-default " >Retour </a>
+    
+            </div>
+        </div>
+        </form>
+    </section>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+ 
+
+
+{% block body %}
+    <section class="container"> 
+
+        <div class="row">
+            <div class="col-sm-12 col-md-12"> 
+                <h1>{{ parcours.title }}</h1> 
+ 
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+ 
+ 
+                    {% for rc in relationships  %}
+                        {% if rc.type_id == 0 %}
+                            {%  if rc.exercise.supportfile.is_title %}     
+                                <h2 class="listing_div thin" style="padding-left: 30px; width:100%; clear:both">
+                                    <input type="hidden" value="{{ rc.id }}" name="relationship_id_sequence" class="relationship_id_sequence" /> 
+                                    {% if rc.is_header_of_section  %}
+                                        <a href="#" data-toggle='modal' data-target='#head_of_section' style="color:{{ parcours.color  }}"    data-relation_id='{{ rc.id }}'  class="header_shower" title="Cours associé à cette section">    
+                                                              
+                                            {% if  rc.exercise.supportfile.title %}  
+                                                {{  rc.exercise.supportfile.title|cleanhtml|capfirst }}  
+                                            {% else %}
+                                                {{ rc.exercise.supportfile.annoncement|cleanhtml }}
+                                            {% endif %}   <sup><i class="fa fa-desktop" style="font-size: 9px"></i></sup></a>
+                                    {% else %}
+                                        {% if  rc.exercise.supportfile.title %}  
+                                            {{  rc.exercise.supportfile.title|cleanhtml|capfirst }}  
+                                        {% else %}
+                                            {{ rc.exercise.supportfile.annoncement|cleanhtml }}
+                                        {% endif %}
+                                    {% endif %}
+                                </h2>
+                            {%  elif rc.exercise.supportfile.is_subtitle %}
+                                <h3 class="listing_div thin" style="padding-left: 30px; width:100%; clear:both"> 
+                                    <input type="hidden" value="{{ rc.id }}" name="relationship_id_sequence" class="relationship_id_sequence" />
+                                    {% if rc.is_header_of_section %}
+                                        <a href="#" data-toggle='modal' data-target='#head_of_section' style="color:{{ parcours.color  }}"  data-relation_id='{{ rc.id }}' class="header_shower" title="Cours associé à cette sous-section">{{ rc.exercise.supportfile.title|cleanhtml|capfirst }} <sup><i class="fa fa-desktop" style="font-size: 9px"></i></sup></a>
+                                    {% else %}
+                                        {{ rc.exercise.supportfile.title|cleanhtml|capfirst }}
+                                    {% endif %}
+                                </h3>
+                            {% else %}
+                                {% include 'details_document.html' %}
+                            {% endif %}  
+                        {% else %}
+                            {% include 'details_document.html' %}
+                        {% endif %}  
+                    {% endfor %}
+ 
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-sm-12 col-md-12">     
+                    <a href="javascript:history.back()"  class="btn btn-default " >Retour </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

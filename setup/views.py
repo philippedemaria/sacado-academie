@@ -1498,9 +1498,6 @@ def paiement(request) :
 
 
 
-
-
-
 def find_facture(facture_id, autorisation ):
 
     chrono  = create_chrono(Facture,"F")
@@ -1514,7 +1511,6 @@ def find_facture(facture_id, autorisation ):
         adhesion.save()
 
  
-
 
 def paiement_retour(request,status):
     # la banque appelle cette page lorsque la transaction est terminée
