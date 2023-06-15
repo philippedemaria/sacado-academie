@@ -2,7 +2,10 @@
 {% load widget_tweaks %}
 {% load static %}
 {% load item_tags %}
- 
+
+{% block python_css %}
+     <link rel="stylesheet" href="{% static 'css/all_styles.css' %}">
+{% endblock %} 
 
 
 {% block body %}
