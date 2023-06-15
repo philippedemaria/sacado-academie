@@ -39,7 +39,7 @@ urlpatterns = [
                   path('flashcard/', include('flashcard.urls')),
                   path('academy/', include('academy.urls')),
                   path('lesson/', include('lesson.urls')),
-                  
+                  path('holidaybook/', include('holidaybook.urls')),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

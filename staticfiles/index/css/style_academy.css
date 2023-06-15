@@ -2598,6 +2598,8 @@ a.detail_index:hover{
 }
 
 
+
+
 @media (max-width: 1200px) {
 
       .min_width{display:none;
@@ -2627,6 +2629,42 @@ a.detail_index:hover{
         height: 300px;          
         font-size: 18px;
       }
-}
 
 }
+
+
+.holiday_book{
+    position: absolute;top:50px;left:0px;background-color: white;border-radius: 50%;height:150px;width:150px;padding:20px;text-align:center; 
+}
+
+
+.hbook{
+   height:150px;
+   width:110px;
+   float: left;
+   background-color:#4c1684;
+   border-radius: 4px;
+   color:white;
+   text-align: center;
+}
+
+.level_hbook{
+   height:50px;
+   width:50px;
+   margin-left: auto;
+   margin-right:auto;
+   color:#4c1684;
+   border-radius: 50%;
+   background-color:white;
+   text-align: center;
+   font-size: 30px;
+}
+
+
+
+@media (max-width: 800px) {
+    .holiday_book{
+        position: absolute;top:20px;left:10px;background-color: white;border-radius: 50%;height:100px;width:100px;padding:15px;text-align:center; 
+    }
+}
+

@@ -45,11 +45,18 @@ Intro Section -
 <section class="bandeau_accueil">
     <div class="row">
         <div class="col-xs-12 col-md-12 col-lg-6 no_display_index" >
+
             <div class="bandeau_accueil_title">
                 Les rituels <br/>pour réussir  en Mathématiques
             </div>
         </div>
         <div class="col-xs-12 col-md-12 col-lg-6" >
+            {% comment %}
+            <div class="holiday_book"><a href="{% url 'holidaybooks' %}">
+                Cahiers de vacances <br/><span class="rose_light">5,00€</span>  <br/>
+                <small class="currency">jusqu'au 31 aout</small></a>
+            </div>
+            {% endcomment %}
             <img src="{% static 'img/accueil_0.png'  %}" class="img_if_small" />
         </div> 
     </div>
