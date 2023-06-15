@@ -56,7 +56,7 @@
         <!-- Si l'exercice est bloqué, on pose une div par-dessus -->
         <div class="card-body student" >
             <span style="font-size: 40px; padding-left:3px;float:left; padding-top: 10px;  color: {{ rc.parcours.color}} ; ">
-                {{ nb_exo_only|index:forloop.counter0 }}.</span> 
+                {{ forloop.counter }}.</span> 
             <div class="card-score-student">
                     <span class="markdown"> 
                            
@@ -167,7 +167,7 @@
         <!-- div de résultat -->   
         <div class="card-body student">
             <span style="font-size: 40px; padding-left:3px;float:left; padding-top: 10px; {% if not score %} color: {{ parcours.color}} ;  {% endif %} ">
-                {{ nb_exo_only|index:forloop.counter0 }}.</span> 
+                {{ forloop.counter }}.</span> 
             <div class="card-score-student"  >
 
             {% if submitter %}
