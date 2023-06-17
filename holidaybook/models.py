@@ -19,3 +19,10 @@ class Holidaybook(models.Model):
     def __str__(self):      
         return "Cahier Vacances > {}".format(self.level.shortname)
 
+
+
+    def level_next(self):
+
+        lvs = ["CE1","CE2","CM1","CM2","6è","5è","4è","3è","2de","1è","T",0,0,"CP"]
+
+        return lvs[self.level.id-1]

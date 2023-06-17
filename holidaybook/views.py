@@ -25,10 +25,11 @@ def try_it(request,idl):
 	np_form = NewpasswordForm()
 
 	group =  Group.objects.filter(level_id = idl,formule_id=5).last()
+	hbook = Holidaybook.objects.filter(level_id = idl, is_publish = 1).first()
 	parcours = group.group_parcours.filter(ranking=1).first()
 	relationships = parcours.parcours_relationship.filter(is_publish=1).order_by("ranking")
 
-	return render(request, 'holidaybook/try_it_book.html', {'parcours': parcours , 'relationships': relationships ,  'form' : form ,  'np_form' : np_form })
+	return render(request, 'holidaybook/try_it_book.html', {'parcours': parcours , 'relationships': relationships ,  'hbook' : hbook ,  'form' : form ,  'np_form' : np_form })
 
 
 def buy_it(request,idl):
