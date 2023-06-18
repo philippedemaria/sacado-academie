@@ -82,7 +82,7 @@
                             {% endif %}
 
  
-                            <a href="{% url 'show_this_index_exercise'  rc.exercise.id   %}" target="_blank">  
+                            <a href="{% url 'show_this_index_exercise'  rc.exercise.id   %}">  
                                 <img src="{{ rc.exercise.supportfile.imagefile.url }}"  class="image_parcours" {% if not rc.is_publish %} style="opacity:0.8" {% endif %}>
                             </a>
   
