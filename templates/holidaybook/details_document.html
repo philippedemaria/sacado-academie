@@ -81,19 +81,11 @@
                                 </div>
                             {% endif %}
 
-                            {% if parcours.is_next and not available.is_ok %} 
-
-
-                                <div class="alert alert-danger" style="position: absolute; z-index:9; top:100px;font-size:12px;border-radius: 0px 4px 4px  0px;"> 
-                                      <i class="fa fa-lock"></i>  Vous devez passer à un autre exercice  
-                                </div>
-                     
-                                    <img src="{{ rc.exercise.supportfile.imagefile.url }}"  class="image_parcours" {% if not rc.is_publish %} style="opacity:0.8" {% endif %}  >
-                            {% else %}
-                                <a href="{% if not is_lock  %}{% url 'execute_exercise'  rc.parcours.id  rc.exercise.id   %}{% endif %}">  
-                                    <img src="{{ rc.exercise.supportfile.imagefile.url }}"  class="image_parcours" {% if not rc.is_publish %} style="opacity:0.8" {% endif %}>
-                                </a>
-                            {% endif %}
+ 
+                            <a href="{% if not is_lock  %}{% url 'show_this_index_exercise'  rc.exercise.id   %}{% endif %}">  
+                                <img src="{{ rc.exercise.supportfile.imagefile.url }}"  class="image_parcours" {% if not rc.is_publish %} style="opacity:0.8" {% endif %}>
+                            </a>
+  
                 {% else %}
                     {% if is_blck %}
                         <div class="alert alert-danger" style="position: absolute; z-index:9; top:100px;font-size:12px;border-radius: 0px 4px 4px  0px;"> 
