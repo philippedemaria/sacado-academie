@@ -26,7 +26,7 @@
 
         		<img src="{% static 'img/sacadoLogo.png' %}" />
 
-               {{  request.user.first_name  }} {{  request.user.last_name  }}, vous venez de demander une adhésion à la <span class="font_sacado" >SACADO ACADÉMIE</span> pour  
+               {{  parent.user.first_name  }} {{  parent.user.last_name  }}, vous venez de demander une adhésion à la <span class="font_sacado" >SACADO ACADÉMIE</span> pour  
 
                <h3 class="font_sacado"  align="center"  style="margin:30px 0px">{{  student.user.first_name  }} {{  student.user.last_name  }}</h3>
 
@@ -36,7 +36,15 @@
                	{% if formule.id == 1 %}<img src="{% static 'img/menu_autonomie.png' %}" width="80px" style='float:right; margin-left:20px' />
                	{% elif formule.id == 2 %}<img src="{% static 'img/menu_suivi.png' %}" width="80px" style='float:right; margin-left:20px' />
                	{% elif formule.id == 3 %}<img src="{% static 'img/menu_exam.png' %}" width="80px" style='float:right; margin-left:20px' />
-               	{% else %}<img src="{% static 'img/prep_class.png' %}" width="80px" style='float:right; margin-left:20px' />{% endif %}
+                {% elif formule.id == 5 %}
+                  <div class="hbook" style='background: url({{ hbook.vignette.url }});float:right; margin-left:20px'>
+                      {{ hbook.title }}
+                      <div class="level_hbook">{{ hbook.level.shortname }}</div>                        
+                      <div style="font-size: 9px;font-weight: 800">Prépare ton entrée en {{ hbook.level_next }} </div>
+                  </div>
+               	{% else %}
+                  <img src="{% static 'img/prep_class.png' %}" width="80px" style='float:right; margin-left:20px' />
+                {% endif %}
 
                	Vous avez choisi la formule <b class="font_sacado"> {{ formule.name}}</b></p>
                 <p class="double_line">pour la classe de <b class="font_sacado">{{ level.name }}</b></p>

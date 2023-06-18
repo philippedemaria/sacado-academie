@@ -1,12 +1,19 @@
 from django.shortcuts import render
+from django.forms import formset_factory
 from django.contrib.auth.decorators import  permission_required,user_passes_test
 from django.contrib.auth.forms import    AuthenticationForm
+from django.db.models import Q 
+from django.utils import formats, timezone
 from account.decorators import user_is_board
+from account.models import User,Parent, Student , Adhesion , Facture
 from .models import *
 from group.models import Group
+from setup.models import Formule  
 from qcm.models import Parcours
-from account.forms import  UserForm, ParentForm, StudentForm ,  NewpasswordForm
-
+from account.forms import  UserForm,  NewpasswordForm, BaseUserFormSet 
+from datetime import datetime , timedelta
+from setup.views import cmd_abonnement , champs_briqueCA
+from general_fonctions import * 
 
 def holidaybooks(request):
 
@@ -32,71 +39,90 @@ def try_it(request,idl):
 	return render(request, 'holidaybook/try_it_book.html', {'parcours': parcours , 'relationships': relationships ,  'hbook' : hbook ,  'form' : form ,  'np_form' : np_form })
 
 
+
+
+
 def buy_it(request,idl):
 
-	parent_form = UserForm(request.POST or None)
-	student_form = UserForm(request.POST or None)
-	hbook = Holidaybook.objects.filter(level_id=idl).first()
+    userFormset = formset_factory(UserForm, extra = 2,  formset=BaseUserFormSet)
 
-	form = AuthenticationForm()
-	np_form = NewpasswordForm()
-	today = datetime.now().replace(tzinfo=timezone.utc)
+    hbook = Holidaybook.objects.filter(level_id=idl).first()
 
-	if  all((parent_form.is_valid(), student_form.is_valid())): 
+    level   = Level.objects.get(pk=idl)
+    group =  Group.objects.filter(level_id = idl,formule_id=5).last()
+    parcours = group.group_parcours.filter(ranking=1).first()
 
-		amount     = 5.00
-		start      = today
-		stop       = datetime(this_year,9,1).replace(tzinfo=timezone.utc)
+    form = AuthenticationForm()
+    np_form = NewpasswordForm()
+    today = datetime.now().replace(tzinfo=timezone.utc)
 
-		user_student = student_form.save()
-		student      = Student.objects.create(user=user_student,level_id=idl)
-		adhesion = Adhesion.objects.create( student = student , level_id = idl , start = start , amount = amount , stop = stop , formule_id  = 5 , year  = today.year , is_active = 0)
+    formset     = userFormset(request.POST or None)
+    if formset.is_valid():
+        i = 0
+        for form in formset :
 
+            last_name  = form.cleaned_data["last_name"]
+            first_name = form.cleaned_data["first_name"]
+            username   = form.cleaned_data["username"]
+            password_no_crypted = form.cleaned_data["password1"] 
+            password  =  make_password(form.cleaned_data["password1"])
+            email     =  form.cleaned_data["email"]  
 
-		user_prent  = parent_form.save()
-		parent,create = Parent.objects.update_or_create(user = user_parent, defaults = { "task_post" : 1 })
-		if create :  parent.students.add(student)
+            this_year  = today.year
+            amount     = 5.00
+            stop       = datetime(this_year,9,1).replace(tzinfo=timezone.utc)
 
-		facture = Facture.objects.create(chrono = "BL_" +  user_parent.last_name +"_"+str(today) ,  user_id = user_parent.id , file = "" , date = today , orderID = "" , is_lesson = 1  ) #orderID = Numéro de paiement donné par la banque"
-		facture.adhesions.add(adhesion)
+            students_in = list()
+            adhesion_in = list()
+            if i ==0 :
 
+                user_parent, created = User.objects.update_or_create(username = username, password = password ,  user_type = 1 , defaults = { "last_name" :  last_name  , "first_name" :  first_name  , "email" :  email  , "country_id" : 5 ,  "school_id" : 50 ,  "closure" : None })
+                parent,create = Parent.objects.update_or_create(user = user_parent, defaults = { "task_post" : 1 })
 
-		this_year  = today.year
-		student_id = user_student.id
-		formule_id = 5
-
-
-		student = Student.objects.get(pk=student_id)
-		level   = Level.objects.get(pk=idl)
-		formule = Formule.objects.get(pk=formule_id)
-		user = request.user
-
-		cmd     = cmd_abonnement(formule,facture.id)
-
-		request.session["details_of_student"] = {'student_id' : student_id , 'level_id' : level_id ,  'formule_id' : formule_id , 'amount' : amount , 'today' : start , 'end_day' : stop }
-
-		email=  request.user.email
-		billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Académie","SACADO ACADÉMIE")
-		try : y,m,d = stop.split("T")[0].split("-")
-		except : y,m,d = stop.split("-")
-		end_day = d+"-"+m+"-"+y
-		champs_val=champs_briqueCA(amount,cmd,email,1,billing)
-
-		context={ 'formule' : formule , 'level' : level , 'student' : student ,  'amount' : amount , 'end_day' : end_day , 'champs_val':champs_val}
-		return render(request, 'setup/brique_credit_agricole.html', context) 
-
-	group =  Group.objects.filter(level_id = idl,formule_id=5).last()
-	parcours = group.group_parcours.filter(ranking=1).first()
-
-	hbooks = Holidaybook.objects.filter(is_publish = 1).order_by("level__ranking")
-
-	clas_sups = ["CE1","CE2","CM1","CM2","6ème","5ème","4ème","3ème","2nde","1ère","Terminale"]
-	classe_sup = clas_sups[idl-1]
-
-	return render(request, 'holidaybook/buy_it_book.html', {'hbooks': hbooks , 'hbook': hbook ,  'group' : group , 'classe_sup' : classe_sup ,
-	  'parent_form' : parent_form ,  'student_form' : student_form  ,  'form' : form ,  'np_form' : np_form     })
+                facture = Facture.objects.create(chrono = "BL_" +  user_parent.last_name +"_"+str(today) ,  user_id = user_parent.id , file = "" , date = today , orderID = "" , is_lesson = 1  ) #orderID = Numéro de paiement donné par la banque"
 
 
+            else :
+
+                user, created = User.objects.update_or_create(username = username, password = password , user_type = 0 , defaults = { "last_name" :last_name , "first_name" : first_name  , "email" : email , "country_id" : 5 ,  "school_id" : 50 , "closure" : stop })
+                student,created_s = Student.objects.update_or_create(user = user, defaults = { "task_post" : 1 , "level_id" : idl })
+
+                if created_s : 
+                    students_in.append(student) # pour associer les enfants aux parents 
+
+                    adhesion = Adhesion.objects.create( student = student , level_id = idl , start = today , amount = amount , stop = stop , formule_id  = 5 , year  = today.year , is_active = 0)
+                    test = attribute_all_documents_of_groups_to_a_new_student([group], student)
+
+            i+=1
+
+        facture.adhesions.add(adhesion)
+        parent.students.set(students_in)
+        formule = Formule.objects.get(pk=5)
+
+        cmd = cmd_abonnement(formule,facture.id)
+ 
+        billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Académie","SACADO ACADÉMIE")
+        try : y,m,d = stop.split("T")[0].split("-")
+        except : y,m,d = str(stop).split(" ")[0].split("-")
+        end_day = d+"-"+m+"-"+y
+        champs_val=champs_briqueCA(amount,cmd,user_parent.email,1,billing)
+
+        context={ 'formule' : formule , 'level' : level , 'parent' : parent ,   'amount' : amount , 'end_day' : end_day , 'champs_val':champs_val , 'hbook': hbook ,  }
+        return render(request, 'setup/brique_credit_agricole.html', context) 
+
+
+    else :
+        print("erreurs => ", formset.errors)
+
+    hbooks = Holidaybook.objects.filter(is_publish = 1).order_by("level__ranking")
+
+    clas_sups = ["CE1","CE2","CM1","CM2","6ème","5ème","4ème","3ème","2nde","1ère","Terminale"]
+    classe_sup = clas_sups[idl-1]
+
+    return render(request, 'holidaybook/buy_it_book.html', {'hbooks': hbooks , 'hbook': hbook ,    'userFormset' : userFormset, 'group' : group , 'classe_sup' : classe_sup , 'level' : level, 
+    'form' : form ,  'np_form' : np_form     })
+
+ 
 
 
 @user_passes_test(user_is_board) 
@@ -122,3 +148,11 @@ def create_holidaybook(request):
     return render(request, 'association/form_holidaybook.html', context)
 
  
+
+def show_this_hbook_exercise(request,ide):
+
+    exercise  = Exercise.objects.get(pk = id)
+    template = "holidaybook/show_this_exercise.html"
+    context = {'exercise': exercise, }
+
+    return render(request, template, context)

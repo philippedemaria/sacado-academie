@@ -1095,6 +1095,13 @@ def attribute_group_to_student_by_level(level,student,formule_id) :
     return success
 
 
+def cmd_abonnement(formule,facture_id):
+    today = datetime.now().replace(tzinfo=timezone.utc)
+    date="{}-{:02}-{:02}".format(today.year,today.month,today.day)
+    return "Abonnement "+formule.name+"_" + date + "_"+ str(facture_id)
+
+
+
 def add_adhesion(request) :
     
     request.session["tdb"] = 'adhesion'
@@ -1412,10 +1419,6 @@ def commit_adhesion(request) :
     return render(request, 'setup/commit_adhesion.html', context)   
 
 
-def cmd_abonnement(formule,facture_id):
-    today = datetime.now().replace(tzinfo=timezone.utc)
-    date="{}-{:02}-{:02}".format(today.year,today.month,today.day)
-    return "Abonnement "+formule.name+"_" + date + "_"+ str(facture_id)
 
 
 

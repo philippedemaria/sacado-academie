@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% load item_tags %}
+ 
+{% block page_title %}
+
+{% endblock %}
+
+
+
+{% block page_menu_right %}
+
+{% endblock %}
+              
+
+
+ 
+{% block require %}
+
+{% endblock %} 
+
+
+
+{% block body  %}  
+<section class="content_main">
+ 
+
+    <div class="col-sm-12" align="center">
+        <div id='ggb_applet_container' ></div>
+        <a href="javascript:history.back()"><input type="button" value="Retour" class="btn btn-default"/></a>
+    </div> 
+
+
+
+
+    <script type="text/javascript" src="{% static 'js/lib/geogebra.js' %}"></script>
+
+    <script type="text/javascript">
+        // parameters of the geogebra app
+
+        var width               = "{{ exercise.supportfile.width }}" ;
+        var height              = "{{ exercise.supportfile.height }}" ; 
+        var showToolBar         = "{{ exercise.supportfile.toolBar|lower }}" ;
+        var showMenuBar         = "{{ exercise.supportfile.menuBar|lower }}" ;
+        var showAlgebraInput    = "{{ exercise.supportfile.algebraInput|lower }}" ;
+        var showResetIcon       = "{{ exercise.supportfile.resetIcon|lower }}" ; 
+        var enableShiftDragZoom = "{{ exercise.supportfile.dragZoom|lower }}" ;
+        var filename            = "{{ exercise.supportfile.ggbfile.url }}" ;
+
+        var parameters = {
+                  "appname":"classic",
+                  "id":"ggb_applet_container",
+                  "prerelease":false,
+                  "width": parseInt(width, 10),
+                  "height": parseInt(height, 10),
+                  "showToolBar": showToolBar,
+                  "showfullscreenbutton":true,
+                  "borderColor":"#f5f8fd",
+                  "showMenuBar": showMenuBar,
+                  "showAlgebraInput": showAlgebraInput ,
+                  "showResetIcon": showResetIcon ,
+                  "enableLabelDrags":false,
+                  "enableShiftDragZoom": enableShiftDragZoom,
+                  "enableRightClick":false,
+                  "capturingThreshold":null,
+                  "showToolBarHelp":false,
+                  "errorDialogsActive":false,
+                  "useBrowserForJS":false,
+                  "langage":"en",
+                  "filename": filename,
+                   "appletOnLoad" :  function(api) { 
+                            var situation = "{{ exercise.supportfile.situation }}" ;
+                            api.setValue("situation", situation );
+                      }
+            };
+        var applet = new GGBApplet('5.0', parameters,true);
+        // Geogebra applet creation
+        applet.inject('ggb_applet_container', 'preferHTML5');  
+    </script>
+</section>
+
+ 
+
+ 
+
+
+{% endblock  %}   
+
+
+ 
