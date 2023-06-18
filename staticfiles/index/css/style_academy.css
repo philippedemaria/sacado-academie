@@ -2400,7 +2400,9 @@ a.detail_index:hover{
   color:white;
 }
 
-
+.card-body {
+    padding: 0rem; 
+}
 
 /*les section de la page d'accueil*/
 .description{
