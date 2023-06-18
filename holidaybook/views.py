@@ -26,7 +26,7 @@ def try_it(request,idl):
 
 	group =  Group.objects.filter(level_id = idl,formule_id=5).last()
 	hbook = Holidaybook.objects.filter(level_id = idl, is_publish = 1).first()
-	parcours = group.group_parcours.filter(ranking=1).first()
+	parcours = group.group_parcours.filter(ranking=0).first()
 	relationships = parcours.parcours_relationship.filter(is_publish=1).order_by("ranking")
 
 	return render(request, 'holidaybook/try_it_book.html', {'parcours': parcours , 'relationships': relationships ,  'hbook' : hbook ,  'form' : form ,  'np_form' : np_form })
