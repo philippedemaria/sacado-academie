@@ -15,6 +15,7 @@ from datetime import datetime , timedelta
 from setup.views import cmd_abonnement , champs_briqueCA
 from general_fonctions import * 
 
+
 def holidaybooks(request):
 
 	form = AuthenticationForm()

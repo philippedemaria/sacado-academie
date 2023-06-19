@@ -109,43 +109,6 @@
                         {% endif %}
                     {% endif  %}
                 {% endif  %}
-
-
- 
-            {% if not rc.exercise.supportfile.id == 6520 %}            
-                <div class="card-text" style="background-color:{{ parcours.color }};color:{{ parcours.color|contrast_color }};opacity:0.8">
-                    <i class="fa fa-fw fa-clock-o"></i> {{ rc.duration }} min.
-                    <i class="fa fa-fw fa-save"></i> {{ rc.situation}}
-                    {% if not rc.parcours.is_evaluation %}
-                    {% if rc.relationships_courses.all|length > 0 %}  
-                        <i class="fa fa-fw fa-desktop"></i>
-                    {% endif  %}
-                    {% endif  %}
-                    {% if noggb_data.is_corrected %}
-                        <span class="pull-right selector_div_result helper_tip" data-relation_id ="{{ rc.id }}"  data-custom=0 ><i class="fa fa-trophy" style="color:{{ parcours.color|contrast_color }}"></i>
-                            <div class="helper_tip_text" >Résultat disponible. </div>
-                        </span>
-                    {% else %}
-                        {% if submitter %}
-                            {% if not rc.exercise.supportfile.is_ggbfile %}  
-                                <span class="pull-right selector_div_result" data-relation_id ="{{ rc.id }}"  data-custom=0 ><i class="fa fa-copy" style="color:{{ parcours.color|contrast_color }}"></i></span>
-                            {% endif %}
-                        {% endif %}
-                    {% endif %}
-
-                    {% if rc.relationship_remediation.all|length > 0 %}
-                        <span class="helper_tip_card"><i class="fa fa-fw fa-paperclip pull-right" style="color:{{ parcours.color|contrast_color }}"></i>
-                            <div class="helper_tip_text_card" >Cet exercice contient une aide extérieure ou une consigne orale.</div>
-                        </span>
-                    {% endif  %}
-                    {% if  rc.is_correction_visible %}
-                        <span class="helper_tip"> <i class="pull-right  fa fa-copyright" style="color:{{ parcours.color|contrast_color }}"></i> 
-                            <div class="helper_tip_text" >Correction disponible. Entrer dans l'exercice. </div>
-                        </span> 
-                    {% endif  %}
-                </div>
-            {% endif  %}
-      
         </div>
     </div>
 <!---------------------------------------------------------->

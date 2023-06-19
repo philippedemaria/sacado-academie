@@ -1603,11 +1603,12 @@ def goto_positionnement_student(request,id):
 
     first_name = request.POST.get("first_name",None)
     last_name  = request.POST.get("last_name",None)
+    email      = request.POST.get("email",None)
 
     if first_name and last_name :
         request.session["student"] = first_name.capitalize()  +" "+last_name.capitalize() + str(uuid.uuid4())[:8]
         request.session["student_full_name"] = first_name.capitalize()  +" "+last_name.capitalize()
-        request.session["email_to_send"] = request.POST.get("email")
+        request.session["email_to_send"] = email
 
     if not  request.session["student"] : 
         return redirect('index')
@@ -1666,7 +1667,7 @@ def goto_positionnement_student(request,id):
     else :
         try :
             send_mail("SACADO ACADEMIE : début d'un test de positionnement ",
-                      first_name+" "+ last_name +" - Niveau : "+positionnement.level.name+", matière : "+positionnement.subject.name,
+                      first_name+" "+ last_name +" - Niveau : "+positionnement.level.name+", matière : "+positionnement.subject.name+"\n\n email : "+email,
                       settings.DEFAULT_FROM_EMAIL,
                       ["philippe.demaria83@gmail.com", "brunoserres33@gmail.com","sandyreb@hotmail.fr"])
         except : pass
