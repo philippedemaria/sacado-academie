@@ -24,7 +24,7 @@
 {% endblock %}
 
 {% block page_menu_right %}
-        <a href="{% url 'academy_index'  %}" class="btn btn-sacado pull-right">Tableau de bord</a> 
+     {% include 'association/menubar.html' %}    
 {% endblock %}
 
 
@@ -46,7 +46,7 @@
                         {% for parent in parents %}
                             <tr>
                                 <td>
-                                    {{ parent.user.last_name }} {{ parent.user.first_name }}
+                                    <a href="{% url 'customer' parent.user.id %}">{{ parent.user.last_name }} {{ parent.user.first_name }}</a>
                                 </td>
                                 <td>
                                     {% for s in parent.students.all %}  
@@ -54,7 +54,7 @@
                                     {% endfor %}
                                 </td>
                                 <td>
-                                    <a href="{% url 'academy_delete_parent' parent.user.id %}">Supprimer ce parent</a> 
+                                    <a href="{% url 'academy_delete_parent' parent.user.id %}" onclick="TestDelete( '{{ parent.user.last_name }} {{ parent.user.first_name }}' )">Supprimer ce parent</a> 
                                 </td>
                             </tr>
                         {% endfor %}
@@ -64,13 +64,8 @@
         </div>
         <div class="row">
             <div class="col-sm-12 col-md-12">     
-                    <a href="javascript:history.back()"  class="btn btn-default " >Retour </a>
+                <a href="javascript:history.back()"  class="btn btn-default" >Retour</a>
             </div>
         </div>
     </section>
- 
-
- 
-
-
 {% endblock %}

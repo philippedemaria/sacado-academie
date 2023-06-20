@@ -25,9 +25,6 @@ urlpatterns = [
 
     path('contact_academy', contact_academy , name='contact_academy'),
 
-
-
-
     path('gestion_academy_dashboard', gestion_academy_dashboard , name='gestion_academy_dashboard'),
     path('delete_groups', delete_groups , name='delete_groups'), 
     path('delete_parcours', delete_parcours , name='delete_parcours'),
@@ -44,8 +41,6 @@ urlpatterns = [
 
 
     path('associate_student_docs', associate_student_docs , name='associate_student_docs'),
-
-
     
 ]
 

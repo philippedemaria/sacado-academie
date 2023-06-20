@@ -1,7 +1,7 @@
 from django.db import models
 from datetime import date
 from ckeditor_uploader.fields import RichTextUploadingField
-from account.models import User , ModelWithCode
+from account.models import User , ModelWithCode , Parent
 from django.apps import apps
 from django.utils import   timezone
 from django.db.models import Q
@@ -370,3 +370,52 @@ class Abonnement(models.Model):
 
     def __str__(self):
         return "{}".format(self.school.name)
+
+
+
+
+  
+class Invoice(models.Model):
+ 
+    FORMES = (
+        ("FACTURE", "FACTURE"),        
+        ("AVOIR", "AVOIR"),
+    )
+
+
+    amount    = models.DecimalField(default=0, blank=True , max_digits=10, decimal_places=2, editable=False)
+    is_credit = models.BooleanField(default=0, verbose_name="is_credit ?" )
+    objet     = models.CharField(max_length=255, verbose_name="Objet*")
+    chrono    = models.CharField(max_length=50, blank=True, unique =True,  editable=False)
+    forme     = models.CharField(max_length=255, default='FACTURE',  blank=True,  choices=FORMES, verbose_name="Format")
+
+    beneficiaire = models.CharField(max_length=255, blank=True, verbose_name="En faveur de")
+    address      = models.CharField(max_length=255, blank=True, verbose_name="Adresse")
+    complement   = models.CharField(max_length=255, blank=True, verbose_name="Complément d'adresse")
+    town         = models.CharField(max_length=255, blank=True, verbose_name="Complément d'adresse")
+    country      = models.ForeignKey(Country, related_name="invoices", blank=True,  null=True,  on_delete=models.SET_NULL, verbose_name="Pays")
+    contact      = models.CharField(max_length=255, blank=True ,  verbose_name="Contact")
+
+    parent       = models.ForeignKey(Parent, related_name="invoices", blank=True, null=True,  on_delete=models.CASCADE, verbose_name="Etablissement")  
+
+    observation  = RichTextUploadingField( blank=True, default="", null=True, verbose_name="Observation")
+
+    date_payment = models.DateTimeField(null=True, blank=True, verbose_name="Date d'effet") # date de paiement
+    date         = models.DateTimeField(auto_now_add=True) # date de création de la facture
+ 
+
+
+    def __str__(self):
+        return self.beneficiaire
+
+
+
+class Subinvoice(models.Model):
+    """ detail d'un Invoice   """
+ 
+    invoice     = models.ForeignKey(Invoice, related_name="subinvoices", on_delete=models.CASCADE, verbose_name="Facture")
+    description = models.CharField(max_length=255, blank=True ,   verbose_name="Description")
+    amount      = models.DecimalField(default=0, blank=True , max_digits=10, decimal_places=2)
+ 
+    def __str__(self):
+        return self.invoice

@@ -1,0 +1,159 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+
+{% block require %}
+<script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common3.js' %}"></script>
+
+ <script>
+    require(['script/update_school_admin']);
+</script>  
+{% endblock %} 
+
+
+
+
+
+{% block page_title %} 
+    <i class="bi bi-person-circle"></i>   {{parent.user.get_full_name}}, <small>{{parent.user.email}}</small> 
+{% endblock  %}
+
+
+{% block page_menu_right %}
+    {% include 'association/menubar.html' %}
+{% endblock %}
+ 
+
+
+{% block body  %}    
+<section class="content_main">
+    <div class="row">
+        <div class="col-sm-12 col-md-4  alert alert-sacado">
+ 
+            <div class="form-group">                
+               <i class="bi bi-person-circle"></i> Enfants<hr/>
+            </div>
+            <div class="form-group">                
+                {% for s in parent.students.all %} {{s.user.get_full_name}}, <small>{{s.user.email}}</small><hr/> {% endfor %}
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-8">
+            <div class="row">
+                <div class="col-sm-12 col-md-12">
+
+
+                    <div class="alert alert-sacado">                
+                         <a href="{% url 'create_invoice' parent.user.id %}"  class="pull-right btn btn-xs btn-danger" ><i class="bi bi-plus-circle-dotted"></i> Créer une facture</a> 
+                         <i class="bi bi-currency-euro"></i> Factures 
+                         <br/><br/>
+
+
+                    <table class="table table-sacado table-striped table-hover table-responsive">
+                            <tr> 
+                                <th>Date</th>
+                                <th>Chrono</th> 
+                                <th style="text-align:center">Montant</th> 
+                                <th style="text-align:center">Payé le</th> 
+                                <th style="text-align:center"></th> 
+                            </tr>
+                        {% for f in parent.invoices.all  %}
+                            <tr> 
+                                <td>{{ f.date|date:"Y-m-d" }}</td> 
+                                <td>{{ f.chrono }}</td> 
+                                <td style="text-align:center">
+                                     {{ f.amount }} €
+                                </td> 
+                                <td style="text-align:center">
+                                    <a href="{% url 'print_invoice'   f.id %}">Télécharger</a> | 
+                                    <a href="{% url 'update_invoice' parent.user.id f.id %}">Modifier</a> | 
+                                    <a href="{% url 'delete_invoice' parent.user.id f.id %}">Supprimer</a>
+
+                                </td> 
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    </div>
+                    <hr/> 
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+
+<div class="modal fade" id="new_abo" tabindex="-1" role="dialog" aria-labelledby="new_abo">
+    <div class="modal-dialog modal-maxsize" role="document">
+        <div class="modal-content" >
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>                 
+                <h2>Date d'échéance</h2>
+                <small>La modification de la date d'échéance enclenche l'abonnement si elle est supérieure à aujourd'hui</small>              
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        {% if customer.school.gar %}
+                            <div style="background-color: green;color:white">Gestion par le GAR demandée.</div>
+                        {% else %}
+                            <div style="background-color: red;color:white">Gestion par le GAR non demandée.</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+ 
+ 
+                    </div>
+                </div> 
+            </div> 
+        </div>
+    </div>        
+</div>
+
+
+
+<div class="modal fade" id="to_pay" tabindex="-1" role="dialog" aria-labelledby="to_pay">
+    <div class="modal-dialog modal-maxsize" role="document">
+        <div class="modal-content" >
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>                 
+                <h2>Date de paiement</h2>              
+            </div>
+            <div class="modal-body">
+                <form  action=" " method="POST" enctype='multipart/form-data'>
+                {% csrf_token %} 
+                <div class="row">
+                    <div class="col-sm-12 col-md-4">   
+                        <div class="form-group">                
+                            <input  type="date" id="date_payment" name="date_payment" class="form-control"   />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12">
+                <input  type="hidden" id="aid" name="accounting_id"   />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12">   
+                        <input value="Enregistrer le paiement" type="submit" class="btn btn-primary"   />
+                   
+                        <a href="javascript:history.back()"><input type="button" value="Annuler"
+                                                   class="btn btn-default "/></a>
+                    </div>
+                </div>                              
+                </form>
+            </div> 
+        </div>
+    </div>        
+</div>
+
+
+{% endblock  %}

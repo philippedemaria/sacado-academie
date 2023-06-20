@@ -708,6 +708,12 @@ a.no_decoration:hover{
     padding: 0 5px;
 }
 
+.alert-sacado{
+  background-color: #FFF ;
+  color :  #5d4391 ;  
+  border : solid 1px #d7cee7 ;
+  border-radius: 4px;
+}
 
 /***************************************************************************/
 /*********************      quizz     **************************************/

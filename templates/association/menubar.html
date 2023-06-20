@@ -2,40 +2,18 @@
 <li class="dropdown">
     <a href="#" data-toggle="dropdown" class="dropdown-toggle no_button"> Opérations <b class="caret"></b> </a>
     <ul   class="dropdown-menu clearfix pull-right" role="menu">
+        <li class="sanspuce">
+            <a href="{% url 'academy_list_parents' %}"> Nouvelle opération par parent </a> 
+        </li> 
+        <li class="divider"></li>
         <li>
-            <a href="{% url 'create_accounting' 0 %}" > Nouvelle opération Client   </a>   
+            <a href="{% url 'create_invoice' 0 %}" > Nouvelle opération Client   </a>   
         </li>
         <li>
-            <a href="{% url 'list_accountings' 0 %}"  class="no_button" > 
+            <a href="{% url 'list_invoices'  %}"  class="no_button" > 
                 Journal opérations Client
             </a> 
         </li> 
-        {% comment %}
-        <li class="divider"></li>
-        <li>
-            <a href="{% url 'create_accounting' 1 %}" > Nouvelle opération Fournisseur    </a>   
-        </li>
-        <li>
-            <a href="{% url 'list_accountings' 1 %}"  class="no_button" > 
-                Journal opérations Fournisseur 
-            </a> 
-        </li> 
-        {% endcomment %}
-        <li class="divider"></li>
-        <li>
-            <a href="{% url 'create_accounting' 2 %}" > Nouvelle opération Bancaire </a>  
-        </li>
-        <li>
-            <a href="{% url 'list_accountings' 2 %}"  class="no_button" > Journal opérations bancaires  CA</a> 
-        </li>
-        <li>
-         <a href="{% url 'list_paypal' %}" class="no_button">Journal opérations bancaires Paypal</a>
-        </li>
-
-
-
-
-
     </ul>
 </li>
 

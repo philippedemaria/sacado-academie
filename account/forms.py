@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import Teacher, User, Student, Parent , Response , Newpassword , Avatar , Background, Description
+from .models import Teacher, User, Student, Parent , Response , Newpassword , Avatar , Background, Description 
 
 from django.core.exceptions import ValidationError
 from django.forms import BaseFormSet
@@ -23,6 +23,7 @@ class UserForm(UserCreationForm):
         if User.objects.filter(username=username).exists():
             raise ValidationError("Ce nom d'utilisateur est déjà utilisé. Merci d'en choisir un autre.", code='invalid')
         return username
+
 
 
 class AvatarForm(forms.ModelForm):

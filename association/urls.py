@@ -87,9 +87,16 @@ urlpatterns = [
     path('transfert_asso_acad/<int:idl>/<int:start>', transfert_asso_acad, name='transfert_asso_acad'),
     path('to_clean_database/<int:idl>/<int:start>', to_clean_database, name='to_clean_database'),
 
-
-
     path('create_all_holidays_book', create_all_holidays_book, name='create_all_holidays_book'),
+
+
+    path('customer/<int:idp>', customer , name='customer'),
+
+    path('create_invoice/<int:idp>', create_invoice , name='create_invoice'),
+    path('update_invoice/<int:idp>/<int:idi>', update_invoice , name='update_invoice'),
+    path('delete_invoice/<int:idp>/<int:idi>', delete_invoice , name='delete_invoice'),
+    path('list_invoices', list_invoices , name='list_invoices'),
+    path('print_invoice/<int:idi>', print_invoice , name='print_invoice'),
 
 ]
  

@@ -1,0 +1,176 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+
+
+ 
+{% block require %}
+ 
+
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common3_withoutMathJax.js' %}"></script>
+
+
+{% endblock %}
+
+
+
+{% block page_title %}
+        Liste des factures
+{% endblock %}
+
+{% block page_menu_right %}
+    {% include 'association/menubar.html' %}
+{% endblock %}
+
+ 
+
+{% block body %}
+<section class="content_main"> 
+
+
+
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            <table   class="standard_tab_sort300 table table-bordered table-hover">
+                <thead>
+                <tr>                     
+                    <td style="width:120px">Chrono</td>                     
+                    <td style="width:120px">Date</td>                        
+                    <td>Client  </td>
+                    <td>Montant  </td>
+                    <td>Libellé </td>
+                    <td>Echéance</td>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for invoice in invoices %}
+                        <tr id="this_tr_{{ invoice.id }}" class="this_tr_all">
+                            <td>
+                                <span >{{ invoice.chrono }}</span> 
+                            </td>                  
+                            <td>
+                                <span >{{ invoice.date|date:"Y-m-d" }} </span> 
+                            </td>
+                            <td><span class="helper_tip">
+                                    {% if invoice.parent  %}<a href="{% url 'update_invoice' invoice.parent.user.id  invoice.id  %}" >{% else %}<a href="{% url 'update_invoice' 0  invoice.id  %}" >{% endif %}
+                                    {% if invoice.beneficiaire  %} {{ invoice.beneficiaire }} {% else %}{{ invoice.parent.user.get_full_name }}  {% endif %}
+                                        {% if invoice.observation  %} <div class="helper_tip_text" > {{ invoice.observation|safe }}</div> {% endif %}
+                                    </a>
+
+                                </span>
+
+
+                                <a href="{% url 'print_invoice'  invoice.id %}" class="pull-right" style="margin-right:10px"><i class="fa fa-print"></i> </a>
+                                <a href="{% url 'delete_invoice' 0 invoice.id %}" class="pull-right" style="margin-right:10px" onclick="TestDelete('Cette facture {{ invoice.chrono }}')"><i class="fa fa-trash"></i> </a>
+                            </td> 
+                            <td>
+                                {{ invoice.amount }}  €
+                            </td>
+                            <td>
+                                {{ invoice.objet }}
+                            </td>
+
+
+                            <td style="width:80px">
+                                {% if invoice.date_payment  %}<span class="text-success">{{ invoice.amount }} €</span>{% endif %}
+                            </td>
+                
+
+                        </tr>
+
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-sm-12 col-md-12">     
+                <a href="javascript:history.back()"  class="btn btn-default " >Retour </a>
+        </div>
+    </div>
+</section>
+ 
+
+
+
+<div class="modal fade" id="e_bilans" tabindex="-1" role="dialog" aria-labelledby="e_bilans">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1  class='sacado'  >Exporter le bilan au format tableur</h1>
+            </div>
+            <div class="modal-body">
+                <form action="{%  url 'export_bilan' %}" method="POST"  >
+                        {% csrf_token %} 
+                    <div class="row">
+                        <div class="col-lg-6 col-xs-12">
+                            <div class="form-group">
+                                <label>Date de début </label>   
+                                <input type="date" name="date_start" class="form-control"/>
+                            </div>
+                        </div> 
+                        <div class="col-lg-6 col-xs-12">
+                            <div class="form-group">   
+                                <label>Date de début </label>    
+                                <input type="date" name="date_end" class="form-control"/>
+                            </div>
+                        </div> 
+                    </div> 
+                    <div class="row">
+                        <div class="col-lg-6 col-xs-12">  
+                            <div class="form-group">  
+                                <input type="submit" class="btn btn-success" value="Exporter" />
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                            </div>        
+                        </div>
+                    </div>
+                </form> 
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="p_bilans" tabindex="-1" role="dialog" aria-labelledby="p_bilans">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1  class='sacado'  >Imprimer le bilan en pdf</h1>
+            </div>
+            <div class="modal-body">
+                <form action="{%  url 'print_bilan' %}" method="POST"  >
+                        {% csrf_token %} 
+                    <div class="row">
+                        <div class="col-lg-6 col-xs-12">
+                            <div class="form-group">
+                                <label>Date de début </label>   
+                                <input type="date" name="date_start" class="form-control"/>
+                            </div>
+                        </div> 
+                        <div class="col-lg-6 col-xs-12">
+                            <div class="form-group">   
+                                <label>Date de début </label>    
+                                <input type="date" name="date_end" class="form-control"/>
+                            </div>
+                        </div> 
+                    </div> 
+                    <div class="row">
+                        <div class="col-lg-6 col-xs-12">  
+                            <div class="form-group">  
+                                <input type="submit" class="btn btn-primary" value="Télécharger" />
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                            </div>        
+                        </div>
+                    </div>
+                </form> 
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+{% endblock %}
