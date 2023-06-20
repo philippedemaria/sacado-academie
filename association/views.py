@@ -3065,7 +3065,7 @@ def print_invoice(request, idi ):
     ### Logo Sacado
     #########################################################################################
     dateur = "Date : " + invoice.date.strftime("%d-%m-%Y")
-    logo = Image('https://sacado-academie.fr/static/img/sacadoA1.png')
+    logo = Image('https://sacado-academie.fr/static/img/sanspb.png')
     logo_tab = [[logo, "SANSPB\nhttps://sacado-academie.fr\nsacado.academie@gmail.com", dateur]]
     logo_tab_tab = Table(logo_tab, hAlign='LEFT', colWidths=[0.7*inch,5.2*inch,inch])
     elements.append(logo_tab_tab)
