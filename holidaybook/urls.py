@@ -10,4 +10,9 @@ urlpatterns = [
     path('buy_it/<int:idl>', buy_it, name='buy_it'),
     path('show_this_hbook_exercise/<int:ide>', show_this_hbook_exercise, name='show_this_hbook_exercise'),
 
+
+    path('engage_holidaybooks', engage_holidaybooks, name='engage_holidaybooks'),
+ 
+
+
 ]
