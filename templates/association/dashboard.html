@@ -34,26 +34,23 @@
                 </div>
                 <ul style="margin:0px;padding: 0px" >
                     <li class="sanspuce">
-                        <a href="{% url 'create_accounting' 0 %}" class="white" style="padding-left: 10px" > Nouvelle opération Client   </a>   
+                         <a href="{% url 'academy_list_parents' %}" class="white" style="padding-left: 10px"> Liste des parents  </a> 
+                    </li> 
+                    <hr style="color:white"/>                    
+                    <li class="sanspuce">
+                        <a href="{% url 'create_invoice' 0 %}" class="white" style="padding-left: 10px" > Nouvelle opération Client   </a>   
                     </li>
                     <li class="sanspuce">
-                        <a href="{% url 'list_accountings' 0 %}"  class="no_button white" style="padding-left: 10px" > 
+                        <a href="{% url 'list_invoices'  %}"  class="no_button white" style="padding-left: 10px" > 
                             Journal opérations Client
                         </a> 
                     </li> 
-                    <hr style="color:white"/>
-                    <li class="sanspuce">
-                        <a href="{% url 'create_accounting' 2 %}" class="white" style="padding-left: 10px"> Nouvelle opération Bancaire </a>  
-                    </li>
-                    <li class="sanspuce">
-                        <a href="{% url 'list_accountings' 2 %}"  class="no_button white" style="padding-left: 10px" > Journal opérations bancaires  CA</a> 
-                    </li>
-                    <li class="sanspuce">
-                     <a href="{% url 'list_paypal' %}" class="no_button white" style="padding-left: 10px">Journal opérations bancaires Paypal</a>
-                    </li>
+
+ 
                 </ul>
             </div>
         </div>
+        {% comment %}
         <div class="col-lg-3 col-md-4 col-xs-6">
             <!-- small box -->
             <div class="small-box bg-purple">
@@ -64,9 +61,7 @@
                     <li class="sanspuce">
                         <a href="{% url 'academy_list_adhesions'  %}" class="white" style="padding-left: 10px"> Liste des adhésions  </a>   
                     </li>    
-                    <li class="sanspuce">
-                         <a href="{% url 'academy_list_parents' %}" class="white" style="padding-left: 10px"> Liste des parents  </a> 
-                    </li> 
+
                     <hr style="color:white"/>
                     <li class="sanspuce">
                      <a href="{% url 'create_school_admin' %}"  class="no_button white" style="padding-left: 10px"> Nouveau partenaire</a>
@@ -75,9 +70,7 @@
                     <li class="sanspuce">
                          <a href="{% url 'all_schools' %}" class="white" style="padding-left: 10px"> Liste des partenaires  </a> 
                     </li>   
-                    <li class="sanspuce">
-                        <a href="{% url 'activeyears'  %}" class="white" style="padding-left: 10px"> Années d'exercice </a>   
-                    </li>
+
                     <hr style="color:white"/>
                     <li class="sanspuce">
                         <a href="{% url 'gestion_academy_dashboard'  %}" class="white" style="padding-left: 10px"> Ré initialisation </a>   
@@ -87,6 +80,7 @@
                 </ul>
             </div>
         </div>
+
         <div class="col-lg-3 col-md-4 col-xs-6">
             <!-- small box -->
             <div class="small-box bg-purple">
@@ -108,6 +102,8 @@
                     <li class="sanspuce" style="padding-left: 10px">
                         <a href="{% url 'activeyears' %}" class="no_button white">Archive</a>
                     </li>
+
+
                     <hr style="color:white"/>
                     <li class="sanspuce" style="padding-left: 10px">
                         <a href="{% url 'print_balance' %}" class="no_button white"> Imprimer la Balance <i class="bi bi-file-earmark-pdf"></i></a>   
@@ -119,6 +115,8 @@
                 </ul>
             </div>
         </div>
+        {% endcomment %}
+        
         <div class="col-lg-3 col-md-4 col-xs-6">
             <!-- small box -->
             <div class="small-box bg-purple">
@@ -137,9 +135,11 @@
                 <li class="sanspuce" style="padding-left: 10px">
                     <a href="{% url 'to_clean_database' 0  0 %}" class="no_button white">Nettoyage de la base</a>
                 </li>
-
-
-
+                <hr style="color:white"/>
+                <li class="sanspuce">
+                    <a href="{% url 'activeyears'  %}" class="white" style="padding-left: 10px"> Années d'exercice </a>   
+                </li>
+                <hr style="color:white"/>
                 <li class="sanspuce" style="padding-left: 10px">
                     <a href="{% url 'create_all_holidays_book' %}" class="no_button white">Cahier de vacances</a>
                 </li>
