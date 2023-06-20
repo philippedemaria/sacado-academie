@@ -32,7 +32,7 @@ Publication des cahiers de vacances
      
                     {% for hbook in hbooks %}
                         <div style="margin: 20px;  padding:10px;background-color: {% if hbook.is_publish %}green;color:white{% else %}white{% endif %};border-radius: 4px;border:1px solid violet">
-                        {{ hbook.title }}{{ hbook.level.shortname }} <input name="engage_books" type="checkbox" value="{{ hbook.id }}" class="pull-right" />
+                        {{ hbook.title }} {{ hbook.level.shortname }} <input name="engage_books" type="checkbox" value="{{ hbook.id }}" class="pull-right" />
 
                         </div>
      
