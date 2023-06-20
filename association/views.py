@@ -3080,7 +3080,7 @@ def print_invoice(request, idi ):
     #########################################################################################
     if invoice.parent :
         beneficiaire = invoice.parent.user.last_name + " "+invoice.parent.user.first_name
-        address = ""
+        address = invoice.parent.user.email
         complement = ""
         town = ""
         country = ""

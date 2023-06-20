@@ -55,10 +55,7 @@
                                     {% if invoice.beneficiaire  %} {{ invoice.beneficiaire }} {% else %}{{ invoice.parent.user.get_full_name }}  {% endif %}
                                         {% if invoice.observation  %} <div class="helper_tip_text" > {{ invoice.observation|safe }}</div> {% endif %}
                                     </a>
-
                                 </span>
-
-
                                 <a href="{% url 'print_invoice'  invoice.id %}" class="pull-right" style="margin-right:10px"><i class="fa fa-print"></i> </a>
                                 <a href="{% url 'delete_invoice' 0 invoice.id %}" class="pull-right" style="margin-right:10px" onclick="TestDelete('Cette facture {{ invoice.chrono }}')"><i class="fa fa-trash"></i> </a>
                             </td> 
