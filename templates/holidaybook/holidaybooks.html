@@ -1,4 +1,4 @@
-{% extends 'dashboard.html' %}
+{% extends 'base.html' %}
 {% load widget_tweaks %}
 {% load static %}
 {% load item_tags %}
@@ -8,7 +8,15 @@
 {% block body %}
     <section class="container"> 
 
-
+        <div class="row" style="margin-top: 30px">
+            <div class="col-sm-12 col-md-12">
+               <span class="rose_light">En 20 séances préparées</span> par des enseignants de l'Education Nationale, nos cahiers numériques Vacances permettent de consolider les acquis de vos enfants. Ces cahiers  Vacances SACADO reprennent l'ensemble des notions avec des exercices choisis dans une progression spiralée, idéale pour <span class="rose_light">revoir tout le programme de l'année</span>.
+               <br/><br/>
+               Si votre enfant a besoin de travailler les notions plus en détails, nous vous conseillons <a href="{% url 'choice_menu' 1 %}">le menu Autonomie</a> dans lequel il aura accès à tous les exercices de son niveau. 
+               <br/><br/>
+               Vous hésitez ? <a href="{% url 'contact' %}" target="_blank">Contactez-nous</a>.
+            </div>
+        </div>
 
 
 
