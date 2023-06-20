@@ -3065,7 +3065,7 @@ def print_invoice(request, idi ):
     ### Logo Sacado
     #########################################################################################
     dateur = "Date : " + invoice.date.strftime("%d-%m-%Y")
-    logo = Image('https://sacado.xyz/static/img/sacadoA1.png')
+    logo = Image('https://sacado-academie.fr/static/img/sacadoA1.png')
     logo_tab = [[logo, "SANSPB\nhttps://sacado-academie.fr\nsacado.academie@gmail.com", dateur]]
     logo_tab_tab = Table(logo_tab, hAlign='LEFT', colWidths=[0.7*inch,5.2*inch,inch])
     elements.append(logo_tab_tab)
@@ -3147,7 +3147,7 @@ def print_invoice(request, idi ):
     ### Total de facturation
     #########################################################################################
     elements.append(Spacer(0,0.1*inch))
-    details_tot = Table([("Hors taxe", str( invoice.amount) +"€" ), ("TVA 20%", str( float(invoice.amount) * 0.2) +"€" ), ("Total TTC", str( float(invoice.amount) * 1.2) +"€" )], hAlign='RIGHT', colWidths=[2.8*inch,1*inch])
+    details_tot = Table([("Hors taxe", str( invoice.amount) +"€" ), ("TVA 20%", str( round(float(invoice.amount) * 0.2,2) +"€" ), ("Total TTC", str( round(float(invoice.amount) * 1.2,2)) +"€" )], hAlign='RIGHT', colWidths=[2.8*inch,1*inch])
     details_tot.setStyle(TableStyle([
                ('INNERGRID', (0,0), (-1,-1), 0.25, colors.gray),
                ('BOX', (0,0), (-1,-1), 0.25, colors.gray),
@@ -3211,7 +3211,7 @@ def print_invoice(request, idi ):
     elements.append(asso2)
     asso21 = Paragraph( "265 route des Chênes"  , bas_de_page )
     elements.append(asso21)
-    asso22 = Paragraph( "La Guarrigue"  , bas_de_page )
+    asso22 = Paragraph( "La Garrigue"  , bas_de_page )
     elements.append(asso22)
     asso23 = Paragraph( "24620 Tamniès"  , bas_de_page )
     elements.append(asso23)
