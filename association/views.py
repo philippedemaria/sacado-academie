@@ -3147,7 +3147,7 @@ def print_invoice(request, idi ):
     ### Total de facturation
     #########################################################################################
     elements.append(Spacer(0,0.1*inch))
-    details_tot = Table([("Hors taxe", str( invoice.amount) +"€" ), ("TVA 20%", str( round(float(invoice.amount) * 0.2,2) +"€" ), ("Total TTC", str( round(float(invoice.amount) * 1.2,2)) +"€" )], hAlign='RIGHT', colWidths=[2.8*inch,1*inch])
+    details_tot = Table([("Hors taxe", str( invoice.amount) +"€" ), ("TVA 20%", str( round(float(invoice.amount) * 0.2,2) +"€" ), ("Total TTC", str( round(float(invoice.amount) * 1.2,2)) +"€") )], hAlign='RIGHT', colWidths=[2.8*inch,1*inch])
     details_tot.setStyle(TableStyle([
                ('INNERGRID', (0,0), (-1,-1), 0.25, colors.gray),
                ('BOX', (0,0), (-1,-1), 0.25, colors.gray),
