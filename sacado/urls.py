@@ -40,6 +40,7 @@ urlpatterns = [
                   path('academy/', include('academy.urls')),
                   path('lesson/', include('lesson.urls')),
                   path('holidaybook/', include('holidaybook.urls')),
+                  path('dyshpe/', include('dyshpe.urls')),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

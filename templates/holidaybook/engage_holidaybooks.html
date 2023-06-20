@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+ 
+
+
+{% block body %}
+    <section class="container"> 
+
+        <form action="" method="POST">
+            <div class="row">
+                <div class="col-sm-12 col-md-6">
+                    {% csrf_token %}
+
+         
+                        <hr/>
+         
+                        {% for hbook in hbooks %}
+                        
+                            {{ hbook.title }}{{ hbook.level.shortname }} <input name="engage_books" type="checkbox" value="{{ hbook.id }}" />
+
+                            <hr/>
+         
+                        {% endfor %}
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-sm-12 col-md-12">     
+                        <a href="javascript:history.back()"  class="btn btn-default " >Retour </a>
+                </div>
+            </div>
+        </form>
+    </section>
+{% endblock %}

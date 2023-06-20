@@ -16,13 +16,114 @@ from setup.views import cmd_abonnement , champs_briqueCA
 from general_fonctions import * 
 
 
-def holidaybooks(request):
+ 
 
-	form = AuthenticationForm()
-	np_form = NewpasswordForm()
+def index(request):
 
-	hbooks = Holidaybook.objects.filter(is_publish = 1).order_by("level__ranking")
-	return render(request, 'holidaybook/holidaybooks.html', {'hbooks': hbooks ,  'form' : form ,  'np_form' : np_form    })
+    try :
+        del request.session["answerpositionnement"]
+        del request.session["student"]
+        del request.session["positionnement_id"]
+    except :
+        pass
+
+    if request.user.is_authenticated :
+        index_tdb = True  # Permet l'affichage des tutos Youtube dans le dashboard
+  
+        today = time_zone_user(request.user)
+        
+        request.session["tdb"] = "Groups"
+        if request.session.has_key("subtdb"): del request.session["subtdb"]
+
+        ############################################################################################
+        #### Mise à jour et affichage des publications  
+        ############################################################################################  
+        # relationships = Relationship.objects.filter(is_publish = 0,start__lte=today)
+        # for r in relationships :
+        #     Relationship.objects.filter(id=r.id).update(is_publish = 1)
+
+        # parcourses = Parcours.objects.filter(start__lte=today).exclude(start = None)
+        # for p in parcourses :
+        #     Parcours.objects.filter(id=p.id).update(is_publish = 1)
+
+        # customexercises = Customexercise.objects.filter(start__lte=today).exclude(start = None)
+        # for c in customexercises :
+        #     Customexercise.objects.filter(id=c.id).update(is_publish = 1)
+        ############################################################################################
+        #### Fin de Mise à jour et affichage des publications
+        ############################################################################################
+        timer = today.time()
+
+        if request.user.last_login.date() != today.date() :
+            request.user.last_login = today
+            request.user.save()
+
+        if request.user.is_teacher:
+
+            teacher = request.user.teacher
+            grps = teacher.groups.all() 
+            shared_grps_id = Sharing_group.objects.filter(teacher=teacher).values_list("group_id", flat=True) 
+            # sgps = []
+            # for sg_id in shared_grps_id :
+            #     grp = Group.objects.get(pk=sg_id)
+            #     sgps.append(grp)
+
+            sgps    = Group.objects.filter(pk__in=shared_grps_id)
+            groupes =  grps | sgps
+            groups  = groupes.order_by("level__ranking") 
+            this_user = request.user
+            nb_teacher_level = teacher.levels.count()
+            relationships = Relationship.objects.filter(Q(is_publish = 1)|Q(start__lte=today), parcours__teacher=teacher, date_limit__gte=today).order_by("date_limit").order_by("parcours")
+            folders_tab = teacher.teacher_folders.filter(students=None, is_favorite=1, is_archive=0 ,is_trash=0 ).exclude(teacher__user__username__contains="_e-test") ## Dossiers  favoris non affectés
+            teacher_parcours = teacher.teacher_parcours
+            parcours_tab = teacher_parcours.filter(students=None, is_favorite=1, is_archive=0 ,is_trash=0 ).exclude(teacher__user__username__contains="_e-test").order_by("is_evaluation") ## Parcours / évaluation favoris non affecté
+            
+            #Menu_right
+            parcourses = teacher_parcours.filter(is_evaluation=0, is_favorite =1, is_archive=0,  is_trash=0 ).order_by("-is_publish")
+            communications = Communication.objects.values('id', 'subject', 'texte', 'today').filter(active=1).order_by("-id")
+
+            connexion_lessons = ConnexionEleve.objects.filter(event__user=this_user, is_done = 0)
+
+            webinaire = Webinaire.objects.filter(date_time__gte=today,is_publish=1).first()
+ 
+            template = 'dashboard.html'
+            context = {'this_user': this_user, 'teacher': teacher, 'groups': groups,  'parcours': None, 'today' : today , 'timer' : timer , 'nb_teacher_level' : nb_teacher_level , 
+                       'relationships': relationships, 'parcourses': parcourses, 'index_tdb' : index_tdb, 'folders_tab' : folders_tab , 'connexion_lessons' : connexion_lessons ,
+                       'communications': communications, 'parcours_tab': parcours_tab, 'webinaire': webinaire}
+        
+        elif request.user.is_student :  ## student
+
+            student = request.user.student
+            this_today = datetime.now().date()
+            prepevals  = student.prepevals.filter(date__gte = this_today)
+            try :
+                student_answer = student.answers.last()
+                parcours       = student_answer.parcours
+            except:
+                parcours = None
+
+            context  = { 'prepevals' : prepevals , 'parcours' : parcours }
+            template = 'dashboard_student_init.html'
+
+
+        elif request.user.is_parent :  ## parent
+            if request.session.get('student_id',None) : # Sert pour la réservation de leçon
+                del request.session['student_id']
+
+            parent = request.user.parent
+            students = parent.students.order_by("user__first_name")
+            context = {'parent': parent, 'students': students, 'today' : today , 'index_tdb' : index_tdb, }
+            template = 'dashboard.html'
+
+        return render(request, template , context)
+    
+    else:  
+         
+
+        context = {   }
+        response = render(request, 'dyshpe/home.html', context)
+        return response
+
 
 
 
@@ -153,29 +254,7 @@ def create_holidaybook(request):
 def show_this_hbook_exercise(request,ide):
 
     exercise  = Exercise.objects.get(pk = id)
+    template = "holidaybook/show_this_exercise.html"
     context = {'exercise': exercise, }
 
-    return render(request, "holidaybook/show_this_exercise.html", context)
-
-
-
-
-def engage_holidaybooks(request):
-
-    form = AuthenticationForm()
-    np_form = NewpasswordForm()
-
-    hbooks = Holidaybook.objects.order_by("level__ranking")
-    
-    if request.method == "POST" :
-        engage_books = request.POST.getlist("engage_books")
-
-        for eb in engage_books :
-            hb = Holidaybook.objects.get(pk=eb)
-            if hb.is_publish : hb.is_publish = 0
-            else : hb.is_publish = 1
-            hb.save() 
-
-
-    return render(request, 'holidaybook/engage_holidaybooks.html', {'hbooks': hbooks ,  'form' : form ,  'np_form' : np_form    })
-
+    return render(request, template, context)
