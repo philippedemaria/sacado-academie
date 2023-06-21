@@ -373,8 +373,6 @@ class Abonnement(models.Model):
 
 
 
-
-  
 class Invoice(models.Model):
  
     FORMES = (
@@ -400,8 +398,8 @@ class Invoice(models.Model):
 
     observation  = RichTextUploadingField( blank=True, default="", null=True, verbose_name="Observation")
 
-    date_payment = models.DateTimeField(null=True, blank=True, verbose_name="Date d'effet") # date de paiement
-    date         = models.DateTimeField(auto_now_add=True) # date de création de la facture
+    date_payment = models.DateField(null=True, blank=True, verbose_name="Date d'effet") # date de paiement
+    date         = models.DateField(null=True, blank=True, verbose_name="Date") # date de paiement
  
 
 

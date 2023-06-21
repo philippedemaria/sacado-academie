@@ -1,28 +1,19 @@
 from django.db import models
 
+from account.models import User, Adhesion
 from socle.models import Subject , Level
 
-# Create your models here.
 
-# class Dyshpe(models.Model):
-
-#     title = models.CharField(max_length=255, blank=True,  default="", null=True,  verbose_name="Titre")
- 
-#     level   = models.ForeignKey(Level, related_name="dyshpe", on_delete=models.CASCADE, verbose_name="Niveau")
-#     subject = models.ForeignKey(Subject, related_name="dyshpe", on_delete=models.CASCADE, verbose_name="Matière")
- 
-#     is_publish = models.BooleanField(default=1, verbose_name="Visible ?")
-#     price      = models.PositiveIntegerField(  default=5	,  blank=True )
-
-#     vignette   = models.ImageField(  default=""	,  blank=True )
-
-#     def __str__(self):      
-#         return "Cahier Vacances > {}".format(self.level.shortname)
+class Facturedys(models.Model):
+    """docstring for Facture"""
+    chrono    = models.CharField(max_length=50,  verbose_name="Chrono", editable= False) # Insertion du code de la facture.
+    user      = models.ForeignKey(User, blank=True,  null=True, related_name="facturedys", on_delete=models.CASCADE, editable= False)
+    adhesions = models.ManyToManyField(Adhesion, related_name="facturedys", blank=True, editable= False)
+    date      = models.DateField(auto_now_add=True)
+    orderID   = models.CharField(max_length=25, verbose_name="Numéro de paiement donné par CA", blank=True, null= True, default="") 
 
 
+    def __str__(self):
+        return "{} {}".format(self.user, self.file)
 
-#     def level_next(self):
 
-#         lvs = ["CE1","CE2","CM1","CM2","6è","5è","4è","3è","2de","1è","T",0,0,"CP"]
-
-#         return lvs[self.level.id-1]

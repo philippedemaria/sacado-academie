@@ -8,13 +8,14 @@ from account.decorators import user_is_board
 from account.models import User,Parent, Student , Adhesion , Facture
 from .models import *
 from group.models import Group
-from setup.models import Formule  
+from setup.models import Formule 
+from socle.models import Level 
 from qcm.models import Parcours
 from account.forms import  UserForm,  NewpasswordForm, BaseUserFormSet 
 from datetime import datetime , timedelta
 from setup.views import cmd_abonnement , champs_briqueCA
 from general_fonctions import * 
-
+from payment_fonctions import *
 
  
 
@@ -119,10 +120,109 @@ def index(request):
     
     else:  
          
+        return render(request, 'dyshpe/home.html', {    })
 
-        context = {   }
-        response = render(request, 'dyshpe/home.html', context)
-        return response
+
+
+
+def attribute_all_documents_to_student_by_level(level,student) :
+
+    teacher_ids = ["0" ,89513,89507,89508,89510, 89511, 46245  , 46242 , 46246  , 46247, 46222, 46243, 46244,"", 130243]
+    teacher_id = teacher_ids[level.id]
+    group = Group.objects.filter(level = level, school_id = 50, teacher_id=teacher_id).first()
+    group.students.add(student)
+    groups = [group]
+    test = attribute_all_documents_of_groups_to_a_new_student(groups, student)
+    success = True
+    return success
+
+
+
+def register_dys(request):
+
+    userFormset = formset_factory(UserForm, extra = 2,  formset=BaseUserFormSet)
+
+    form = AuthenticationForm()
+    np_form = NewpasswordForm()
+    today = datetime.now().replace(tzinfo=timezone.utc)
+
+    levels = Level.objects.order_by("ranking")
+    formule= Formule.objects.get(pk=6)
+
+    formset     = userFormset(request.POST or None)
+    if formset.is_valid():
+        i = 0
+        for form in formset :
+
+            last_name  = form.cleaned_data["last_name"]
+            first_name = form.cleaned_data["first_name"]
+            username   = form.cleaned_data["username"]
+            password_no_crypted = form.cleaned_data["password1"] 
+            password   =  make_password(form.cleaned_data["password1"])  
+            email      =  form.cleaned_data["email"]  
+            this_year  = today.year
+            amount     = 5.00
+            group      = Group.objects.get(pk=7328)
+
+            students_in = list()
+            adhesion_in = list()
+            if i ==0 :
+
+                user_parent, created = User.objects.update_or_create(username = username, password = password ,  user_type = 1 , defaults = { "last_name" :  last_name  , "first_name" :  first_name  , "email" :  email  , "country_id" : 5 ,  "school_id" : 50 ,  "closure" : None })
+                parent, create       = Parent.objects.update_or_create(user = user_parent, defaults = { "task_post" : 1 })
+                facture              = Facturedys.objects.create(chrono = "BL_" +  user_parent.last_name +"_"+str(today) ,  user_id = user_parent.id ,   orderID = ""  ) #orderID = Numéro de paiement donné par la banque"
+
+            else :
+                duration   = request.POST.get("duration",None)
+                level_id   = request.POST.get("level",None)
+                stop       = get_this_stop_day(today, int(duration) )
+                if duration == 1   : amount = round(float(formule.price),2)
+                elif duration == 3 : amount = round(float(formule.price) * 2.9,2)
+                elif duration == 6 : amount = round(float(formule.price) * 5.8,2)
+                else               : amount = round(float(formule.price) * 11.7,2)
+
+                user, created = User.objects.update_or_create(username = username, password = password , user_type = 0 , defaults = { "last_name" : last_name , "first_name" : first_name  , "email" : email , "country_id" : 5 ,  "school_id" : 50 , "closure" : stop })
+                student,created_s = Student.objects.update_or_create(user = user, defaults = { "task_post" : 1 , "level_id" : level_id })
+                level = Level.objects.get(pk=level_id)
+                
+                group.students.add(student)
+                if created_s : 
+                    students_in.append(student) # pour associer les enfants aux parents 
+                    adhesion = Adhesion.objects.create( student = student , level = level, start = today , amount = amount , stop = stop , formule_id  = 6 , year  = today.year , is_active = 0)
+                    success  = attribute_all_documents_to_student_by_level(level,student)
+            i+=1
+
+        facture.adhesions.add(adhesion)
+        parent.students.set(students_in)
+        
+
+        cmd = cmd_abonnement(formule,facture.id)
+ 
+        billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Académie","SACADO ACADÉMIE")
+        try : y,m,d = stop.split("T")[0].split("-")
+        except : y,m,d = str(stop).split(" ")[0].split("-")
+        end_day = d+"-"+m+"-"+y
+        champs_val=champs_briqueCA(amount,cmd,user_parent.email,1,billing)
+
+        context={ 'formule' : formule , 'level' : level , 'parent' : parent ,   'amount' : amount , 'end_day' : end_day , 'champs_val':champs_val , 'hbook': hbook ,  }
+        return render(request, 'setup/brique_credit_agricole.html', context) 
+
+    else :
+        messages.error(request, formset.errors)
+
+    price1  = round(float(formule.price))
+    price3  = round(float(price1) * 2.8,2)
+    price6  = round(float(price1) * 5.4,2)
+    price12 = round(float(price1) * 11,2)
+
+    text3  = "économisez " + str(round(3*price1-price3))
+    text6  = "économisez " + str(round(6*price1-price6))
+    text12 = "économisez " + str(round(12*price1-price12))
+
+    return render(request, 'dyshpe/register.html', { 'userFormset' : userFormset, 'form' : form ,  'np_form' : np_form , 'levels' : levels , 'price1' : price1 , 'price3' : price3 , 'price6' : price6 ,
+                                                     'price12' : price12 , 'text3' : text3 , 'text6' : text6 , 'text12' : text12  })
+
+
 
 
 
@@ -142,88 +242,7 @@ def try_it(request,idl):
 
 
 
-
-
-def buy_it(request,idl):
-
-    userFormset = formset_factory(UserForm, extra = 2,  formset=BaseUserFormSet)
-
-    hbook = Holidaybook.objects.filter(level_id=idl).first()
-
-    level   = Level.objects.get(pk=idl)
-    group =  Group.objects.filter(level_id = idl,formule_id=5).last()
-    parcours = group.group_parcours.filter(ranking=1).first()
-
-    form = AuthenticationForm()
-    np_form = NewpasswordForm()
-    today = datetime.now().replace(tzinfo=timezone.utc)
-
-    formset     = userFormset(request.POST or None)
-    if formset.is_valid():
-        i = 0
-        for form in formset :
-
-            last_name  = form.cleaned_data["last_name"]
-            first_name = form.cleaned_data["first_name"]
-            username   = form.cleaned_data["username"]
-            password_no_crypted = form.cleaned_data["password1"] 
-            password  =  make_password(form.cleaned_data["password1"])
-            email     =  form.cleaned_data["email"]  
-
-            this_year  = today.year
-            amount     = 5.00
-            stop       = datetime(this_year,9,1).replace(tzinfo=timezone.utc)
-
-            students_in = list()
-            adhesion_in = list()
-            if i ==0 :
-
-                user_parent, created = User.objects.update_or_create(username = username, password = password ,  user_type = 1 , defaults = { "last_name" :  last_name  , "first_name" :  first_name  , "email" :  email  , "country_id" : 5 ,  "school_id" : 50 ,  "closure" : None })
-                parent,create = Parent.objects.update_or_create(user = user_parent, defaults = { "task_post" : 1 })
-
-                facture = Facture.objects.create(chrono = "BL_" +  user_parent.last_name +"_"+str(today) ,  user_id = user_parent.id , file = "" , date = today , orderID = "" , is_lesson = 1  ) #orderID = Numéro de paiement donné par la banque"
-
-
-            else :
-
-                user, created = User.objects.update_or_create(username = username, password = password , user_type = 0 , defaults = { "last_name" :last_name , "first_name" : first_name  , "email" : email , "country_id" : 5 ,  "school_id" : 50 , "closure" : stop })
-                student,created_s = Student.objects.update_or_create(user = user, defaults = { "task_post" : 1 , "level_id" : idl })
-
-                if created_s : 
-                    students_in.append(student) # pour associer les enfants aux parents 
-
-                    adhesion = Adhesion.objects.create( student = student , level_id = idl , start = today , amount = amount , stop = stop , formule_id  = 5 , year  = today.year , is_active = 0)
-                    test = attribute_all_documents_of_groups_to_a_new_student([group], student)
-
-            i+=1
-
-        facture.adhesions.add(adhesion)
-        parent.students.set(students_in)
-        formule = Formule.objects.get(pk=5)
-
-        cmd = cmd_abonnement(formule,facture.id)
  
-        billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Académie","SACADO ACADÉMIE")
-        try : y,m,d = stop.split("T")[0].split("-")
-        except : y,m,d = str(stop).split(" ")[0].split("-")
-        end_day = d+"-"+m+"-"+y
-        champs_val=champs_briqueCA(amount,cmd,user_parent.email,1,billing)
-
-        context={ 'formule' : formule , 'level' : level , 'parent' : parent ,   'amount' : amount , 'end_day' : end_day , 'champs_val':champs_val , 'hbook': hbook ,  }
-        return render(request, 'setup/brique_credit_agricole.html', context) 
-
-
-    else :
-        print("erreurs => ", formset.errors)
-
-    hbooks = Holidaybook.objects.filter(is_publish = 1).order_by("level__ranking")
-
-    clas_sups = ["CE1","CE2","CM1","CM2","6ème","5ème","4ème","3ème","2nde","1ère","Terminale"]
-    classe_sup = clas_sups[idl-1]
-
-    return render(request, 'holidaybook/buy_it_book.html', {'hbooks': hbooks , 'hbook': hbook ,    'userFormset' : userFormset, 'group' : group , 'classe_sup' : classe_sup , 'level' : level, 
-    'form' : form ,  'np_form' : np_form     })
-
  
 
 

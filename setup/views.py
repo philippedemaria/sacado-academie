@@ -1035,7 +1035,6 @@ def creation_facture(facture):
     return store_path
   
 
-
 def all_from_parent_user(user) :
     students = user.parent.students.all()
     u_parents = []
@@ -1046,27 +1045,14 @@ def all_from_parent_user(user) :
     return u_parents
 
 
-
-
-
 def save_renewal_adhesion(request) :
     
     return render(request, 'setup/save_renewal_adhesion.html', context)  
   
 
- 
-
-
-
 @csrf_exempt
 def accept_renewal_adhesion(request) :
     return HttpResponse("ok")
-
-
-
-
-
-
 
 
 def attribute_all_documents_to_student_by_level(level,student) :
@@ -1079,7 +1065,6 @@ def attribute_all_documents_to_student_by_level(level,student) :
     test = attribute_all_documents_of_groups_to_a_new_student(groups, student)
     success = True
     return success
-
 
 
 def attribute_group_to_student_by_level(level,student,formule_id) :
@@ -1143,7 +1128,7 @@ def add_adhesion(request) :
 
             success = attribute_group_to_student_by_level(level,student,formule_id)
             adhesion = Adhesion.objects.create(start = today, stop = end_of_this_adhesion, student = student , level_id = level_id  , amount = amount  , formule_id = formule_id , is_active = 0 ) 
-            facture  = Facture.objects.create(chrono = chrono, file = "" , user = request.user , date = today , is_lesson = 1   ) 
+            facture  = Facture.objects.create(chrono = chrono, file = "" , user = request.user, is_lesson = 1   ) 
             facture.adhesions.add(adhesion)
 
 
@@ -1229,7 +1214,7 @@ def insertion_into_database(parents,students):
         parent.students.set(students_in)
 
         if loop == 0 :
-            facture = Facture.objects.create(chrono = "BL_" +  user.last_name +"_"+str(today) ,  user_id = user.id , file = "" , date = today , orderID = "" , is_lesson = 1  ) #orderID = Numéro de paiement donné par la banque"
+            facture = Facture.objects.create(chrono = "BL_" +  user.last_name +"_"+str(today) ,  user_id = user.id , file = "" ,  orderID = "" , is_lesson = 1  ) #orderID = Numéro de paiement donné par la banque"
             facture.adhesions.set(adhesion_in)
             parents_to_session.append({ 'parent_id' : user.id , 'password_no_crypted' : p['password_no_crypted'] , 'facture_id' : facture.id }) 
 
@@ -1439,7 +1424,7 @@ def paiement_change_adhesion(request) :
     this_year = today.year
     user = request.user
     amount = float(amount.replace(",","."))
-    facture = Facture.objects.create(chrono = "BL_" +  user.last_name +"_"+str(today) ,  user_id = user.id , file = "" , date = today , orderID = "" , is_lesson = 1 ) #orderID = Numéro de paiement donné par la banque"
+    facture = Facture.objects.create(chrono = "BL_" +  user.last_name +"_"+str(today) ,  user_id = user.id , file = "" ,  orderID = "" , is_lesson = 1 ) #orderID = Numéro de paiement donné par la banque"
     adhesion = Adhesion.objects.create(amount = amount , student_id = student_id , formule_id = formule_id , start = start , stop = stop , level_id = level_id , year = this_year , is_active = 0 )
     facture.adhesions.add(adhesion)
 

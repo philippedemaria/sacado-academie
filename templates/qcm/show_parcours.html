@@ -307,19 +307,10 @@ body{
                     Exercices  
                     </div>  
                     <div class="col-sm-4 col-md-4">
-                    <a href="{% url 'peuplate_parcours' parcours.id   %}" class="btn btn-warning"> Associer des exercices SACADO </a>  
-                    </div> 
-                </div> 
-                <hr/>
-                <div class="row">
-                    <div class="col-sm-3 col-md-3">
-                    Exercices personnalisés
-                    </div>  
-                    <div class="col-sm-4 col-md-4">
-                    <a href="{% url 'peuplate_custom_parcours' parcours.id   %}" class="btn btn-warning"> Associer  un existant </a>  
+                    <a href="{% url 'peuplate_parcours' parcours.id   %}" class="btn btn-warning"> Associer un existant </a>  
                     </div> 
                     <div class="col-sm-4 col-md-4">
-                    <a href="{% url 'create_custom_sequence' parcours.id  %}" class="btn btn-danger"> Créer  un nouveau</a>  
+                    <a href="{% url 'create_supportfile_knowledge' 0  %}" class="btn btn-danger"> Créer  un nouveau</a>  
                     </div> 
                 </div>        
                 <hr/>

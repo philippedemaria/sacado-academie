@@ -740,7 +740,7 @@ class Facture(models.Model):
     user      = models.ForeignKey(User, blank=True,  null=True, related_name="factures", on_delete=models.CASCADE, editable= False)
     file      = models.FileField(upload_to=file_directory_path,verbose_name="fichier", blank=True, null= True, default ="", editable= False)
     adhesions = models.ManyToManyField(Adhesion, related_name="factures", blank=True, editable= False)
-    date      = models.DateTimeField(null=True, blank=True, editable= False)
+    date      = models.DateTimeField(auto_now_add=True)
     orderID   = models.CharField(max_length=25, verbose_name="Numéro de paiement donné par Paypal", blank=True, null= True, default="") 
     is_lesson = models.BooleanField(default=0, editable= False)
 

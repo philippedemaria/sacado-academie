@@ -63,7 +63,7 @@
     <div class="col-xs-12 col-md-12">
         <form action="" method="POST" enctype='multipart/form-data'>
             {% csrf_token %}
-            <div class="row" id="standard_layer">
+            <div class="row" id="standard_layer"> 
                 {% if knowledge and not supportfile %}
                     <input value="{{ knowledge.level.id }}" name="level" id="id_level" type="hidden" />
                     <input value="{{ knowledge.theme.id }}" name="theme" id="id_theme" type="hidden" />

@@ -39,12 +39,28 @@
             </a>
             {% endif %}
 
+            {% if request.user.is_in_academy and request.user.student.data_menu.id == 6 %}
+            <a href="{% url 'detail_student_all_views' user.id %}" class="student_init">
+                <i class="bi bi-hypnotize icon_size"></i> <label class="big_size margin_bottom20"> Dys Jonction</label><br/>Module d'accès à tous les supports personnalisés.
+            </a>
             <a href="{% if sacado_asso %}{% url 'dash_student' %}{% else %}{% url 'end_of_adhesion' %}{% endif %}" class="student_init">
-                <i class="bi bi-graph-up-arrow icon_size"></i> <label class="big_size margin_bottom20"> Entraînement</label><br/>Module pour t’entraîner
+                <i class="bi bi-infinity icon_size"></i> <label class="big_size margin_bottom20"> Mathématiques</label><br/>Module pour t’entraîner
                             10 min par jour aux
                             différents exercices,
                             classés par thèmes.
             </a>
+
+
+            {% else %}
+            <a href="{% if sacado_asso %}{% url 'dash_student' %}{% else %}{% url 'end_of_adhesion' %}{% endif %}" class="student_init">
+                <i class="bi bi-graph-up-arrow icon_size"></i> <label class="big_size margin_bottom20"> Entrainement</label><br/>Module pour t’entraîner
+                            10 min par jour aux
+                            différents exercices,
+                            classés par thèmes.
+            </a>
+            {% endif %}
+
+
 
             <a href="{% if sacado_asso %}{% url 'detail_student_all_views' user.id %}{% else %}{% url 'end_of_adhesion' %}{% endif %}" class="student_init">
                 <i class="bi bi-clipboard-data icon_size"></i> <label class="big_size margin_bottom20"> Suivis</label><br/>Module pour suivre les
@@ -74,6 +90,10 @@
                 <i class="bi bi-envelope icon_size"></i> <label class="big_size margin_bottom20"> Messages</label><br/>C'est la page d'accueil. On y accède dès notre arrivée mais on y retrouve tous les liens utiles.
             </a>
             {% endif %}
+
+
+
+
             {% if request.user.is_in_academy and request.user.student.level.id == 9 or request.user.student.level.id == 12 or request.user.student.level.id == 11 %}
             <a href="{% url 'annales' request.user.student.level.id %}" class="student_init">
                 <i class="bi bi-envelope icon_size"></i> <label class="big_size margin_bottom20"> Annales DNB</label><br/>Toutes les annales corrigées de la dernière session.

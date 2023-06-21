@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+ 
+
+
+{% block body %}
+    <section class="container"> 
+
+ 
+
+ 
+        <form action="" method="POST" enctype='multipart/form-data'>
+            {% csrf_token %}             {{ userFormset.management_form }}
+            <div class="row">
+                {% for form in userFormset %}
+                <div class="col-sm-12 col-md-6" style="margin-top:30px">
+                    <div class="card" style="padding:30px;margin-bottom: 20px;background-color: #f1eef7">
+                        <h4  class="title_page violet">
+                            
+                            {% if forloop.first %}Responsable légal{% else %}Enfant 
+                            {% endif %}
+ 
+                        </h4>
+                        <div class="form-group">
+                            {{ form.last_name.label_tag }}
+                            {{ form.last_name |add_class:"form-control id_last_name"|attr:"required" }}
+                            {{ form.last_name.errors }}
+                        </div>     
+                        <div class="form-group">
+                            {{ form.first_name.label_tag }}
+                            {{ form.first_name |add_class:"form-control id_first_name"|attr:"required" }}
+                            {{ form.first_name.errors }}
+                        </div>
+                        <div class="form-group">
+                            {% if forloop.first %}
+                                {{ form.email.label_tag }} 
+                                {{ form.email |add_class:"form-control email"|attr:"required" }}
+                            {% else  %}
+                                {{ form.email.label_tag }} <em>facultatif </em>
+                                {{ form.email |add_class:"form-control email"}}
+                            {% endif %}
+                            {{ form.email.errors }}
+                        </div>
+                        <div class="row"> 
+                            <div class="col-sm-12 col-md-12">
+                                <div class="form-group">
+                                    <label>Choisir un identifiant :</label>
+                                    {{ form.username |add_class:"form-control username"|attr:"required" }}
+                                    <span id="ajaxresult{{ forloop.counter0 }}" class="ajaxresult"></span>
+                                    {{ form.username.errors }}
+                                </div>
+                            </div>  
+                        </div>       
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6">
+                                <div class="form-group">
+                                    {{ form.password1.label_tag }} <small><em>Au moins 8 caractères</em></small>
+                                    {{ form.password1 |add_class:"form-control"|attr:"required" }}
+                                    {{ form.password1.errors }}
+                                </div>
+                            </div>  
+                            <div class="col-sm-12 col-md-6">
+                                <div class="form-group">
+                                    {{ form.password2.label_tag }}
+                                    {{ form.password2 |add_class:"form-control"|attr:"required" }}
+                                    {{ form.password2.errors }}
+                                </div>
+                            </div>
+                        </div> 
+                        {% if not forloop.first %}
+                            <div class="form-group">
+                                <small>En </small><i class="bi bi-plus-circle-dotted"></i> <small> et gratuitement, SacadoDys vous donne accès aux parcours de Mathématiques sur un niveau.</small>
+                            </div>
+                            <div class="form-group">
+                                <label>Choisir le niveau : </label>
+                                <select name="level" class="form-control select2" required>
+                                    {% for l in levels  %}
+                                        <option value="{{ l.id }}">{{ l.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+ 
+                            <div class="form-group">
+                                <label>Durée :</label><br/>
+                                <label><input type="radio" name="duration" value="1" /> 1 mois {{ price1 }}€</label><br/>
+                                <label><input type="radio" name="duration" value="3" /> 3 mois  {{ price3 }}€, {{ text3 }}€</label><br/>
+                                <label><input type="radio" name="duration" value="6" /> 6 mois  {{ price6 }}€, {{ text6 }}€</label><br/>
+                                <label><input type="radio" name="duration" value="12" /> 12 mois  {{ price12 }}€, {{ text12 }}€</label>
+                            </div>
+                    
+                        {% else %}
+                            <input name="level" value="" type="hidden" />
+                        {% endif %}
+
+                        {% if forloop.counter == 1 %}
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12">
+                                <div class="form-group">
+                                    <label>{{ form.cgu|attr:"required" }}   Je reconnais avoir lu et compris les <a href="#" data-target="#cgu" data-toggle='modal'>conditions générales d'utilisation</a> et je les accepte.</label>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+
+
+
+
+
+
+
+            <div class="row">
+                <div class="col-sm-12 col-md-12">   
+
+                    <button type="submit" class="btn btn-primary" >Entrer dans le groupe</button>
+
+                    <a href="javascript:history.back()"  class="btn btn-default " >Retour </a>
+        
+                </div>
+            </div>
+        </form>
+ 
+ 
+
+
+        <div class="row">
+            <div class="col-sm-12 col-md-12">     
+                    <a href="javascript:history.back()"  class="btn btn-default " >Retour </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

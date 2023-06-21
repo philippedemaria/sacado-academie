@@ -3,7 +3,7 @@ import random
 import re
 import csv
 import pytz
-from datetime import datetime 
+from datetime import datetime , timedelta
 from django.utils import timezone
 from django.http import HttpResponseRedirect , HttpResponse
 from django.shortcuts import  redirect
@@ -950,3 +950,13 @@ def this_year_from_today(today) :
     else :
         year = str(today.year-1) +"-"+str(today.year)
     return year
+
+
+
+def get_this_stop_day(today, duration):
+
+    these_days = [31,31,29,31,30,31,30,31,31,30,31,30,31,31,29,31,30,31,30,31,31,30,31,30,31]
+    duration_days = 0
+    for i in range(duration) :
+        duration_days += these_days[i+today.month]
+    return today + timedelta(days=duration_days)

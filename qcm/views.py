@@ -6298,8 +6298,11 @@ def supportfile_creator(request,idq=0) :
 
 @user_passes_test(user_is_creator)
 def create_supportfile_knowledge(request,id):
-    knowledge = Knowledge.objects.get(id = id)
-    request.session['exo_knowledge_id'] = knowledge.id
+    if id :
+        knowledge = Knowledge.objects.get(id = id)
+        request.session['exo_knowledge_id'] = knowledge.id
+    else :
+        knowledge = ""
     qtypes = Qtype.objects.filter(is_online=1).order_by("ranking")
     context = {  'qtypes': qtypes, 'knowledge': knowledge, }
     return render(request, 'qcm/supportfile_creator.html', context)
@@ -6327,8 +6330,10 @@ def create_supportfile(request,qtype,ids):
 
     if request.user.is_superuser :
         qtypes = Qtype.objects.filter(is_online=1).order_by("ranking")
+        subjects = Subject.objects.filter(is_active=1)
     else :
         qtypes = Qtype.objects.filter(is_online=1).exclude(pk=100).order_by("ranking")
+        subjects = teacher.subjects.all()
 
     qt = Qtype.objects.get(pk=qtype)
     extra = qt.extra
@@ -6340,14 +6345,13 @@ def create_supportfile(request,qtype,ids):
 
     form       = SupportfileForm(request.POST or None,request.FILES or None,teacher = teacher)
     form_c     = CriterionOnlyForm(teacher = teacher) 
-    subjects   = teacher.subjects.all()
     formSetvar = inlineformset_factory( Supportfile , Supportvariable , fields=('name','is_integer','is_notnull','minimum','maximum', 'words') , extra=0  )
 
     today      = time_zone_user(request.user)
     sacado_asso, sacado_is_active = is_sacado_asso(teacher.user,today)
 
     if qt.is_sub == 0 : 
-        formSet  = inlineformset_factory( Supportfile , Supportchoice , fields=('answer','imageanswer','answerbis','imageanswerbis','is_correct','retroaction')  , extra =  extra)
+        formSet = inlineformset_factory( Supportfile , Supportchoice , fields=('answer','imageanswer','answerbis','imageanswerbis','is_correct','retroaction')  , extra =  extra)
     else :
         formSet = formSetNested()
 
