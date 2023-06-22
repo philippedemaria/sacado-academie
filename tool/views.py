@@ -1918,7 +1918,7 @@ def my_results(request):
 
     answerpositionnements = request.session.get("answerpositionnement")
     student_full_name     = request.session.get("student_full_name")
-    email_to_send =  request.session.get("email_to_send",None) 
+    email_to_send         =  request.session.get("email_to_send",None) 
 
 
     results , themes ,  final_skills , skill_tab , subskill_tab  = []  , [] ,  [] ,  [] ,  []
@@ -1971,8 +1971,8 @@ def my_results(request):
         theme_tab.append({ "theme" : t["theme"] , "score" : this_score , 'color' : color })
 
 
-    # if email_to_send :
-    #     pdf_to_send( pdf_to_create(request,theme_tab) , [email_to_send] , student_full_name)
+    if email_to_send :
+        pdf_to_send( pdf_to_create(request,theme_tab) , [email_to_send] , student_full_name)
 
 
     sending_of_answers(answerpositionnements) 
