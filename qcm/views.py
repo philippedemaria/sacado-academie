@@ -12997,7 +12997,7 @@ def create_folder(request,idg):
             else :
                 return redirect ("folders") 
         else:
-            messages.error(form.errors)
+            messages.error(request,form.errors)
 
     context = {'form': form,  'parcours_is_folder' : True,   'teacher': teacher, 'group': group,  'group_id': group_id,  'images' : images ,    'parcours': None,   'role' : True }
 
