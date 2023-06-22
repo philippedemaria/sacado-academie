@@ -19,7 +19,7 @@ from payment_fonctions import *
 
  
 
-def index(request):
+def indexdys(request):
 
     try :
         del request.session["answerpositionnement"]

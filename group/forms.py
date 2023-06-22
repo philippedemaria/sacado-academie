@@ -21,7 +21,7 @@ class GroupTeacherForm(forms.ModelForm):
 		teacher = kwargs.pop('teacher')
 		super(GroupTeacherForm, self).__init__(*args, **kwargs)
 		if teacher:
-
+			
 			subjects = teacher.subjects.all()
 			levels = teacher.levels.all()
 			self.fields['subject']	 = forms.ModelChoiceField(queryset=subjects,  required=True)    
