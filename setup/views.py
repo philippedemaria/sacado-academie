@@ -1486,19 +1486,26 @@ def paiement(request) :
 
 
 
-def find_facture(facture_id, autorisation ):
+def find_facture_and_send_mail(facture_id, autorisation ):
 
     chrono  = create_chrono(Facture,"F")
     facture = Facture.objects.get(pk=facture_id)
     facture.chrono  = chrono
     facture.orderID = autorisation
     facture.save()
-
+    
     for adhesion in facture.adhesions.all() :
         adhesion.is_active=1
         adhesion.save()
 
- 
+    try :
+        sacado_msg = "Bonjour {} {},\n\nVotre paiement vient d'être reçu. \n\nL'équipe de l'ACADÉMIE SACADO vous remercie et vous souhaite une bonne utilisation.\nCordialement.\n\nCeci est  un mail automatique. Ne pas répondre.".format(facture.user.first_name,facture.user.last_name)
+        send_mail("Inscription SACADO ACADÉMIE", sacado_msg, settings.DEFAULT_FROM_EMAIL, [facture.user.email,"sacado.academie@gmail.com"])
+    except:
+        f=open("logs/debug.log","a")
+        print("Erreur d'envoi du mail",file=f)
+
+
 
 def paiement_retour(request,status):
     # la banque appelle cette page lorsque la transaction est terminée
@@ -1508,31 +1515,9 @@ def paiement_retour(request,status):
     autorisation=request.GET.get("Auto",None)
     cmd = request.GET.get("Cmd",None)
     f=open("logs/debug.log","a")
+      
 
-    if status=="effectue" :
-        if erreur=="00000" and autorisation != None : # tout va bien
-
-            students_to_session = request.session.get("students_to_session",None) 
-            parents_to_session  = request.session.get("parents_to_session",None) 
-
-            if parents_to_session :
-                parent_id = parents_to_session[0]["parent_id"]
-                user = User.objects.get(pk=parent_id)
-                password = parents_to_session[0]["password_no_crypted"]
-                user = authenticate(username=user.username, password=password)
-                login(request, user,  backend='django.contrib.auth.backends.ModelBackend' )                
-                try : 
-                    request.session.pop('students_to_session', None) 
-                    request.session.pop('parents_to_session', None)
-                    sacado_msg = "Bonjour {} {},\n\nVotre paiement vient d'être reçu. \n\nL'équipe de l'ACADÉMIE SACADO vous remercie et vous souhaite une bonne utilisation.\nCordialement.\n\nCeci est  un mail automatique. Ne pas répondre.".format(user.first_name,user.last_name)
-                    send_mail("Inscription SACADO ACADÉMIE", sacado_msg, settings.DEFAULT_FROM_EMAIL, [user.email,"sacado.academie@gmail.com"])
-                except : pass
-
-        else : print("le status est 'effectué', pourtant il y a une erreur : erreur = {},numero_autor.={}".format(erreur,autorisation), file=f)
-    
-        f.close()        
-
-    elif status=="repondre_a" : # envoyé directement par le CA, c'est le seul retour fiable
+    if status=="repondre_a" : # envoyé directement par le CA, c'est le seul retour fiable
         ip=request.META.get('HTTP_X_FORWARDED_FOR')
         if ip!="194.2.160.85" and ip!="194.2.122.190" :
             print("ip emetteur : ",ip,"n'est pas dans la liste des ip autorisées",file=f)
@@ -1544,7 +1529,7 @@ def paiement_retour(request,status):
  
         signature=request.GET.get("sig")
         facture_id = cmd.split("_")[2]
-        find_facture(facture_id, autorisation )
+        find_facture_and_send_mail(facture_id, autorisation )
         msg=request.get_full_path()  #l'url complete avec les données get
         print("================ PAIEMENT REPONDRE_A ================",file=f)
         print(facture_id,file=f)
