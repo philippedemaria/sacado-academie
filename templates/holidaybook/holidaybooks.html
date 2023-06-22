@@ -19,30 +19,33 @@
         </div>
 
 
-
-        <div class="row">
-            <div class="col-sm-12 col-md-12">
-                {% for hbook in hbooks %}
-                    <div class="hbook" style='background: url({{ hbook.vignette.url }})'>
-                        {{ hbook.title }}
-                        <div class="level_hbook">{{ hbook.level.shortname }}</div>
-                        <div style="font-size: 9px;font-weight: 800">Prépare ton entrée en {{ hbook.level_next }} </div>
-                        <div class="bottom_hbook">
-                            <a href="{% url 'try_it' hbook.level.id %}" class="try_it">Essai</a>
-                            |
-                            <a href="{% url 'buy_it' hbook.level.id %}" class="buy_it">Achat</a>
+        {% if hbook.count %}
+            <div class="row">
+                <div class="col-sm-12 col-md-12">
+                    {% for hbook in hbooks %}
+                        <div class="hbook" style='background: url({{ hbook.vignette.url }})'>
+                            {{ hbook.title }}
+                            <div class="level_hbook">{{ hbook.level.shortname }}</div>
+                            <div style="font-size: 9px;font-weight: 800">Prépare ton entrée en {{ hbook.level_next }} </div>
+                            <div class="bottom_hbook">
+                                <a href="{% url 'try_it' hbook.level.id %}" class="try_it">Essai</a>
+                                |
+                                <a href="{% url 'buy_it' hbook.level.id %}" class="buy_it">Achat</a>
+                            </div>
                         </div>
-
-
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                </div>
             </div>
-        </div>
-
-
+        {% else %}
+            <div class="row">
+                <div class="col-sm-12 col-md-12">
+                    <h1>Ouverture au 1er juillet 2023</h1>
+                </div>
+            </div>
+        {% endif %}
         <div class="row">
             <div class="col-sm-12 col-md-12">     
-                    <a href="javascript:history.back()"  class="btn btn-default " >Retour </a>
+                <a href="javascript:history.back()"  class="btn btn-default " >Retour </a>
             </div>
         </div>
     </section>
