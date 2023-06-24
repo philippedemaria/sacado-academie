@@ -21,7 +21,8 @@ def holidaybooks(request):
 	form = AuthenticationForm()
 	np_form = NewpasswordForm()
 
-	hbooks = Holidaybook.objects.filter(is_publish = 1).order_by("level__ranking")
+	hbooks = Holidaybook.objects.order_by("level__ranking")
+    print(hbooks)
 	return render(request, 'holidaybook/holidaybooks.html', {'hbooks': hbooks ,  'form' : form ,  'np_form' : np_form    })
 
 
