@@ -654,21 +654,23 @@ def time_done(arg):
             return "0" + str(number)
         else:
             return str(number)
-
-    if arg == "":
-        return arg
-    else:
-        arg = int(arg)
-        s = pad(arg % 60)
-        m = pad(arg // 60 % 60)
-        h = pad(arg // 3600)
-        
-        if arg < 60:
-            return f"{s}s"
-        if arg < 3600:
-            return f"{m}min.{s}s"
+    try :
+        if arg == "":
+            return arg
         else:
-            return f"{h}h.{m}min.{s}s"
+            arg = int(arg)
+            s = pad(arg % 60)
+            m = pad(arg // 60 % 60)
+            h = pad(arg // 3600)
+            
+            if arg < 60:
+                return f"{s}s"
+            if arg < 3600:
+                return f"{m}min.{s}s"
+            else:
+                return f"{h}h.{m}min.{s}s"
+    except :
+        return arg
 
 
 
