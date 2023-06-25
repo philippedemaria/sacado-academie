@@ -52,7 +52,7 @@
                                 </span>
 
                                 <span class="badge_exercise badge_exercise_margin_top" title="Durée du travail du parcours">
-                                    {{ data.sum_duration|time_done}}
+                                   {% if data.sum_duration %} {{ data.sum_duration|time_done}} {% else %}0 min.{% endif %}
                                 </span>
 
 
@@ -76,7 +76,7 @@
                                     </div>
                                 </span>
                                 <span class="badge_exercise badge_exercise_margin_top" title="Durée du travail du parcours">
-                                    {{ data.sum_duration|time_done}}
+                                    {% if data.sum_duration %}{{ data.sum_duration|time_done}}{% else %}0 min.{% endif %}
                                 </span>
                                 {% endif %}
                             </a>
