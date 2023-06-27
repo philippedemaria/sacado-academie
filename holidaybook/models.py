@@ -26,5 +26,13 @@ class Holidaybook(models.Model):
     def level_next(self):
 
         lvs = ["CE1","CE2","CM1","CM2","6è","5è","4è","3è","2de","1è","T",0,0,"CP"]
-
-        return lvs[self.level.id-1]
+        le = lvs[self.level.id-1]
+        try :
+            if self.level.id == 10 :
+                if self.group.id == 7323  : 
+                    le = "1 ES"
+                else :
+                    le = "1 spé"
+        except :
+            pass
+        return le
