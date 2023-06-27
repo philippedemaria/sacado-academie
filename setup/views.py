@@ -1123,10 +1123,24 @@ def add_adhesion(request) :
 
             chrono = "BL_" +  request.user.last_name +"_"+str(today)
 
-            data , amount , end_of_this_adhesion = get_price_and_end_adhesion(formule_id,  today, duration, student,level.id )
-            amount = float(amount.replace(",","."))
+            if formule_id == 5 :
+                data , amount , end_of_this_adhesion =  False , "5,00" ,  datetime(today.year + (today.month - 1 + duration)//12,9,1).replace(tzinfo=timezone.utc)
+                if level_id == 10 :
+                    sublevel = request.POST.get("sublevel",None)
+                    if sublevel == "es":
+                        group = Group.objects.get(pk=7323)
+                    else :
+                        group = Group.objects.get(pk=7324)
+                    group.students.add(student)
+                    success = attribute_all_documents_of_groups_to_a_new_student([group], student)
+                else :
+                    success = attribute_group_to_student_by_level(level,student,formule_id)
+            else :
+                data , amount , end_of_this_adhesion = get_price_and_end_adhesion(formule_id,  today, duration, student,level.id )
+                success = attribute_group_to_student_by_level(level,student,formule_id)
 
-            success = attribute_group_to_student_by_level(level,student,formule_id)
+
+            amount = float(amount.replace(",","."))
             adhesion = Adhesion.objects.create(start = today, stop = end_of_this_adhesion, student = student , level_id = level_id  , amount = amount  , formule_id = formule_id , is_active = 0 ) 
             facture  = Facture.objects.create(chrono = chrono, file = "" , user = request.user, is_lesson = 1   ) 
             facture.adhesions.add(adhesion)

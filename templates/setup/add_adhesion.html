@@ -72,6 +72,11 @@
                             {% endfor %}
                         </select>
                     </div>
+                    <div class="no_visu_on_load" id="sublevel_div">
+                        <label>Spécialité souhaitée du cahier vacances :</label>
+                        <li class="sanspuce"><label><input type="radio" value="es" name="sublevel"> <span class="sacado_color_text">Vers la 1ère Enseignement Scientifique</span></label></li>
+                        <li class="sanspuce"><label><input type="radio" value="spe" name="sublevel" selected> <span class="sacado_color_text">Vers la 1ère Spécialité</span></label></li>
+                    </div>
                     <div class="row"> 
                         <div class="col-sm-12 col-md-12">
                             <div class="form-group">
@@ -107,16 +112,25 @@
                                     {% endfor %}
                             </div>    
                         </div> 
-                        <div class="col-sm-12 col-md-6">
+                        <div class="col-sm-12 col-md-6" id="duration_div">
                             <div class="form-group">                     
                                 <label>Durée :</label>
                                 <li class="sanspuce"><label><input type="radio" value="1" name="duration" class="duration_ch new_params"> <span class="sacado_color_text">1 mois</span></label></li>
                                 <li class="sanspuce"><label><input type="radio" value="3" name="duration" class="duration_ch new_params"> <span class="sacado_color_text">3 mois</span></label></li>
                                 <li class="sanspuce"><label><input type="radio" value="6" name="duration" class="duration_ch new_params"> <span class="sacado_color_text">6 mois</span></label></li>
-                                <li class="sanspuce"><label><input type="radio" value="12" name="duration" class="duration_ch new_params"> <span class="sacado_color_text">12 mois</span>
-                                </label></li>
+                                <li class="sanspuce"><label><input type="radio" value="12" name="duration" class="duration_ch new_params"> <span class="sacado_color_text">12 mois</span></label></li>
                             </div>    
                         </div> 
+                        <div class="col-sm-12 col-md-6 no_visu_on_load" id="duration_div_cv">
+                            <div class="form-group">                     
+                                <label>Durée :</label>
+                                <li class="sanspuce"><label>Juillet-Aout</label></li>
+                                <li class="sanspuce">5,00 € seulement</span>
+                                </label></li>
+                            </div>  
+                        </div>
+
+
                     </div> 
                     <div id="result_change_adhesion">                      
                     </div>   

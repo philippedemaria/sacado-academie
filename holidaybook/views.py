@@ -26,31 +26,31 @@ def holidaybooks(request):
 
 
 
-def try_it(request,idl):
+def try_it(request,idg):
 
 
-	form = AuthenticationForm()
-	np_form = NewpasswordForm()
+    form = AuthenticationForm()
+    np_form = NewpasswordForm()
 
-	group =  Group.objects.filter(level_id = idl,formule_id=5).last()
-	hbook = Holidaybook.objects.filter(level_id = idl, is_publish = 1).first()
-	parcours = group.group_parcours.filter(ranking=0).first()
-	relationships = parcours.parcours_relationship.filter(is_publish=1).order_by("ranking")
+    group = Group.objects.get(pk = idg)
+    hbook = group.holidaybook
+    parcours = group.group_parcours.filter(ranking=0).first()
+    relationships = parcours.parcours_relationship.filter(is_publish=1).order_by("ranking")
 
-	return render(request, 'holidaybook/try_it_book.html', {'parcours': parcours , 'relationships': relationships ,  'hbook' : hbook ,  'form' : form ,  'np_form' : np_form })
-
-
+    return render(request, 'holidaybook/try_it_book.html', {'parcours': parcours , 'relationships': relationships ,  'hbook' : hbook ,  'form' : form ,  'np_form' : np_form })
 
 
 
-def buy_it(request,idl):
+
+
+def buy_it(request,idg):
 
     userFormset = formset_factory(UserForm, extra = 2,  formset=BaseUserFormSet)
 
-    hbook = Holidaybook.objects.filter(level_id=idl).first()
+    group = Group.objects.get(pk = idg)
+    hbook = group.holidaybook
 
-    level   = Level.objects.get(pk=idl)
-    group =  Group.objects.filter(level_id = idl,formule_id=5).last()
+    level    = hbook.level 
     parcours = group.group_parcours.filter(ranking=1).first()
 
     form = AuthenticationForm()
@@ -86,12 +86,12 @@ def buy_it(request,idl):
             else :
 
                 user, created = User.objects.update_or_create(username = username, password = password , user_type = 0 , defaults = { "last_name" :last_name , "first_name" : first_name  , "email" : email , "country_id" : 5 ,  "school_id" : 50 , "closure" : stop })
-                student,created_s = Student.objects.update_or_create(user = user, defaults = { "task_post" : 1 , "level_id" : idl })
+                student,created_s = Student.objects.update_or_create(user = user, defaults = { "task_post" : 1 , "level" : level })
 
                 if created_s : 
                     students_in.append(student) # pour associer les enfants aux parents 
 
-                    adhesion = Adhesion.objects.create( student = student , level_id = idl , start = today , amount = amount , stop = stop , formule_id  = 5 , year  = today.year , is_active = 0)
+                    adhesion = Adhesion.objects.create( student = student , level = level , start = today , amount = amount , stop = stop , formule_id  = 5 , year  = today.year , is_active = 0)
                     test = attribute_all_documents_of_groups_to_a_new_student([group], student)
 
             i+=1
@@ -117,10 +117,10 @@ def buy_it(request,idl):
 
     hbooks = Holidaybook.objects.filter(is_publish = 1).order_by("level__ranking")
 
-    clas_sups = ["CE1","CE2","CM1","CM2","6ème","5ème","4ème","3ème","2nde","1ère","Terminale"]
-    classe_sup = clas_sups[idl-1]
+    clas_sups = ["CE1","CE2","CM1","CM2","6ème","5ème","4ème","3ème","2nde","1ère","1ère"]
+    classe_sup = clas_sups[hbook.group.level.id-1]
 
-    return render(request, 'holidaybook/buy_it_book.html', {'hbooks': hbooks , 'hbook': hbook ,    'userFormset' : userFormset, 'group' : group , 'classe_sup' : classe_sup , 'level' : level, 
+    return render(request, 'holidaybook/buy_it_book.html', {'hbooks': hbooks , 'hbook': hbook , 'userFormset' : userFormset, 'group' : group , 'classe_sup' : classe_sup , 'level' : level, 
     'form' : form ,  'np_form' : np_form     })
 
  

@@ -31,11 +31,11 @@
                         {{ hbook.title }}
                         <div class="level_hbook">{{ hbook.level.shortname }}</div>
                         <div style="font-size: 9px;font-weight: 800">Prépare ton entrée en {{ hbook.level_next }} </div>
-                        {% if hbook.is_display %}
+                        {% if hbook.is_publish %}
                         <div class="bottom_hbook">
-                            <a href="{% url 'try_it' hbook.level.id %}" class="try_it">Essai</a>
+                            <a href="{% url 'try_it' hbook.group.id %}" class="try_it">Essai</a>
                             |
-                            <a href="{% url 'buy_it' hbook.level.id %}" class="buy_it">Achat</a>
+                            <a href="{% url 'buy_it' hbook.group.id %}" class="buy_it">Achat</a>
                         </div>
                         {% endif %}
                     </div>

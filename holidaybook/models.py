@@ -1,5 +1,5 @@
 from django.db import models
-
+from group.models import Group
 from socle.models import Subject , Level
 
 # Create your models here.
@@ -10,9 +10,11 @@ class Holidaybook(models.Model):
  
     level   = models.ForeignKey(Level, related_name="holidaybooks", on_delete=models.CASCADE, verbose_name="Niveau")
     subject = models.ForeignKey(Subject, related_name="holidaybooks", on_delete=models.CASCADE, verbose_name="Matière")
- 
+    group   = models.OneToOneField(Group, related_name="holidaybook", blank=True,  default="", null=True,  on_delete=models.CASCADE, verbose_name="Groupe")
+
     is_publish = models.BooleanField(default=1, verbose_name="Visible ?")
     price      = models.PositiveIntegerField(  default=5	,  blank=True )
+
 
     vignette   = models.ImageField(  default=""	,  blank=True )
 

@@ -155,6 +155,7 @@ define(['jquery', 'bootstrap'], function ($) {
 
                 $("#verif_level").html( levels [ $("#id_level").val() ]  );
 
+                if ($(this).val() == 10)  { $("#sublevel_div").show() } else { $("#sublevel_div").hide() } 
             });
 
 
@@ -186,11 +187,12 @@ define(['jquery', 'bootstrap'], function ($) {
             $(".formule_change").on('change', function () {
                 $("#div_display").show() 
                 $("#div_formule").show();
+                if ( $(this).val() == 1) { f = "Autonomie"; $("#duration_div").show();  $("#duration_div_cv").hide(); }
+                else if ( $(this).val() == 2) {f = "Suivi"; $("#duration_div").show();  $("#duration_div_cv").hide(); }
+                else if ( $(this).val() == 3) {f = "Prép'Examen"; $("#duration_div").show();  $("#duration_div_cv").hide(); }
+                else if ( $(this).val() == 5) {f = "Cahier Vacances" ; $("#duration_div").hide();  $("#duration_div_cv").show(); }
 
-                if ( $(this).val() == 1) { f = "Autonomie"}
-                else if ( $(this).val() == 2) {f = "Suivi"}
-                else if ( $(this).val() == 3) {f = "Prép'Examen"}
-                else  {f = "PrépaClasse"}
+                else  {f = "PrépaClasse"; $("#duration_div").show();  $("#duration_div_cv").hide(); }
 
                 $("#verif_formule").html( f );
             });
@@ -230,37 +232,7 @@ define(['jquery', 'bootstrap'], function ($) {
             }
         }); 
 
-
-        // $('.formule').on('change', function (event) {
-        //     let formule_id = $(this).val();
-        //     let csrf_token = $("input[name='csrfmiddlewaretoken']").val();
-        //     let student_id = $(this).data("user");
-
-        //     $.ajax(
-        //         {
-        //             type: "POST",
-        //             dataType: "json",
-        //             data: {
-        //                 'formule_id': formule_id,
-        //                 'student_id': student_id,
-        //                 csrfmiddlewaretoken: csrf_token
-        //             },
-        //             url: "ajax_prices_formule",
-        //             success: function (data) {
-        //                 $('#engage'+student_id).html("");
-        //                 // Remplir la liste des choix avec le résultat de l'appel Ajax
-        //                 let prices = data["prices"];
-        //                 for (let i = 0; i < prices.length; i++) {
-
-        //                     let price_id   = prices[i].price;
-        //                     let price_name =  prices[i].nb_month;
-
-        //                     $('#engage'+student_id).append('<label for="engagement'+student_id+'"><input type="radio" id="engagement'+student_id+'" name="engagement'+student_id+'" value="'+ price_id +'-'+price_name+'" /> '+price_name+' mois - '+ price_id +'€</label><br/>')    
-        //                 }
-        //             }
-        //         }
-        //     )
-        // }); 
+ 
 
  
 
