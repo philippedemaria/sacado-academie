@@ -101,7 +101,11 @@ def buy_it(request,idg):
         formule = Formule.objects.get(pk=5)
 
         cmd = cmd_abonnement(formule,facture.id)
- 
+        try :
+            sacado_msg = "Achat d'un cahier Vacances"
+            send_mail("Inscription Cahier vances SACADO ACADÉMIE", sacado_msg, settings.DEFAULT_FROM_EMAIL, [facture.user.email,"sacado.academie@gmail.com"]) 
+        except :
+            pass
         billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Académie","SACADO ACADÉMIE")
         try : y,m,d = stop.split("T")[0].split("-")
         except : y,m,d = str(stop).split(" ")[0].split("-")
