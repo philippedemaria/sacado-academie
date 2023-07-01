@@ -26,7 +26,7 @@
  
             </div>
             <div class="col-sm-4 col-md-4"> 
-                <div class="hbook" style='background: url({{ hbook.vignette.url }})'>
+                <div class="hbook">
                     {{ hbook.title }}
                     <div class="level_hbook">{{ hbook.level.shortname }}</div>                        
                     <div style="font-size: 9px;font-weight: 800">Prépare ton entrée en {{ hbook.level_next }} </div>
@@ -36,7 +36,7 @@
         </div>
 
         <div class="row">
-            <div class="col-sm-12 col-md-12"   style="color:white">
+            <div class="col-sm-12 col-md-12" >
  
  
                     {% for rc in relationships  %}
