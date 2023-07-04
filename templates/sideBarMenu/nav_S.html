@@ -47,6 +47,17 @@
 {% endif %}
 
 
+{% if request.user.is_in_academy and request.user.student.data_menu.id == 5 %}
+
+<li class="dropdown {% if  request.session.tdb == 'training' %}active{% endif %}">
+    <a href="{% if sacado_asso %}{% url 'dash_holidaybook_student' %}{% else %}{% url 'end_of_adhesion' %}{% endif %}" class="main" >
+        <i class="bi bi-journal-richtext icon_size"></i> 
+        <div class="captionmenu">Cahier Vacances</div>
+    </a>
+</li>
+
+ 
+{% else %}
 <li class="dropdown {% if  request.session.tdb == 'training' %}active{% endif %}">
     <a href="{% if sacado_asso %}{% url 'dash_student' %}{% else %}{% url 'end_of_adhesion' %}{% endif %}" class="main" >
         <i class="bi bi-graph-up-arrow icon_size"></i> 
@@ -54,6 +65,10 @@
     </a>
 </li>
  
+{% endif %}
+
+
+
 
 
 <li  class="dropdown {% if  request.session.tdb == 'account' %}active{% endif %}">

@@ -71,12 +71,15 @@
                     résultats de tes
                     entraînements.
             </a>
+ 
             <a href="{% if sacado_asso %}{% url 'prep_eval' user.id %}{% else %}{% url 'end_of_adhesion' %}{% endif %}" class="student_init">
                 <i class="bi bi-calendar-week icon_size"></i> <label class="big_size margin_bottom20"> Prép' éval</label><br/>Module pour préparer
                     tes évaluations avec ton
                     planning de révision.
                     Prêt pour le jour J !
             </a>
+
+
             <a href="{% if sacado_asso %}{% url 'flashpacks' %}{% else %}{% url 'end_of_adhesion' %}{% endif %}" class="student_init">
                 <i class="bi bi-layers icon_size"></i> <label class="big_size margin_bottom20"> Flashcards</label><br/>Module pour créer tes
                             fiches de révisions.
