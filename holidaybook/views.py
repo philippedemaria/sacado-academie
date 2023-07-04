@@ -184,3 +184,19 @@ def engage_holidaybooks(request):
 
     return render(request, 'holidaybook/engage_holidaybooks.html', {'hbooks': hbooks ,  'form' : form ,  'np_form' : np_form    })
 
+
+
+ 
+
+def dash_holidaybook_student(request):
+
+    student = request.user.student
+    group   = student.students_to_group.filter(name__startswith="Cahier", level=student.level).first()
+    parcourses = group.group_parcours.all()
+
+    context = {'parcourses': parcourses, 'student' : student }
+
+    return render(request, "holidaybook/show_all_parcours_days.html", context)
+
+
+

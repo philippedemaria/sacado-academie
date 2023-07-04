@@ -12,7 +12,6 @@ urlpatterns = [
 
 
     path('engage_holidaybooks', engage_holidaybooks, name='engage_holidaybooks'),
- 
-
+    path('dash_holidaybook_student', dash_holidaybook_student, name='dash_holidaybook_student'),
 
 ]
