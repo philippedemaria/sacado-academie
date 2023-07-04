@@ -49,14 +49,18 @@
                             différents exercices,
                             classés par thèmes.
             </a>
-
-
-            {% else %}
+            {% elif request.user.is_in_academy and request.user.student.data_menu.id < 5 %}
             <a href="{% if sacado_asso %}{% url 'dash_student' %}{% else %}{% url 'end_of_adhesion' %}{% endif %}" class="student_init">
                 <i class="bi bi-graph-up-arrow icon_size"></i> <label class="big_size margin_bottom20"> Entrainement</label><br/>Module pour t’entraîner
                             10 min par jour aux
                             différents exercices,
                             classés par thèmes.
+            </a>
+            {% endif %}
+
+            {% if request.user.is_in_academy and request.user.student.data_menu.id == 5 %}
+            <a href="{% url 'show_parcours_student' user.id %}" class="student_init">
+                <i class="bi bi-journal-richtext icon_size"></i> <label class="big_size margin_bottom20"> Cahier Vacances</label><br/>Module d'accès aux 20 séances de tes vacances.
             </a>
             {% endif %}
 
@@ -94,7 +98,7 @@
 
 
 
-            {% if request.user.is_in_academy and request.user.student.level.id == 9 or request.user.student.level.id == 12 or request.user.student.level.id == 11 %}
+            {% if request.user.is_in_academy and request.user.student.data_menu.id != 5 and request.user.student.level.id == 9 or request.user.student.level.id == 12 or request.user.student.level.id == 11 %}
             <a href="{% url 'annales' request.user.student.level.id %}" class="student_init">
                 <i class="bi bi-envelope icon_size"></i> <label class="big_size margin_bottom20"> Annales DNB</label><br/>Toutes les annales corrigées de la dernière session.
             </a>

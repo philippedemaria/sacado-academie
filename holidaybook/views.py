@@ -90,9 +90,10 @@ def buy_it(request,idg):
 
                 if created_s : 
                     students_in.append(student) # pour associer les enfants aux parents 
-
+                    group.students.add(student)
                     adhesion = Adhesion.objects.create( student = student , level = level , start = today , amount = amount , stop = stop , formule_id  = 5 , year  = today.year , is_active = 0)
                     test = attribute_all_documents_of_groups_to_a_new_student([group], student)
+
 
             i+=1
 
@@ -103,7 +104,7 @@ def buy_it(request,idg):
         cmd = cmd_abonnement(formule,facture.id)
         try :
             sacado_msg = "Achat d'un cahier Vacances"
-            send_mail("Inscription Cahier vances SACADO ACADÉMIE", sacado_msg, settings.DEFAULT_FROM_EMAIL, [facture.user.email,"sacado.academie@gmail.com"]) 
+            send_mail("Inscription Cahier Vacances SACADO ACADÉMIE", sacado_msg, settings.DEFAULT_FROM_EMAIL, [facture.user.email,"sacado.academie@gmail.com"]) 
         except :
             pass
         billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Académie","SACADO ACADÉMIE")

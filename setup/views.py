@@ -1317,7 +1317,6 @@ def champs_briqueCA(montant,cmd,email,nbr_articles,billing):
     chaine=""
     champs_val=[]
     try :
-        print(montant)
         montant=str(int(float(montant)*100+0.5))
     except :
         with open("logs/debug.log","a") as f :
@@ -1448,7 +1447,7 @@ def paiement_change_adhesion(request) :
     formule = Formule.objects.get(pk=formule_id)
     cmd     = cmd_abonnement(formule,facture.id)
 
-    email= "stephan.ceroi@gmail.com" #user.email
+    email= user.email
     billing='<?xml version="1.0" encoding="utf-8" ?><Billing><Address><FirstName>{}</FirstName><LastName>{}</LastName><Address1>Sarlat</Address1><ZipCode>24200</ZipCode><City>Sarlat</City><CountryCode>250</CountryCode></Address></Billing>'.format("Académie","SACADO ACADÉMIE")
     try : y,m,d = stop.split("T")[0].split("-")
     except : y,m,d = stop.split("-")
@@ -1515,6 +1514,10 @@ def find_facture_and_send_mail(facture_id, autorisation ):
     try :
         sacado_msg = "Bonjour {} {},\n\nVotre paiement vient d'être reçu. \n\nL'équipe de l'ACADÉMIE SACADO vous remercie et vous souhaite une bonne utilisation.\nCordialement.\n\nCeci est  un mail automatique. Ne pas répondre.".format(facture.user.first_name,facture.user.last_name)
         send_mail("Inscription SACADO ACADÉMIE", sacado_msg, settings.DEFAULT_FROM_EMAIL, [facture.user.email,"sacado.academie@gmail.com"])
+    
+        msg_interne="Paiement reçu : de la part de {} {}, chrono = {}, autorisation={}".format(facture.user.first_name,facture.user.last_name,chrono,autorisation)
+        send_mail("Paiement reçu", msg_interne, settings.DEFAULT_FROM_EMAIL, ["sacado.academie@gmail.com", "stephan.ceroi@gmail.com"])
+        
     except:
         f=open("logs/debug.log","a")
         print("Erreur d'envoi du mail",file=f)
