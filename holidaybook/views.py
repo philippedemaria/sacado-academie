@@ -9,7 +9,7 @@ from account.models import User,Parent, Student , Adhesion , Facture
 from .models import *
 from group.models import Group
 from setup.models import Formule  
-from qcm.models import Parcours
+from qcm.models import Parcours, Exercise
 from account.forms import  UserForm,  NewpasswordForm, BaseUserFormSet 
 from datetime import datetime , timedelta
 from setup.views import cmd_abonnement , champs_briqueCA
@@ -157,7 +157,7 @@ def create_holidaybook(request):
 
 def show_this_hbook_exercise(request,ide):
 
-    exercise  = Exercise.objects.get(pk = id)
+    exercise  = Exercise.objects.get(pk = ide)
     context = {'exercise': exercise, }
 
     return render(request, "holidaybook/show_this_exercise.html", context)
