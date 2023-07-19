@@ -5414,22 +5414,6 @@ def ajax_publish_parcours(request):
     if is_quizz == "yes" :
         Quizz.objects.filter(pk = int(parcours_id)).update(is_publish = statut)
     elif is_folder == "no" :
-        if statut == 1 :
-            pcs = Parcours.objects.get(pk = int(parcours_id))
-            exercise_ids = Relationship.objects.values_list("exercise_id",flat=True).filter(parcours=pcs, is_publish=1)
-            # if pcs.is_testpos : # Training pour le test de positionnement
-            #     pcs_str = convert_into_str(exercise_ids)
-            #     Testtraining.objects.filter(parcours = pcs.target_id).update(questions_effective = pcs_str)
-            # elif pcs.is_ia and not pcs.is_testpos : # Training pour le parcours IA
-            students  = pcs.students.all()
-            knowledge_ids = Parcourscreator.objects.filter(parcours_id = pcs.id).values_list('knowledge_id',flat=True).distinct()
-            for kid in knowledge_ids :
-                for student in students :
-                    exercise_ids_std = Relationship.objects.values_list("exercise_id",flat=True).filter(parcours=pcs, is_publish=1,students=student)
-                    exercise_ids_std_str = convert_into_str(exercise_ids_std)
-                    Parcourscreator.objects.filter(parcours_id = pcs.id , knowledge_id = kid , student_id = student.user.id).update(effective = "")
-                    Parcourscreator.objects.filter(parcours_id = pcs.id , knowledge_id = kid , student_id = student.user.id).update(effective = exercise_ids_std_str)
-
         Parcours.objects.filter(pk = int(parcours_id)).update(is_publish = statut)
     else :
         Folder.objects.filter(pk = int(parcours_id)).update(is_publish = statut)
