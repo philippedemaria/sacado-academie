@@ -1616,11 +1616,12 @@ def get_price_and_end_adhesion(formule_id, today, duration, student,level_id ):
     else   : days_list = [31,28,31,30,31,30,31,31,30,31,30,31,31,28,31,30,31,30,31,31,30,31,30,31]
 
     nb_days = 0
-    for i in range(int(duration)) :
-        nb_days += days_list[today.month+i-1]
-
-
-    end_of_this_adhesion = today + timedelta(days=nb_days+1)
+    if int(formule_id) == 5 :
+        end_of_this_adhesion = datetime(1,9,today.year)
+    else :
+        for i in range(int(duration)) :
+            nb_days += days_list[today.month+i-1]
+        end_of_this_adhesion = today + timedelta(days=nb_days+1)
 
 
     if adhesion :
