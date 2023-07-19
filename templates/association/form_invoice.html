@@ -104,25 +104,30 @@
         </div>
         <div class="row alert alert-sacado"> 
             <div class="col-sm-4 col-md-3 col-lg-3">
+                    {{ form.is_credit.label_tag }}
                     {{ form.is_credit |attr:"data-toggle:toggle" |attr:"data-onstyle:success"|attr:"data-offstyle:danger"|attr:"data-on:Crédit"|attr:"data-off:Débit"}} 
                     {{ form.is_credit.errors }}
             </div>
 
             <div class="col-sm-4 col-md-3 col-lg-3">
+                    {{ form.forme.label_tag }}
                     {{ form.forme |add_class:"form-control select2"|attr:"placeholder:Forme"}}  
                     {{ form.forme.errors }}
             </div>
             <div class="col-sm-4 col-md-6  col-lg-6">
+                    {{ form.objet.label_tag }}
                     {{ form.objet |add_class:"form-control"|attr:"placeholder:Libellé"}}  
                     {{ form.objet.errors }}
             </div>
             <div class="col-sm-6 col-md-6 col-lg-6">
+                    {{ form.date_payment.label_tag }}
                     {{ form.date_payment |add_class:"form-control datepicker"|attr:"placeholder:Date"}}  
                     {{ form.date_payment.errors }}
             </div> 
             <div class="col-sm-6 col-md-6 col-lg-6">
-                    {{ form.date_payment |add_class:"form-control datepicker"|attr:"placeholder:Date de paiement"}}  
-                    {{ form.date_payment.errors }}
+                    {{ form.date.label_tag }}
+                    {{ form.date |add_class:"form-control datepicker"|attr:"placeholder:Date de paiement"}}  
+                    {{ form.date.errors }}
             </div> 
 
         </div>

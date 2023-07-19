@@ -2914,9 +2914,9 @@ def update_invoice(request,idp,idi):
 
 
     invoice = Invoice.objects.get(id=idi)
-    form = InvoiceForm(request.POST or None, instance = invoice)
-    formSet  = inlineformset_factory( Invoice , Subinvoice , fields=('invoice','description','amount',) , extra=0)
-    form_ds  = formSet(request.POST or None, instance = invoice)
+    form    = InvoiceForm(request.POST or None, instance = invoice)
+    formSet = inlineformset_factory( Invoice , Subinvoice , fields=('invoice','description','amount') , extra=0)
+    form_ds = formSet(request.POST or None, instance = invoice)
  
 
     if idp : parent = Parent.objects.get(user__id=idp)
