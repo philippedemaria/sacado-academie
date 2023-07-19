@@ -95,14 +95,7 @@
         </div>
         {% endif %}
  
-        <div class="row">
-            <div class="col-sm-12 col-md-12 col-lg-12">
-                <div class="form-group">
-                    Compte 
-                </div>
-            </div>
-        </div>
-        <div class="row alert alert-sacado"> 
+        <div class="row"> 
             <div class="col-sm-4 col-md-3 col-lg-3">
                     {{ form.is_credit.label_tag }}
                     {{ form.is_credit |attr:"data-toggle:toggle" |attr:"data-onstyle:success"|attr:"data-offstyle:danger"|attr:"data-on:Crédit"|attr:"data-off:Débit"}} 
@@ -119,17 +112,18 @@
                     {{ form.objet |add_class:"form-control"|attr:"placeholder:Libellé"}}  
                     {{ form.objet.errors }}
             </div>
-            <div class="col-sm-6 col-md-6 col-lg-6">
+        </div>
+        <div class="row">             
+            <div class="col-sm-6 col-md-6 col-lg-3">
                     {{ form.date_payment.label_tag }}
                     {{ form.date_payment |add_class:"form-control datepicker"|attr:"placeholder:Date"}}  
                     {{ form.date_payment.errors }}
             </div> 
-            <div class="col-sm-6 col-md-6 col-lg-6">
+            <div class="col-sm-6 col-md-6 col-lg-3">
                     {{ form.date.label_tag }}
                     {{ form.date |add_class:"form-control datepicker"|attr:"placeholder:Date de paiement"}}  
                     {{ form.date.errors }}
             </div> 
-
         </div>
  
              
