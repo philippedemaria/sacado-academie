@@ -1099,7 +1099,7 @@ def add_adhesion(request) :
         if form.is_valid():
             duration = request.POST.get("duration")
             formule_id = request.POST.get("formule_id")
-            if formule_id == 5 :
+            if formule_id == 5 or formule_id == "5" :
                 d,m,y = 1 , 9 , today.year
             else :
                 today = datetime.now()
