@@ -12272,7 +12272,6 @@ def show_course_student(request, idc , id ):
  
 
 
-@student_can_show_this_course
 def show_course_sequence_student(request, idc , id ):
     """
     idc : course_id et id = parcours_id pour correspondre avec le decorateur
