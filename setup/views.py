@@ -1097,7 +1097,7 @@ def add_adhesion(request) :
 
     if request.method == "POST" :
         if form.is_valid():
-            duration = int(request.POST.get("duration"))
+            duration = request.POST.get("duration")
             formule_id = request.POST.get("formule_id")
             if formule_id == 5 :
                 d,m,y = 1 , 9 , today.year
