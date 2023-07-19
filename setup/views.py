@@ -1617,7 +1617,7 @@ def get_price_and_end_adhesion(formule_id, today, duration, student,level_id ):
 
     nb_days = 0
     if int(formule_id) == 5 :
-        end_of_this_adhesion = datetime(1,9,today.year)
+        end_of_this_adhesion = datetime(today.year,9,1)
     else :
         for i in range(int(duration)) :
             nb_days += days_list[today.month+i-1]
