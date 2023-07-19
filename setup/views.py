@@ -908,7 +908,7 @@ def get_price_by_formules(formule_id,duration,level_id):
 
     if formule.id > 1 and 5 < int(level_id) <10  :  price = formule.price + 10
     elif formule.id > 1 and 9 < int(level_id) <13:  price = formule.price +20 
-    elif formule.id == 5 : price = 5 
+    elif formule.id == 5 : price = 2.50 
     else : price = formule.price
 
     price_dico = { '1' : 5.00 , '3' : 14.00 , '6' : 26.00 , '12' : 50.00  }
