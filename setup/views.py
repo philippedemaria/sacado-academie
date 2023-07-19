@@ -1098,10 +1098,13 @@ def add_adhesion(request) :
     if request.method == "POST" :
         if form.is_valid():
             duration = int(request.POST.get("duration"))
-
-            today = datetime.now()
-            today = today.replace(tzinfo=timezone.utc)
-            d,m,y = today.day , (today.month - 1 + duration)%12 + 1 , today.year + (today.month - 1 + duration)//12
+            formule_id = request.POST.get("formule_id")
+            if formule_id == 5 :
+                d,m,y = 1 , 9 , today.year
+            else :
+                today = datetime.now()
+                today = today.replace(tzinfo=timezone.utc)
+                d,m,y = today.day , (today.month - 1 + duration)%12 + 1 , today.year + (today.month - 1 + duration)//12
             end = datetime(y,m,d).replace(tzinfo=timezone.utc)
             form_user = form.save(commit=False)
             form_user.closure = end
@@ -1111,7 +1114,6 @@ def add_adhesion(request) :
             form_user.user_type = 0
             form_user.save()
             level_id = request.POST.get("level")
-            formule_id = request.POST.get("formule_id")
             level   = Level.objects.get(pk = level_id)            
             student = Student.objects.create(user=form_user, level = level)
             u_parents = all_from_parent_user(request.user)
