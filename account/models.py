@@ -747,8 +747,13 @@ class Facture(models.Model):
     def __str__(self):
         return "{} {}".format(self.user, self.file)
 
+    def amount(self):
 
+        price = 0
+        for a in self.adhesions.all():
+            price += a.amount
 
+        return price
 
 
 class Teacher(models.Model):
