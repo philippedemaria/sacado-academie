@@ -53,11 +53,11 @@
                             <tr> 
                                 <th>Date</th>
                                 <th>Chrono</th> 
-                                <th style="text-align:center">Adhésions</th> 
-                                <th style="text-align:center">Montant</th> 
-                                <th style="text-align:center">Payé le</th> 
-                                <th style="text-align:center">orderID</th> 
-                                <th style="text-align:center"></th> 
+                                <th>Adhésions</th> 
+                                <th>Montant</th> 
+                                <th>Payé le</th> 
+                                <th>orderID</th> 
+                                <th></th> 
                             </tr>
                         {% for f in parent.user.factures.all  %}
                             <tr> 
@@ -69,15 +69,17 @@
                                 </td> 
 
 
-                                <td style="text-align:center">
+                                <td >
                                      {{ f.amount }} €
                                 </td> 
-                                <td style="text-align:center">
+                                <td >
                                      {{ f.date }}
                                 </td> 
                                 <td style="text-align:center"> {{ f.orderID }}</td> 
                                 <td style="text-align:center">
-
+                                    <a href="{% url 'print_invoice'   f.id %}">Télécharger</a> | 
+                                    <a href="{% url 'update_invoice' parent.user.id f.id %}">Modifier</a> | 
+                                    <a href="{% url 'delete_invoice' parent.user.id f.id %}">Supprimer</a>
 
                                 </td> 
                             </tr>
