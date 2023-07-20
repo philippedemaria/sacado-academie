@@ -53,21 +53,31 @@
                             <tr> 
                                 <th>Date</th>
                                 <th>Chrono</th> 
+                                <th style="text-align:center">Adhésions</th> 
                                 <th style="text-align:center">Montant</th> 
                                 <th style="text-align:center">Payé le</th> 
+                                <th style="text-align:center">orderID</th> 
                                 <th style="text-align:center"></th> 
                             </tr>
-                        {% for f in parent.invoices.all  %}
+                        {% for f in parent.user.factures.all  %}
                             <tr> 
                                 <td>{{ f.date|date:"Y-m-d" }}</td> 
                                 <td>{{ f.chrono }}</td> 
+                                <td>{% for a in f.adhesions.all %}
+                                        <li>{{ a.student.user.first_name}} : {{ a.amount }}€, {{ a.formule }} | {{ a.start }} {{ a.stop }} | {{ a.level }} </li>
+                                    {% endfor %}
+                                </td> 
+
+
                                 <td style="text-align:center">
                                      {{ f.amount }} €
                                 </td> 
                                 <td style="text-align:center">
-                                    <a href="{% url 'print_invoice'   f.id %}">Télécharger</a> | 
-                                    <a href="{% url 'update_invoice' parent.user.id f.id %}">Modifier</a> | 
-                                    <a href="{% url 'delete_invoice' parent.user.id f.id %}">Supprimer</a>
+                                     {{ f.date }}
+                                </td> 
+                                <td style="text-align:center"> {{ f.orderID }}</td> 
+                                <td style="text-align:center">
+
 
                                 </td> 
                             </tr>
@@ -82,7 +92,9 @@
     </div>
 </section>
 
+ 
 
+ 
 
 <div class="modal fade" id="new_abo" tabindex="-1" role="dialog" aria-labelledby="new_abo">
     <div class="modal-dialog modal-maxsize" role="document">
