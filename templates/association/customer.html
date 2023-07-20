@@ -64,7 +64,7 @@
                                 <td>{{ f.date|date:"Y-m-d" }}</td> 
                                 <td>{{ f.chrono }}</td> 
                                 <td>{% for a in f.adhesions.all %}
-                                        <li>{{ a.student.user.first_name}} : {{ a.amount }}€, {{ a.formule }} | {{ a.start }} {{ a.stop }} | {{ a.level }} </li>
+                                        <li>{{ a.student.user.first_name}} : {{ a.amount }}€, {{ a.formule }} | {{ a.start|date:"d-m-Y" }} {{ a.stop|date:"d-m-Y" }} | {{ a.level }} </li>
                                     {% endfor %}
                                 </td> 
 
