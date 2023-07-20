@@ -751,7 +751,7 @@ class Facture(models.Model):
 
         price = 0
         for a in self.adhesions.all():
-            price += a.amount
+            price += round(float(a.amount),2)
 
         return price
 
