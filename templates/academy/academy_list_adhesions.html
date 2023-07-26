@@ -66,7 +66,10 @@
                                     {{ adhesion.amount }}€
                                 </td>
                                 <td>
-                                    <a href="{% url 'delete_adhesion' adhesion.id %}"  onclick="return TestDelete('cette adhésion')">Supprimer cette adhésion</a> 
+                                    <a href="{% url 'delete_adhesion' adhesion.id %}"  onclick="return TestDelete('cette adhésion')"><i class="bi bi-trash"></i></a>
+                                    <a href="{% url 'validate_adhesion' adhesion.id %}"  title="Valider le paiement">
+                                        <i class="bi bi-currency-euro text-{% if adhesion.is_active %}success{% else %}danger{% endif %}"></i>
+                                    </a>
                                 </td>
                             </tr>
                         {% endfor %}

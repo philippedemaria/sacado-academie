@@ -14,6 +14,7 @@ from qcm.models import  Resultexercise, Studentanswer , Supportfile
 from association.models import   Activeyear
 from academy.models import  Autotest 
 from academy.forms import  AutotestForm
+from account.models import  Adhesion
 from socle.models import  Level
 from group.models import  Group
 from qcm.models import  Studentanswer , Relationship , Parcours, Course, Folder , Mastering
@@ -622,6 +623,24 @@ def delete_adhesion(request,ida):
 
     else:
         return redirect("index")
+
+
+
+def validate_adhesion(request,ida):
+
+    adhesion = Adhesion.objects.get(pk=ida)
+    rq_user = request.user 
+    if rq_user.is_board :
+        if adhesion.is_active :
+            adhesion.is_active = 0
+        else :
+            adhesion.is_active = 1
+        adhesion.save()
+        return redirect("academy_list_adhesions" )
+
+    else:
+        return redirect("index")
+
 
 
 def delete_student_academy(request, ids, level_id ):
