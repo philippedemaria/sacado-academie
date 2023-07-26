@@ -1106,7 +1106,7 @@ def add_adhesion(request) :
             else :
                 today = datetime.now()
                 today = today.replace(tzinfo=timezone.utc)
-                d,m,y = today.day , (today.month - 1 + duration)%12 + 1 , today.year + (today.month - 1 + duration)//12
+                d,m,y = today.day , (today.month - 1 + int(duration))%12 + 1 , today.year + (today.month - 1 + int(duration))//12
             end = datetime(y,m,d).replace(tzinfo=timezone.utc)
             form_user = form.save(commit=False)
             form_user.closure = end
