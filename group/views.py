@@ -164,6 +164,7 @@ def student_dashboard(request,group_id):
     # si une seule matière alors  sur dashboard
     groups = student.students_to_group.all()
 
+
     request.session["tdb"] = "training"
 
     parcourses_on_fire = []
@@ -215,6 +216,8 @@ def student_dashboard(request,group_id):
             folders = student.folders.filter( is_publish=1 , subject = group.subject,level = group.level,is_archive=0, groups = group , is_trash=0).order_by("ranking")
         except :
             folders = student.folders.filter( is_publish=1 , is_archive=0, is_trash=0).order_by("ranking")
+
+
         parcourses_on_fire = student.students_to_parcours.filter(Q(is_publish=1) | Q(start__lte=today, stop__gte=today), is_active=1,  is_archive =0 , is_trash=0).distinct()
 
 

@@ -409,6 +409,8 @@ def push_student_group(request):
 	for student_id in student_ids :
 		student = Student.objects.get(pk=student_id)	
 		group.students.add(student)
+        groups = [group]
+        attribute_all_documents_of_groups_to_a_new_student(groups, student)
 	return redirect('school_groups')
  
 
