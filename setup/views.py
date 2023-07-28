@@ -1725,15 +1725,34 @@ def delete_adhesion(request):
     pk = int(request.POST.get("adh_id"))
     adhesion = Adhesion.objects.get(pk=pk)
 
-    remb  = calcul_remboursement(adhesion)[0]
+    try : remb  = str(calcul_remboursement(adhesion)[0])
+    except : remb ="== non calculé == "
 
-    msg = "Une demande d'annulation vient d'être formulée de la part de "+adhesion.user+". \n"
-    msg += "La référence d'adhésion est "+adhesion.code+" et son id est "+adhesion.id+".\n\n"
-    msg += "Le montant du remboursement est de "+remb+"€ au pro-rata des jours adhérés." 
+
+    msg = "Une annulation de demande d'adhésion vient d'être formulée pour "+adhesion.student.user+". \n"
+    msg += "Son id est "+adhesion.id+".\n\n"
 
     send_mail("Demande d'annulation d'adhésion SACADO", msg, settings.DEFAULT_FROM_EMAIL, ["sacado.academie@gmail.com"])
 
     return redirect("adhesions")
+
+
+
+def delete_this_adhesion(request,ida):
+
+    adhesion = Adhesion.objects.get(pk=ida)
+
+    try : remb  = str(calcul_remboursement(adhesion)[0])
+    except : remb ="== non calculé == "
+
+    msg = "Une annulation de demande d'adhésion vient d'être formulée pour "+adhesion.student.user+". \n"
+    msg += "Son id est "+adhesion.id+".\n\n" 
+
+    send_mail("Demande d'annulation d'adhésion SACADO", msg, settings.DEFAULT_FROM_EMAIL, ["sacado.academie@gmail.com"])
+
+    return redirect("adhesions")
+
+
 
 
  

@@ -79,6 +79,9 @@
                                                     
                                                 {% endif %}
                                                 </form>
+                                                {% if 'BL' in adh.chrono %}
+                                                    <a href="{% url 'delete_this_adhesion' adh.id %}" class="pull-right"><i class="bi bi-trash"></i></a>
+                                                {% endif %}
                                             </li>
                                         {% endfor %}
                                     </td>
