@@ -1735,7 +1735,7 @@ def delete_adhesion(request):
 
     send_mail("Demande d'annulation d'adhésion SACADO", msg, settings.DEFAULT_FROM_EMAIL, ["sacado.academie@gmail.com"])
 
-    return redirect("adhesions")
+    return redirect("adhesions_academy")
 
 
 
@@ -1756,7 +1756,7 @@ def delete_this_facture(request,idf):
     facture.delete()
     send_mail("Demande d'annulation d'adhésion SACADO", msg, settings.DEFAULT_FROM_EMAIL, ["sacado.academie@gmail.com"])
 
-    return redirect("adhesions")
+    return redirect("adhesions_academy")
 
 
 
