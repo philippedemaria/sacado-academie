@@ -1724,7 +1724,7 @@ def delete_adhesion(request):
 
     pk = int(request.POST.get("adh_id"))
     adhesion = Adhesion.objects.get(pk=pk)
-
+    adhesion.delete()
     try : remb  = str(calcul_remboursement(adhesion)[0])
     except : remb ="== non calculé == "
 
@@ -1738,16 +1738,20 @@ def delete_adhesion(request):
 
 
 
-def delete_this_adhesion(request,ida):
+def delete_this_facture(request,idf):
 
-    adhesion = Adhesion.objects.get(pk=ida)
+    facture = Facture.objects.get(pk=idf)
+
 
     try : remb  = str(calcul_remboursement(adhesion)[0])
     except : remb ="== non calculé == "
 
-    msg = "Une annulation de demande d'adhésion vient d'être formulée pour "+adhesion.student.user+". \n"
-    msg += "Son id est "+adhesion.id+".\n\n" 
+    msg = "Une annulation de demande d'adhésion vient d'être formulée par "+facture.user+". \n"
+    msg += "Son id est "+facture.id+".\n\n"
+    for a in facture.adhesions.all():
+        a.delete()
 
+    facture.delete()
     send_mail("Demande d'annulation d'adhésion SACADO", msg, settings.DEFAULT_FROM_EMAIL, ["sacado.academie@gmail.com"])
 
     return redirect("adhesions")

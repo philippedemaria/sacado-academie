@@ -33,7 +33,7 @@ urlpatterns = [
     path('adhesions_academy', adhesions_academy, name='adhesions_academy'), 
     path('delete_adhesion', delete_adhesion, name='delete_adhesion'), 
 
-    path("delete_this_adhesion/<int:ida>",delete_this_adhesion,name=delete_this_adhesion),
+    path("delete_this_facture/<int:idf>",delete_this_facture,name=delete_this_facture),
 
     path('ajax_remboursement', ajax_remboursement, name='ajax_remboursement'),
     path('add_adhesion', add_adhesion, name='add_adhesion'),
