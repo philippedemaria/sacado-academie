@@ -1730,7 +1730,8 @@ def delete_adhesion(request):
 
 
     msg = "Une annulation de demande d'adhésion vient d'être formulée pour "+adhesion.student.user+". \n"
-    msg += "Son id est "+adhesion.id+".\n\n"
+    msg += "Annulation effectuée.\n\n"
+    msg += "Son id est "+str(adhesion.id)+".\n\n"
 
     send_mail("Demande d'annulation d'adhésion SACADO", msg, settings.DEFAULT_FROM_EMAIL, ["sacado.academie@gmail.com"])
 
@@ -1747,7 +1748,8 @@ def delete_this_facture(request,idf):
     except : remb ="== non calculé == "
 
     msg = "Une annulation de demande d'adhésion vient d'être formulée par "+facture.user.last_name+". \n"
-    msg += "Son id est "+facture.id+".\n\n"
+    msg += "Annulation effectuée.\n\n"
+    msg += "Son id est "+str(facture.id)+".\n\n"
     for a in facture.adhesions.all():
         a.delete()
 
