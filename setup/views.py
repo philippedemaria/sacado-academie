@@ -1746,7 +1746,7 @@ def delete_this_facture(request,idf):
     try : remb  = str(calcul_remboursement(adhesion)[0])
     except : remb ="== non calculé == "
 
-    msg = "Une annulation de demande d'adhésion vient d'être formulée par "+facture.user+". \n"
+    msg = "Une annulation de demande d'adhésion vient d'être formulée par "+facture.user.last_name+". \n"
     msg += "Son id est "+facture.id+".\n\n"
     for a in facture.adhesions.all():
         a.delete()

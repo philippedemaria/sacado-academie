@@ -84,7 +84,7 @@
                                         {% endfor %}
                                     </td>
                                     <td>
-                                        {% if 'BL' in facture.chrono %}
+                                        {% if 'BL' in facture.chrono and facture.adhesions.count == 0 %}
                                             <a href="{% url 'delete_this_facture' facture.id %}" class="pull-right"><i class="bi bi-trash"></i></a>
                                         {% endif %}
                                     </td>
