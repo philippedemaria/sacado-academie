@@ -1621,7 +1621,7 @@ def change_adhesion(request,ids):
     request.session["tdb"] = 'adhesion'
     user     = request.user
     formules = Formule.objects.filter(is_sale=1)
-    levels   = Level.objects.order_by("ranking")
+    levels   = Level.objects.exclude(pk=13).order_by("ranking")
     student  = Student.objects.get(user_id=ids)
     adhesion = student.adhesions.last()    
     today    = time_zone_user(student.user)
