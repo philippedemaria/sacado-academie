@@ -1082,6 +1082,21 @@ def attribute_group_to_student_by_level(level,student,formule_id) :
     return success
 
 
+
+def remove_student_to_group_by_level(level,student,formule_id) :
+
+    teacher_ids = ["0" ,89513,89507,89508,89510, 89511, 46245  , 46242 , 46246  , 46247, 46222, 46243, 46244,"", 130243] # "0" ET "" sont des offsets
+    teacher_id = teacher_ids[level.id]
+    if int(formule_id) > 2 and  int(formule_id) < 5 : formule_id = 2
+    else : formule_id = 5
+    group = Group.objects.filter(level = level, school_id = 50, teacher_id=teacher_id, formule_id=formule_id).first()
+    group.students.remove(student)
+    success = True
+    return success
+
+
+
+
 def cmd_abonnement(formule,facture_id):
     today = datetime.now().replace(tzinfo=timezone.utc)
     date="{}-{:02}-{:02}".format(today.year,today.month,today.day)
@@ -1436,7 +1451,11 @@ def paiement_change_adhesion(request) :
     stop       = request.POST.get('stop')
     level_id   = request.POST.get('level_id')
     formule_id = request.POST.get('formule')
+    
+    level_choice = request.POST.get('level_choice',None)
+    if level_choice : level_id = level_choice
 
+    
     today = datetime.now().replace(tzinfo=timezone.utc)
     this_year = today.year
     user = request.user
@@ -1445,10 +1464,15 @@ def paiement_change_adhesion(request) :
     adhesion = Adhesion.objects.create(amount = amount , student_id = student_id , formule_id = formule_id , start = start , stop = stop , level_id = level_id , year = this_year , is_active = 0 )
     facture.adhesions.add(adhesion)
 
-
     student = Student.objects.get(pk=student_id)
     level   = Level.objects.get(pk=level_id)
     formule = Formule.objects.get(pk=formule_id)
+    if level_choice : 
+        student.level_id = level_choice
+        student.save()
+        remove_student_to_group_by_level(level,student,formule_id) 
+        success = attribute_group_to_student_by_level(level,student,formule_id)
+
     cmd     = cmd_abonnement(formule,facture.id)
 
     email= user.email
@@ -1478,12 +1502,20 @@ def paiement(request) :
     formule_id = request.POST.get('formule')
     today = datetime.now().replace(tzinfo=timezone.utc)
 
+    level_choice = request.POST.get('level_choice',None)
+    if level_choice : level_id = level_choice
+
     student = Student.objects.get(pk=student_id)
     level   = Level.objects.get(pk=level_id)
     formule = Formule.objects.get(pk=formule_id)
     user = request.user
     this_year = today.year
 
+    if level_choice : 
+        student.level_id = level_choice
+        student.save()
+        remove_student_to_group_by_level(level,student,formule_id) 
+        success = attribute_group_to_student_by_level(level,student,formule_id)
  
     adhesion = Adhesion.objects.filter(amount = amount , student_id = student_id , formule_id = formule_id, level_id =  level_id , is_active = 0 ).last()
     facture = adhesion.factures.first()
@@ -1589,13 +1621,14 @@ def change_adhesion(request,ids):
     request.session["tdb"] = 'adhesion'
     user     = request.user
     formules = Formule.objects.filter(is_sale=1)
+    levels   = Level.objets.order_by("ranking")
     student  = Student.objects.get(user_id=ids)
     adhesion = student.adhesions.last()    
     today    = time_zone_user(student.user)
     if today.month < 7 : this_year = today.year 
     else : this_year = today.year + 1
  
-    context = {    "student" : student , "adhesion" : adhesion   , "formules" : formules   , "this_year" : this_year  }
+    context = {    "student" : student , "adhesion" : adhesion   , "formules" : formules  , "levels" : levels  , "this_year" : this_year  }
 
     return render(request, 'setup/change_adhesion.html', context)
 

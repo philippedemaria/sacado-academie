@@ -77,10 +77,25 @@
             <div class="row">
                 <div class="col-sm-12 col-md-12">                    
                     <div class="form-group">  
-                    Sélectionner la formule désirée et la durée de l'engagement.  
+                    Sélectionner la formule désirée, la durée de l'engagement et le niveau de l'élève.  
                     </div>
                 </div> 
             </div> 
+
+            <div class="row">
+                <div class="col-sm-12 col-md-12">                    
+                    <div class="form-group">  
+                    <label>Nouveau niveau <small>Ne rien choisir si le niveau est le même que celui indiqué ci-dessus.</small></label> 
+                        <select name="level_choice" class="form-control">
+                        {% for l in levels  %}
+                            <option value="{{ l.id }}">{{ l.name }}</option>
+                        {% endfor %}  
+                        </select>
+                    </div>
+                </div> 
+            </div> 
+
+
             <div class="row">
                 <div class="col-sm-12 col-md-6">
                     <div class="form-group">                     
