@@ -636,6 +636,8 @@ def validate_adhesion(request,ida):
         else :
             adhesion.is_active = 1
         adhesion.save()
+        adhesion.student.user.closure = adhesion.stop
+        adhesion.student.user.save()
         return redirect("academy_list_adhesions" )
 
     else:
