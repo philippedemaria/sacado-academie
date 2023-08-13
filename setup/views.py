@@ -1514,6 +1514,8 @@ def find_facture_and_send_mail(facture_id, autorisation ):
     for adhesion in facture.adhesions.all() :
         adhesion.is_active=1
         adhesion.save()
+        adhesion.student.user.closure = adhesion.stop
+        adhesion.student.user.save()
 
     try :
         sacado_msg = "Bonjour {} {},\n\nVotre paiement vient d'être reçu. \n\nL'équipe de l'ACADÉMIE SACADO vous remercie et vous souhaite une bonne utilisation.\nCordialement.\n\nCeci est  un mail automatique. Ne pas répondre.".format(facture.user.first_name,facture.user.last_name)
