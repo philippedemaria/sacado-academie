@@ -76,21 +76,20 @@
             <div class="row">
                 <div class="col-sm-12 col-md-12">                    
                     <div class="form-group">  
-                    Si vous souhaitez modifier le niveau des contenus, choisir le nouveau ici. <br/><small style="color:red">Attention, votre enfant n'aura plus accès aux contenus du niveau actuel. Cet espace est utile pour changer le niveau dans le cas d'un passage d'une classe au niveau supérieur</small>.  
+                    <a href="javascript:void(0);" id="change_level">Si vous souhaitez modifier le niveau des contenus, choisir le nouveau ici. </a><br/>
+                    <small style="color:#E76080">Attention, votre enfant n'aura plus accès aux contenus du niveau actuel. Cet espace est utile pour changer le niveau dans le cas d'un passage d'une classe au niveau supérieur</small>.  
                     </div>
                 </div> 
             </div> 
-            <div class="row">
+            <div class="row no_visu_on_load" id="change_level_target">
                 <div class="col-sm-12 col-md-12">                    
-                    <div class="form-group">  
                     <label>Nouveau niveau éventuel ?</label> 
-                        <select name="level_choice" class="form-control">
-                        <option value="">Sélectionner un niveau </option>    
-                        {% for l in levels  %}
-                            <option value="{{ l.id }}">{{ l.name }}</option>
-                        {% endfor %}  
-                        </select>
-                    </div>
+                    <select name="level_choice" class="form-control">
+                    <option value="">Sélectionner un niveau </option>    
+                    {% for l in levels  %}
+                        <option value="{{ l.id }}">{{ l.name }}</option>
+                    {% endfor %}  
+                    </select>
                 </div> 
             </div> 
             <hr/>

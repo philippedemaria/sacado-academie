@@ -316,6 +316,19 @@ define(['jquery', 'bootstrap'], function ($) {
         });
 
 
+        $(document).on('#change_level','click', function (event) { 
+
+            if( $("#change_level_target").hasClass('no_visu_on_load'))
+            {
+                $("#change_level_target").removeClass('no_visu_on_load');
+            }
+            else 
+            {
+                $("#change_level_target").addClass('no_visu_on_load');
+            }                
+
+        });  
+
 
   
     });
