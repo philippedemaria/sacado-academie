@@ -316,7 +316,7 @@ define(['jquery', 'bootstrap'], function ($) {
         });
 
 
-        $(document).on('#change_level','click', function (event) { 
+        $(document).on('click', '#change_level', function (event) { 
 
             if( $("#change_level_target").hasClass('no_visu_on_load'))
             {
