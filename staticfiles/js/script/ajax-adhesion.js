@@ -321,10 +321,12 @@ define(['jquery', 'bootstrap'], function ($) {
             if( $("#change_level_target").hasClass('no_visu_on_load'))
             {
                 $("#change_level_target").removeClass('no_visu_on_load');
+                $("#change_level_target").show(500);                
             }
             else 
             {
                 $("#change_level_target").addClass('no_visu_on_load');
+                $("#change_level_target").hide(500);
             }                
 
         });  
