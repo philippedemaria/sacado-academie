@@ -1464,7 +1464,9 @@ def paiement_change_adhesion(request) :
     formule_id = request.POST.get('formule')
     
     level_choice = request.POST.get('level_choice',None)
-    if level_choice : level_id = level_choice
+    if level_choice : 
+        level_prev = level_id
+        level_id   = level_choice
 
     
     today = datetime.now().replace(tzinfo=timezone.utc)
@@ -1479,9 +1481,10 @@ def paiement_change_adhesion(request) :
     level   = Level.objects.get(pk=level_id)
     formule = Formule.objects.get(pk=formule_id)
     if level_choice : 
+        level_p = Level.objects.get(pk=level_prev)
         student.level_id = level_choice
         student.save()
-        remove_student_to_group_by_level(level,student,formule_id) 
+        remove_student_to_group_by_level(level_p,student,formule_id) 
         success = attribute_group_to_student_by_level(level,student,formule_id)
 
     cmd     = cmd_abonnement(formule,facture.id)
@@ -1514,7 +1517,9 @@ def paiement(request) :
     today = datetime.now().replace(tzinfo=timezone.utc)
 
     level_choice = request.POST.get('level_choice',None)
-    if level_choice : level_id = level_choice
+    if level_choice : 
+        level_prev = level_id
+        level_id   = level_choice
 
     student = Student.objects.get(pk=student_id)
     level   = Level.objects.get(pk=level_id)
@@ -1525,7 +1530,8 @@ def paiement(request) :
     if level_choice : 
         student.level_id = level_choice
         student.save()
-        remove_student_to_group_by_level(level,student,formule_id) 
+        level_p = Level.objets.get(pk=level_prev)
+        remove_student_to_group_by_level(level_p,student,formule_id) 
         success = attribute_group_to_student_by_level(level,student,formule_id)
  
     adhesion = Adhesion.objects.filter(amount = amount , student_id = student_id , formule_id = formule_id, level_id =  level_id , is_active = 0 ).last()
