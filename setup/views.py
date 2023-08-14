@@ -1091,6 +1091,20 @@ def remove_student_to_group_by_level(level,student,formule_id) :
     else : formule_id = 5
     group = Group.objects.filter(level = level, school_id = 50, teacher_id=teacher_id, formule_id=formule_id).first()
     group.students.remove(student)
+    for p in group.group_parcours.all():
+        p.students.remove(student)
+    for b in group.bibliotexs.all():
+        b.students.remove(student)
+        for r in b.relationtexs.all():
+            r.students.remove()
+    for f in group.group_folders.all():
+        f.students.remove(student)
+    for f in group.group_folders.all():
+        f.students.remove(student)
+    for q in group.quizz.all():
+        q.students.remove(student)
+        for qu in q.questions.all():
+            qu.students.remove()
     success = True
     return success
 

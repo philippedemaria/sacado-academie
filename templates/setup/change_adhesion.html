@@ -72,22 +72,20 @@
 
 
             </div>
-
             <hr/>
             <div class="row">
                 <div class="col-sm-12 col-md-12">                    
                     <div class="form-group">  
-                    Sélectionner la formule désirée, la durée de l'engagement et le niveau de l'élève.  
+                    Si vous souhaitez modifier le niveau des contenus, choisir le nouveau ici. <br/><small style="color:red">Attention, votre enfant n'aura plus accès aux contenus du niveau actuel. Cet espace est utile pour changer le niveau dans le cas d'un passage d'une classe au niveau supérieur</small>.  
                     </div>
                 </div> 
             </div> 
-
             <div class="row">
                 <div class="col-sm-12 col-md-12">                    
                     <div class="form-group">  
-                    <label>Nouveau niveau <small>Ne rien choisir si le niveau est le même que celui indiqué ci-dessus.</small></label> 
+                    <label>Nouveau niveau éventuel ?</label> 
                         <select name="level_choice" class="form-control">
-                        <option value="">Modifier le niveau</option>    
+                        <option value="">Sélectionner un niveau </option>    
                         {% for l in levels  %}
                             <option value="{{ l.id }}">{{ l.name }}</option>
                         {% endfor %}  
@@ -95,8 +93,14 @@
                     </div>
                 </div> 
             </div> 
-
-
+            <hr/>
+            <div class="row">
+                <div class="col-sm-12 col-md-12">                    
+                    <div class="form-group">  
+                    Sélectionner la formule désirée et la durée de l'engagement.  
+                    </div>
+                </div> 
+            </div> 
             <div class="row">
                 <div class="col-sm-12 col-md-6">
                     <div class="form-group">                     
