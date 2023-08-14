@@ -1176,7 +1176,6 @@ def add_adhesion(request) :
             facture  = Facture.objects.create(chrono = chrono, file = "" , user = request.user, is_lesson = 1   ) 
             facture.adhesions.add(adhesion)
 
-
             msg = "Bonjour,\n\nVous venez de souscrire à une adhésion à la SACADO ACADÉMIE. \n\n"
             msg += "Votre référence d'adhésion est "+facture.chrono+". Vous êtes en attente de paiement.\n\n"
             msg += "Vous avez inscrit : \n"
