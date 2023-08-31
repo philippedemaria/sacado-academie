@@ -2367,7 +2367,7 @@ def print_facture(request,fid):
     ### Total de facturation
     #########################################################################################
     elements.append(Spacer(0,0.1*inch))
-    details_tot = Table([("Hors taxe", str( round(float(total_amount)/1.2,2) )+" €" ),( "TVA 20%", str(  float(total_amount)-round(float(total_amount)/1.2,2)) +" €" ), ("Total TTC", str( total_amount) +" €" ) ], hAlign='RIGHT', colWidths=[2.8*inch,1*inch])
+    details_tot = Table([("Hors taxe", str( round(float(total_amount)/1.2,2) )+" €" ),( "TVA 20%", str( round( float(total_amount)-round(float(total_amount)/1.2,2),2)) +" €" ), ("Total TTC", str( total_amount) +" €" ) ], hAlign='RIGHT', colWidths=[2.8*inch,1*inch])
     details_tot.setStyle(TableStyle([
                ('INNERGRID', (0,0), (-1,-1), 0.25, colors.gray),
                ('BOX', (0,0), (-1,-1), 0.25, colors.gray),
