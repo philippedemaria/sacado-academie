@@ -119,4 +119,14 @@ urlpatterns = [
     path('switch_student_teacher', switch_student_teacher, name='switch_student_teacher'),
 
     path('aggregate_child', aggregate_child, name='aggregate_child'),
+
+
+
+    path('delete_facture/<int:idp>/<int:idf>', delete_facture, name='delete_facture'),
+
+    path('print_facture/<int:fid>', print_facture, name='print_facture'),
+ 
+
+
+
 ]

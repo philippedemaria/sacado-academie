@@ -77,10 +77,8 @@
                                 </td> 
                                 <td style="text-align:center"> {{ f.orderID }}</td> 
                                 <td style="text-align:center">
-                                    <a href="{% url 'print_invoice'   f.id %}"><i class="bi bi-printer"></i></a> 
-                                    <a href="{% url 'update_invoice' parent.user.id f.id %}"><i class="bi bi-pencil"></i></a>  
-                                    <a href="{% url 'delete_invoice' parent.user.id f.id %}"><i class="bi bi-trash"></i></a>
-
+                                    <a href="{% url 'print_facture'   f.id %}"><i class="bi bi-printer"></i></a>   
+                                    <a href="{% url 'delete_facture' parent.user.id f.id %}"  onclick="return TestDelete('Cette facture')"><i class="bi bi-trash"></i></a>
                                 </td> 
                             </tr>
                         {% endfor %}

@@ -2882,9 +2882,7 @@ def create_invoice(request,idp):
             forme     = request.POST.get("forme",None)
             nf.chrono = create_chrono(Invoice, forme) # Create_chrono dans general_functions.py
             nf.save()
-
-            print(nf)
-
+            
             form_ds = formSet(request.POST or None, instance = nf)
             for form_d in form_ds :
                 if form_d.is_valid():

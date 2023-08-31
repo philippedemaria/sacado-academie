@@ -28,7 +28,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 from django.contrib.auth import   logout
 from account.decorators import user_can_read_details, who_can_read_details, can_register, is_manager_of_this_school
-from account.models import User, Teacher, Student, Resultknowledge, Parent , Response , Newpassword , Avatar , Background
+from account.models import User, Teacher, Student, Resultknowledge, Parent , Response , Newpassword , Avatar , Background, Facture
 from group.models import Group, Sharing_group
 from qcm.models import Exercise, Parcours, Relationship, Resultexercise, Studentanswer
 from sendmail.models import Communication
@@ -41,6 +41,28 @@ from general_fonctions import *
 from school.views import this_school_in_session
 from qcm.views import tracker_execute_exercise
 import uuid
+
+
+##############   bibliothèques pour les impressions pdf    #########################
+import os
+from pdf2image import convert_from_path # convertit un pdf en autant d'images que de pages du pdf
+from django.utils import formats, timezone
+from io import BytesIO, StringIO
+from django.http import  HttpResponse
+from reportlab.pdfgen import canvas
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import A4, inch, landscape , letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer, Image , PageBreak
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.colors import yellow, red, black, white, blue
+from reportlab.pdfgen.canvas import Canvas
+from reportlab.lib.utils import ImageReader
+from reportlab.lib.enums import TA_JUSTIFY,TA_LEFT,TA_CENTER,TA_RIGHT 
+############## FIN bibliothèques pour les impressions pdf  #########################
+
+
+
+
 
 
 
@@ -2170,3 +2192,246 @@ def aggregate_child(request):
     return redirect('index') 
 
 
+###########################################################################################################################################
+######
+###### Facture
+######
+###########################################################################################################################################
+
+
+
+def delete_facture(request,idp,idf):
+
+    facture = Facture.objects.get(pk = idf)
+    facture.delete() 
+    return redirect("customer", idp)
+
+
+
+def print_facture(request,fid):  
+
+    facture = Facture.objects.get(id=fid)
+
+    if not request.user.is_superuser :
+        if request.user != facture.user :
+            return redirect ("index")
+
+    #########################################################################################
+    ### Instanciation
+    #########################################################################################
+    elements = []        
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="'+str(facture.chrono)+'.pdf"'
+    doc = SimpleDocTemplate(response,   pagesize=A4, 
+                                        topMargin=0.5*inch,
+                                        leftMargin=0.5*inch,
+                                        rightMargin=0.5*inch,
+                                        bottomMargin=0.3*inch     )
+
+    sample_style_sheet = getSampleStyleSheet()
+    OFFSET_INIT = 0.2
+    #########################################################################################
+    ### Style
+    #########################################################################################
+    sacado = ParagraphStyle('sacado', 
+                            fontSize=20, 
+                            leading=26,
+                            borderPadding = 0,
+                            alignment= TA_CENTER,
+                            )
+    bas_de_page = ParagraphStyle('sacado', 
+                            fontSize=9, 
+                            borderPadding = 0,
+                            alignment= TA_CENTER,
+                            )
+    bas_de_page_blue = ParagraphStyle('sacado', 
+                            fontSize=9, 
+                            borderPadding = 0,
+                            alignment= TA_CENTER,
+                            textColor=colors.HexColor("#00819f"),
+                            )
+    title = ParagraphStyle('title', 
+                            fontSize=16, 
+                            )
+    subtitle = ParagraphStyle('title', 
+                            fontSize=14, 
+                            textColor=colors.HexColor("#00819f"),
+                            )
+    mini = ParagraphStyle(name='mini',fontSize=9 )  
+    normal = ParagraphStyle(name='normal',fontSize=12,)   
+    dateur_style = ParagraphStyle('dateur_style', 
+                            fontSize=12, 
+                            leading=26,
+                            borderPadding = 0,
+                            alignment= TA_RIGHT,
+                            )
+    signature_style = ParagraphStyle('dateur_style', 
+                            fontSize=11, 
+                            borderPadding = 0,
+                            alignment= TA_RIGHT,
+                            )
+    signature_style_mini = ParagraphStyle('dateur_style', 
+                            fontSize=9, 
+                            borderPadding = 0,
+                            alignment= TA_RIGHT,
+                            )
+    signature_style_blue = ParagraphStyle('dateur_style', 
+                            fontSize=12, 
+                            borderPadding = 0,
+                            alignment= TA_RIGHT,
+                            textColor=colors.HexColor("#00819f"),
+                            )
+    style_cell = TableStyle(
+            [
+                ('SPAN', (0, 1), (1, 1)),
+                ('TEXTCOLOR', (0, 1), (-1, -1),  colors.Color(0,0.7,0.7))
+            ]
+        )
+    offset = 0 # permet de placer le bas de page
+
+
+    #########################################################################################
+    ### Logo Sacado
+    #########################################################################################
+    dateur = "Date : " + facture.date.strftime("%d-%m-%Y")
+    logo = Image('https://sacado-academie.fr/static/img/sanspb.png')
+    logo_tab = [[logo, "SANSPB\nhttps://sacado-academie.fr\nsacado.academie@gmail.com", dateur]]
+    logo_tab_tab = Table(logo_tab, hAlign='LEFT', colWidths=[0.7*inch,5.2*inch,inch])
+    elements.append(logo_tab_tab)
+    #########################################################################################
+    ### Facture
+    #########################################################################################
+    #########################################################################################
+    ### Bénéficiaire ou Etablissement
+    #########################################################################################
+    if facture.user :
+        beneficiaire = facture.user.last_name + " "+facture.user.first_name
+        address = facture.user.email
+        town = facture.user.school.town 
+        country = facture.user.school.country.name
+
+
+    beneficiaire = Paragraph( beneficiaire  , signature_style )
+    elements.append(beneficiaire)
+    elements.append(Spacer(0,0.1*inch))
+    if address :
+        address = Paragraph( address , signature_style_mini )
+        elements.append(address)
+        offset += OFFSET_INIT
+
+
+    town = Paragraph( town + " - " + country , signature_style_mini )
+    elements.append(town)
+
+    #########################################################################################
+    ### Code de facture
+    #########################################################################################
+ 
+    elements.append(Spacer(0,0.5*inch))
+    code = Paragraph( "Facture : " + facture.orderID , normal )
+    elements.append(code)
+    elements.append(Spacer(0,0.1*inch))
+    objet = Paragraph(  "Objet : Adhésion" , normal )
+    elements.append(objet) 
+    elements.append(Spacer(0,0.2*inch))
+
+
+    #########################################################################################
+    ### Description de facturation
+    #########################################################################################
+    details_tab = [("Description", "Qté", "Px unitaire" ,  "Px Total" )]
+
+    adhesions = facture.adhesions.all()
+    total_amount = 0
+    for adhesion in adhesions :
+
+        start = str(adhesion.start).split(" ")
+        tstart = start[0][2]+"-"+start[0][1]+"-"+start[0][0]
+        stop = str(adhesion.stop).split(" ")
+        tstop = stop[0][2]+"-"+stop[0][1]+"-"+stop[0][0]
+
+        description = adhesion.formule().name + " - "+adhesion.student.user.first_name+ " - "+adhesion.level.name+", du "+tstart+" au "+tstop
+        total_amount += float(adhesion.amount)
+
+        details_tab.append(( description, "1" , adhesion.amount ,  adhesion.amount ))
+        offset += OFFSET_INIT
+ 
+
+    details_table = Table(details_tab, hAlign='LEFT', colWidths=[4.1*inch,1*inch,1*inch,1*inch])
+    details_table.setStyle(TableStyle([
+               ('INNERGRID', (0,0), (-1,-1), 0.25, colors.gray),
+               ('BOX', (0,0), (-1,-1), 0.25, colors.gray),
+                ('BACKGROUND', (0,0), (-1,0), colors.Color(1,1,1))
+               ]))
+    elements.append(details_table)
+
+    #########################################################################################
+    ### Total de facturation
+    #########################################################################################
+    elements.append(Spacer(0,0.1*inch))
+    details_tot = Table([("Hors taxe", str( round(float(total_amount)/1.2,2) )+" €" ),( "TVA 20%", str(  float(total_amount)-round(float(total_amount)/1.2,2)) +" €" ), ("Total TTC", str( total_amount) +" €" ) ], hAlign='RIGHT', colWidths=[2.8*inch,1*inch])
+    details_tot.setStyle(TableStyle([
+               ('INNERGRID', (0,0), (-1,-1), 0.25, colors.gray),
+               ('BOX', (0,0), (-1,-1), 0.25, colors.gray),
+                ('BACKGROUND', (0,0), (-1,0), colors.Color(0.9,0.9,0.9))
+               ]))
+    elements.append(details_tot)
+
+  
+
+    #########################################################################################
+    ### TVA non applicable
+    #########################################################################################
+
+    elements.append(Spacer(0,0.1*inch))
+
+    tva1 = "Paiement :"  
+    bic1 = Paragraph(  tva1  , signature_style_mini )
+    tva2 = "Domiciliation : Crédit Agricole Daglan"
+    bic2 = Paragraph(  tva2  , signature_style_mini )
+    tva3 = "Code Banque : 12406 Code Guichet : 00005" 
+    bic3 = Paragraph(  tva3  , signature_style_mini ) 
+    tva4 = "Numéro de compte : 80023056082 Clé RIB : 56" 
+    bic4 = Paragraph(  tva4  , signature_style_mini )
+    tva5 = "IBAN ( International Bank Account Number ) : FR76 1240 6000 0580 0230 5608 256" 
+    bic5 = Paragraph(  tva5  , signature_style_mini )
+    tva6 = "Code BIC ( Bank Identification Code ) - Code SWIFT : AGRIFRPP824"  
+    bic6 = Paragraph(  tva6  , signature_style_mini )
+    tva7 = "Pas d'escompte pour réglement anticipé"  
+    bic7 = Paragraph(  tva7  , signature_style_mini )
+    elements.append(bic1)
+    elements.append(bic2)
+    elements.append(bic3)
+    elements.append(bic4)
+    elements.append(bic5)
+    elements.append(bic6)
+    elements.append(bic7)
+
+    #########################################################################################
+    ### Bas de page
+    #########################################################################################
+    nb_inches = 3.4 - offset
+    elements.append(Spacer(0,nb_inches*inch)) 
+    asso = Paragraph(  "___________________________________________________________________"  , bas_de_page_blue )
+    elements.append(asso)
+    asso2 = Paragraph( "SANS PB"  , bas_de_page )
+    elements.append(asso2)
+    asso21 = Paragraph( "265 route des Chênes"  , bas_de_page )
+    elements.append(asso21)
+    asso22 = Paragraph( "La Garrigue"  , bas_de_page )
+    elements.append(asso22)
+    asso23 = Paragraph( "24620 Tamniès"  , bas_de_page )
+    elements.append(asso23)
+
+
+    asso3 = Paragraph( "siret : 921341921 00010"  , bas_de_page )
+    elements.append(asso3)
+    asso30 = Paragraph( "TVA intra-communautaire: FR08921341921"  , bas_de_page )
+    elements.append(asso30)
+    asso4 = Paragraph( "Tél : 06 03 54 27 47\nsanspb24@gmail.com"  , bas_de_page )
+    elements.append(asso4)
+
+    doc.build(elements)
+
+    return response
+ 
