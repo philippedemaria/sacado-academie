@@ -2328,7 +2328,7 @@ def print_facture(request,fid):
     #########################################################################################
  
     elements.append(Spacer(0,0.5*inch))
-    code = Paragraph( "Facture : " + facture.orderID , normal )
+    code = Paragraph( "Facture : " + facture.chrono , normal )
     elements.append(code)
     elements.append(Spacer(0,0.1*inch))
     objet = Paragraph(  "Objet : Adhésion" , normal )
