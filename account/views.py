@@ -536,9 +536,6 @@ def register_student(request):
 
 
  
-
-
-
 #@can_register
 #@is_manager_of_this_school
 def update_student(request, id,idg=0):  
