@@ -2307,9 +2307,6 @@ def print_facture(request,fid):
     if facture.user :
         beneficiaire = facture.user.last_name + " "+facture.user.first_name
         address = facture.user.email
-        town = facture.user.school.town 
-        country = facture.user.school.country.name
-
 
     beneficiaire = Paragraph( beneficiaire  , signature_style )
     elements.append(beneficiaire)
@@ -2319,9 +2316,6 @@ def print_facture(request,fid):
         elements.append(address)
         offset += OFFSET_INIT
 
-
-    town = Paragraph( town + " - " + country , signature_style_mini )
-    elements.append(town)
 
     #########################################################################################
     ### Code de facture
