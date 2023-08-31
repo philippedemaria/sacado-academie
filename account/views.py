@@ -2380,8 +2380,12 @@ def print_facture(request,fid):
     #########################################################################################
     ### TVA non applicable
     #########################################################################################
-
-    elements.append(Spacer(0,0.1*inch))
+    if facture.orderID :
+        elements.append(Spacer(0,0.1*inch))
+        orderID = Paragraph(  "N° d'ordre Bancaire : "+str(facture.orderID) , normal )
+        elements.append(orderID) 
+        elements.append(Spacer(0,0.2*inch))
+ 
 
     tva1 = "Paiement :"  
     bic1 = Paragraph(  tva1  , signature_style_mini )
@@ -2404,6 +2408,8 @@ def print_facture(request,fid):
     elements.append(bic5)
     elements.append(bic6)
     elements.append(bic7)
+
+
 
     #########################################################################################
     ### Bas de page
