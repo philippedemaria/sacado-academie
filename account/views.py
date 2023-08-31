@@ -2345,10 +2345,8 @@ def print_facture(request,fid):
     total_amount = 0
     for adhesion in adhesions :
 
-        start = str(adhesion.start).split(" ")
-        tstart = start[0][2]+"-"+start[0][1]+"-"+start[0][0]
-        stop = str(adhesion.stop).split(" ")
-        tstop = stop[0][2]+"-"+stop[0][1]+"-"+stop[0][0]
+        tstart = adhesion.start.strftime("%d-%m-%Y")
+        tstop = adhesion.stop.strftime("%d-%m-%Y")
 
         description = adhesion.formule().name + " - "+adhesion.student.user.first_name+ " - "+adhesion.level.name+", du "+tstart+" au "+tstop
         total_amount += float(adhesion.amount)
