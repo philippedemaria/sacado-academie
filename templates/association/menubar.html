@@ -27,14 +27,6 @@
         <li>
              <a href="{% url 'academy_list_parents' %}" ><i class="bi bi-people"></i> Liste des parents  </a> 
         </li> 
-        <li class="divider"></li>  
-		<li>
-		 <a href="{% url 'create_school_admin' %}"  class="no_button"><i class="bi bi-plus"></i> Nouveau partenaire</a>
-		</li>
-
-        <li>
-             <a href="{% url 'all_schools' %}" ><i class="bi bi-bank"></i> Liste des partenaires  </a> 
-        </li> 
         <li class="divider"></li>   
         <li>
             <a href="{% url 'activeyears'  %}" ><i class="bi bi-calendar3"></i> Années d'exercice </a>   
@@ -50,35 +42,3 @@
     </ul>
 </li>
 
-<li class="dropdown">
-    <a href="#" data-toggle="dropdown" class="dropdown-toggle no_button"> Comptabilité <b class="caret"></b> </a>
-    <ul   class="dropdown-menu clearfix pull-right" role="menu">
-
-
-        <li>
-            <a href="{% url 'create_accountancy' %}" class="no_button">Nouvelle opération comptable</a>
-        </li>
-
-        <li>
-            <a href="{% url 'list_accountancy' %}" class="no_button">Journal de comptabilité</a>
-        </li> 
-        <li class="divider"></li>
-        <li>
-            <a href="{% url 'bank_bilan' %}" class="no_button">Bilan</a>
-        </li>
-        <li>
-            <a href="{% url 'activeyears' %}" class="no_button">Archive</a>
-        </li>
-        <li class="divider"></li>
-
-        <li>
-            <a href="{% url 'print_balance' %}" class="no_button"><i class="bi bi-file-earmark-pdf text-danger"></i> Imprimer la Balance</a>   
-        </li>
-
-        <li>
-            <a href="{% url 'print_big_book' %}"  class="no_button" ><i class="bi bi-file-earmark-pdf text-danger"></i> Imprimer le Grand livre</a> 
-        </li>  
-
-
-    </ul>
-</li>
