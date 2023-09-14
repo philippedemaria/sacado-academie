@@ -266,10 +266,10 @@ def dash_student(request):
         if request.user.closure and request.user.closure < today :
             messages.error(request,"Votre adhésion est terminée.")  
             return redirect("logout")
-
-        template, context = student_dashboard(request, 0)
-
-        return render(request, template , context)
+        else :
+            template, context = student_dashboard(request, 0)
+            return render(request, template , context)
+            
     else :
         return redirect ('index')
  

@@ -21,13 +21,6 @@ $(document).ready(function () {
 
 
 
-
-
-
-
-
-
-
         // Affiche dans la modal la liste des élèves du groupe sélectionné
         $('.get_details_bar').on('click', function (event) {
             let date    = $(this).attr("data-date");

@@ -210,7 +210,7 @@ def student_dashboard(request,group_id):
         folders = student.folders.filter( is_publish=1 , subject = group.subject,level = group.level,is_archive=0, groups = group , is_trash=0).order_by("ranking")
         
     else :
-
+        template =  "group/dashboard_group.html"
         group = student.students_to_group.first()
         try :
             folders = student.folders.filter( is_publish=1 , subject = group.subject,level = group.level,is_archive=0, groups = group , is_trash=0).order_by("ranking")
