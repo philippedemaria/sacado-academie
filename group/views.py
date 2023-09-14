@@ -1735,12 +1735,6 @@ def print_monthly_statistiques(request):
 
 
     date_start = request.POST.get('date_start',None)
-    if not date_start:
-        year = timezone.now().year
-        date_start = datetime.date(year,9,1)
-
-
-
     date_stop  = request.POST.get('date_stop') 
     group_id   = request.POST.get('group_id')
     student_id = request.POST.get('student_id') 

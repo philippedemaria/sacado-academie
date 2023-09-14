@@ -11,8 +11,10 @@ $(document).ready(function () {
 
             let date_start_id = $("#date_start_id").val(); 
             let date_stop_id  = $("#date_stop_id").val(); 
+
+            if (date_start_id=="") { alert("Vous devez renseignez la date de début de période.") ; return false ;}
             
-            if ((date_start_id=="")&&(date_stop_id=="")) { alert("Vous devez renseignez les dates de début et de fin de période.") ; return false ;}
+            else if ((date_start_id=="")&&(date_stop_id=="")) { alert("Vous devez renseignez les dates de début et de fin de période.") ; return false ;}
 
 
         });
