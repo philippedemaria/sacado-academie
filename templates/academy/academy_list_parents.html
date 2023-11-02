@@ -38,6 +38,7 @@
                     <thead>
                     <tr>
                         <td>Parents </td>
+                        <td>Mail </td>
                         <td>Elèves </td>
                         <td></td>
                     </tr>
@@ -46,7 +47,10 @@
                         {% for parent in parents %}
                             <tr>
                                 <td>
-                                    <a href="{% url 'customer' parent.user.id %}">{{ parent.user.last_name }} {{ parent.user.first_name }}</a>
+                                    <a href="{% url 'customer' parent.user.id %}">{{ parent.user.last_name }} {{ parent.user.first_name }} </a>
+                                </td>
+                                <td>
+                                    {{ parent.user.email }} </a>
                                 </td>
                                 <td>
                                     {% for s in parent.students.all %}  
@@ -64,7 +68,7 @@
         </div>
         <div class="row">
             <div class="col-sm-12 col-md-12">     
-                <a href="javascript:history.back()"  class="btn btn-default" >Retour</a>
+                <a href="javascript:history.back()" class="btn btn-default">Retour</a>
             </div>
         </div>
     </section>

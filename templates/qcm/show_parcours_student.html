@@ -25,11 +25,6 @@
      
     <small class="thin">{{ nb_exercises }} {% if parcours.is_sequence %}document{{ nb_exercises|pluralize }}{% else %}exercice{{ nb_exercises|pluralize }} {% endif %}
 
-    {% if parcours.is_achievement %}
-        <img src="{% static 'img/angle-right.png' %}"/>
-        <a href="{% url 'parcours_progression_student' parcours.id  %}">avancements</a>
-        </small> 
-    {% endif %}
 </span>
 {% endblock %}
 
