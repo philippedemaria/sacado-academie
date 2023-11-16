@@ -95,7 +95,6 @@ $(document).ready(function () {
             if(value.length < 8)
             {
                 alert("Votre mot de passe doit contenir au moins 8 caractères.") ;
-                return false ;
             }
         });
 
