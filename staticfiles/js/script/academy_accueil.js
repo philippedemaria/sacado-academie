@@ -89,7 +89,7 @@ $(document).ready(function () {
             }
 
 
-        $(document).on('change', '.this_password', function (event) {
+        $(document).on('blur', '.this_password', function (event) {
 
             var value = $(this).val() ;
             if(value.length<8)
