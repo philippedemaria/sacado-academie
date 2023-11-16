@@ -95,7 +95,8 @@ $(document).ready(function () {
             if(value.length < 8)
             {
                 var n = 8 - value.length ; 
-                $(this).parent().find('.this_span').remove().append("<span class='this_span' style='color:red'>Il manque " +n+ " caractères.</span>") ;
+                if($('span').hasClass('this_span')) {$(this).parent().find('.this_span').remove();}
+                $(this).parent().append("<span class='this_span' style='color:red'>Il manque " +n+ " caractères.</span>") ;
             }
             else
             {
