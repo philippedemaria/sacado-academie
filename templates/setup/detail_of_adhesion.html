@@ -165,7 +165,7 @@
                             <div class="col-sm-12 col-md-6">
                                 <div class="form-group">
                                     {{ form.password1.label_tag }} <small><em>Au moins 8 caractères</em></small>
-                                    {{ form.password1 |add_class:"form-control"|attr:"required" }}
+                                    {{ form.password1 |add_class:"form-control this_password"|attr:"required" }}
                                     {{ form.password1.errors }}
                                 </div>
                             </div>  
