@@ -5,6 +5,19 @@
 
 
 
+{% block require %}
+
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common2.js' %}"></script>
+
+        <script>
+            require(['script/ajax-inscription']);
+        </script> 
+
+{% endblock %}
+
+
+
+
 
 
 {% block body %}
@@ -89,7 +102,7 @@
                         <div class="col-sm-12 col-md-6">
                             <div class="form-group">
                                 {{ userFormset.empty_form.password1.label_tag }} 
-                                {{ userFormset.empty_form.password1 |add_class:"form-control"  }}
+                                {{ userFormset.empty_form.password1 |add_class:"form-control this_password"  }}
                                 <small><em>Au moins 8 caractères</em></small>
                                 {{ userFormset.empty_form.password1.errors }}
                             </div>
