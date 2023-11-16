@@ -89,6 +89,18 @@ $(document).ready(function () {
             }
 
 
+        $(document).on('change', '.this_password', function (event) {
+
+            var value = $(this).val() ;
+            if(value.length<8)
+            {
+                alert("Votre mot de passe doit contenir au moins 8 caractères.") ;
+                return false ;
+            }
+        });
+
+
+
 
 
 
