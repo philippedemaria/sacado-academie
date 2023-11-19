@@ -1599,7 +1599,7 @@ def start_positionnement_student(request,id):
 
 def goto_positionnement_student(request,id):
     """ participation à un quizz sur poste"""
-    student = request.session.get("student")
+    student = request.session.get("student",None)
 
     first_name = request.POST.get("first_name",None)
     last_name  = request.POST.get("last_name",None)
@@ -1663,7 +1663,7 @@ def goto_positionnement_student(request,id):
         today = time_zone_user(positionnement.teacher.user)
 
         is_correct = store_positionnement_solution(request ,positionnement_id,student,q_id, solutions,timer)
-
+        Historicpositionnement.objects.create(last_name=last_name,first_name=first_name,email=email,positionnement=positionnement)
     else :
         try :
             send_mail("SACADO ACADEMIE : début d'un test de positionnement ",

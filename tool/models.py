@@ -513,6 +513,21 @@ class Positionnement(ModelWithCode):
 
 
 
+class Historicpositionnement(ModelWithCode):
+ 
+    last_name      = models.CharField( max_length=255, default="Test de positionnement" ) 
+    first_name     = models.CharField( max_length=255, default="Test de positionnement" ) 
+    email          = models.CharField( max_length=255, blank=True,  default="Test de positionnement" ) 
+    datetime       = models.DateTimeField(auto_now=True)
+    positionnement = models.ForeignKey(Positionnement, related_name="positionnements", blank=True, on_delete=models.CASCADE) 
+   
+
+    def __str__(self):
+        return self.last_name 
+
+
+
+
 def time_zone_user(user):
     try :
         if user.time_zone :
