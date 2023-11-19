@@ -24,6 +24,7 @@ from school.forms import SchoolForm
 from setup.models import Formule
 from setup.forms import FormuleForm
 from socle.models import Level
+from tool.models import Historicpositionnement
 #################################################################################
 import os
 from django.utils import formats, timezone
@@ -2721,6 +2722,25 @@ def ajax_shower_document(request):
     data['html'] = render_to_string('association/ajax_shower_document.html', context)
 
     return JsonResponse(data)
+
+
+
+
+
+@user_passes_test(user_is_board)
+def list_historicpositionnement(request):
+
+    historicpositionnements = Historicpositionnement.objects.order_by("-date")
+    context = {'historicpositionnements': historicpositionnements ,  }
+
+    return render(request, 'association/historicpositionnement.html', context )
+
+
+
+
+
+
+
 
 
 #####################################################################################################################################

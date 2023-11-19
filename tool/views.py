@@ -1663,7 +1663,7 @@ def goto_positionnement_student(request,id):
         today = time_zone_user(positionnement.teacher.user)
 
         is_correct = store_positionnement_solution(request ,positionnement_id,student,q_id, solutions,timer)
-        Historicpositionnement.objects.create(last_name=last_name,first_name=first_name,email=email,positionnement=positionnement)
+
     else :
         try :
             send_mail("SACADO ACADEMIE : début d'un test de positionnement ",
@@ -1671,7 +1671,10 @@ def goto_positionnement_student(request,id):
                       settings.DEFAULT_FROM_EMAIL,
                       ["philippe.demaria83@gmail.com", "brunoserres33@gmail.com","sandyreb@hotmail.fr"])
         except : pass
-
+    
+    try : Historicpositionnement.objects.get_or_create(last_name=last_name,first_name=first_name,email=email,positionnement=positionnement)
+    except : pass
+    
     if quizz_nav == len(question_ids) :
         end_of_quizz = True
         question = None

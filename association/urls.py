@@ -89,6 +89,7 @@ urlpatterns = [
 
     path('create_all_holidays_book', create_all_holidays_book, name='create_all_holidays_book'),
 
+    path('list_historicpositionnement', list_historicpositionnement , name='list_historicpositionnement'),
 
     path('customer/<int:idp>', customer , name='customer'),
 
