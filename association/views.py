@@ -2730,7 +2730,7 @@ def ajax_shower_document(request):
 @user_passes_test(user_is_board)
 def list_historicpositionnement(request):
 
-    historicpositionnements = Historicpositionnement.objects.order_by("-date")
+    historicpositionnements = Historicpositionnement.objects.order_by("-datetime")
     context = {'historicpositionnements': historicpositionnements ,  }
 
     return render(request, 'association/historicpositionnement.html', context )
