@@ -62,16 +62,13 @@ def indexdys(request):
         if request.user.is_teacher:
 
             teacher = request.user.teacher
-            grps = teacher.groups.all() 
-            shared_grps_id = Sharing_group.objects.filter(teacher=teacher).values_list("group_id", flat=True) 
+            grps = teacher.groups.order_by("level__ranking")  
+ 
             # sgps = []
             # for sg_id in shared_grps_id :
             #     grp = Group.objects.get(pk=sg_id)
             #     sgps.append(grp)
-
-            sgps    = Group.objects.filter(pk__in=shared_grps_id)
-            groupes =  grps | sgps
-            groups  = groupes.order_by("level__ranking") 
+ 
             this_user = request.user
             nb_teacher_level = teacher.levels.count()
             relationships = Relationship.objects.filter(Q(is_publish = 1)|Q(start__lte=today), parcours__teacher=teacher, date_limit__gte=today).order_by("date_limit").order_by("parcours")
