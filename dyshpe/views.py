@@ -10,7 +10,7 @@ from .models import *
 from group.models import Group
 from setup.models import Formule 
 from socle.models import Level 
-from qcm.models import Parcours
+from qcm.models import Parcours, Relationship
 from account.forms import  UserForm,  NewpasswordForm, BaseUserFormSet 
 from datetime import datetime , timedelta
 from setup.views import cmd_abonnement , champs_briqueCA
