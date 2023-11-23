@@ -63,7 +63,7 @@ def indexdys(request):
         if request.user.is_teacher:
 
             teacher = request.user.teacher
-            grps = teacher.groups.order_by("level__ranking")  
+            groups = teacher.groups.order_by("level__ranking")  
  
             # sgps = []
             # for sg_id in shared_grps_id :
