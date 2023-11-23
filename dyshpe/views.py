@@ -7,6 +7,7 @@ from django.utils import formats, timezone
 from account.decorators import user_is_board
 from account.models import User,Parent, Student , Adhesion , Facture
 from .models import *
+from sendmail.models import Communication
 from group.models import Group
 from setup.models import Formule 
 from socle.models import Level 
