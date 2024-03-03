@@ -44,6 +44,14 @@
 
         </div> 
         <hr/> 
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <b>Attention</b> : Les identifiants et mots de passe doivent être différentes pour chaque utilisateur. <br/>
+                Les mots de passe ne doivent pas ressemblés ni à l'identifiant, ni au nom de famille ou au prénom de l'utilisateur.
+
+            </div>
+        </div> 
+        <hr/> 
         <form action="{% url 'commit_adhesion' %}" method="POST" enctype='multipart/form-data'>
             {% csrf_token %} 
             {{ userFormset.management_form }}
