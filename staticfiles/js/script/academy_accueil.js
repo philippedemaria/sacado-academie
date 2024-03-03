@@ -702,59 +702,6 @@ $(document).ready(function () {
 
 
 
-
-
-
-        if ( $("#id_form-1-username").length ) {   
-            if (($("#id_form-1-username").value == $("#id_form-0-username").value))
-                {
-                    alert("Les identifiants doivent être différents.")
-                    return false;
-                }
-            }
-
-        if ( $("#id_form-2-username").length ) {   
-            if (($("#id_form-1-username").value == $("#id_form-0-username").value)||
-                ($("#id_form-1-username").value == $("#id_form-2-username").value) ||
-                ($("#id_form-0-username").value == $("#id_form-2-username").value)
-                ){
-                    alert("Les identifiants doivent être différents.")
-                    return false;
-                }
-            }
-
-        if ( $("#id_form-3-username").length ) {   
-                if (($("#id_form-0-username").value == $("#id_form-1-username").value)||
-                    ($("#id_form-0-username").value == $("#id_form-2-username").value)||
-                    ($("#id_form-0-username").value == $("#id_form-3-username").value)||
-                    ($("#id_form-1-username").value == $("#id_form-2-username").value)||
-                    ($("#id_form-1-username").value == $("#id_form-3-username").value)||
-                    ($("#id_form-2-username").value == $("#id_form-3-username").value)
-                    ){
-                        alert("Les identifiants doivent être différents.")
-                        return false;
-                    }
-                }
-
-        if ( $("#id_form-4-username").length ) {   
-                if (($("#id_form-0-username").value == $("#id_form-1-username").value)||
-                    ($("#id_form-0-username").value == $("#id_form-2-username").value)||
-                    ($("#id_form-0-username").value == $("#id_form-3-username").value)||
-                    ($("#id_form-0-username").value == $("#id_form-4-username").value)||
-                    ($("#id_form-1-username").value == $("#id_form-2-username").value)||
-                    ($("#id_form-1-username").value == $("#id_form-3-username").value)||
-                    ($("#id_form-1-username").value == $("#id_form-4-username").value)||
-                    ($("#id_form-2-username").value == $("#id_form-3-username").value)||
-                    ($("#id_form-2-username").value == $("#id_form-4-username").value)||
-                    ($("#id_form-3-username").value == $("#id_form-4-username").value)
-                    ){
-                        alert("Les identifiants doivent être différents.")
-                        return false;
-                    }
-                }
-
-
-
 });
 
  
