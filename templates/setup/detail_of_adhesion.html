@@ -66,7 +66,7 @@
                         <div class="col-sm-12 col-md-12">
                             <div class="form-group">
                                 {{ userFormset.empty_form.last_name.label_tag }}
-                                {{ userFormset.empty_form.last_name |add_class:"form-control id_last_name"  }}
+                                {{ userFormset.empty_form.last_name |add_class:"form-control id_last_name"|attr:"required"  }}
                                 {{ userFormset.empty_form.last_name.errors }}
                             </div>
                         </div>  
@@ -75,7 +75,7 @@
                         <div class="col-sm-12 col-md-12">
                             <div class="form-group">
                                 {{ userFormset.empty_form.first_name.label_tag }}
-                                {{ userFormset.empty_form.first_name |add_class:"form-control id_first_name"  }}
+                                {{ userFormset.empty_form.first_name |add_class:"form-control id_first_name"|attr:"required"  }}
                                 {{ userFormset.empty_form.first_name.errors }}
                             </div>
                         </div>  
@@ -84,7 +84,7 @@
                         <div class="col-sm-12 col-md-12">
                             <div class="form-group">
                                 {{ userFormset.empty_form.email.label_tag }} 
-                                {{ userFormset.empty_form.email |add_class:"form-control email" }}
+                                {{ userFormset.empty_form.email |add_class:"form-control email"|attr:"required" }}
                                 {{ userFormset.empty_form.email.errors }}
                             </div>
                         </div>  
@@ -93,7 +93,7 @@
                         <div class="col-sm-10 col-md-10">
                             <div class="form-group">
                                 {{ userFormset.empty_form.username.label_tag }}
-                                {{ userFormset.empty_form.username |add_class:"form-control username"  }}
+                                {{ userFormset.empty_form.username |add_class:"form-control username"|attr:"required"  }}
                                 {{ userFormset.empty_form.username.errors }}
                             </div>
                         </div>
@@ -107,7 +107,7 @@
                         <div class="col-sm-12 col-md-6">
                             <div class="form-group">
                                 {{ userFormset.empty_form.password1.label_tag }} 
-                                {{ userFormset.empty_form.password1 |add_class:"form-control this_password"  }}
+                                {{ userFormset.empty_form.password1 |add_class:"form-control this_password"|attr:"required"  }}
                                 <small><em>Au moins 8 caractères</em></small>
                                 {{ userFormset.empty_form.password1.errors }}
                             </div>
@@ -115,7 +115,7 @@
                         <div class="col-sm-12 col-md-6">
                             <div class="form-group">
                                 {{ userFormset.empty_form.password2.label_tag }}
-                                {{ userFormset.empty_form.password2 |add_class:"form-control"  }}
+                                {{ userFormset.empty_form.password2 |add_class:"form-control"|attr:"required"  }}
                                 {{ userFormset.empty_form.password2.errors }}
                             </div>
                         </div>
