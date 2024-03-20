@@ -271,6 +271,7 @@ def dash_student(request):
             return render(request, template , context)
             
     else :
+        
         return redirect ('index')
  
  
