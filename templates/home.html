@@ -47,33 +47,28 @@ Intro Section -
         <div class="col-xs-12 col-md-12 col-lg-6 no_display_index" >
 
             <div class="bandeau_accueil_title">
-                Les rituels <br/>pour réussir  en Mathématiques
+                Les exercices <br/>pour réussir  en Mathématiques
             </div>
+
         </div>
         <div class="col-xs-12 col-md-12 col-lg-6" >
-            {% comment %}
-            <div class="holiday_book">
-                <a href="{% url 'holidaybooks' %}" class="white">                
-                <img src="{% static 'img/holidaybooks.png'  %}"   />
- 
-
-                Cahiers de vacances </a><span style="color:white;" >5,00€</span>  
-
-            </div>
-            {% endcomment %}
-            <img src="{% static 'img/accueil_0.png'  %}" class="img_if_small" />
+            <img src="{% static 'img/accueil_img.png'  %}" class="img_if_small" />
         </div> 
     </div>
  
     <div class="row">
         <div class="col-xs-12 col-md-12 col-lg-6" >
             <div class="bandeau_accueil_subtitle">
-                <i class="bi bi-clock-history"></i> <a href="#" data-toggle='modal' data-target='#div_methode_sacado' class="rose_light" >Méthode SACADO<sup><small><i class='fa fa-copyright'></i></small></sup></a>  : 10 minutes chaque jour
-            </div>
+                <i class="bi bi-clock-history"></i> 
+                <a href="#" data-toggle='modal' data-target='#div_methode_sacado' class="rose_light" >
+                    
+                    La Méthode SACADO<sup><small><i class='fa fa-copyright'></i></small></sup></a>            
+                    10 min par jour
+                    pour consolider sa mémoire
         </div>
         <div class="col-xs-12 col-md-12 col-lg-6" >
-            <div align="center" class="bandeau_accueil_subtitle" style="color:white;">
-                Gratuit : <a href="{% url 'advises_index' %}" class="rose_light">test de positionnement</a>
+            <div align="center" class="bandeau_accueil_subtitle" style="background-color:white; color:blueviolet">
+                Gratuit : <a href="{% url 'advises_index' %}" class="rose_light">test de positionnement du CP à la Terminale</a>
             </div>
         </div> 
     </div>
@@ -242,9 +237,15 @@ Intro Section -
 <section class="fond_bis" style="margin-top:80px;">
     <div class="container">
         <div class="row">
-            <div class="col-xs-12 col-md-12">
-                <h1 class="title_bloc_index_white"  style="font-variant: small-caps;">Essayez nos exercices</h1>
+            <div class="col-xs-12 col-md-9">
+                <h1 class="title_bloc_index_white"  style="font-variant: small-caps;">Cliquez sur nos exercices</h1>
             </div>
+
+            <div class="col-xs-12 col-md-9">
+                Contenus conformes aux programmes de l'Education Nationale
+            </div>
+
+
         </div>
         <div class="row" align="center">
         {% for data in dataset %}
@@ -318,6 +319,42 @@ Intro Section -
 
     </div>
 </div>
+
+
+
+<div class="background_accueil">
+    <div class="container" id="interfaces">
+
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <h1 class="title_bloc_index">Nos partenaires</h1>
+            </div>
+        </div>
+
+        <div class="row" style="margin-bottom:60px">
+            <div class="col-xs-6 col-md-3"  align="center">
+                <img src="{% static 'img/logo_ft.png' %}" style="height:150px" >       
+
+            </div>
+            <div class="col-xs-6 col-md-3"  align="center">
+                <img src="{% static 'img/premieres.png' %}"  >  
+            </div>
+            <div class="col-xs-6 col-md-3"  align="center">
+                <img src="{% static 'img/entreprendre_perigord.png' %}"  >  
+            </div>
+
+            <div class="col-xs-6 col-md-3"  align="center">
+                <img src="{% static 'img/expat_pro.png' %}"  >  
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+
+
+
 
 
 
