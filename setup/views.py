@@ -1122,7 +1122,7 @@ def add_adhesion(request) :
     request.session["tdb"] = 'adhesion'
     form =  UserForm(request.POST or None)
     formules = Formule.objects.filter(is_sale=1)
-    levels = Level.objects.exclude(pk=13).order_by("ranking")
+    levels = Level.objects.exclude(pk=13).exclude(pk=17).order_by("ranking")
     today = time_zone_user(request.user)
 
     if request.method == "POST" :
