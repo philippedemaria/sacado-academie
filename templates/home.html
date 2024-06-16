@@ -1,219 +1,333 @@
-{% extends 'base.html' %}
-
-{% load widget_tweaks %}
-{% load static %}
-{% load item_tags %}
-
-
-
-
-
-
-
-{% block body %}
-
-
-{% if messages %}
+{% extends 'base.html' %} {% load widget_tweaks %} {% load static %} {% load
+item_tags %} {% block body %} {% if messages %}
 <ul class="messages" id="container_messages">
-    {% for message in messages %}
-    <div class="container alert alert-info" role="alert" style="top:50px">
-        {{ message }}
-    </div>
-    {% endfor %}
+  {% for message in messages %}
+  <div class="container alert alert-info" role="alert" style="top: 50px">
+    {{ message }}
+  </div>
+  {% endfor %}
 </ul>
-{% endif %}
-
-{% if cookie_rgpd_accepted %}
-<div id="display_rgpd" >
-    <form  method="POST" enctype='multipart/form-data'> {% csrf_token  %}
-        Sacado ACADEMIE veille à protéger vos données personnelles. Ce site utilise des cookies pour améliorer votre expérience. Sacado ACADEMIE ne recueille aucune donnée autre que les données nécessaires.  
-        <hr>
-        <a href="#" id="accept_rgpd" class="btn btn-default"> Oui, j'accepte les cookies.</a>
-        <a href="#" id="no_accept_rgpd" class="btn btn-default"> Non, je refuse les cookies.</a>
-    </form>
+{% endif %} {% if cookie_rgpd_accepted %}
+<div id="display_rgpd">
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %} Sacado ACADEMIE veille à protéger vos données personnelles.
+    Ce site utilise des cookies pour améliorer votre expérience. Sacado ACADEMIE
+    ne recueille aucune donnée autre que les données nécessaires.
+    <hr />
+    <a href="#" id="accept_rgpd" class="btn btn-default">
+      Oui, j'accepte les cookies.</a
+    >
+    <a href="#" id="no_accept_rgpd" class="btn btn-default">
+      Non, je refuse les cookies.</a
+    >
+  </form>
 </div>
-{% endif %}
-
-{% if form.errors %}
-<div class="container alert alert-danger" role="alert" style="top:100px">
-    <i class="fa fa-warning"></i> Votre connexion a échoué. Vérifier votre identifiant et/ou votre mot de passe.
+{% endif %} {% if form.errors %}
+<div class="container alert alert-danger" role="alert" style="top: 100px">
+  <i class="fa fa-warning"></i> Votre connexion a échoué. Vérifier votre
+  identifiant et/ou votre mot de passe.
 </div>
 {% endif %}
 <!--==========================
 Intro Section -
 ============================-->
 <section class="bandeau_accueil">
-    <div class="row">
-        <div class="col-xs-12 col-md-12 col-lg-6 no_display_index" >
-
-            <div class="bandeau_accueil_title">
-                Les exercices <br/>pour réussir  en Mathématiques
-            </div>
-
-        </div>
-        <div class="col-xs-12 col-md-12 col-lg-6" >
-            <img src="{% static 'img/accueil_img.png'  %}" class="img_if_small" />
-        </div> 
+  <div class="row">
+    <div class="col-xs-12 col-md-12 col-lg-6 no_display_index">
+      <div class="bandeau_accueil_title">
+        Les exercices <br />pour réussir en Mathématiques
+      </div>
     </div>
- 
-    <div class="row">
-        <div class="col-xs-12 col-md-12 col-lg-6" >
-            <div class="bandeau_accueil_subtitle">
-                <i class="bi bi-clock-history"></i> 
-                <a href="#" data-toggle='modal' data-target='#div_methode_sacado' class="rose_light" >
-                    La Méthode SACADO<sup><small><i class='fa fa-copyright'></i></small></sup></a>            
-                    10 min par jour<br/>
-                    pour consolider sa mémoire
-            </div>
-        </div>
-        <div class="col-xs-12 col-md-12 col-lg-6" align="center" >
+    <div class="col-xs-12 col-md-12 col-lg-6">
+      <img src="{% static 'img/accueil_img.png'  %}" class="img_if_small" />
+    </div>
+  </div>
 
-            <a href="{% url 'advises_index' %}">
-            <img src="{% static 'img/position_accueil.png'  %}" class="img_if_small" />
-            </a>
-<!--             
+  <div class="row">
+    <div class="col-xs-12 col-md-12 col-lg-6">
+      <div class="bandeau_accueil_subtitle">
+        <i class="bi bi-clock-history"></i>
+        <a
+          href="#"
+          data-toggle="modal"
+          data-target="#div_methode_sacado"
+          class="rose_light"
+        >
+          La Méthode SACADO<sup
+            ><small><i class="fa fa-copyright"></i></small></sup
+        ></a>
+        10 min par jour<br />
+        pour consolider sa mémoire
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-12 col-lg-6" align="center">
+      <a href="{% url 'advises_index' %}">
+        <img
+          src="{% static 'img/position_accueil.png'  %}"
+          class="img_if_small"
+        />
+      </a>
+      <!--             
             <div align="center" style="font-size:26px;background-color:white; color:blueviolet; width:max-content;padding:10px">
                  Gratuit : <a href="{% url 'advises_index' %}" class="rose_light">test de positionnement<br/> du CP à la Terminale</a>
             </div> -->
-        </div> 
     </div>
+  </div>
 
+  <div
+    class="modal fade"
+    id="div_methode_sacado"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="div_methode_sacado"
+  >
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="font_sacado">La méthode SACADO<sup>©</sup></h2>
+          <button
+            type="button"
+            class="close pull-right"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-xs-12 col-md-12">
+              <h1 class="title_bloc_index" style="font-variant: small-caps">
+                Notre méthode
+              </h1>
+              <p class="p_index">
+                Votre enfant progresse à son rythme avec des exercices
+                interactifs, corrigés immédiatement, qu’il peut recommencer sans
+                limitation. Les variables des exercices sont aléatoires pour
+                <b class="rose">ancrer les procédures en mémoire</b>.
+              </p>
+              <p class="p_index">
+                <img
+                  src="{% static 'img/image_a.png' %}"
+                  style="float: right"
+                />
+                Chaque jour, <b class="rose">10 minutes</b> d'entrainement sur
+                nos exercices structurés en parcours permettent de reprendre les
+                procédures et techniques et de les fixer dans la mémoire. Ces
+                rituels facilitent la maîtrise des
+                <b class="rose">automatismes</b> à la base de l'apprentissage
+                des mathématiques.
+              </p>
 
-    <div class="modal fade" id="div_methode_sacado" tabindex="-1" role="dialog" aria-labelledby="div_methode_sacado">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content" >
-                <div class="modal-header">
-                    <h2 class="font_sacado">La méthode SACADO<sup>©</sup>
-
-                    </h2>
-                    <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-
-
- 
-                    <div class="row">
-                        <div class="col-xs-12 col-md-12">
-                            <h1 class="title_bloc_index" style="font-variant: small-caps;">Notre méthode</h1>
-                            <p class="p_index">  Votre enfant progresse à son rythme avec des exercices interactifs, corrigés immédiatement, qu’il peut recommencer sans limitation. Les variables des exercices sont aléatoires pour <b class="rose">ancrer les procédures en mémoire</b>.</p>
-                            <p class="p_index"><img src="{% static 'img/image_a.png' %}" style="float:right" />  Chaque jour, <b class="rose">10 minutes</b> d'entrainement sur nos exercices structurés en parcours permettent de reprendre les procédures et techniques et de les fixer dans la mémoire. Ces rituels facilitent la maîtrise des <b class="rose">automatismes</b> à la base de l'apprentissage des mathématiques.</p>
-
-                            <p class="p_index"> De la maternelle à la terminale, SACADO Académie propose des parcours<b class="rose"> 100% mathématiques</b> conformes aux réformes et aux programmes scolaires en vigueur de l’Éducation Nationale.</p>
-                        </div>
-                    </div>
- 
-
-
-                    {% comment %}
-                    <span class="rose">Constat</span> : si une information n’est pas répétée dans le temps, elle est oubliée par les enfants, selon une loi qu’on appelle la courbe de l’oubli. Pour lutter contre cette courbe, il est important de travailler l’ancrage en mémoire, pédagogie permettant la mémorisation durable, au fil du temps, d’informations apprises.
-
-                    C’est la méthode Sacado©<br/>
-
-                    <img src="{% static 'img/ebbinghaus.jpg' %}"  class="little_img_if_small"  /><br/>
-
-                     
-
-                    Comment faire ? La méthode Sacado © permet de travailler efficacement grâce à nos quatre concepts issus des sciences cognitives :
-
-                    <li class="sanspuce">1. <span class="rose">Le e-learning </span>: espacer les apprentissages dans la durée permet au cerveau de ne pas saturer. 
-                        <em><span class="rose">Préconisation Sacado©</span> : 10 min d’entraînement quotidien sur notre plateforme est un bon moyen d’améliorer le taux de rétention et ancrer les points importants.</em>
-                    </li>
-                    
-                    <li class="sanspuce">2. <span class="rose">Le reminder ou « rappel » </span>: permet de reconnecter le cerveau aux informations apprises. Il est essentiel dans l’ancrage en mémoire à long terme, c’est le principe même de la répétition. <em><span class="rose">Préconisation Sacado©</span> : 10 min d’entraînement quotidien et/ou l’étalement des révisions grâce à notre programmateur d’évaluations jusqu’au jour J.</em></li>
-                    
-                    <li class="sanspuce">3. <span class="rose">Le learning-by-doing </span>: on apprend mieux quand on fait par soi-même. <em><span class="rose">Préconisation Sacado©</span> : l’entraînement quotidien va sécuriser votre enfant, qui va apprendre de ses erreurs grâce à nos corrections immédiates des exercices.</em></li>
-                    
-                    <li class="sanspuce">4. <span class="rose">L’émotionnel </span>: L’émotion stimule la mémorisation. Le cerveau retient les informations plus intensément si l’enfant y trouve du plaisir.  
-                        <em><span class="rose">Préconisation Sacado©</span> :  l’accompagnement sur notre plateforme en ligne pour préparer les évaluations et les examens sans stress sera source de motivation.  Ce climat de travail bienveillant, sécurisant et valorisant permet d’ajouter cet aspect émotionnel aux expériences d’apprentissage.</em>
-                    </li>
-
-
-                    <li class="sanspuce"><span class="rose"><b>Le petit + Sacado© </b></span> nous offrons la possibilité à votre enfant de créer ses propres cartes de révision (flashcards) qui mêlent les 4 piliers : la révision en ligne, le rappel (grâce à notre programmateur), l’engagement actif et l’envie de réussir !</li>
-                    {% endcomment %}
-                </div>
+              <p class="p_index">
+                De la maternelle à la terminale, SACADO Académie propose des
+                parcours<b class="rose"> 100% mathématiques</b> conformes aux
+                réformes et aux programmes scolaires en vigueur de l’Éducation
+                Nationale.
+              </p>
             </div>
+          </div>
+
+          {% comment %}
+          <span class="rose">Constat</span> : si une information n’est pas
+          répétée dans le temps, elle est oubliée par les enfants, selon une loi
+          qu’on appelle la courbe de l’oubli. Pour lutter contre cette courbe,
+          il est important de travailler l’ancrage en mémoire, pédagogie
+          permettant la mémorisation durable, au fil du temps, d’informations
+          apprises. C’est la méthode Sacado©<br />
+
+          <img
+            src="{% static 'img/ebbinghaus.jpg' %}"
+            class="little_img_if_small"
+          /><br />
+
+          Comment faire ? La méthode Sacado © permet de travailler efficacement
+          grâce à nos quatre concepts issus des sciences cognitives :
+
+          <li class="sanspuce">
+            1. <span class="rose">Le e-learning </span>: espacer les
+            apprentissages dans la durée permet au cerveau de ne pas saturer.
+            <em
+              ><span class="rose">Préconisation Sacado©</span> : 10 min
+              d’entraînement quotidien sur notre plateforme est un bon moyen
+              d’améliorer le taux de rétention et ancrer les points
+              importants.</em
+            >
+          </li>
+
+          <li class="sanspuce">
+            2. <span class="rose">Le reminder ou « rappel » </span>: permet de
+            reconnecter le cerveau aux informations apprises. Il est essentiel
+            dans l’ancrage en mémoire à long terme, c’est le principe même de la
+            répétition.
+            <em
+              ><span class="rose">Préconisation Sacado©</span> : 10 min
+              d’entraînement quotidien et/ou l’étalement des révisions grâce à
+              notre programmateur d’évaluations jusqu’au jour J.</em
+            >
+          </li>
+
+          <li class="sanspuce">
+            3. <span class="rose">Le learning-by-doing </span>: on apprend mieux
+            quand on fait par soi-même.
+            <em
+              ><span class="rose">Préconisation Sacado©</span> : l’entraînement
+              quotidien va sécuriser votre enfant, qui va apprendre de ses
+              erreurs grâce à nos corrections immédiates des exercices.</em
+            >
+          </li>
+
+          <li class="sanspuce">
+            4. <span class="rose">L’émotionnel </span>: L’émotion stimule la
+            mémorisation. Le cerveau retient les informations plus intensément
+            si l’enfant y trouve du plaisir.
+            <em
+              ><span class="rose">Préconisation Sacado©</span> :
+              l’accompagnement sur notre plateforme en ligne pour préparer les
+              évaluations et les examens sans stress sera source de motivation.
+              Ce climat de travail bienveillant, sécurisant et valorisant permet
+              d’ajouter cet aspect émotionnel aux expériences
+              d’apprentissage.</em
+            >
+          </li>
+
+          <li class="sanspuce">
+            <span class="rose"><b>Le petit + Sacado© </b></span> nous offrons la
+            possibilité à votre enfant de créer ses propres cartes de révision
+            (flashcards) qui mêlent les 4 piliers : la révision en ligne, le
+            rappel (grâce à notre programmateur), l’engagement actif et l’envie
+            de réussir !
+          </li>
+          {% endcomment %}
         </div>
+      </div>
     </div>
-
- 
-
+  </div>
 </section>
- 
+
 <section class="container" id="presentation">
-    <div class="row">
-        <div class="col-xs-12 col-md-12">
-            <h1 class="title_bloc_index"  style="font-variant: small-caps;">Présentation </h1>
-        </div>
+  <div class="row">
+    <div class="col-xs-12 col-md-12">
+      <h1 class="title_bloc_index" style="font-variant: small-caps">
+        Présentation
+      </h1>
     </div>
-    <div class="row">
-        <div class="col-xs-12 col-md-12" style="margin-left: auto; margin-right: auto; width:800px;" align="center">
- 
-
-            <video width="800" height="450"  controls="controls">
-                <source src="https://sacado-academie.fr/ressources/videos_exos.mp4" type="video/mp4">
-            </video>
-
-
-
-        </div>
-
+  </div>
+  <div class="row">
+    <div
+      class="col-xs-12 col-md-12"
+      style="margin-left: auto; margin-right: auto; width: 800px"
+      align="center"
+    >
+      <video width="800" height="450" controls="controls">
+        <source
+          src="https://sacado-academie.fr/ressources/videos_exos.mp4"
+          type="video/mp4"
+        />
+      </video>
     </div>
+  </div>
 </section>
-
 
 <section class="container" id="menus">
-    <div class="row">
-        <div class="col-xs-12 col-md-12">
-            <h1 class="title_bloc_index"  style="font-variant: small-caps;">Nos menus </h1>
-        </div>
+  <div class="row">
+    <div class="col-xs-12 col-md-12">
+      <h1 class="title_bloc_index" style="font-variant: small-caps">
+        Nos menus
+      </h1>
     </div>
-    <div class="row">
-        <div class="col-xs-12 col-md-4"  align="center">
-            <div class="card border_card" >             
-                <div class="card-header">              
-                    <div class="row">
-                        <div class="col-sm-12 col-md-12 font_white" align="center">
-                            <img src="{% static 'img/menu_autonomie.png' %}"  width="60px"  style="float:left">                                
-                         Menu<div class="sub_header">Autonomie</div> 
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body" style="background-image: url('static/img/fond_autonomie.png')">
-                    <div class="this_price"> <span class="currency">5 €</span>/mois<br/><small style="font-size:12px">Sans engagement</small></div>
-                    <div class="card-block plus">
-                        <p class="card-text">  <a href="#" data-toggle='modal' data-target='#Autonomie'  class="detail_index"> Contenu de l'offre <i class="bi bi-question-circle"></i></a>  </p>
-                    </div>
-                    <div class="card-block plus">
-                        <a href="{% url 'choice_menu' 1 %}" class="btn btn-asso">Choisir ce menu</a>
-                    </div>
-                </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 col-md-4" align="center">
+      <div class="card border_card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-sm-12 col-md-12 font_white" align="center">
+              <img
+                src="{% static 'img/menu_autonomie.png' %}"
+                width="60px"
+                style="float: left"
+              />
+              Menu
+              <div class="sub_header">Autonomie</div>
             </div>
+          </div>
         </div>
-        <div class="col-xs-12 col-md-4"  align="center">
-            <div class="card border_card" >             
-                <div class="card-header">              
-                    <div class="row">
-                        <div class="col-sm-12 col-md-12 font_white" align="center">
-                            <img src="{% static 'img/menu_suivi.png' %}"  width="60px" style="float:left">
-                            Menu<div class="sub_header">Suivi</div> 
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="this_price">dès <span class="currency">29 €</span>/mois<br/><small style="font-size:12px">Sans engagement</small></div>
-                    <div class="card-block plus">
-                        <p class="card-text">  
-                            <a href="#" data-toggle='modal' data-target='#Suivi'  class="detail_index"> Contenu de l'offre <i class="bi bi-question-circle"></i></a>  
-                    </div>                    
-                    <div class="card-block plus">
-                        <a href="{% url 'choice_menu' 2 %}" class="btn btn-asso">Choisir ce menu</a>
-                    </div>
-                </div>
+        <div
+          class="card-body"
+          style="background-image: url('static/img/fond_autonomie.png')"
+        >
+          <div class="this_price">
+            <span class="currency">5 €</span>/mois<br /><small
+              style="font-size: 12px"
+              >Sans engagement</small
+            >
+          </div>
+          <div class="card-block plus">
+            <p class="card-text">
+              <a
+                href="#"
+                data-toggle="modal"
+                data-target="#Autonomie"
+                class="detail_index"
+              >
+                Contenu de l'offre <i class="bi bi-question-circle"></i
+              ></a>
+            </p>
+          </div>
+          <div class="card-block plus">
+            <a href="{% url 'choice_menu' 1 %}" class="btn btn-asso"
+              >Choisir ce menu</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 col-md-4" align="center">
+      <div class="card border_card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-sm-12 col-md-12 font_white" align="center">
+              <img
+                src="{% static 'img/menu_suivi.png' %}"
+                width="60px"
+                style="float: left"
+              />
+              Menu
+              <div class="sub_header">Suivi</div>
             </div>
-        </div>        
-        <div class="col-xs-12 col-md-4"  align="center">
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="this_price">
+            dès <span class="currency">29 €</span>/mois<br /><small
+              style="font-size: 12px"
+              >Sans engagement</small
+            >
+          </div>
+          <div class="card-block plus">
+            <p class="card-text">
+              <a
+                href="#"
+                data-toggle="modal"
+                data-target="#Suivi"
+                class="detail_index"
+              >
+                Contenu de l'offre <i class="bi bi-question-circle"></i
+              ></a>
+            </p>
+          </div>
+
+          <div class="card-block plus">
+            <a href="{% url 'choice_menu' 2 %}" class="btn btn-asso"
+              >Choisir ce menu</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--         <div class="col-xs-12 col-md-4"  align="center">
             <div class="card border_card" >             
                 <div class="card-header">              
                     <div class="row">
@@ -235,348 +349,606 @@ Intro Section -
                     </div>
                 </div>
             </div>
+        </div> -->
+    <div class="col-xs-12 col-md-4" align="center">
+      <div class="card border_card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-sm-12 col-md-12 font_white" align="center">
+              <img
+                src="{% static 'img/menu_exam.png' %}"
+                width="60px"
+                style="float: left"
+              />
+              Menu
+              <div class="sub_header">Cahier de vacances</div>
+            </div>
+          </div>
         </div>
+        <div class="card-body">
+          <div class="this_price">
+            dès <span class="currency">5 €</span><br /><small
+              style="font-size: 14px"
+              >Le cahier</small
+            >
+          </div>
+          <div class="card-block plus">
+            <p class="card-text">
+              <a
+                href="#"
+                data-toggle="modal"
+                data-target="#holidays"
+                class="detail_index"
+              >
+                Contenu de l'offre <i class="bi bi-question-circle"></i
+              ></a>
+            </p>
+          </div>
+          <div class="card-block plus">
+            <a href="{% url 'holidaybooks' %}" class="btn btn-asso"
+              >Choisir le cahier</a
+            >
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </section>
 
-<section class="fond_bis" style="margin-top:80px;">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12 col-md-9">
-                <h1 class="title_bloc_index_white"  style="font-variant: small-caps;">Cliquez sur nos exercices</h1>
-            </div>
+<section class="fond_bis" style="margin-top: 80px">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12 col-md-9">
+        <h1 class="title_bloc_index_white" style="font-variant: small-caps">
+          Cliquez sur nos exercices
+        </h1>
+      </div>
 
-            <div class="col-xs-12 col-md-3" align="center">
-                <div style="margin: 80px 0px 40px 0px;color:white;font-size:22px">Contenus conformes aux programmes de l'Education Nationale</div>
-            </div>
-
-
+      <div class="col-xs-12 col-md-3" align="center">
+        <div style="margin: 80px 0px 40px 0px; color: white; font-size: 22px">
+          Contenus conformes aux programmes de l'Education Nationale
         </div>
-        <div class="row" align="center">
-        {% for data in dataset %}
-            <div class="col-xs-3 col-md-2 modal_title_level">
-                <a href="{% url 'exercises_shower' data.level.id %}">{% if  data.exercise.supportfile.imagefile %} <img src="{{ data.exercise.supportfile.imagefile.url }}"  width="150px" /> {% endif %}
-                <br/>{{ data.level.name }}
-                </a>
-            </div>
-        {% endfor %}                        
-        </div>
+      </div>
     </div>
+    <div class="row" align="center">
+      {% for data in dataset %}
+      <div class="col-xs-3 col-md-2 modal_title_level">
+        <a href="{% url 'exercises_shower' data.level.id %}"
+          >{% if data.exercise.supportfile.imagefile %}
+          <img
+            src="{{ data.exercise.supportfile.imagefile.url }}"
+            width="150px"
+          />
+          {% endif %} <br />{{ data.level.name }}
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
 </section>
 
- 
+<div class="background_accueil">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12 col-md-12">
+        <h1 class="title_bloc_index" style="font-variant: small-caps">
+          Les Prép'éval
+        </h1>
+        <p class="p_index">
+          Choisis la date de ton évaluation, les thèmes à réviser et
+          <span class="sacado">SACADO</span> confectionne ton
+          <b class="rose">programme de révision</b> jour par jour, avec suivi de
+          progression, jusqu'au jour J.
+        </p>
+        <p class="p_index"><b>Génération du programme de révision</b></p>
+        <img src="{% static 'img/prep_4.png' %}" width="100%" />
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="background_accueil">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-12 col-md-12">
-                <h1 class="title_bloc_index" style="font-variant: small-caps;">Les Prép'éval</h1>
-                <p class="p_index">Choisis la date de ton évaluation, les thèmes à réviser et <span class="sacado">SACADO</span> confectionne ton <b class="rose">programme de révision</b> jour par jour, avec suivi de progression, jusqu'au jour J.</p>
-                <p class="p_index"><b>Génération du programme de révision</b> </p>
-                <img src="{% static 'img/prep_4.png' %}" width="100%"   />
-            </div>
-        </div>
+  <div class="container" id="interfaces">
+    <div class="row">
+      <div class="col-xs-12 col-md-12">
+        <h1 class="title_bloc_index">Notre interface</h1>
+      </div>
     </div>
+
+    <div class="row" style="margin-bottom: 60px">
+      <div class="col-xs-6 col-md-4" align="center">
+        <div class="sub_icon_link_index">
+          <img src="{% static 'img/icone_exos.jpg' %}" /> <br />
+          <a href="{% url 'acad_exercises' %}" class="icon_link_index p_index"
+            >Cours et exercices</a
+          >
+          <br />
+
+          <small
+            >Interactifs, autocorrigés et détaillés<br />
+            Préparation aux évaluations</small
+          >
+        </div>
+      </div>
+      <div class="col-xs-6 col-md-4" align="center">
+        <div class="sub_icon_link_index">
+          <img src="{% static 'img/icone_interface.jpg' %}" /> <br />
+          <a href="{% url 'parents' %}" class="icon_link_index p_index">
+            Espace parent
+          </a>
+          <br />
+          <small
+            >Interface complète<br />
+            et détaillée
+          </small>
+        </div>
+      </div>
+      <div class="col-xs-6 col-md-4" align="center">
+        <div class="sub_icon_link_index">
+          <img src="{% static 'img/icone_memory.jpg' %}" /> <br />
+          <a href="{% url 'numeric' %}" class="icon_link_index p_index">
+            Contenu pédagogique</a
+          >
+          <br />
+          <small>Rétroaction, mémorisation, automatisme </small>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-
-
-
-
-
-
-
 
 <div class="background_accueil">
-    <div class="container" id="interfaces">
+  <div class="container" id="interfaces">
+    <div class="row">
+      <div class="col-xs-12 col-md-12">
+        <h1 class="title_bloc_index">Nos partenaires</h1>
+      </div>
+    </div>
 
+    <div class="row" style="margin-bottom: 60px">
+      <div class="col-xs-6 col-md-3" align="center">
+        <img src="{% static 'img/logo_ft.png' %}" style="height: 150px" />
+      </div>
+      <div class="col-xs-6 col-md-3" align="center">
+        <img src="{% static 'img/premieres.png' %}" />
+      </div>
+      <div class="col-xs-6 col-md-3" align="center">
+        <img src="{% static 'img/entreprendre_perigord.png' %}" />
+      </div>
+
+      <div class="col-xs-6 col-md-3" align="center">
+        <img src="{% static 'img/expat_pro.png' %}" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="Autonomie"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="Autonomie"
+>
+  <div class="modal-dialog" role="document" style="width: 70%">
+    <div class="modal-content">
+      <div class="modal-header">
         <div class="row">
-            <div class="col-xs-12 col-md-12">
-                <h1 class="title_bloc_index">Notre interface</h1>
-            </div>
+          <div class="col-sm-3 col-md-2">
+            <img src="{% static 'img/menu_autonomie.png' %}" width="60px" />
+          </div>
+          <div class="col-sm-8 col-md-9">
+            <span style="font-size: 30px">
+              Menu <span class="sub_header">Autonomie</span>
+            </span>
+            <em style="font-size: 12px; text-align: center">
+              en illimité (24h/24 et 7j/7)
+            </em>
+          </div>
+          <div class="col-sm-1 col-md-1">
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
         </div>
+      </div>
+      <div class="modal-body" style="font-size: 14px">
+        <b class="rose">Interface Enfant </b>
+        <li>
+          Séquences de cours interactifs (collège et lycée) et d’exercices.
+        </li>
+        <li>Outils interactifs de découverte (Primaire et Sixième).</li>
+        <li>Niveaux structurés par thèmes et par compétences.</li>
+        <li>Interface de création de flashcards</li>
+        <li>
+          Préparation aux évaluations en fonction des chapitres travaillés en
+          classe.
+        </li>
+        <li>Suivi détaillé de sa progression jour par jour</li>
+        <br />
+        <b class="rose">Interface Parent</b>
 
-        <div class="row" style="margin-bottom:60px">
-            <div class="col-xs-6 col-md-4"  align="center">
-                    <div class="sub_icon_link_index">
-                        <img src="{% static 'img/icone_exos.jpg' %}"/> <br/> 
-                        <a href="{% url 'acad_exercises' %}" class="icon_link_index p_index" >Cours et exercices</a> <br/>  
-                             
-                        <small >Interactifs, autocorrigés et détaillés<br/> Préparation aux évaluations</small> 
-                    </div>
-
-            </div>
-            <div class="col-xs-6 col-md-4"  align="center">
-                <div class="sub_icon_link_index">
-                    <img src="{% static 'img/icone_interface.jpg' %}"/> <br/> 
-                    <a href="{% url 'parents' %}" class="icon_link_index p_index" >  Espace parent </a>    <br/>                     
-                    <small   >Interface complète<br/>  et détaillée </small>   
-                </div>
-            </div>
-            <div class="col-xs-6 col-md-4"  align="center">
-                <div class="sub_icon_link_index">
-                    <img src="{% static 'img/icone_memory.jpg' %}"/> <br/> 
-                     <a href="{% url 'numeric' %}" class="icon_link_index p_index"> Contenu pédagogique</a> <br/>                        
-                    <small >Rétroaction, mémorisation, automatisme </small>  
-                </div>
-            
-            </div>
-        </div>
-
+        <li>
+          Visualisation des résultats de chacun de vos enfants sur votre tableau
+          de bord.
+        </li>
+        <li>
+          Choix de la réception d’un mail à chaque exercice fait (fréquence à
+          choisir).
+        </li>
+        <li>
+          Choix de la réception d’un rapport d’activité (nombre et % de réussite
+          des exercices effectués).
+        </li>
+        <li>Génération d’un bilan (format pdf).</li>
+      </div>
     </div>
+  </div>
 </div>
 
-
-
-<div class="background_accueil">
-    <div class="container" id="interfaces">
-
+<div
+  class="modal fade"
+  id="autonomie"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="autonomie"
+>
+  <div class="modal-dialog" role="document" style="width: 70%">
+    <div class="modal-content">
+      <div class="modal-header">
         <div class="row">
-            <div class="col-xs-12 col-md-12">
-                <h1 class="title_bloc_index">Nos partenaires</h1>
+          <div class="col-sm-3 col-md-2">
+            <img src="{% static 'img/menu_autonomie.png' %}" width="60px" />
+          </div>
+          <div class="col-sm-8 col-md-9">
+            <div style="font-size: 30px">
+              Menu <span class="sub_header">Personnalisé</span>
             </div>
+            <em style="font-size: 12px; text-align: center">
+              en illimité (24h/24 et 7j/7)
+            </em>
+          </div>
+          <div class="col-sm-1 col-md-1">
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
         </div>
-
-        <div class="row" style="margin-bottom:60px">
-            <div class="col-xs-6 col-md-3"  align="center">
-                <img src="{% static 'img/logo_ft.png' %}" style="height:150px" >       
-
-            </div>
-            <div class="col-xs-6 col-md-3"  align="center">
-                <img src="{% static 'img/premieres.png' %}"  >  
-            </div>
-            <div class="col-xs-6 col-md-3"  align="center">
-                <img src="{% static 'img/entreprendre_perigord.png' %}"  >  
-            </div>
-
-            <div class="col-xs-6 col-md-3"  align="center">
-                <img src="{% static 'img/expat_pro.png' %}"  >  
-            </div>
-
-
+      </div>
+      <div class="modal-body" id="indiv_this_exercise">
+        <div class="alert alert-sacado" align="center">
+          <img src="{% static 'img/menu_autonomie.png' %}" width="60px" /> Menu
+          <span class="">Autonomie</span>
+          <a
+            href="#"
+            id="detail_display_autonomie"
+            class="detail_index"
+            style="font-size: 12px"
+            ><i class="bi bi-cursor"></i> Détails de l'offre
+            <i class="bi bi-question-circle"></i></a
+          ><br />
         </div>
+        <div id="show_detail_display_autonomie" style="font-size: 12px">
+          <b class="rose">Interface Enfant </b>
 
+          <li>
+            Séquences de cours interactifs (collège et lycée) et d’exercices.
+          </li>
+          <li>Outils interactifs de découverte (Primaire et Sixième).</li>
+          <li>Niveaux structurés par thèmes et par compétences.</li>
+          <li>Interface de création de flashcards</li>
+          <li>
+            Préparation aux évaluations en fonction des chapitres travaillés en
+            classe.
+          </li>
+          <li>Suivi détaillé de sa progression jour par jour</li>
+
+          <br />
+          <b class="rose">Interface Parent</b>
+
+          <li>
+            Visualisation des résultats de chacun de vos enfants sur votre
+            tableau de bord
+          </li>
+          <li>
+            Choix de la réception d’un mail à chaque exercice fait (fréquence à
+            choisir)
+          </li>
+          <li>
+            Choix de la réception d’un rapport d’activité (nombre et % de
+            réussite des exercices effectués)
+          </li>
+          <li>Génération d’un bilan (format pdf)</li>
+        </div>
+        <h2 align="center"><i class="bi bi-plus"></i></h2>
+        Votre enfant échange par <b class="rose">tchat</b> (en direct) ou
+        <b class="rose">message</b> (réponse sous 24h) avec un
+        <b class="rose">enseignant</b> pour surmonter les difficultés
+        rencontrées. <br /><em
+          ><small>Tchat du lundi au vendredi 16h à 00h.</small>
+        </em>
+
+        <p style="margin-top: 20px">
+          <b>En option.</b><br />
+
+          Votre enfant peut demander un accompagnement par un
+          <b class="rose">enseignant</b> par
+          <b class="rose">visioconférence</b> selon les créneaux choisis.
+          <br /><em
+            ><small
+              >Choix de l'enseignant parmi les enseignants proposés par la
+              Sacado Académie. Paiement à la prestation.</small
+            ></em
+          >
+        </p>
+      </div>
     </div>
+  </div>
 </div>
 
-
-
-
-
-
-<div class="modal fade" id="Autonomie" tabindex="-1" role="dialog" aria-labelledby="Autonomie">
-    <div class="modal-dialog" role="document" style="width:70%">
-        <div class="modal-content" >
-            <div class="modal-header">
-                <div class="row">
-                    <div class="col-sm-3 col-md-2">
-                        <img src="{% static 'img/menu_autonomie.png' %}"  width="60px"/>
-                    </div>
-                    <div class="col-sm-8 col-md-9">
-                        <span style="font-size:30px;">  Menu <span class="sub_header">Autonomie</span> </span>
-                        <em style="font-size:12px;text-align: center" > en illimité (24h/24 et 7j/7) </em>
-                    </div>
-                    <div class="col-sm-1 col-md-1">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button> 
-                    </div>
-                </div>
-            </div>
-            <div class="modal-body" style="font-size:14px;" >
-   
-                <b class="rose">Interface Enfant </b>  
-                    <li>Séquences de cours interactifs (collège et lycée) et d’exercices.</li>
-                    <li>Outils interactifs de découverte (Primaire et Sixième).</li>
-                    <li>Niveaux structurés par thèmes et par compétences.</li>
-                    <li>Interface de création de flashcards</li>
-                    <li>Préparation aux évaluations en fonction des chapitres travaillés en classe.</li>
-                    <li>Suivi détaillé de sa progression jour par jour</li>
-               <br/>
-                <b class="rose">Interface Parent</b>
-
-                <li>Visualisation des résultats de chacun de vos enfants sur votre tableau de bord.</li>
-                <li>Choix de la réception d’un mail à chaque exercice fait (fréquence à choisir).</li>
-                <li>Choix de la réception d’un rapport d’activité (nombre et % de réussite des exercices effectués).</li>
-                <li>Génération d’un bilan (format pdf).</li>
-
-            </div>
+<div
+  class="modal fade"
+  id="Suivi"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="Suivi"
+>
+  <div class="modal-dialog" role="document" style="width: 70%">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="row">
+          <div class="col-sm-3 col-md-2">
+            <img src="{% static 'img/menu_suivi.png' %}" width="60px" />
+          </div>
+          <div class="col-sm-8 col-md-9">
+            <span style="font-size: 30px">
+              Menu <span class="sub_header">Suivi</span>
+            </span>
+            <em style="font-size: 12px; text-align: center">
+              en illimité (24h/24 et 7j/7)
+            </em>
+          </div>
+          <div class="col-sm-1 col-md-1">
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
         </div>
+      </div>
+      <div class="modal-body" id="indiv_this_exercise">
+        <div class="alert alert-sacado" align="center">
+          <img src="{% static 'img/menu_autonomie.png' %}" width="60px" /> Menu
+          <span class="">Autonomie</span>
+          <a
+            href="javascript:void();"
+            id="detail_display_suivi"
+            class="detail_index"
+            style="font-size: 12px"
+            ><i class="bi bi-cursor"></i> Détails de l'offre
+            <i class="bi bi-question-circle"></i></a
+          ><br />
+        </div>
+
+        <div id="show_detail_display_suivi" style="font-size: 12px">
+          <b class="rose">Interface Enfant </b>
+
+          <li>
+            Séquences de cours interactifs (collège et lycée) et d’exercices.
+          </li>
+          <li>Outils interactifs de découverte (Primaire et Sixième).</li>
+          <li>Niveaux structurés par thèmes et par compétences.</li>
+          <li>Interface de création de flashcards</li>
+          <li>
+            Préparation aux évaluations en fonction des chapitres travaillés en
+            classe.
+          </li>
+          <li>Suivi détaillé de sa progression jour par jour</li>
+          <br />
+          <b class="rose">Interface Parent</b>
+
+          <li>
+            Visualisation des résultats de chacun de vos enfants sur votre
+            tableau de bord.
+          </li>
+          <li>
+            Choix de la réception d’un mail à chaque exercice fait (fréquence à
+            choisir).
+          </li>
+          <li>
+            Choix de la réception d’un rapport d’activité (nombre et % de
+            réussite des exercices effectués).
+          </li>
+          <li>Génération d’un bilan (format pdf).</li>
+        </div>
+
+        <h2 align="center"><i class="bi bi-plus"></i></h2>
+        Tous les 10 jours, un enseignant de l'Education Nationale propose à
+        votre enfant un bilan détaillé des résultats pendant
+        <b class="rose">20 minutes</b> par <b class="rose">visio conférence</b>.
+        Lors de ce bilan, des conseils méthodologiques et des axes de progrès
+        sont explicités. <br /><em><small>Sur les jours ouvrés.</small> </em>
+        <hr />
+        <li class="sanspuce">Primaire : <b class="rose">29€</b>/mois</li>
+        <li class="sanspuce">Collège : <b class="rose">39€</b>/mois</li>
+        <li class="sanspuce">Lycée : <b class="rose">49€</b>/mois</li>
+      </div>
     </div>
+  </div>
 </div>
 
-
-
-<div class="modal fade" id="autonomie" tabindex="-1" role="dialog" aria-labelledby="autonomie">
-    <div class="modal-dialog" role="document" style="width:70%">
-        <div class="modal-content" >
-            <div class="modal-header">
-
-                <div class="row">
-                    <div class="col-sm-3 col-md-2">
-                        <img src="{% static 'img/menu_autonomie.png' %}"  width="60px"/>
-                    </div>
-                    <div class="col-sm-8 col-md-9">
-                        <div style="font-size:30px;">  Menu <span class="sub_header ">Personnalisé</span> </div>
-                        <em style="font-size:12px;text-align: center" > en illimité (24h/24 et 7j/7) </em>
-                    </div>
-                    <div class="col-sm-1 col-md-1">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button> 
-                    </div>
-                </div>
-            </div>
-            <div class="modal-body" id="indiv_this_exercise">
-                <div class="alert alert-sacado"  align="center">
-                    <img src="{% static 'img/menu_autonomie.png' %}"  width="60px"/>  Menu <span class="">Autonomie</span> 
-                    <a href="#" id="detail_display_autonomie"  class="detail_index" style="font-size:12px;"><i class="bi bi-cursor"></i>  Détails de l'offre <i class="bi bi-question-circle"></i></a><br/>
-                </div>
-                <div id="show_detail_display_autonomie"  style="font-size:12px;">
-   
-                <b class="rose">Interface Enfant </b>
-
-                    <li>Séquences de cours interactifs (collège et lycée) et d’exercices.</li>
-                    <li>Outils interactifs de découverte (Primaire et Sixième).</li>
-                    <li>Niveaux structurés par thèmes et par compétences.</li>
-                    <li>Interface de création de flashcards</li>
-                    <li>Préparation aux évaluations en fonction des chapitres travaillés en classe.</li>
-                    <li>Suivi détaillé de sa progression jour par jour</li>
-
-                   <br/>
-                    <b class="rose">Interface Parent</b>
-
-                    <li>Visualisation des résultats de chacun de vos enfants sur votre tableau de bord</li>
-                    <li>Choix de la réception d’un mail à chaque exercice fait (fréquence à choisir)</li>
-                    <li>Choix de la réception d’un rapport d’activité (nombre et % de réussite des exercices effectués)</li>
-                    <li>Génération d’un bilan (format pdf)</li>
-
-                </div>
-                <h2  align="center"><i class="bi bi-plus"></i></h2>
-                    Votre enfant échange par <b  class="rose">tchat</b> (en direct) ou <b  class="rose">message</b> (réponse sous 24h) avec un <b  class="rose">enseignant</b> pour surmonter les difficultés rencontrées. <br/><em><small>Tchat du lundi au vendredi 16h à 00h.</small> </em> 
-
-                <p style="margin-top:20px"><b>En option.</b><br/>
-
-                Votre enfant peut demander un accompagnement par un <b  class="rose">enseignant</b> par <b class="rose">visioconférence</b> selon les créneaux choisis. <br/><em><small>Choix de l'enseignant parmi les enseignants proposés par la Sacado Académie. Paiement à la prestation.</small></em>
-                </p>
-            </div>
+<div
+  class="modal fade"
+  id="exam"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exam"
+>
+  <div class="modal-dialog" role="document" style="width: 70%">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="row">
+          <div class="col-sm-3 col-md-2">
+            <img src="{% static 'img/menu_suivi.png' %}" width="60px" />
+          </div>
+          <div class="col-sm-8 col-md-9">
+            <span style="font-size: 30px">
+              Menu <span class="sub_header">Prép'Exam</span>
+            </span>
+            <em style="font-size: 12px; text-align: center"> Visio </em>
+          </div>
+          <div class="col-sm-1 col-md-1">
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
         </div>
+      </div>
+      <div class="modal-body" id="indiv_this_exercise">
+        <div class="alert alert-sacado" align="center">
+          <img src="{% static 'img/menu_autonomie.png' %}" width="60px" /> Menu
+          <span class="">Autonomie</span>
+          <a
+            href="javascript:void();"
+            id="detail_display_perso"
+            class="detail_index"
+            style="font-size: 12px"
+            ><i class="bi bi-cursor"></i> Détails de l'offre
+            <i class="bi bi-question-circle"></i></a
+          ><br />
+        </div>
+
+        <div id="show_detail_display_perso" style="font-size: 12px">
+          <b class="rose">Interface Enfant </b>
+
+          <li>
+            Séquences de cours interactifs (collège et lycée) et d’exercices.
+          </li>
+          <li>Outils interactifs de découverte (Primaire et Sixième).</li>
+          <li>Niveaux structurés par thèmes et par compétences.</li>
+          <li>Interface de création de flashcards</li>
+          <li>
+            Préparation aux évaluations en fonction des chapitres travaillés en
+            classe.
+          </li>
+          <li>Suivi détaillé de sa progression jour par jour</li>
+          <br />
+          <b class="rose">Interface Parent</b>
+
+          <li>
+            Visualisation des résultats de chacun de vos enfants sur votre
+            tableau de bord.
+          </li>
+          <li>
+            Choix de la réception d’un mail à chaque exercice fait (fréquence à
+            choisir).
+          </li>
+          <li>
+            Choix de la réception d’un rapport d’activité (nombre et % de
+            réussite des exercices effectués).
+          </li>
+          <li>Génération d’un bilan (format pdf).</li>
+        </div>
+
+        <h2 align="center"><i class="bi bi-plus"></i></h2>
+        Package de <b class="rose">10</b> heures de
+        <b class="rose">visio conférence</b> avec un enseignant de l'Education
+        Nationale. <br /><em><small>Sur les jours ouvrés.</small> </em>
+        <hr />
+        <li class="sanspuce">
+          Primaire : <b class="rose">29€</b>/h
+          <small>Soit 290€ les 10 séances</small>
+        </li>
+        <li class="sanspuce">
+          Collège : <b class="rose">39€</b>/h
+          <small>Soit 390€ les 10 séances</small>
+        </li>
+        <li class="sanspuce">
+          Lycée : <b class="rose">49€</b>/h
+          <small>Soit 490€ les 10 séances</small>
+        </li>
+      </div>
     </div>
+  </div>
 </div>
 
-<div class="modal fade" id="Suivi" tabindex="-1" role="dialog" aria-labelledby="Suivi">
-    <div class="modal-dialog" role="document" style="width:70%">
-        <div class="modal-content" >
-            <div class="modal-header">
-                <div class="row">
-                    <div class="col-sm-3 col-md-2">
-                        <img src="{% static 'img/menu_suivi.png' %}"  width="60px"/>
-                    </div>
-                    <div class="col-sm-8 col-md-9">
-                        <span style="font-size:30px">  Menu <span class="sub_header">Suivi</span>    </span>
-                        <em style="font-size:12px;text-align: center" > en illimité (24h/24 et 7j/7) </em>
-                    </div>
-                    <div class="col-sm-1 col-md-1">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button> 
-                    </div>
-                </div>
-            </div>
-            <div class="modal-body" id="indiv_this_exercise" >  
-            
-                <div class="alert alert-sacado"  align="center">
-                    <img src="{% static 'img/menu_autonomie.png' %}"  width="60px"/>  Menu <span class="">Autonomie</span> 
-                    <a href="javascript:void();" id="detail_display_suivi"  class="detail_index" style="font-size:12px;"><i class="bi bi-cursor"></i>  Détails de l'offre <i class="bi bi-question-circle"></i></a><br/> 
-                </div>
-
-                <div id="show_detail_display_suivi" style="font-size:12px;">
-                    <b class="rose">Interface Enfant </b>
-                    
-                    <li>Séquences de cours interactifs (collège et lycée) et d’exercices.</li>
-                    <li>Outils interactifs de découverte (Primaire et Sixième).</li>
-                    <li>Niveaux structurés par thèmes et par compétences.</li>
-                    <li>Interface de création de flashcards</li>
-                    <li>Préparation aux évaluations en fonction des chapitres travaillés en classe.</li>
-                    <li>Suivi détaillé de sa progression jour par jour</li>
-                   <br/>
-                    <b class="rose">Interface Parent</b>
-
-                    <li>Visualisation des résultats de chacun de vos enfants sur votre tableau de bord.</li>
-                    <li>Choix de la réception d’un mail à chaque exercice fait (fréquence à choisir).</li>
-                    <li>Choix de la réception d’un rapport d’activité (nombre et % de réussite des exercices effectués).</li>
-                    <li>Génération d’un bilan (format pdf).</li>
-                </div>
-
-                <h2  align="center"><i class="bi bi-plus"></i></h2>
-                    Tous les 10 jours, un enseignant de l'Education Nationale propose à votre enfant un bilan détaillé des résultats pendant <b  class="rose">20 minutes</b>  par <b  class="rose">visio conférence</b>. Lors de ce bilan, des conseils méthodologiques et des axes de progrès sont explicités. <br/><em><small>Sur les jours ouvrés.</small> </em> 
-                <hr/>
-                <li class="sanspuce"> Primaire : <b class="rose">29€</b>/mois   </li>
-                <li class="sanspuce"> Collège : <b class="rose">39€</b>/mois  </li>
-                <li class="sanspuce"> Lycée : <b class="rose">49€</b>/mois  </li>
-            </div>
+<div
+  class="modal fade"
+  id="holidays"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="holidays"
+>
+  <div class="modal-dialog" role="document" style="width: 70%">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="row">
+          <div class="col-sm-3 col-md-2">
+            <img src="{% static 'img/menu_suivi.png' %}" width="60px" />
+          </div>
+          <div class="col-sm-8 col-md-9">
+            <span style="font-size: 30px">
+              <span class="sub_header">Cahier de vacances</span>
+            </span>
+          </div>
+          <div class="col-sm-1 col-md-1">
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
         </div>
-    </div>
-</div>
+      </div>
+      <div class="modal-body" id="indiv_this_exercise">
+        <div id="show_detail_display_perso" style="font-size: 12px">
+          <b class="rose">Interface Enfant </b>
 
+          <li>Séquences de cours et exercices interactifs autocorrigés.</li>
+          <li>Tout le programme de l'année revisité.</li>
+          <li>Suivi détaillé de sa progression jour par jour</li>
+          <br />
+          <b class="rose">Interface Parent</b>
 
-
-<div class="modal fade" id="exam" tabindex="-1" role="dialog" aria-labelledby="exam">
-    <div class="modal-dialog" role="document" style="width:70%">
-        <div class="modal-content" >
-            <div class="modal-header">
-                <div class="row">
-                    <div class="col-sm-3 col-md-2">
-                        <img src="{% static 'img/menu_suivi.png' %}"  width="60px"/>
-                    </div>
-                    <div class="col-sm-8 col-md-9">
-                        <span style="font-size:30px">  Menu <span class="sub_header">Prép'Exam</span>    </span>
-                        <em style="font-size:12px;text-align: center" > Visio </em>
-                    </div>
-                    <div class="col-sm-1 col-md-1">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button> 
-                    </div>
-                </div>
-            </div>
-            <div class="modal-body" id="indiv_this_exercise" >  
-            
-                <div class="alert alert-sacado"  align="center">
-                    <img src="{% static 'img/menu_autonomie.png' %}"  width="60px"/>  Menu <span class="">Autonomie</span> 
-                    <a href="javascript:void();" id="detail_display_perso"  class="detail_index" style="font-size:12px;"><i class="bi bi-cursor"></i>   Détails de l'offre <i class="bi bi-question-circle"></i></a><br/> 
-                </div>
-
-                <div id="show_detail_display_perso" style="font-size:12px;">
-                    <b class="rose">Interface Enfant </b>
-
-                    <li>Séquences de cours interactifs (collège et lycée) et d’exercices.</li>
-                    <li>Outils interactifs de découverte (Primaire et Sixième).</li>
-                    <li>Niveaux structurés par thèmes et par compétences.</li>
-                    <li>Interface de création de flashcards</li>
-                    <li>Préparation aux évaluations en fonction des chapitres travaillés en classe.</li>
-                    <li>Suivi détaillé de sa progression jour par jour</li>
-                   <br/>
-                    <b class="rose">Interface Parent</b>
-
-                    <li>Visualisation des résultats de chacun de vos enfants sur votre tableau de bord.</li>
-                    <li>Choix de la réception d’un mail à chaque exercice fait (fréquence à choisir).</li>
-                    <li>Choix de la réception d’un rapport d’activité (nombre et % de réussite des exercices effectués).</li>
-                    <li>Génération d’un bilan (format pdf).</li>
-                </div>
-
-                <h2  align="center"><i class="bi bi-plus"></i></h2>
-                Package de <b  class="rose">10</b> heures de <b  class="rose">visio conférence</b> avec un enseignant de l'Education Nationale. <br/><em><small>Sur les jours ouvrés.</small> </em> 
-                <hr/>
-                <li class="sanspuce"> Primaire : <b  class="rose">29€</b>/h <small>Soit 290€ les 10 séances</small></li>
-                <li class="sanspuce"> Collège : <b  class="rose">39€</b>/h <small>Soit 390€ les 10 séances</small></li>
-                <li class="sanspuce"> Lycée : <b  class="rose">49€</b>/h <small>Soit 490€ les 10 séances</small></li>
-
-            </div>
+          <li>
+            Visualisation des résultats de chacun de vos enfants sur votre
+            tableau de bord.
+          </li>
+          <li>
+            Choix de la réception d’un mail à chaque exercice fait (fréquence à
+            choisir).
+          </li>
+          <li>
+            Choix de la réception d’un rapport d’activité (nombre et % de
+            réussite des exercices effectués).
+          </li>
+          <li>Génération d’un bilan (format pdf).</li>
         </div>
+      </div>
     </div>
+  </div>
 </div>
-
-
 
 {% endblock %}
-
