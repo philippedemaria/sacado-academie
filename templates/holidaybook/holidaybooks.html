@@ -1,47 +1,49 @@
-{% extends 'base.html' %}
-{% load widget_tweaks %}
-{% load static %}
-{% load item_tags %}
- 
+{% extends 'base.html' %} {% load widget_tweaks %} {% load static %} {% load
+item_tags %} {% block body %}
+<section class="container">
+  <div class="row" style="margin-top: 30px">
+    <div class="col-sm-12 col-md-12">
+      <span class="rose_light">En 20 séances préparées</span> par des
+      enseignants de l'Education Nationale, nos cahiers numériques Vacances
+      permettent de consolider les acquis de vos enfants. Ces cahiers Vacances
+      SACADO reprennent l'ensemble des notions avec des exercices choisis dans
+      une progression spiralée, idéale pour
+      <span class="rose_light">revoir tout le programme de l'année</span>.
+      <br /><br />
+      Si votre enfant a besoin de travailler les notions plus en détails, nous
+      vous conseillons
+      <a href="{% url 'index' %}#menus">le menu Autonomie</a> dans lequel il
+      aura accès à tous les exercices de son niveau. <br /><br />
+      Vous hésitez ?
+      <a href="{% url 'contact' %}" target="_blank">Contactez-nous</a>.
+    </div>
+  </div>
 
-
-{% block body %}
-    <section class="container"> 
-
-        <div class="row" style="margin-top: 30px">
-            <div class="col-sm-12 col-md-12">
-               <span class="rose_light">En 20 séances préparées</span> par des enseignants de l'Education Nationale, nos cahiers numériques Vacances permettent de consolider les acquis de vos enfants. Ces cahiers  Vacances SACADO reprennent l'ensemble des notions avec des exercices choisis dans une progression spiralée, idéale pour <span class="rose_light">revoir tout le programme de l'année</span>.
-               <br/><br/>
-               Si votre enfant a besoin de travailler les notions plus en détails, nous vous conseillons <a href="{% url 'index' %}#menus">le menu Autonomie</a> dans lequel il aura accès à tous les exercices de son niveau. 
-               <br/><br/>
-               Vous hésitez ? <a href="{% url 'contact' %}" target="_blank">Contactez-nous</a>.
-            </div>
+  <div class="row">
+    <div class="col-sm-12 col-md-12">
+      {% for hbook in hbooks %}
+      <div class="hbook" style="background: url({{ hbook.vignette.url }})">
+        {{ hbook.title }}
+        <div class="level_hbook">{{ hbook.level.shortname }}</div>
+        <div style="font-size: 8px; font-weight: 800">
+          Pour une entrée en {{ hbook.level_next }}
         </div>
-
-
-        <div class="row">
-            <div class="col-sm-12 col-md-12">
-                {% for hbook in hbooks %}
-                    <div class="hbook" style='background: url({{ hbook.vignette.url }})'>
-                        {{ hbook.title }}
-                        <div class="level_hbook">{{ hbook.level.shortname }}</div>
-                        <div style="font-size: 8px;font-weight: 800">Prépare ton entrée en {{ hbook.level_next }} </div>
-                        {% if hbook.is_publish %}
-                        <div class="bottom_hbook">
-                            <a href="{% url 'try_it' hbook.group.id %}" class="try_it">Essai</a>
-                            |
-                            <a href="{% url 'buy_it' hbook.group.id %}" class="buy_it">Achat</a>
-                        </div>
-                        {% endif %}
-                    </div>
-                {% endfor %}
-            </div>
+        {% if hbook.is_publish %}
+        <div class="bottom_hbook">
+          <a href="{% url 'try_it' hbook.group.id %}" class="try_it">Essai</a>
+          |
+          <a href="{% url 'buy_it' hbook.group.id %}" class="buy_it">Achat</a>
         </div>
- 
-        <div class="row">
-            <div class="col-sm-12 col-md-12">     
-                <a href="javascript:history.back()"  class="btn btn-default " >Retour </a>
-            </div>
-        </div>
-    </section>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12 col-md-12">
+      <a href="javascript:history.back()" class="btn btn-default">Retour </a>
+    </div>
+  </div>
+</section>
 {% endblock %}
