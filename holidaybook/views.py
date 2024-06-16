@@ -122,7 +122,7 @@ def buy_it(request,idg):
 
     hbooks = Holidaybook.objects.filter(is_publish = 1).order_by("level__ranking")
 
-    clas_sups = ["CE1","CE2","CM1","CM2","6ème","5ème","4ème","3ème","2nde","1 es","1 spé","Mater"]
+    clas_sups = ["CE1","CE2","CM1","CM2","6ème","5ème","4ème","3ème","2nde","1 es","1 spé","CP"]
     try : classe_sup = clas_sups[hbook.group.level.id-1]
     except : classe_sup = clas_sups[11]
 
