@@ -348,7 +348,14 @@ class Document(models.Model): # pour l'asso'
 
 
 
+class Actual(models.Model): # pour l'asso' 
 
+  
+    texte      = RichTextUploadingField( blank=True, verbose_name="Texte*") 
+    is_display = models.BooleanField(default=0, verbose_name="Affichage ?" ) 
+ 
+    def __str__(self):
+        return self.texte 
 
 
 ########################################################################################################################################### 
