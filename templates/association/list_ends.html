@@ -46,7 +46,7 @@
                                 <td>Du {{ a.start|date:"d-m-Y" }} </td> 
                                 <td>Au {{ a.stop|date:"d-m-Y" }}</td>                                
                                 <td>{% for p in a.student.students_parent.all %}
-                                        {{ p.user.last_name}} {{ p.user.first_name}} {{ p.user.email}}
+                                        {{ p.user.last_name}} {{ p.user.first_name}} 
                                     {% endfor %}    
                                 </td> 
                                 <td>{% for p in a.student.students_parent.all %}
