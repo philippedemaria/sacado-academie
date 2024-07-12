@@ -216,7 +216,7 @@ def index(request):
         nb_exercises = Exercise.objects.filter(supportfile__is_title=0 ).count()
         nb_students  = Student.objects.count()
         formules = Formule.objects.filter(pk__lte=3)
-        actuals = Actual.objects.filter(is_display=1 ).order('-id')
+        actuals = Actual.objects.filter(is_display=1 ).order_by('-id')
         lastActual = actuals[0].texte
         #delete_and_erase()  
 
