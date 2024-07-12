@@ -38,23 +38,25 @@
                         <th>Montant</th> 
                         <th>Payé le</th> 
                     </tr>
-                    {% for a in f.adhesions.all %}
-                        <tr> 
-                            <td>Du {{ a.start|date:"d-m-Y" }} au {{ a.stop|date:"d-m-Y" }}</td> 
-                            <td>{% for p in a.student.students_parent.all %}
-                                    {{ p.user.last_name}} {{ p.user.first_name}} 
-                                {% endfor %}    
-                            </td> 
-                            <td>{{ a.student.user.first_name}} ({{a.level.name}})</td> 
-                            <td>{{ a.formule.name }}  
-                            </td> 
-                            <td >
-                                {{ a.amount }}€  
-                            </td> 
-                            <td >
-                                 {{ f.date }}
-                            </td> 
-                        </tr>
+                    {% for f in factures %}
+                        {% for a in f.adhesions.all %}
+                            <tr> 
+                                <td>Du {{ a.start|date:"d-m-Y" }} au {{ a.stop|date:"d-m-Y" }}</td> 
+                                <td>{% for p in a.student.students_parent.all %}
+                                        {{ p.user.last_name}} {{ p.user.first_name}} 
+                                    {% endfor %}    
+                                </td> 
+                                <td>{{ a.student.user.first_name}} ({{a.level.name}})</td> 
+                                <td>{{ a.formule.name }}  
+                                </td> 
+                                <td >
+                                    {{ a.amount }}€  
+                                </td> 
+                                <td >
+                                     {{ f.date }}
+                                </td> 
+                            </tr>
+                        {% endfor %}
                     {% endfor %}
                 </table>
             </div>

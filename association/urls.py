@@ -107,8 +107,5 @@ urlpatterns = [
     path('update_actual/<int:id>/', update_actual, name='update_actual'),
     path('delete_actual/<int:id>/', delete_actual, name='delete_actual'),
 
-
-
-
 ]
  
