@@ -101,7 +101,7 @@ urlpatterns = [
 
 
 
-
+    path('list_factures', list_factures, name='list_factures'),
     path('list_actuals', list_actuals, name='list_actuals'),
     path('create_actual', create_actual, name='create_actual'),
     path('update_actual/<int:id>/', update_actual, name='update_actual'),
