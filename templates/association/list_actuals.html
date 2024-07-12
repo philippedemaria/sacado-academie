@@ -27,7 +27,6 @@
 
 {% block body %}
     <section class="content_main"> 
-        <h2 class="thin">Cotisation établissement</h2>
         <div class="row">
             <div class="col-sm-12 col-md-12">
                 <table id="standard_tab" class="table table-bordered table-hover">
@@ -41,7 +40,7 @@
                         {% for actual in actuals %}
                             <tr>
                                 <td>
-                                    <a href="{% url 'update_actuals' actual.id %}">{{ actual.texte }}</a>
+                                    <a href="{% url 'update_actual' actual.id %}">{{ actual.texte }}</a>
                                     <a href="{% url 'delete_actual' actual.id %}" class="pull-right"  onclick="return TestDelete('cette actualité')"><i class="fa fa-trash"></i> </a>
                                 </td>
                                 <td>
