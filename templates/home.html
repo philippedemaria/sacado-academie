@@ -53,11 +53,8 @@ Intro Section -
           data-target="#div_methode_sacado"
           class="rose_light"
         >
-          La Méthode SACADO<sup
-            ><small><i class="fa fa-copyright"></i></small></sup
-        ></a>
-        10 min par jour<br />
-        pour consolider sa mémoire
+          Notre actualité </a>
+       
       </div>
     </div>
     <div class="col-xs-12 col-md-12 col-lg-6" align="center">
@@ -84,7 +81,7 @@ Intro Section -
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h2 class="font_sacado">La méthode SACADO<sup>©</sup></h2>
+          <h2 class="font_sacado">Notre actualité</h2>
           <button
             type="button"
             class="close pull-right"
@@ -97,108 +94,9 @@ Intro Section -
         <div class="modal-body">
           <div class="row">
             <div class="col-xs-12 col-md-12">
-              <h1 class="title_bloc_index" style="font-variant: small-caps">
-                Notre méthode
-              </h1>
-              <p class="p_index">
-                Votre enfant progresse à son rythme avec des exercices
-                interactifs, corrigés immédiatement, qu’il peut recommencer sans
-                limitation. Les variables des exercices sont aléatoires pour
-                <b class="rose">ancrer les procédures en mémoire</b>.
-              </p>
-              <p class="p_index">
-                <img
-                  src="{% static 'img/image_a.png' %}"
-                  style="float: right"
-                />
-                Chaque jour, <b class="rose">10 minutes</b> d'entrainement sur
-                nos exercices structurés en parcours permettent de reprendre les
-                procédures et techniques et de les fixer dans la mémoire. Ces
-                rituels facilitent la maîtrise des
-                <b class="rose">automatismes</b> à la base de l'apprentissage
-                des mathématiques.
-              </p>
-
-              <p class="p_index">
-                De la maternelle à la terminale, SACADO Académie propose des
-                parcours<b class="rose"> 100% mathématiques</b> conformes aux
-                réformes et aux programmes scolaires en vigueur de l’Éducation
-                Nationale.
-              </p>
+                {{lastActual|safe}}
             </div>
           </div>
-
-          {% comment %}
-          <span class="rose">Constat</span> : si une information n’est pas
-          répétée dans le temps, elle est oubliée par les enfants, selon une loi
-          qu’on appelle la courbe de l’oubli. Pour lutter contre cette courbe,
-          il est important de travailler l’ancrage en mémoire, pédagogie
-          permettant la mémorisation durable, au fil du temps, d’informations
-          apprises. C’est la méthode Sacado©<br />
-
-          <img
-            src="{% static 'img/ebbinghaus.jpg' %}"
-            class="little_img_if_small"
-          /><br />
-
-          Comment faire ? La méthode Sacado © permet de travailler efficacement
-          grâce à nos quatre concepts issus des sciences cognitives :
-
-          <li class="sanspuce">
-            1. <span class="rose">Le e-learning </span>: espacer les
-            apprentissages dans la durée permet au cerveau de ne pas saturer.
-            <em
-              ><span class="rose">Préconisation Sacado©</span> : 10 min
-              d’entraînement quotidien sur notre plateforme est un bon moyen
-              d’améliorer le taux de rétention et ancrer les points
-              importants.</em
-            >
-          </li>
-
-          <li class="sanspuce">
-            2. <span class="rose">Le reminder ou « rappel » </span>: permet de
-            reconnecter le cerveau aux informations apprises. Il est essentiel
-            dans l’ancrage en mémoire à long terme, c’est le principe même de la
-            répétition.
-            <em
-              ><span class="rose">Préconisation Sacado©</span> : 10 min
-              d’entraînement quotidien et/ou l’étalement des révisions grâce à
-              notre programmateur d’évaluations jusqu’au jour J.</em
-            >
-          </li>
-
-          <li class="sanspuce">
-            3. <span class="rose">Le learning-by-doing </span>: on apprend mieux
-            quand on fait par soi-même.
-            <em
-              ><span class="rose">Préconisation Sacado©</span> : l’entraînement
-              quotidien va sécuriser votre enfant, qui va apprendre de ses
-              erreurs grâce à nos corrections immédiates des exercices.</em
-            >
-          </li>
-
-          <li class="sanspuce">
-            4. <span class="rose">L’émotionnel </span>: L’émotion stimule la
-            mémorisation. Le cerveau retient les informations plus intensément
-            si l’enfant y trouve du plaisir.
-            <em
-              ><span class="rose">Préconisation Sacado©</span> :
-              l’accompagnement sur notre plateforme en ligne pour préparer les
-              évaluations et les examens sans stress sera source de motivation.
-              Ce climat de travail bienveillant, sécurisant et valorisant permet
-              d’ajouter cet aspect émotionnel aux expériences
-              d’apprentissage.</em
-            >
-          </li>
-
-          <li class="sanspuce">
-            <span class="rose"><b>Le petit + Sacado© </b></span> nous offrons la
-            possibilité à votre enfant de créer ses propres cartes de révision
-            (flashcards) qui mêlent les 4 piliers : la révision en ligne, le
-            rappel (grâce à notre programmateur), l’engagement actif et l’envie
-            de réussir !
-          </li>
-          {% endcomment %}
         </div>
       </div>
     </div>

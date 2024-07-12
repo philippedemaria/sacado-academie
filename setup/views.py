@@ -216,8 +216,9 @@ def index(request):
         nb_exercises = Exercise.objects.filter(supportfile__is_title=0 ).count()
         nb_students  = Student.objects.count()
         formules = Formule.objects.filter(pk__lte=3)
-        
-        #delete_and_erase()     
+        actuals = Actual.objects.filter(is_display=1 ).order('-id')
+        lastActual = actuals[0].texte
+        #delete_and_erase()  
 
         form = AuthenticationForm()
         np_form = NewpasswordForm()
@@ -248,7 +249,7 @@ def index(request):
         cookie_rgpd_accepted = request.COOKIES.get('cookie_rgpd_accepted',None)
         cookie_rgpd_accepted = not ( cookie_rgpd_accepted  == "True" )
 
-        context = {  'cookie_rgpd_accepted' : cookie_rgpd_accepted ,  'nb_exercises' : nb_exercises , 'form' : form , 'np_form' : np_form , 'levels' : levels , 'nb_students' : nb_students , 'formules'  :  formules , 'image_accueil' : image_accueil , 'dataset' : dataset }
+        context = { 'lastActual':lastActual, 'cookie_rgpd_accepted' : cookie_rgpd_accepted ,  'nb_exercises' : nb_exercises , 'form' : form , 'np_form' : np_form , 'levels' : levels , 'nb_students' : nb_students , 'formules'  :  formules , 'image_accueil' : image_accueil , 'dataset' : dataset }
  
         response = render(request, 'home.html', context)
         return response
