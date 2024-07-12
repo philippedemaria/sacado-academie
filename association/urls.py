@@ -100,7 +100,7 @@ urlpatterns = [
     path('print_invoice/<int:idi>', print_invoice , name='print_invoice'),
 
 
-
+    path('list_ends', list_ends, name='list_ends'),
     path('list_factures', list_factures, name='list_factures'),
     path('list_actuals', list_actuals, name='list_actuals'),
     path('create_actual', create_actual, name='create_actual'),
