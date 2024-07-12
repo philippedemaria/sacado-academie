@@ -16,7 +16,7 @@ from django.contrib.auth.decorators import  permission_required,user_passes_test
 ############### bibliothèques pour les impressions pdf  #########################
 from association.models import Actual, Accounting,Associate , Voting , Document, Section , Detail , Rate  , Holidaybook, Abonnement , Activeyear, Plancomptable , Accountancy  , Invoice , Subinvoice
 from association.forms import ActualForm, AccountingForm,AssociateForm,VotingForm, DocumentForm , SectionForm, DetailForm , RateForm , AbonnementForm , HolidaybookForm ,  ActiveyearForm, AccountancyForm , InvoiceForm
-from account.models import User, Student, Teacher, Parent ,  Response
+from account.models import  Facture, User, Student, Teacher, Parent ,  Response
 from group.models import Group
 from qcm.models import Exercise, Studentanswer , Customanswerbystudent , Writtenanswerbystudent , Supportfile , Parcours
 from school.models import School
@@ -3044,6 +3044,16 @@ def list_invoices(request):
 
     invoices = Invoice.objects.order_by("parent__user__last_name")
     return render(request, 'association/list_invoices.html', { 'invoices':invoices,  })
+
+
+ 
+
+@user_passes_test(user_is_board)
+def list_factures(request):
+
+    factures = Facture.objects.order_by("-date")
+    return render(request, 'association/list_factures.html', { 'factures':factures,  })
+
 
 
 

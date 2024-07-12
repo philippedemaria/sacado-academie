@@ -29,7 +29,7 @@
     <section class="content_main"> 
         <div class="row">
             <div class="col-sm-12 col-md-12">
-                                     <table class="table table-sacado table-striped table-hover table-responsive">
+                <table class="table table-sacado table-striped table-hover table-responsive">
                             <tr> 
                                 <th width="100px">Date</th>
                                 <th>Chrono</th> 
@@ -39,7 +39,7 @@
                                 <th>orderID</th> 
                                 <th></th> 
                             </tr>
-                        {% for f in parent.user.factures.all  %}
+                        {% for f in factures   %}
                             <tr> 
                                 <td>{{ f.date|date:"Y-m-d" }}</td> 
                                 <td>{{ f.chrono }}</td> 
