@@ -8,7 +8,10 @@ class HolidaybookForm(forms.ModelForm):
         model = Holidaybook 
         fields = '__all__' 
 
-
+class ActualForm(forms.ModelForm):
+    class Meta:
+        model = Actual 
+        fields = '__all__' 
 
 class AccountingForm(forms.ModelForm):
 

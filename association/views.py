@@ -2736,10 +2736,60 @@ def list_historicpositionnement(request):
     return render(request, 'association/historicpositionnement.html', context )
 
 
+#####################################################################################################################################
+#####################################################################################################################################
+####    Actual
+#####################################################################################################################################
+#####################################################################################################################################
 
 
 
+@user_passes_test(user_is_board)
+def list_actuals(request):
+    actuals = Actual.objects.order_by("-id")
+    return render(request, 'association/list_actuals.html', { 'actuals': actuals   })
 
+
+@user_passes_test(user_is_board) 
+def create_actual(request):
+ 
+    form = ActualForm(request.POST or None )
+    if form.is_valid():
+        form.save()
+        return redirect('list_actuals')
+    else:
+        print(form.errors)
+
+    context = {'form': form, }
+    return render(request, 'association/form_actual.html', context)
+
+
+
+@user_passes_test(user_is_board)
+def update_actual(request, id):
+
+    actual = Actual.objects.get(id=id)
+    
+    form = ActualForm(request.POST or None, instance=actual )
+
+    if form.is_valid():
+        form.save()
+        return redirect('list_actuals')
+    else:
+        print(form.errors)
+
+    context = {'form': form,  'actual': actual,  }
+
+    return render(request, 'association/form_actual.html', context )
+
+
+
+@user_passes_test(user_is_board)
+def delete_actual(request, id):
+
+    actual = Actual.objects.get(id=id)
+    actual.delete()
+    return redirect('list_actuals')
 
 
 

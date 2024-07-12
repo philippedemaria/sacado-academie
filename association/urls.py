@@ -99,5 +99,16 @@ urlpatterns = [
     path('list_invoices', list_invoices , name='list_invoices'),
     path('print_invoice/<int:idi>', print_invoice , name='print_invoice'),
 
+
+
+
+    path('list_actuals', list_actuals, name='list_actuals'),
+    path('create_actual', create_actual, name='create_actual'),
+    path('update_actual/<int:id>/', update_actual, name='update_actual'),
+    path('delete_actual/<int:id>/', delete_actual, name='delete_actual'),
+
+
+
+
 ]
  

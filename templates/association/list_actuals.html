@@ -1,0 +1,59 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+
+
+ 
+{% block require %}
+ 
+
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common2.js' %}"></script>
+
+ 
+
+{% endblock %}
+
+
+
+{% block page_title %}
+        <a href="{% url 'association_index' %}" ><i class="fa fa-cloud"></i> </a> Actualités
+{% endblock %}
+
+{% block page_menu_right %}
+    <a href="{% url 'create_actual' %}" class="btn btn-new pull-right">  Nouvelle actualité</a> 
+{% endblock %}
+
+ 
+
+
+{% block body %}
+    <section class="content_main"> 
+        <h2 class="thin">Cotisation établissement</h2>
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <table id="standard_tab" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Texte</th>                        
+                            <th>Affichage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for actual in actuals %}
+                            <tr>
+                                <td>
+                                    <a href="{% url 'update_actuals' actual.id %}">{{ actual.texte }}</a>
+                                    <a href="{% url 'delete_actual' actual.id %}" class="pull-right"  onclick="return TestDelete('cette actualité')"><i class="fa fa-trash"></i> </a>
+                                </td>
+                                <td>
+                                    {{ actual.is_display }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+ 

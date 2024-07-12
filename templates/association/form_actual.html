@@ -1,0 +1,67 @@
+{% extends 'dashboard.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% load item_tags %}
+
+{% block require %}
+ 
+    {% if accounting %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common3.js' %}"></script>
+    {% else %}
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common2.js' %}"></script>
+    {% endif %}
+{% endblock %}
+
+
+{% block page_title %}  
+        <a href="{% url 'association_index' %}" ><i class="fa fa-cloud"></i> </a>  Actualités 
+  
+{% endblock %}
+
+{% block page_menu_right %}
+    
+    
+{% endblock %}
+
+
+ 
+{% block body %}     
+<section class="content_main">
+    <form action="" method="POST">
+
+        {% csrf_token %}
+
+        <div class="row">
+            <div class="col-sm-12 col-md-3">
+                <div class="form-group">
+                    {{ form.texte.label_tag }}
+                    {{ form.texte  }}
+                    {{ form.texte.errors }}
+                </div>
+            </div> 
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <div class="form-group">
+                    {{ form.is_display.label_tag }}<br/>
+                    {{ form.is_display|attr:"data-toggle:toggle"|attr:"data-onstyle:success"|attr:"data-offstyle:danger"|attr:"data-on:Oui"|attr:"data-off:Non"}} 
+                    {{ form.is_display.errors }}
+                </div>
+            </div>
+        </div> 
+ 
+
+ 
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <div class="form-group">
+                    <input value="Enregistrer" type="submit" class="btn btn-primary"   />
+                    <a href="javascript:history.back()"><input type="button" value="Annuler" class="btn btn-default "/></a>
+                </div>
+            </div>    
+        </div>
+
+ 
+    </form>
+</section>  
+{% endblock %}
