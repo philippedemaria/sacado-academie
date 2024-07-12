@@ -1,0 +1,64 @@
+{% extends 'dashboard.html' %}
+{% load static %}
+
+
+ 
+{% block require %}
+ 
+
+    <script src="{% static 'js/require.js' %}"   data-main="{% static 'js/common2.js' %}"></script>
+
+ 
+
+{% endblock %}
+
+
+
+{% block page_title %}
+        <a href="{% url 'association_index' %}" ><i class="fa fa-cloud"></i> </a> Liste des adhésions
+{% endblock %}
+
+{% block page_menu_right %}
+ 
+{% endblock %}
+
+ 
+
+
+{% block body %}
+    <section class="content_main"> 
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <table class="table table-sacado table-striped table-hover table-responsive">
+                    <tr> 
+                        <th width="100px">Dates</th>
+                        <th width="100px">Parent</th>
+                        <th>Enfant (Niveau)</th> 
+                        <th>Formule</th> 
+                        <th>Montant</th> 
+                        <th>Payé le</th> 
+                    </tr>
+                    {% for a in f.adhesions.all %}
+                        <tr> 
+                            <td>Du {{ a.start|date:"d-m-Y" }} au {{ a.stop|date:"d-m-Y" }}</td> 
+                            <td>{% for p in a.student.students_parent.all %}
+                                    {{ p.user.last_name}} {{ p.user.first_name}} 
+                                {% endfor %}    
+                            </td> 
+                            <td>{{ a.student.user.first_name}} ({{a.level.name}})</td> 
+                            <td>{{ a.formule.name }}  
+                            </td> 
+                            <td >
+                                {{ a.amount }}€  
+                            </td> 
+                            <td >
+                                 {{ f.date }}
+                            </td> 
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+

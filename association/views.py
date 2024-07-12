@@ -2736,6 +2736,11 @@ def list_historicpositionnement(request):
     return render(request, 'association/historicpositionnement.html', context )
 
 
+@user_passes_test(user_is_board)
+def list_ends(request):
+    factures = Facture.objects.order_by('-id')
+    return render(request, 'association/list_ends.html', { 'factures': factures   })
+
 #####################################################################################################################################
 #####################################################################################################################################
 ####    Actual
