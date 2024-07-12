@@ -31,8 +31,10 @@
             <div class="col-sm-12 col-md-12">
                 <table class="table table-sacado table-striped table-hover table-responsive">
                     <tr> 
-                        <th>Dates</th>
+                        <th>Date début</th>
+                        <th>Date fin</th>                        
                         <th>Parent</th>
+                        <th>Courriel</th>                     
                         <th>Enfant (Niveau)</th> 
                         <th>Formule</th> 
                         <th>Montant</th> 
@@ -41,9 +43,14 @@
                     {% for f in factures %}
                         {% for a in f.adhesions.all %}
                             <tr> 
-                                <td>Du {{ a.start|date:"d-m-Y" }} au {{ a.stop|date:"d-m-Y" }}</td> 
+                                <td>Du {{ a.start|date:"d-m-Y" }} </td> 
+                                <td>Au {{ a.stop|date:"d-m-Y" }}</td>                                
                                 <td>{% for p in a.student.students_parent.all %}
                                         {{ p.user.last_name}} {{ p.user.first_name}} {{ p.user.email}}
+                                    {% endfor %}    
+                                </td> 
+                                <td>{% for p in a.student.students_parent.all %}
+                                        {{ p.user.email}}
                                     {% endfor %}    
                                 </td> 
                                 <td>{{ a.student.user.first_name}} ({{a.level.name}})</td> 
