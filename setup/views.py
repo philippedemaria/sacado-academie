@@ -28,7 +28,7 @@ from django.db.models import Count, Q
 from account.decorators import is_manager_of_this_school
 from account.forms import  UserForm, TeacherForm, StudentForm , BaseUserFormSet , NewpasswordForm, DescriptionForm
 from account.models import  User, Teacher, Student  , Parent , Adhesion , Facture
-from association.models import Accounting , Detail , Rate , Abonnement , Holidaybook , Activeyear
+from association.models import Actual, Accounting , Detail , Rate , Abonnement , Holidaybook , Activeyear
 from group.models import Group, Sharing_group
 from group.views import student_dashboard
 from qcm.models import Folder , Parcours, Exercise,Relationship,Studentanswer, Supportfile, Customexercise, Customanswerbystudent,Writtenanswerbystudent
