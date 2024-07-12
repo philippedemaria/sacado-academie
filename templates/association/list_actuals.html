@@ -40,11 +40,11 @@
                         {% for actual in actuals %}
                             <tr>
                                 <td>
-                                    <a href="{% url 'update_actual' actual.id %}">{{ actual.texte }}</a>
+                                    <a href="{% url 'update_actual' actual.id %}">{{ actual.texte|safe }}</a>
                                     <a href="{% url 'delete_actual' actual.id %}" class="pull-right"  onclick="return TestDelete('cette actualité')"><i class="fa fa-trash"></i> </a>
                                 </td>
                                 <td>
-                                    {{ actual.is_display }}
+                                    {% if actual.is_display %}Affiché{% else %}Caché{% endif %}
                                 </td>
                             </tr>
                         {% endfor %}
