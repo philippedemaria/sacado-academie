@@ -40,14 +40,14 @@
                             {{ form.email.errors }}
                         </div>
                         <div class="row"> 
-                            <div class="col-sm-12 col-md-12">
+                            <div class="col-sm-12 col-md-11">
                                 <div class="form-group">
                                     <label>Choisir un identifiant :</label>
                                     {{ form.username |add_class:"form-control username"|attr:"required" }}
-                                    <span id="ajaxresult{{ forloop.counter0 }}" class="ajaxresult"></span>
+                                    <span style="font-size:10px">L'identifiant et le mot de passe ne doivent pas contenir de une même séquence de lettres.</span><span id="ajaxresult{{ forloop.counter0 }}" class="ajaxresult"></span>
                                     {{ form.username.errors }}
                                 </div>
-                            </div>  
+                            </div> 
                         </div>       
                         <div class="row">
                             <div class="col-sm-12 col-md-6">
