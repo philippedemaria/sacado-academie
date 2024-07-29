@@ -44,7 +44,7 @@
                                 <div class="form-group">
                                     <label>Choisir un identifiant :</label>
                                     {{ form.username |add_class:"form-control username"|attr:"required" }}
-                                    <span style="font-size:12px;color:red">L'identifiant et le mot de passe ne doivent pas contenir une même séquence de lettres.</span><span id="ajaxresult{{ forloop.counter0 }}" class="ajaxresult"></span>
+                                    <span style="font-size:10px;color:red">L'identifiant et le mot de passe ne doivent pas contenir une même séquence de lettres.</span><span id="ajaxresult{{ forloop.counter0 }}" class="ajaxresult"></span>
                                     {{ form.username.errors }}
                                 </div>
                             </div> 
