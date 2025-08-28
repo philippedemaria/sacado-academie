@@ -24,7 +24,7 @@
         <div class="row margins">
         {% for exercise in  exercises %}
             <div class="col-xs-12 col-md-4">
-                <a href="{% url 'show_this_index_exercise' exercise.id %}">{% if exercise.supportfile.imagefile %} <img src="{{ exercise.supportfile.imagefile.url }}"  width="300px" /> {% endif %}</a>
+                <a href="{% url 'show_this_index_exercise' exercise.id %}" target="_blank">{% if exercise.supportfile.imagefile %} <img src="{{ exercise.supportfile.imagefile.url }}"  width="300px" /> {% endif %}</a>
             </div>
         {% endfor %}
         </div>
